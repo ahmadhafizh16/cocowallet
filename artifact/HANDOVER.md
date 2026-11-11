@@ -1,6 +1,6 @@
 # Handover
 
-**Status:** Nine of 32 tasks are closed: platform/money/journal core plus Impeccable product and direction confirmation. The reference-led frosted wallet sketch is user-approved; production interface implementation is next under T11-02. Money-moving APIs, full idempotency, FX integration, Swagger, account seeding, and application UI remain unimplemented.
+**Status:** Nine of 32 tasks are closed: platform/money/journal core plus Impeccable product and direction confirmation. The reference-led frosted interface is in progress under T11-02, including skeletons and honest preview states. Money-moving APIs, full idempotency, FX integration, Swagger, and account seeding remain unimplemented.
 
 ## Implemented modules and commands
 
@@ -19,6 +19,8 @@
 | `src/features/journal/balances.ts` | Stream exact per-wallet bigint balances; account reads share one snapshot and validate final bounds. |
 | `src/features/journal/write.ts` | Top-level synchronous immediate-write boundary; main-only accounting, exact credits, funds checks, atomic creation/entries, and a technical-success integration seam. [Contract](JOURNAL.md). |
 | `components.json`, `postcss.config.mjs`, `src/lib/utils.ts` | shadcn/Lucide/Tailwind configuration and tested class helper; not an implemented wallet design. |
+| `src/components/ui/` | Local shadcn-style button/input/skeleton primitives and Radix-backed dialog; explicit button types, focus handling, and decorative skeleton semantics. |
+| `src/features/theme/`, `src/app/globals.css` | Approved frosted tokens, light/dark/system preference, pre-paint theme bootstrap, storage fallback, and reduced-motion styles. |
 | `scripts/check-artifacts.mjs` | Checks Markdown links, decision/task references, board status alignment, and task dependency cycles. |
 
 Fresh local setup and checks:
