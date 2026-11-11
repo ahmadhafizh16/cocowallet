@@ -1,3 +1,5 @@
+import { fundingPath, fundingSchemas } from "./funding-openapi";
+
 const json = (schema: object) => ({ "application/json": { schema } });
 const reference = (name: string) => ({ $ref: `#/components/schemas/${name}` });
 const problem = {
@@ -11,17 +13,19 @@ const noStore = {
   },
 };
 
-/** The implemented read contract only; planned money endpoints are not advertised. */
+/** Implemented reads and simulated funding only; no speculative FX/write routes. */
 export const readApiDocument = {
   openapi: "3.1.0",
   info: {
-    title: "CocoWallet read API",
+    title: "CocoWallet simulated wallet API",
     version: "0.1.0",
     description:
-      "Local-only simulated wallet. Accounts and journal-derived balances are connected; money submissions, FX and history APIs are not. No authentication: do not expose the Docker port publicly.",
+      "Local-only simulated wallet. Exact account reads and durable simulated deposits/withdrawals are connected. FX, conversions, transfers and full history APIs are not. No authentication: do not expose the Docker port publicly.",
   },
   servers: [{ url: "/" }],
   paths: {
+    "/api/deposits": fundingPath("deposit"),
+    "/api/withdrawals": fundingPath("withdrawal"),
     "/api/accounts": {
       get: {
         operationId: "listAccounts",
@@ -114,6 +118,7 @@ export const readApiDocument = {
   },
   components: {
     schemas: {
+      ...fundingSchemas,
       Account: {
         type: "object",
         additionalProperties: false,

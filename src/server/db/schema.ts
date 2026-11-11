@@ -152,3 +152,28 @@ export const journalEntries = sqliteTable(
     index("journal_wallet").on(table.walletId),
   ],
 );
+
+/** Immutable technical outcomes, separate from completed transaction history. */
+export const fundingAttempts = sqliteTable(
+  "funding_attempts",
+  {
+    key: text("key").primaryKey(),
+    request: text("request").notNull(),
+    status: text("status").notNull(),
+    response: text("response").notNull(),
+    transactionId: text("transaction_id")
+      .unique()
+      .references(() => transactions.id, { onDelete: "restrict" }),
+    createdAt: createdAt(),
+  },
+  (table) => [
+    check(
+      "funding_status",
+      sql`${table.status} IN ('200', '400', '404', '409')`,
+    ),
+    check(
+      "funding_result_shape",
+      sql`(${table.status} = '200' AND ${table.transactionId} IS NOT NULL) OR (${table.status} != '200' AND ${table.transactionId} IS NULL)`,
+    ),
+  ],
+);

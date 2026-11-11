@@ -6,6 +6,8 @@ import { readApiDocument } from "@/server/http/openapi";
 import { GET as accounts } from "../accounts/route";
 import { GET as wallets } from "../accounts/[accountId]/wallets/route";
 import { GET } from "./route";
+import { POST as deposit } from "../deposits/route";
+import { randomUUID } from "node:crypto";
 
 jest.mock("@/server/db/runtime", () => ({ getRuntimeDatabase: jest.fn() }));
 
@@ -84,14 +86,20 @@ describe("read-only OpenAPI contract", () => {
     const spec = await response.json();
     expect(spec.openapi).toBe("3.1.0");
     expect(Object.keys(spec.paths)).toEqual([
+      "/api/deposits",
+      "/api/withdrawals",
       "/api/accounts",
       "/api/accounts/{accountId}/wallets",
       "/api/health",
       "/api/ready",
       "/api/openapi",
     ]);
-    for (const path of Object.values(spec.paths))
-      expect(Object.keys(path as object)).toEqual(["get"]);
+    for (const [route, path] of Object.entries(spec.paths))
+      expect(Object.keys(path as object)).toEqual([
+        route === "/api/deposits" || route === "/api/withdrawals"
+          ? "post"
+          : "get",
+      ]);
     expect(spec.components.schemas.Wallet.properties.balanceMinor.type).toBe(
       "string",
     );
@@ -123,5 +131,31 @@ describe("read-only OpenAPI contract", () => {
       ).json(),
       schemas.Problem!,
     );
+  });
+
+  it("validates actual funding receipt and definitive error against the published schemas", async () => {
+    const id = seedMainAccount(database);
+    const wallet = database.sqlite
+      .prepare<[string], { id: string }>(
+        "SELECT id FROM wallets WHERE account_id = ? AND currency_code = 'USD'",
+      )
+      .get(id)!;
+    const send = (amount: string) =>
+      deposit(
+        new Request("http://localhost/api/deposits", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Idempotency-Key": randomUUID(),
+          },
+          body: JSON.stringify({
+            walletId: wallet.id,
+            amount,
+            provider: "demo_bank",
+          }),
+        }),
+      );
+    expectContract(await (await send("1.00")).json(), schemas.FundingReceipt!);
+    expectContract(await (await send("1.001")).json(), schemas.FundingProblem!);
   });
 });
