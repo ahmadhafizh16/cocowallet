@@ -202,4 +202,38 @@ describe("wallet presentation interactions", () => {
       host.querySelector(".wallet-balance-history")?.getAttribute("data-state"),
     ).toBe("invalid");
   });
+
+  it("labels connected balances truthfully without pretending writes or history are connected", async () => {
+    const model = createPreviewOverview();
+    model.mode = "connected-readonly";
+    model.wallets[0]!.balanceMinor = "12345";
+    model.usdTotals = {
+      [model.activeAccountId]: { status: "available", balanceMinor: "12345" },
+    };
+    await render(model);
+    expect(host.querySelector(".wallet-total-value")?.textContent).toBe(
+      "$123.45",
+    );
+    expect(host.querySelector(".wallet-total-note")?.textContent).toContain(
+      "Journal-derived balances",
+    );
+    expect(host.querySelector(".wallet-preview-notice")?.textContent).toContain(
+      "Balances connected",
+    );
+    expect(host.querySelector(".wallet-preview-notice")?.textContent).toContain(
+      "money operations and history are not connected",
+    );
+    expect(host.querySelector(".wallet-history-empty")?.textContent).toContain(
+      "Transaction history not connected",
+    );
+    expect(host.querySelector(".wallet-balance-history svg")).toBeNull();
+    model.usdTotals[model.activeAccountId] = { status: "unavailable" };
+    await render({ ...model });
+    expect(host.querySelector(".wallet-total-value")?.textContent).toBe(
+      "Unavailable",
+    );
+    expect(host.querySelector(".wallet-currency-list")?.textContent).toContain(
+      "123.45",
+    );
+  });
 });

@@ -1,5 +1,5 @@
 import { assertBalanceMinor, formatAmount } from "../money/money";
-import type { WalletCurrency, WalletView } from "./types";
+import type { UsdTotalView, WalletCurrency, WalletView } from "./types";
 
 export const CURRENCY_SYMBOLS: Record<WalletCurrency, string> = {
   USD: "$",
@@ -17,18 +17,29 @@ export function walletsForAccount(
 }
 
 /** Invalid integration data is unavailable, never silently a zero balance. */
-export function walletBalance(wallet: WalletView): bigint | null {
+function balanceMinor(value: unknown, exponent: number): bigint | null {
   try {
-    if (typeof wallet.balanceMinor !== "string") return null;
-    if (!/^(?:0|[1-9][0-9]{0,18})(?![\s\S])/u.test(wallet.balanceMinor))
-      return null;
-    const balance = BigInt(wallet.balanceMinor);
+    if (typeof value !== "string") return null;
+    if (!/^(?:0|[1-9][0-9]{0,18})(?![\s\S])/u.test(value)) return null;
+    const balance = BigInt(value);
     assertBalanceMinor(balance);
-    formatAmount(balance, wallet.exponent);
+    formatAmount(balance, exponent);
     return balance;
   } catch {
     return null;
   }
+}
+
+export function walletBalance(wallet: WalletView): bigint | null {
+  return balanceMinor(wallet.balanceMinor, wallet.exponent);
+}
+
+export function displayUsdTotal(
+  total: UsdTotalView | undefined,
+): string | null {
+  if (total?.status !== "available") return null;
+  const minor = balanceMinor(total.balanceMinor, 2);
+  return minor === null ? null : `$${displayAmount(minor, 2)}`;
 }
 
 export function displayAmount(minor: bigint, exponent: number): string {

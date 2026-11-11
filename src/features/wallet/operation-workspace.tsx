@@ -55,10 +55,9 @@ import type { AccountView, WalletCurrency, WalletView } from "./types";
 const DESCRIPTIONS: Record<Operation, string> = {
   deposit:
     "Choose a fictional provider and review a deposit draft. Submission is not connected.",
-  withdraw:
-    "Withdrawals need a funded wallet. Preview balances start at zero, and submission is not connected.",
+  withdraw: "Withdrawals need a funded wallet. Submission is not connected.",
   convert:
-    "Conversion needs a funded balance and an exchange-rate quote. Neither is connected in this preview.",
+    "Conversion needs a funded balance and an exchange-rate quote. Exchange-rate quotes and submission are not connected.",
   transfer:
     "Explore a simulated transfer. This preview cannot send funds, verify recipients, or create accounts.",
 };
@@ -69,6 +68,7 @@ export function OperationWorkspace({
   account,
   wallets: suppliedWallets,
   hidden,
+  balancesConnected = false,
   open,
   onOpenChange,
   returnFocusRef,
@@ -77,6 +77,7 @@ export function OperationWorkspace({
   account: AccountView | undefined;
   wallets: WalletView[];
   hidden: boolean;
+  balancesConnected?: boolean;
   open: boolean;
   onOpenChange: (open: boolean) => void;
   returnFocusRef?: RefObject<HTMLElement | null>;
@@ -445,8 +446,8 @@ export function OperationWorkspace({
                   <FieldDescription id={fieldId("available")}>
                     {sourceWallet
                       ? hidden
-                        ? "Preview balance hidden"
-                        : `${displayBalance(sourceWallet)} ${sourceWallet.currency} · Preview balance`
+                        ? "Balance hidden"
+                        : `${displayBalance(sourceWallet)} ${sourceWallet.currency} · ${balancesConnected ? "Journal-derived balance" : "Preview balance"}`
                       : "Balance unavailable"}
                   </FieldDescription>
                   {errors.amount && (

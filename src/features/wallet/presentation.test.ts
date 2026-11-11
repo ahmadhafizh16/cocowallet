@@ -2,6 +2,7 @@ import { MAX_MINOR } from "../money/money";
 import {
   displayAmount,
   displayBalance,
+  displayUsdTotal,
   hasZeroTotal,
   walletBalance,
   walletsForAccount,
@@ -32,6 +33,26 @@ describe("wallet presentation", () => {
     expect(displayAmount(-1234567n, 2)).toBe("-12,345.67");
     expect(displayAmount(123456n, 0)).toBe("123,456");
     expect(displayBalance(usd)).toBe("0.00");
+  });
+
+  it("formats supplied USD totals exactly and preserves unavailable state", () => {
+    expect(
+      displayUsdTotal({
+        status: "available",
+        balanceMinor: MAX_MINOR.toString(),
+      }),
+    ).toBe("$92,233,720,368,547,758.07");
+    expect(displayUsdTotal({ status: "unavailable" })).toBeNull();
+    expect(displayUsdTotal(undefined)).toBeNull();
+    expect(
+      displayUsdTotal({
+        status: "available",
+        balanceMinor: "9223372036854775808",
+      }),
+    ).toBeNull();
+    expect(
+      displayUsdTotal({ status: "available", balanceMinor: "01" }),
+    ).toBeNull();
   });
 
   it("only allows a rate-free total for complete, valid zero balances", () => {

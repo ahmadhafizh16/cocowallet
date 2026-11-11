@@ -32,7 +32,9 @@ test("the overview has two columns and no permanent form or conflicting conversi
       ),
   ).toBe(2);
   await expect(
-    page.getByText("operations are not connected.", { exact: false }),
+    page.getByText("money operations and history are not connected.", {
+      exact: false,
+    }),
   ).toBeVisible();
   await expect(
     page.getByRole("heading", { name: "Currency wallets", exact: true }),
@@ -239,11 +241,15 @@ test("zero balances cannot be withdrawn or converted and service guidance preced
 
 test("self-transfer is rejected without creating a destination or claiming success", async ({
   page,
+  request,
 }) => {
+  const { accounts } = await (await request.get("/api/accounts")).json();
   await openMoneyForm(page, "Send money");
   await page
     .getByLabel("Simulated recipient account ID", { exact: true })
-    .fill("main-account");
+    .fill(
+      accounts.find((account: { role: string }) => account.role === "main").id,
+    );
   await page.getByLabel("You send", { exact: true }).fill("1.00");
   await page
     .getByRole("button", { name: "Review transfer", exact: true })
@@ -299,18 +305,26 @@ test("history filters use shadcn Select and have a useful reset", async ({
   await expect(filter).toHaveAttribute("data-slot", "select-trigger");
   await chooseOption(page, "Filter transactions", "Deposits");
   await expect(
-    page.getByRole("heading", { name: "No deposits to show.", exact: true }),
+    page.getByRole("heading", {
+      name: "Transaction history not connected",
+      exact: true,
+    }),
   ).toBeVisible();
   await page.getByRole("button", { name: "Clear filter", exact: true }).click();
   await expect(filter).toContainText("All activity");
   await expect(
-    page.getByRole("heading", { name: "No activity yet", exact: true }),
+    page.getByRole("heading", {
+      name: "Transaction history not connected",
+      exact: true,
+    }),
   ).toBeVisible();
 });
 
 test("clipboard failure offers a selectable ID inside the shadcn account menu", async ({
   page,
+  request,
 }) => {
+  const { accounts } = await (await request.get("/api/accounts")).json();
   await page.evaluate(() =>
     Object.defineProperty(navigator, "clipboard", {
       configurable: true,
@@ -328,7 +342,9 @@ test("clipboard failure offers a selectable ID inside the shadcn account menu", 
     .getByRole("menuitem", { name: "Copy account ID", exact: true })
     .click();
   await expect(page.getByRole("status")).toContainText("copy it manually");
-  await expect(page.locator(".wallet-account-id")).toHaveText("main-account");
+  await expect(page.locator(".wallet-account-id")).toHaveText(
+    accounts.find((account: { role: string }) => account.role === "main").id,
+  );
   await expect(
     page.locator('[data-slot="dropdown-menu-content"]'),
   ).toBeVisible();

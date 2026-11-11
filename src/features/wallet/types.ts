@@ -27,14 +27,19 @@ export type BalanceHistorySeries = {
   points: { recordedAt: string; balanceMinor: string }[];
 };
 
+export type UsdTotalView =
+  { status: "available"; balanceMinor: string } | { status: "unavailable" };
+
 export type WalletOverview = {
-  mode: "interface-preview";
+  mode: "interface-preview" | "connected-readonly";
   accounts: AccountView[];
   activeAccountId: string;
   wallets: WalletView[];
   transactions: [];
   /** Absent means disconnected; an explicitly supplied empty series has no records. */
   balanceHistory?: BalanceHistorySeries[];
+  /** Server-supplied totals; unavailable never means a zero balance. */
+  usdTotals?: Record<string, UsdTotalView>;
 };
 
 /** Honest first-run presentation, not database seeding or a balance response. */

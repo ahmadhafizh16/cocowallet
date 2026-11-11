@@ -60,6 +60,7 @@ import { OperationWorkspace } from "./operation-workspace";
 import { type Operation } from "./operation-model";
 import {
   displayBalance,
+  displayUsdTotal,
   hasZeroTotal,
   walletsForAccount,
 } from "./presentation";
@@ -107,6 +108,14 @@ export function WalletDashboard({ model }: { model: WalletOverview }) {
   const isMain = account?.role === "main";
   const wallets = walletsForAccount(model.wallets, account?.id);
   const zeroTotal = hasZeroTotal(wallets);
+  const balancesConnected = model.mode === "connected-readonly";
+  const suppliedTotal = account ? model.usdTotals?.[account.id] : undefined;
+  const totalLabel =
+    suppliedTotal !== undefined
+      ? displayUsdTotal(suppliedTotal)
+      : zeroTotal
+        ? "$0.00"
+        : null;
   const invalidHistory =
     model.balanceHistory !== undefined && !Array.isArray(model.balanceHistory);
   const histories = Array.isArray(model.balanceHistory)
@@ -119,9 +128,10 @@ export function WalletDashboard({ model }: { model: WalletOverview }) {
     invalidHistory || histories.length > 1 ? null : histories[0];
   const copyFeedback =
     copyResult?.accountId === account?.id ? (copyResult?.message ?? "") : "";
-  const emptyHistoryHeading =
-    HISTORY_FILTERS.find((filter) => filter.value === historyFilter)?.empty ??
-    HISTORY_FILTERS[0].empty;
+  const emptyHistoryHeading = balancesConnected
+    ? "Transaction history not connected"
+    : (HISTORY_FILTERS.find((filter) => filter.value === historyFilter)
+        ?.empty ?? HISTORY_FILTERS[0].empty);
 
   useEffect(() => {
     function syncHash() {
@@ -241,10 +251,16 @@ export function WalletDashboard({ model }: { model: WalletOverview }) {
                   {copyFeedback}
                 </p>
                 <DropdownMenuSeparator />
-                <DropdownMenuLabel>About this preview</DropdownMenuLabel>
+                <DropdownMenuLabel>
+                  {balancesConnected
+                    ? "About this wallet"
+                    : "About this preview"}
+                </DropdownMenuLabel>
                 <p className="wallet-account-about">
-                  Balances are presentation-only, not stored. Form drafts stay
-                  on this page and clear when you reload.
+                  {balancesConnected
+                    ? "Balances are a snapshot of stored journal entries. Reload to refresh. "
+                    : "Balances are presentation-only, not stored. "}
+                  Form drafts stay on this page and clear when you reload.
                 </p>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -362,8 +378,16 @@ export function WalletDashboard({ model }: { model: WalletOverview }) {
             <div className="wallet-preview-notice">
               <Info aria-hidden="true" />
               <p>
-                <strong>Interface preview</strong> — operations are not
-                connected. No real funds move.
+                <strong>
+                  {balancesConnected
+                    ? "Balances connected"
+                    : "Interface preview"}
+                </strong>{" "}
+                —{" "}
+                {balancesConnected
+                  ? "money operations and history are not connected."
+                  : "operations are not connected."}{" "}
+                No real funds move.
               </p>
             </div>
             <div className="wallet-dashboard-grid">
@@ -399,17 +423,15 @@ export function WalletDashboard({ model }: { model: WalletOverview }) {
                   <CardContent className="wallet-card-content">
                     <div className="wallet-total">
                       <span
-                        className={`wallet-total-value${!zeroTotal && !hidden ? " wallet-total-unavailable" : ""}`}
+                        className={`wallet-total-value${totalLabel === null && !hidden ? " wallet-total-unavailable" : ""}`}
                       >
                         {hidden ? (
                           <span aria-label="Amount hidden">••••</span>
-                        ) : zeroTotal ? (
-                          "$0.00"
                         ) : (
-                          "Unavailable"
+                          (totalLabel ?? "Unavailable")
                         )}
                       </span>
-                      {zeroTotal && (
+                      {totalLabel !== null && (
                         <span className="wallet-total-unit">USD</span>
                       )}
                     </div>
@@ -418,11 +440,15 @@ export function WalletDashboard({ model }: { model: WalletOverview }) {
                         ? "No account balances supplied."
                         : !isMain
                           ? wallets.length > 0
-                            ? "Inspect-only destination · Presentation balances"
+                            ? balancesConnected
+                              ? "Inspect-only destination · Journal-derived balances"
+                              : "Inspect-only destination · Presentation balances"
                             : "No destination balances supplied."
-                          : zeroTotal
-                            ? "Presentation only · Not a stored balance"
-                            : "A combined total needs connected exchange rates."}
+                          : balancesConnected && totalLabel !== null
+                            ? "Journal-derived balances · No FX applied"
+                            : zeroTotal
+                              ? "Presentation only · Not a stored balance"
+                              : "A combined total needs connected exchange rates."}
                     </p>
                     <BalanceHistory
                       series={balanceHistory}
@@ -503,7 +529,9 @@ export function WalletDashboard({ model }: { model: WalletOverview }) {
                       <h3>{emptyHistoryHeading}</h3>
                       <p>
                         {isMain
-                          ? "Transactions will appear here when wallet services are connected."
+                          ? balancesConnected
+                            ? "Completed transactions will appear when the history service is connected."
+                            : "Transactions will appear here when wallet services are connected."
                           : "Destination history is not connected. Main-account activity is not shown here."}
                       </p>
                       {historyFilter !== "all" && (
@@ -603,6 +631,7 @@ export function WalletDashboard({ model }: { model: WalletOverview }) {
           account={account}
           wallets={wallets}
           hidden={hidden}
+          balancesConnected={balancesConnected}
           open={operationOpen}
           onOpenChange={setOperationOpen}
           returnFocusRef={operationTriggerRef}
