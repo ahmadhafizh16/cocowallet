@@ -74,6 +74,7 @@ docs: document the transfer flow
 ## Proposed quality and testing
 
 - Use ESLint and Prettier defaults; run lint and formatting checks alongside strict TypeScript checks.
+- The application/configuration formatter excludes the vendored `.opencode/` distribution and the intentional planning-table/diagram layout under `artifact/`. Artifact links and traceability are checked separately; do not mass-reformat upstream tooling as an application change.
 - Write Jest tests for monetary calculations, validation, persistence, concurrent/duplicate requests, and Frankfurter failure handling. Use temporary isolated SQLite databases, never the developer's wallet data. Use a temporary file and independent connections when testing concurrent access.
 - Mock Frankfurter in routine automated tests so they are deterministic; any real-network smoke test should be clearly separated and optional.
 - Use Playwright for the main flows and browser-level accessibility/responsive checks, including inspecting a destination account and the expired quote flow.

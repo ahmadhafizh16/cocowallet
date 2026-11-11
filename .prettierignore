@@ -1,0 +1,16 @@
+# Upstream tool distribution: retain its original formatting.
+.opencode/
+.impeccable/
+
+# Planning Markdown has intentional table/diagram layout; checked separately.
+artifact/
+
+# Generated or runtime files.
+node_modules/
+.next/
+next-env.d.ts
+package-lock.json
+coverage/
+playwright-report/
+test-results/
+data/
