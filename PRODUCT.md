@@ -58,7 +58,8 @@ Not yet implemented: account seeding, wallet HTTP journeys, full durable idempot
 ## Brand Commitments
 
 - “Simulated multi-currency wallet” is the existing project descriptor; no separate product name or logo was approved during init.
-- Preserve the confirmed modern fintech interface requirement, shadcn/ui, Lucide React, light/dark themes, and system theme preference. This is a binding brief, not a chosen palette, typography system, or layout.
+- Preserve the confirmed modern fintech interface requirement, shadcn/ui, Lucide React with visible labels, light/dark themes, and system theme preference.
+- After initialization, the user supplied a frosted banking-dashboard reference and approved its wallet-specific adaptation. Preserve that direction: pale-blue glass surfaces, diffuse navy backdrop, rounded panels, softly raised circular controls, and the sketch's three-column desktop composition with responsive stacking. The [approved brief](artifact/DESIGN_REFERENCE.md) records scope and approval; the earlier Atlas proposal was not locked. Final production tokens and `DESIGN.md` await the built and reviewed interface. Example balances, rates, and history are not approved seed data.
 - Name simulation boundaries and fictional providers plainly. Do not imply real funds moved or call reference rates live/streaming market prices. No additional brand voice was established.
 
 ## Evidence on Hand

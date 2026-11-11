@@ -1,8 +1,8 @@
 # Project kanban
 
-**Last updated:** Money/journal core is verified: exact arithmetic, snapshot balances, and atomic serialized writes. Impeccable product initialization is complete in [PRODUCT.md](../PRODUCT.md); T11-01 remains in progress for the pending visual direction before wallet screens. API/idempotency integration remains future work.
+**Last updated:** Money/journal core is verified. Impeccable product context and the reference-led frosted wallet sketch are user-approved; T11-01 is complete. Responsive shell implementation (T11-02) is next; wallet API/idempotency integration remains future work.
 
-**Scope:** 32 implementation tasks: **23 to do**, **1 in progress**, **0 blocked**, **8 done**. Planning activities completed below do not count as implemented features.
+**Scope:** 32 implementation tasks: **23 to do**, **0 in progress**, **0 blocked**, **9 done**. Planning activities completed below do not count as implemented features.
 
 Each task links to its detailed description, source PRD, decision IDs, dependencies, and acceptance tests. The Angular-style, one-intention-per-commit rule and local Git workflow in [D-021](DECISIONS.md#d-021) and [D-022](DECISIONS.md#d-022) apply to every task. A task moves to **Done** only when its acceptance criteria are verified and the PRD, decisions, diagrams, API documentation, and handover are updated as needed.
 
@@ -64,7 +64,7 @@ See Done for the verified money/journal core.
 
 ### Interface — [PRD-11](prd/PRD-11-interface.md)
 
-See In progress for product context and design direction.
+See Done for the approved product context and visual direction.
 - [ ] [T11-02](tasks/TASKS-11.md#t11-02) — Responsive shell, theme, and components.
 - [ ] [T11-03](tasks/TASKS-11.md#t11-03) — Accessibility, motion, and design review.
 
@@ -76,7 +76,7 @@ See In progress for product context and design direction.
 
 ## In progress
 
-- [ ] [T11-01](tasks/TASKS-11.md#t11-01) — User-confirmed product context and code-first workflow captured; visual direction remains pending.
+_No task is currently in progress at this design-approval checkpoint._
 
 ## Blocked
 
@@ -92,11 +92,12 @@ _No task is currently blocked by an explicit unresolved decision or external blo
 - [x] [T02-01](tasks/TASKS-02.md#t02-01) — Exact bigint parsing/formatting, bounded rational half-up FX, pinned accounting precision, and 437 regression tests.
 - [x] [T02-02](tasks/TASKS-02.md#t02-02) — Immutable journal schema, exact streamed bigint balances, wallet isolation, and consistent account snapshots.
 - [x] [T02-03](tasks/TASKS-02.md#t02-03) — Immediate serialized writes, atomic account/wallet/accounting rollback, independent-connection spending tests, and technical-success integration seam.
+- [x] [T11-01](tasks/TASKS-11.md#t11-01) — User-confirmed product context, code-first workflow, and approved reference-led frosted wallet direction; application UI remains unimplemented.
 
 ## Done — planning only
 
 - [x] **PL-01:** Captured the agreed stack and product decisions in the [decision register](DECISIONS.md) ([D-001](DECISIONS.md#d-001)–[D-022](DECISIONS.md#d-022)).
-- [x] **PL-02:** Installed and verified Impeccable project-locally, without automatic hooks ([D-014](DECISIONS.md#d-014)). Initialization/design remains [T11-01](tasks/TASKS-11.md#t11-01).
+- [x] **PL-02:** Installed and verified Impeccable project-locally, without automatic hooks ([D-014](DECISIONS.md#d-014)). Product and direction confirmation are complete under [T11-01](tasks/TASKS-11.md#t11-01); production UI remains [T11-02](tasks/TASKS-11.md#t11-02).
 - [x] **PL-03:** Moved planning documentation to `artifact/` and drafted feature PRDs, traceable tasks, diagrams, and this board ([D-020](DECISIONS.md#d-020)). These drafts do not count as completed app functionality.
 
 ## Board maintenance

@@ -54,11 +54,11 @@
 
 ### D-013
 
-**Interface:** Use shadcn/ui and Lucide React for a modern fintech interface, light and dark themes with system preference, smooth transitions, and reduced-motion support. Icons8 MCP was removed. Tailwind and exact visual tokens remain implementation/design proposals.
+**Interface:** Use shadcn/ui and Lucide React for a modern fintech interface, light and dark themes with system preference, smooth transitions, and reduced-motion support. The user approved the reference-led frosted wallet sketch: pale-blue translucent panels, diffuse navy backdrop, rounded/raised controls, labelled icons, and the adapted three-column desktop layout. See [DESIGN_REFERENCE.md](DESIGN_REFERENCE.md) for the approved brief and scope. Icons8 MCP was removed. Exact production tokens and the final design-system contract await implementation and visual review.
 
 ### D-014
 
-**Impeccable:** Use the requested design workflow. Impeccable is installed project-locally for OpenCode without automatic hooks. Initialization and baseline confirmation are complete in [PRODUCT.md](../PRODUCT.md): the user confirmed local demo/evaluation use and the existing agreed decisions, with current open questions preserved. The user selected code-first in `.impeccable/config.json`. Visual direction remains pending; init did not create `DESIGN.md` or a wallet interface. See the [official guide](https://impeccable.style/tutorials/getting-started/).
+**Impeccable:** Use the requested design workflow. Impeccable is installed project-locally for OpenCode without automatic hooks. Product initialization and the reference-led visual direction are user-confirmed, with existing product questions preserved. [PRODUCT.md](../PRODUCT.md) captures product truth; `.impeccable/config.json` records code-first; [DESIGN_REFERENCE.md](DESIGN_REFERENCE.md) records sketch approval. No production wallet UI or final `DESIGN.md` exists yet. See the [official guide](https://impeccable.style/tutorials/getting-started/).
 
 ### D-015
 

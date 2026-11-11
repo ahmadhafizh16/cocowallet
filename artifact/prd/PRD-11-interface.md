@@ -1,6 +1,6 @@
 # PRD-11 — Interface, design system, and accessibility
 
-**Status:** Draft; no UI exists. Impeccable initialization captured the user-confirmed context in [PRODUCT.md](../../PRODUCT.md); visual direction remains pending.
+**Status:** Product context and reference-led frosted visual direction are user-approved; T11-01 is complete. See [PRODUCT.md](../../PRODUCT.md) and the [approved sketch brief](../DESIGN_REFERENCE.md). Production UI, final design-system tokens, accessibility review, and working flows remain unimplemented.
 
 **Decisions:** [D-003](../DECISIONS.md#d-003), [D-011](../DECISIONS.md#d-011), [D-013](../DECISIONS.md#d-013), [D-014](../DECISIONS.md#d-014), [D-016](../DECISIONS.md#d-016).  
 **Tasks:** [T11-01–T11-03](../tasks/TASKS-11.md).  
@@ -13,7 +13,7 @@ As the user, I can understand my balances and perform the simulated wallet workf
 ## Requirements
 
 1. Initialize Impeccable with product context and review the resulting `PRODUCT.md` before designing a new interface. Follow the skill's applicable workflow; do not invent a design system or claim design work has been done.
-2. Use shadcn/ui and Lucide React, a cohesive visual system, and light/dark themes respecting system preference by default. Exact palette, type, and layout remain design decisions.
+2. Use shadcn/ui and visibly labelled Lucide React icons, with light/dark themes respecting system preference by default. Follow the approved frosted reference: pale-blue glass, navy accents, soft shadows, rounded panels, and its adapted three-column desktop hierarchy. Final tokens and type details are implementation/review decisions, not permission to replace the approved composition.
 3. Provide clear entry points for account switching, balances, funding, conversion, transfers, history, and transaction details. Destination account views are visibly inspect-only.
 4. Support semantic labels, keyboard navigation, visible focus, readable contrast, mobile layouts, and loading/empty/error/confirmation states. Use purposeful smooth transitions and honor reduced-motion preferences.
 5. Label simulated providers and transfers clearly. FX previews show the reference date, cached status if relevant, and quote validity; never call reference rates streaming/live market rates.

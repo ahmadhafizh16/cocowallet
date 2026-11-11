@@ -1,9 +1,11 @@
 # Reference-led wallet sketch
 
-**Status:** Visual exploration for [T11-01](tasks/TASKS-11.md#t11-01), not an
-approved direction contract or application implementation. The previous Atlas
-proposal was not locked. The user supplied a pale-blue frosted banking dashboard
-and explicitly chose to adapt its visual treatment to our actual wallet features.
+**Status:** User-approved visual direction for [T11-01](tasks/TASKS-11.md#t11-01).
+After reviewing the adapted sketch, the user confirmed: “yes, this is good”.
+This approves the reference-led direction, not application implementation or
+production readiness. The previous Atlas proposal was not locked. The user
+supplied a pale-blue frosted banking dashboard and chose to adapt its visual
+treatment to our actual wallet features.
 Related requirements: [PRD-11](prd/PRD-11-interface.md),
 [D-013](DECISIONS.md#d-013), and [PRODUCT.md](../PRODUCT.md).
 
@@ -22,6 +24,23 @@ Related requirements: [PRD-11](prd/PRD-11-interface.md),
 - **What needs improvement:** the supplied reference has faint supporting copy
   and icon-only navigation. The sketch uses darker foregrounds and visible
   navigation/action labels, with Lucide-derived SVG icons.
+
+## Confirmed design brief
+
+- **Job:** let a local-demo user understand exact currency balances, inspect
+  completed activity, and enter the four simulated money workflows confidently.
+- **Direction:** retain the approved pale-blue frosted surfaces, diffuse navy
+  backdrop, rounded panels, raised circular controls, restrained sans-serif type,
+  and visible Lucide labels. Do not revert to the earlier flat Atlas proposal.
+- **Composition:** balances/actions and activity left; currency information and
+  conversion middle; transfer workspace and simulated account identity right.
+  Preserve the sketch's responsive stacking and light/dark character.
+- **Boundaries:** illustrative values are not seed data. No bills, payment cards,
+  real banking, extra brand identity, or settled answers to open product questions
+  follow from this visual approval. Production first-run balances remain zero.
+- **Next stage:** implement the responsive shell under T11-02, then integrate
+  real feature flows. Produce the final token-bearing `DESIGN.md` from the built,
+  visually reviewed interface, not from an unimplemented rulebook.
 
 ## Adaptation, not extra banking scope
 
@@ -45,7 +64,10 @@ claim that the small illustrative panel is a usable quote.
 The isolated, self-contained HTML sketch is stored at
 `.impeccable/mocks/decision/wallet-frosted-reference.html` and presented through
 Impeccable's local decision page. Runtime sketches/review screenshots remain
-Git-ignored by the established tooling policy; this note records the proposal.
+Git-ignored by the established tooling policy; this note records the approval.
+The approved HTML's SHA-256 is
+`a1dc740678fd0876c5565098e57c898b5b0c422565d6a0088a4579c76f2ebad8`.
+Preserve it as the local visual reference; future alternatives need separate files.
 No `src/` files, production styles, routes, money, or database state were changed.
 
 - Desktop retains the three-column composition; tablet uses two columns; mobile
@@ -60,6 +82,6 @@ No `src/` files, production styles, routes, money, or database state were change
   balance visibility, currency-change/FX notice, review notice, and inspection
   boundary were exercised. No production accessibility certification is implied.
 
-**Next decision:** review the reference-led sketch and request changes or approve
-its direction. Do not treat it as approval to implement the app, create the final
-`DESIGN.md`, seed sample money, or add bills/payment-card features.
+**Approval boundary:** the direction is now agreed. No application UI or final
+`DESIGN.md` was created in this planning stage. T11-02 and subsequent feature
+tasks retain their implementation, verification, and review requirements.

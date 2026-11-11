@@ -7,17 +7,19 @@ Status is mirrored in [KANBAN.md](../KANBAN.md).
 ### T11-01
 
 **Impeccable product context and design direction**  
-**Status:** In progress. Product initialization and baseline confirmation are complete; visual direction remains pending.
+**Status:** Done. Product context, code-first workflow, and the reference-led frosted wallet direction are user-confirmed. Approval and the bounded design brief are recorded in [DESIGN_REFERENCE.md](../DESIGN_REFERENCE.md); production UI remains T11-02.
 
 **Decisions:** [D-013](../DECISIONS.md#d-013), [D-014](../DECISIONS.md#d-014), [D-020](../DECISIONS.md#d-020).  
 **Depends on:** None; coordinate with [T01-02](TASKS-01.md#t01-02) before UI implementation.  
 **Implementation:** Run the skill's initialization workflow with the user, review the resulting `PRODUCT.md`, and develop a suitable operate-mode fintech direction. Preserve all agreed simulation, read-only, theme, and accessibility constraints. Do not assume a pre-existing design system.
 
-**Progress:** Init ran the context launcher once and reviewed repository evidence. The user confirmed local demo/evaluation use, the existing agreed product/interface requirements, and code-first. [PRODUCT.md](../../PRODUCT.md) captures the confirmed record, implementation boundaries, and open questions; `.impeccable/config.json` stores the workflow choice. No `DESIGN.md`, surface concept, or UI was created. Live-picker setup is deferred because the app has no renderable document shell yet. The task is not complete until visual direction is agreed.
+**Progress:** Init ran the context launcher once and reviewed repository evidence. The user confirmed local demo/evaluation use, the existing agreed product/interface requirements, and code-first. [PRODUCT.md](../../PRODUCT.md) captures the confirmed record, implementation boundaries, and open questions; `.impeccable/config.json` stores the workflow choice. Initialization did not create a UI or final `DESIGN.md`. Live-picker setup remains deferred until the app has a renderable document shell.
 
-**Reference exploration:** The user subsequently supplied a frosted pale-blue banking dashboard and chose to adapt its appearance to our real wallet scope, rather than lock the earlier Atlas proposal. A separate Impeccable HTML sketch now explores that reference in desktop/mobile and light/dark views, with labelled Lucide icons and explicitly illustrative data. See the [reference breakdown and sketch record](../DESIGN_REFERENCE.md). Direction approval remains pending; no application UI or final design contract has been written.
+**Reference approval:** The user supplied a frosted pale-blue banking dashboard, chose to adapt it to our wallet scope rather than lock Atlas, then approved the resulting Impeccable sketch with “yes, this is good”. It shows desktop/mobile and light/dark views, labelled Lucide icons, and illustrative data. See the [approved brief and sketch record](../DESIGN_REFERENCE.md). No application UI or final design-system contract has been written.
 
 **Acceptance and tests:** The user has reviewed the captured product context and an agreed direction exists before UI coding. Keep any skill-required root context files where the skill discovers them; keep project PRDs/decisions/tasks in `artifact/` per D-020.
+
+**Verification:** Explicit product and direction confirmation; Chromium sketch checks at desktop, tablet, and mobile sizes and both themes; documentation-link/task-status validation and formatting checks. This is planning acceptance, not a production UI/accessibility verdict.
 
 ### T11-02
 
