@@ -10,12 +10,16 @@ import { POST as deposit } from "../deposits/route";
 import { randomUUID } from "node:crypto";
 import { GET as currencyCatalog } from "../currencies/route";
 import { GET as referenceRate } from "../rates/route";
+import { POST as createServerQuote } from "../quotes/route";
+import { GET as readServerQuote } from "../quotes/[quoteId]/route";
+import { withJournalWrite } from "@/features/journal/write";
 
 jest.mock("server-only", () => ({}));
 
 jest.mock("@/server/db/runtime", () => ({ getRuntimeDatabase: jest.fn() }));
 
 type Schema = {
+  oneOf?: readonly Schema[];
   $ref?: string;
   type?: string;
   required?: readonly string[];
@@ -38,6 +42,18 @@ function expectContract(value: unknown, source: Schema) {
     ? schemas[source.$ref.split("/").at(-1)!]!
     : source;
   expect(schema).toBeDefined();
+  if (schema.oneOf) {
+    const matches = schema.oneOf.filter((candidate) => {
+      try {
+        expectContract(value, candidate);
+        return true;
+      } catch {
+        return false;
+      }
+    });
+    expect(matches).toHaveLength(1);
+    return;
+  }
   if (schema.enum) expect(schema.enum).toContain(value);
   if ("const" in schema) expect(value).toEqual(schema.const);
   if (schema.type === "object") {
@@ -96,6 +112,8 @@ describe("read-only OpenAPI contract", () => {
     const spec = await response.json();
     expect(spec.openapi).toBe("3.1.0");
     expect(Object.keys(spec.paths)).toEqual([
+      "/api/quotes",
+      "/api/quotes/{quoteId}",
       "/api/currencies",
       "/api/rates",
       "/api/deposits",
@@ -108,7 +126,9 @@ describe("read-only OpenAPI contract", () => {
     ]);
     for (const [route, path] of Object.entries(spec.paths))
       expect(Object.keys(path as object)).toEqual([
-        route === "/api/deposits" || route === "/api/withdrawals"
+        route === "/api/deposits" ||
+        route === "/api/withdrawals" ||
+        route === "/api/quotes"
           ? "post"
           : "get",
       ]);
@@ -205,6 +225,72 @@ describe("read-only OpenAPI contract", () => {
         )
       ).json(),
       schemas.ReferenceProblem!,
+    );
+  });
+
+  it("validates actual server quote preview/readback against the discriminated schemas", async () => {
+    const accountId = seedMainAccount(database);
+    const wallet = database.sqlite
+      .prepare<[string], { id: string }>(
+        "SELECT id FROM wallets WHERE account_id=? AND currency_code='USD'",
+      )
+      .get(accountId)!;
+    withJournalWrite(database, (scope) =>
+      scope.record({
+        id: randomUUID(),
+        type: "deposit",
+        targetWalletId: wallet.id,
+        amountMinor: 10000n,
+        provider: "demo_bank",
+      }),
+    );
+    jest.spyOn(globalThis, "fetch").mockImplementation(async (url) =>
+      String(url).endsWith("/currencies")
+        ? new Response(
+            JSON.stringify([
+              { iso_code: "USD", name: "Dollar", type: "currency" },
+              { iso_code: "GBP", name: "Pound", type: "currency" },
+            ]),
+            { headers: { "Content-Type": "application/json" } },
+          )
+        : new Response("date,base,quote,rate\n2026-01-01,USD,GBP,1.005\n", {
+            headers: { "Content-Type": "text/csv" },
+          }),
+    );
+    const input = {
+      operation: "conversion",
+      sourceWalletId: wallet.id,
+      amount: "1.00",
+      targetCurrency: "GBP",
+    };
+    expectContract(input, schemas.QuoteRequest!);
+    const response = await createServerQuote(
+      new Request("http://localhost/api/quotes", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(input),
+      }),
+    );
+    expect(response.status).toBe(200);
+    const view = await response.json();
+    expectContract(view, schemas.QuoteView!);
+    expectContract(
+      await (
+        await readServerQuote(
+          new Request("http://localhost/api/quotes/example"),
+          { params: Promise.resolve({ quoteId: view.quote.quoteId }) },
+        )
+      ).json(),
+      schemas.QuoteView!,
+    );
+    expectContract(
+      await (
+        await readServerQuote(
+          new Request("http://localhost/api/quotes/example"),
+          { params: Promise.resolve({ quoteId: randomUUID() }) },
+        )
+      ).json(),
+      schemas.QuoteProblem!,
     );
   });
 });

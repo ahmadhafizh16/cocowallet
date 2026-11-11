@@ -18,7 +18,14 @@ try {
 }
 const child = spawn(
   process.execPath,
-  ["node_modules/next/dist/bin/next", "start", "--hostname", "0.0.0.0"],
+  [
+    "--import",
+    "./scripts/e2e-reference-provider.mjs",
+    "node_modules/next/dist/bin/next",
+    "start",
+    "--hostname",
+    "0.0.0.0",
+  ],
   { stdio: "inherit", env: { ...process.env, NODE_ENV: "production" } },
 );
 for (const signal of ["SIGTERM", "SIGINT"] as const)

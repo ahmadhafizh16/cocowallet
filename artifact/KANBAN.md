@@ -1,8 +1,8 @@
 # Project kanban
 
-**Last updated:** T06-01 is complete: fresh-first Frankfurter fiat catalog, exact decimal pair observations and persistent 24-hour fallback, with documented GETs and isolated verification. Funding remains connected; the UI is unchanged. Next is T06-02's server-owned one-minute quote. Conversion/transfer, valuation/history and Swagger acceptance remain separate work.
+**Last updated:** T06-02 is complete: immutable server-owned one-minute quote previews/readback and internal confirmation/single-use safeguards. Full check/build and 926 Jest / 53 production Chromium checks pass; backed-up runtime migration and unchanged data are verified. Funding remains connected and the UI unchanged. Next is T07-01's atomic conversion service; submission/UI, transfers, valuation/history and Swagger acceptance remain separate work.
 
-**Scope:** 36 implementation tasks: **15 to do**, **2 in progress**, **0 blocked**, **19 done**. Planning activities completed below do not count as implemented features.
+**Scope:** 36 implementation tasks: **14 to do**, **2 in progress**, **0 blocked**, **20 done**. Planning activities completed below do not count as implemented features.
 
 Each task links to its detailed description, source PRD, decision IDs, dependencies, and acceptance tests. The Angular-style, one-intention-per-commit rule and local Git workflow in [D-021](DECISIONS.md#d-021) and [D-022](DECISIONS.md#d-022) apply to every task. A task moves to **Done** only when its acceptance criteria are verified and the PRD, decisions, diagrams, API documentation, and handover are updated as needed.
 
@@ -35,7 +35,7 @@ See Done for the protected service and In progress for remaining Swagger accepta
 
 ### FX rates and quotes — [PRD-06](prd/PRD-06-rates.md)
 
-- [ ] [T06-02](tasks/TASKS-06.md#t06-02) — Server-owned preview and one-minute quote.
+See Done for reference metadata and the verified server-owned quote backend.
 
 ### Conversion — [PRD-07](prd/PRD-07-conversion.md)
 
@@ -100,6 +100,7 @@ _No task is currently blocked by an explicit unresolved decision or external blo
 - [x] [T04-01](tasks/TASKS-04.md#t04-01) — Exact simulated deposit service, main-only credit, atomic result/journal writes and rollback/duplicate tests.
 - [x] [T05-01](tasks/TASKS-05.md#t05-01) — Protected simulated debit, serialized funds check, no overspend and definitive error replay outside history.
 - [x] [T06-01](tasks/TASKS-06.md#t06-01) — Fresh-first eligible fiat catalog, exact CSV rates and persistent bounded fallback; 867 Jest / 51 production Chromium checks, isolated live smoke and unchanged runtime records verified.
+- [x] [T06-02](tasks/TASKS-06.md#t06-02) — Immutable full-minute quote previews/readback, exact binding and internal atomic single-success use; 926 Jest / 53 production Chromium checks, repeated backed-up migration and stable development verified. Submission/UI remain T07/T08.
 
 ## Done — planning only
 

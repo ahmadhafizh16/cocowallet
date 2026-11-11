@@ -17,12 +17,13 @@ Status is mirrored in [KANBAN.md](../KANBAN.md).
 **Partial groundwork:** D-029 implements thin account/wallet GET handlers, exact
 string responses, safe 400/404/503 read problems and response-contract tests.
 Funding now adds structural/business validation, safe 409 conflicts, exact receipts,
-shared request helpers and actual response/schema tests. FX/quote validation and
-the broader generated-schema workflow remain; this task is not globally closed.
+shared request helpers and actual response/schema tests. The broader monetary
+submission/generated-schema workflow remains; this task is not globally closed.
 
 T06-01 additionally documents and tests eligible-catalog/exact-rate GET responses,
-including safe 400/503 metadata failures. Binding quote/confirmation validation
-still belongs to its next stage; a reference observation cannot move money.
+including safe 400/503 metadata failures. T06-02 adds strict quote preview/readback,
+safe quote problems, internal confirmation/consumption safeguards and shared
+bounded JSON input. It does not implement conversion/transfer submission.
 
 ### T10-02
 
@@ -52,6 +53,7 @@ implemented by this funding-specific boundary.
 **Acceptance and tests:** Every implemented endpoint, required idempotency header, quote/amount schema, and Problem Details response is represented accurately. Contract tests validate real responses against the document; Swagger works without paid services and is not publicly exposed by default.
 
 **Partial groundwork:** `/api/openapi` serves a tested hand-maintained document
-for implemented read/operational and funding routes, including required keys,
-receipts, exact amounts and safe problems. Schema generation, quote/history
-contracts and Swagger UI remain unimplemented; no closure implied.
+for implemented read/operational, funding, reference and quote routes, including
+required money keys, exact amounts, discriminated quote terms/lifecycle and safe
+problems. Schema generation, conversion/transfer submission/history contracts and
+Swagger UI remain unimplemented; no closure implied.

@@ -1,6 +1,6 @@
 # Digital wallet planning
 
-These documents distinguish decisions, proposals, and implemented work. The **platform, money/journal core, and interface-preview shell exist**: Docker/Node 26, health/readiness, accounting, and the approved frosted UI with skeleton/empty/error/review states. Wallet APIs, full idempotency, account seeding, rates/quotes, and Swagger remain future work; preview controls cannot move money. Consult the kanban rather than assuming a draft PRD describes completed features.
+These documents distinguish decisions, proposals, and implemented work. The platform, exact money/journal core, persistent account reads, durable simulated funding, fresh-first reference metadata and immutable one-minute quote backend exist. The approved UI supports reviewed funding; conversion/transfer submission, quote UI wiring, full history/valuation and Swagger remain future work. Quote previews move/reserve no funds. Consult the kanban rather than assuming a draft PRD describes completed features.
 
 - [Main PRD](PRD.md): product scope and links to the smaller feature PRDs.
 - [Decision register](DECISIONS.md): stable `D-###` decisions and `O-###` open questions.
@@ -22,6 +22,7 @@ These documents distinguish decisions, proposals, and implemented work. The **pl
 - [Backend read integration](BACKEND_READS.md): persistent account initialization, exact read APIs and the connected read-only overview.
 - [Simulated funding](FUNDING.md): durable retry protection, deposit/withdrawal confirmation, narrow per-tab recovery and isolated monetary tests.
 - [Reference metadata](RATES.md): fresh-first Frankfurter fiat catalog and exact decimal rates with bounded persistent fallback.
+- [Server-owned quotes](QUOTES.md): immutable full-minute previews/readback, exact binding, no reservation and internal single-success safeguards.
 - [Diagrams](DIAGRAMS.md): proposed architecture, data relationships, business flows, and code flow.
 - [API design](API_DESIGN.md): proposed HTTP contract, sequence diagram, and OpenAPI/Swagger approach.
 - [Idempotency discussion](IDEMPOTENCY.md): the selected failed-retry policy, alternatives, and examples.

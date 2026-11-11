@@ -48,8 +48,63 @@ export type JournalWriteScope = {
     accountId: string;
     currencyCode: string;
   }): void;
-  record(operation: JournalOperation): { transactionId: string };
+  record(
+    operation: JournalOperation,
+    afterRecord?: (receipt: { transactionId: string }) => undefined,
+  ): { transactionId: string };
 };
+
+const activeRecordHooks = new WeakMap<
+  WalletDatabase,
+  { transactionId: string; run: <T>(action: () => T) => T }
+>();
+
+/** A technical success registration may only attach to the transaction that
+ * this connection just recorded, while its synchronous scoped hook is active. */
+export function assertJournalAfterRecord(
+  database: WalletDatabase,
+  transactionId: string,
+): void {
+  if (
+    !database.sqlite.inTransaction ||
+    activeRecordHooks.get(database)?.transactionId !== transactionId
+  ) {
+    throw new JournalError(
+      "invalid_operation",
+      "Success registration requires the active after-record hook.",
+    );
+  }
+}
+
+/** Extension steps share the journal failure latch, even if their caller catches
+ * the error inside the hook. This capability closes when the hook returns. */
+export function withJournalAfterRecord<T>(
+  database: WalletDatabase,
+  transactionId: string,
+  action: () => T & (T extends PromiseLike<unknown> ? never : unknown),
+): T {
+  const hook = activeRecordHooks.get(database);
+  if (!hook)
+    throw new JournalError(
+      "invalid_operation",
+      "Success registration requires the active after-record hook.",
+    );
+  return hook.run(() => {
+    assertJournalAfterRecord(database, transactionId);
+    const result = action();
+    if (
+      result != null &&
+      (typeof result === "object" || typeof result === "function") &&
+      "then" in result &&
+      typeof result.then === "function"
+    )
+      throw new JournalError(
+        "invalid_operation",
+        "Success registration must be synchronous.",
+      );
+    return result;
+  });
+}
 
 function wallet(database: WalletDatabase, id: string): StoredWallet {
   const row = database.sqlite
@@ -234,8 +289,28 @@ export function withJournalWrite<T>(
         createWallet(input) {
           step(() => database.db.insert(wallets).values(input).run());
         },
-        record(operation) {
-          return step(() => record(database, operation));
+        record(operation, afterRecord) {
+          return step(() => {
+            const receipt = record(database, operation);
+            if (afterRecord) {
+              const previous = activeRecordHooks.get(database);
+              activeRecordHooks.set(database, {
+                transactionId: receipt.transactionId,
+                run: step,
+              });
+              try {
+                if (afterRecord(receipt) !== undefined)
+                  throw new JournalError(
+                    "invalid_operation",
+                    "After-record callbacks must be synchronous and return undefined.",
+                  );
+              } finally {
+                if (previous === undefined) activeRecordHooks.delete(database);
+                else activeRecordHooks.set(database, previous);
+              }
+            }
+            return receipt;
+          });
         },
       };
       try {

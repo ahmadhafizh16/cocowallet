@@ -3,9 +3,10 @@
 **Status:** Persistent account reads and durable simulated deposits/withdrawals
 now connect the existing interface to exact journal accounting. Reviewed
 confirmation, original-key recovery and partial completed-funding visibility work.
-T06-01 reference catalog/rates and bounded persistent fallback now exist; binding
-quotes, conversion/transfer, full history/valuation and Swagger remain future
-work. Visual feedback is deferred. See [RATES.md](RATES.md), linked feature
+Reference catalog/rates, bounded persistent fallback and T06-02's immutable
+one-minute quote previews/readback now exist. Quotes reserve no funds; actual
+conversion/transfer submission, quote UI, full history/valuation and Swagger remain
+future work. Visual feedback is deferred. See [QUOTES.md](QUOTES.md), linked feature
 PRDs and [KANBAN.md](KANBAN.md) for actual acceptance boundaries.
 
 ## Goal

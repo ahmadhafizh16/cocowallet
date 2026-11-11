@@ -36,6 +36,13 @@
       "when": 1794416551766,
       "tag": "0004_reference_rate_cache",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "6",
+      "when": 1794418409121,
+      "tag": "0005_immutable_fx_quotes",
+      "breakpoints": true
     }
   ]
 }

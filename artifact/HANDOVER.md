@@ -1,11 +1,11 @@
 # Handover
 
-**Status:** Nineteen of 36 tasks are closed. T06-01 adds fresh-first reference
-catalog/rates and persistent exact-pair fallback to the existing reads/funding.
-The board has 15 To do, 2 In progress (remaining Swagger acceptance), and 19 Done.
-The UI remains unchanged and visual feedback deferred. Next is T06-02's
-server-owned one-minute quote; conversion/transfer, full valuation/history and
-Swagger UI remain separate work. See [RATES.md](RATES.md).
+**Status:** Twenty of 36 tasks are closed. T06-02 adds immutable server-owned
+one-minute quote previews/readback and internal atomic single-use safeguards.
+The board has 14 To do, 2 In progress (remaining Swagger acceptance), and 20 Done.
+The UI remains unchanged and visual feedback deferred. Next is T07-01's atomic
+conversion service; reviewed submission/UI, transfers, full valuation/history and
+Swagger UI remain separate work. See [QUOTES.md](QUOTES.md).
 
 ## Implemented modules and commands
 
@@ -29,6 +29,8 @@ Swagger UI remain separate work. See [RATES.md](RATES.md).
 | `drizzle/0003_funding_results.sql` | Retained technical outcome table and immutable update/delete triggers; no seeded funds or transactions. |
 | `src/features/rates/`, `src/app/api/currencies/`, `src/app/api/rates/` | Server-only fixed-origin Frankfurter catalog and exact CSV pair observations; fresh-first validation, bounded timeout/size and original-time eligible fallback. No binding quote or monetary change. |
 | `drizzle/0004_reference_rate_cache.sql`, `scripts/smoke-rates.ts` | Mutable technical caches separate from financial records; optional guarded live check uses only an isolated disposable database. |
+| `src/features/quotes/`, `src/app/api/quotes/`, `drizzle/0005_immutable_fx_quotes.sql` | Immutable exact-input/recipient-bound full-minute previews/readback; no reservation, internal confirmation checks and scoped atomic single-success consumption. No monetary submission endpoint. |
+| `scripts/e2e-reference-provider.mjs`, `e2e/zzz-quotes.spec.ts` | Guarded deterministic provider preload only for the disposable production server; no-money preview and disabled-submission browser checks. |
 | `scripts/start-funding-e2e.ts`, `e2e/zz-funding.spec.ts` | Refuse ordinary runtime target; successful monetary browser writes use only the disposable isolated server/database. |
 | `src/server/wallet-overview.ts` | Dynamic-page adapter, prototype-safe account totals, exact rate-free main USD totals, unavailable FX/destination valuation, no dropped unsupported currencies. |
 | `components.json`, `postcss.config.mjs`, `src/lib/utils.ts` | shadcn/Lucide/Tailwind configuration and tested class helper used by the local UI components. |
@@ -57,7 +59,23 @@ Stop the dev compiler before `docker compose run --rm app npm run check`, then u
 
 Application DB: `/app/data/wallet.sqlite` in Compose's `wallet-data` volume. Tests use isolated temporary SQLite files. Normal shutdown is `docker compose down` without deleting volumes. Before applying journal migrations, the stopped app's database was backed up with SQLite's backup API to `/app/data/wallet.sqlite.pre-journal-1794390597589.bak`. Backup creation is verified; a full restore drill is not claimed.
 
-Current reference-stage verification: full Docker check/build passes **867 Jest
+Current quote-stage verification: full Docker check/build passes **926 Jest
+tests in 41 suites**; all **53 production Chromium checks** pass on the disposable
+database. Migration 0005 was applied twice after verified SQLite backup
+`/app/data/wallet.sqlite.pre-quotes-1794419402981.bak`. Every existing non-migration
+table is unchanged; runtime remains 1 account / 3 wallets / 0 transactions /
+0 journal entries / 0 funding attempts, with empty reference/quote tables.
+All four quote retention triggers exist; integrity is `ok`, FK violations zero.
+No runtime test funding/quote seeding or restore drill is claimed.
+
+Development resumed with `.next/dev.pre-quotes-1794419551364` retained. A real
+browser verified enabled funding review, 300 stable frames, zero extra
+navigations/errors and zero financial/reference/quote requests. Full-minute cache
+boundary holds, exact binding, restart readback, concurrent use and inner-caught
+registration failures are covered. This is in-thread bounded review, not an
+independent security certification. See [QUOTES.md](QUOTES.md) for reproduction.
+
+Historical reference-stage verification: full Docker check/build passes **867 Jest
 tests** in 37 suites; all **51 production Chromium regressions** pass on the
 disposable funding database. Separate live verification on an isolated database
 confirmed the current CSV format, 154 eligible pinned fiat codes and identical
@@ -95,7 +113,7 @@ funding verification supersedes its disconnected-write boundary, not its evidenc
 The last production npm audit was clean; 23 low/moderate development-tool findings
 remain in [DEPENDENCIES.md](DEPENDENCIES.md); no new dependency was installed.
 
-Artifact validation verifies **52 documents / 36 tasks**. The previous
+Artifact validation verifies **53 documents / 36 tasks**. The previous
 T11-02 design-extraction counts and verdict are historical, not certification of
 T11-04. Current production captures include desktop light/dark, 1688/1769px,
 tablet, mobile, dialogs/menus, validation/review, loading and errors. Independent
@@ -147,7 +165,7 @@ The atomic-write checkpoint passes 16 feature-local integration tests, including
 - The workspace was empty before the draft documents were added.
 - The available host `node` command reports v24.22.1; the application will run on Node.js 26 in Docker, avoiding a requirement to install Node 26 on the host.
 - The `sqlite3` CLI was not found. It is optional if the selected application driver manages the SQLite file.
-- Docker and Compose run the application at `http://localhost:3000`; `/` renders the stored-balance read-only overview. Health/readiness remain separate JSON endpoints. Financial submissions, FX and history remain disconnected.
+- Docker and Compose run the application at `http://localhost:3000`; `/` renders the stored-balance overview with reviewed simulated funding. Health/readiness are separate JSON endpoints. Reference/quote APIs exist, but FX forms and full history/valuation remain disconnected; conversion/transfer submissions are disabled.
 - T03-01 changes `/` to the dynamic journal-backed read-only overview. Startup
   now requires explicit `db:migrate` then `db:seed`; GET and build never seed.
   Before initialization, SQLite's backup API saved
@@ -217,7 +235,7 @@ Tests open their own temporary database through `openDatabase`, apply committed 
 
 ## Next steps
 
-Next are server-owned one-minute FX quotes, conversion/transfer, full history/valuation and the
+Next are T07-01's atomic conversion service, reviewed conversion/transfer flows, full history/valuation and the
 remaining API/Swagger acceptance in dependency order. T03-02/T03-03 and
 T10-01/T10-03 retain partial/future work; T04-02/T05-02 remain in progress solely
 for their Swagger acceptance. O-006 is resolved for funding by D-030. Preserve the

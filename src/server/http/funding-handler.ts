@@ -6,6 +6,7 @@ import {
 } from "@/features/funding/contracts";
 import { submitFunding } from "@/features/funding/service";
 import { getRuntimeDatabase } from "../db/runtime";
+import { readBoundedJson } from "./request-input";
 
 function respond(result: FundingResult) {
   return Response.json(result.body, {
@@ -17,34 +18,6 @@ function respond(result: FundingResult) {
       "Idempotency-Replayed": String(result.replayed),
     },
   });
-}
-
-async function readBoundedJson(request: Request): Promise<unknown> {
-  if (!request.body) throw new Error("Missing body.");
-  const reader = request.body.getReader();
-  const chunks: Uint8Array[] = [];
-  let size = 0;
-  try {
-    for (;;) {
-      const { done, value } = await reader.read();
-      if (done) break;
-      size += value.byteLength;
-      if (size > 16384) {
-        await reader.cancel();
-        throw new Error("Oversized body.");
-      }
-      chunks.push(value);
-    }
-    const bytes = new Uint8Array(size);
-    let offset = 0;
-    for (const chunk of chunks) {
-      bytes.set(chunk, offset);
-      offset += chunk.length;
-    }
-    return JSON.parse(new TextDecoder("utf-8", { fatal: true }).decode(bytes));
-  } finally {
-    reader.releaseLock();
-  }
 }
 
 export async function handleFunding(request: Request, kind: FundingKind) {

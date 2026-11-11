@@ -177,6 +177,20 @@ exact-pair fallback fetched less than 24 hours ago. Catalog and rate source/fetc
 times remain distinct; future timestamps and the exact 24-hour boundary are
 ineligible. Implement T06-01 without enabling quotes/conversion/transfers.
 
+### D-032
+
+**Server-owned quote lifecycle:** The user approved immutable persisted quote
+terms, a full 60-second hold starting after rate retrieval/final validation, no
+funds reservation, and at most one successful operation per quote. Failed attempts
+do not consume it; monetary confirmation must recheck funds. Original successful
+idempotent requests replay before checking quote expiry/consumption. After an
+explanation, the user selected the full-minute policy: cached data must still be
+under 24 hours old at issuance, but an already issued quote keeps its complete
+60-second hold even if that cache boundary passes. An expired cache cannot issue
+a new quote; an existing quote is never extended. T06-02 implements preview,
+readback and internal validation/consumption safeguards, not conversion/transfer
+HTTP submission. Exact contracts are in [QUOTES.md](QUOTES.md).
+
 ## Questions and resolutions
 
 ### O-001
@@ -189,10 +203,11 @@ ineligible. Implement T06-01 without enabling quotes/conversion/transfers.
 
 ### O-003
 
-**API details:** D-029–D-031 finalize account/wallet GETs, simulated funding
-POSTs and reference metadata GETs, including their exact receipt/problem,
-idempotency/provenance contracts and maintained OpenAPI document.
-Quote/conversion/transfer/history shapes, generation and full
+**API details:** D-029–D-032 finalize account/wallet GETs, simulated funding
+POSTs, reference metadata GETs and immutable quote preview/readback, including
+their exact receipt/problem, idempotency/provenance/lifecycle contracts and
+maintained OpenAPI document. See [QUOTES.md](QUOTES.md) for the quote slice.
+Conversion/transfer submission/history shapes, generation and full
 filtering/pagination stay open in [API_DESIGN.md](API_DESIGN.md). Swagger UI is not implemented.
 
 ### O-004
@@ -215,7 +230,9 @@ provider and decimal-syntax failures are pre-acceptance; resource, precision,
 range and funds failures are recorded under the writer reservation. SQLite
 serializes concurrent attempts; busy/storage failures return a nondefinitive 503
 and require the same key. See [IDEMPOTENCY.md](IDEMPOTENCY.md). Extending these
-mechanics to future quote/transfer contracts remains their implementation work.
+mechanics to future conversion/transfer submission remains their implementation
+work. D-032 requires existing monetary results to replay before quote expiry/use
+checks; preview itself needs no money key and moves no funds.
 
 ### O-007
 

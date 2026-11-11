@@ -25,9 +25,20 @@ are verified in [RATES.md](../RATES.md). No quote, money action or UI change.
 ### T06-02
 
 **Server-owned quote preview and one-minute validity**  
-**Status:** To do.  
-**Decisions:** [D-007](../DECISIONS.md#d-007), [D-008](../DECISIONS.md#d-008), [D-017](../DECISIONS.md#d-017), [D-018](../DECISIONS.md#d-018).  
+**Status:** Done.
+**Decisions:** [D-007](../DECISIONS.md#d-007), [D-008](../DECISIONS.md#d-008), [D-017](../DECISIONS.md#d-017), [D-018](../DECISIONS.md#d-018), [D-032](../DECISIONS.md#d-032).
 **Depends on:** [T06-01](#t06-01), [T10-01](TASKS-10.md#t10-01).  
 **Implementation:** Define a server-owned quote representation tied to operation parameters, rate provenance, calculated target amount, and one-minute expiry; expose a documented preview. Validate that confirmation uses the quote's actual rate and original inputs, not a client-supplied value. Final request/storage details follow [O-003](../DECISIONS.md#o-003).
 
 **Acceptance and tests:** A preview shows source/target amounts, exact rate, source date, cache state, and expiry. Controlled-clock tests cover valid and expired quotes and parameter tampering. A stale quote or missing rate produces no monetary change; network fetches do not occur inside a SQLite write transaction.
+
+**Verified slice:** Immutable persisted snapshots, strict POST/GET and OpenAPI,
+full-minute post-validation issuance, no reservation, exact original-input and
+recipient binding, confirmation rechecks and atomic single-success consumption.
+Late-registration failures cannot commit money even if caught inside the hook;
+independent connections prove one successful use. Full Docker check/build passes
+**926 Jest / 53 production Chromium checks**. Backup, repeated migration, unchanged
+runtime records and stable restored development are recorded in
+[QUOTES.md](../QUOTES.md). T10-01's necessary quote conventions are implemented;
+its broader submission/generation scope stays open. No conversion/transfer HTTP
+submission or UI quote wiring is enabled; those retain T07/T08.

@@ -1,6 +1,6 @@
 # Architecture and flow diagrams
 
-**Status:** Persistent reads/funding and fresh-first Frankfurter reference metadata are implemented. Funding retains atomic original outcomes; metadata has separate bounded catalog/exact-pair cache fallback. Binding quotes, conversion/transfer and full history/valuation remain future features. The [decision register](DECISIONS.md) is authoritative when a diagram and an open question conflict.
+**Status:** Persistent reads/funding, fresh-first reference metadata and immutable one-minute quote preview/readback are implemented. Funding retains atomic original outcomes; quotes have separate immutable terms/use metadata and internal confirmation safeguards. Conversion/transfer submission, reviewed quote UI and full history/valuation remain future features. The [decision register](DECISIONS.md) is authoritative when a diagram and an open question conflict.
 
 ## Implemented foundation flow
 
@@ -107,7 +107,16 @@ erDiagram
     IDEMPOTENCY_KEY o|--o| TRANSACTION : protects
 ```
 
-Account, wallet, transaction, and journal tables now exist; FX quote and idempotency relationships remain conceptual. A wallet is unique by account and currency. A deposit or withdrawal affects one wallet; a conversion or transfer affects two wallets and stores one related debit and one related credit. Amounts use each wallet currency's minor units, so entries in different currencies must **not** be summed together. A wallet balance is derived from its own journal entries. Triggers protect recorded history, wallet/account identity, journal direction, and used currency precision. Full journal cardinality and balance checks are supplied by the application write boundary, not a claim that arbitrary direct SQL is safe. A quote is needed only when FX applies. Definitive failed-result metadata is separate from completed transactions; retention and recovery details are [O-006](DECISIONS.md#o-006).
+Account, wallet, transaction, journal, funding-outcome and immutable quote/use
+tables now exist. This conceptual diagram omits technical metadata: `fx_quotes`
+references source account/wallet; `fx_quote_uses` uniquely links one quote and one
+successful transaction. A wallet is unique by account and currency. Deposits or
+withdrawals affect one wallet; conversions/transfers have two entries in their
+respective currencies, which must **not** be summed together. Triggers protect
+history, identities, used precision and quote/use retention. Full cardinality
+and balance checks belong to the application write boundary, not arbitrary SQL.
+A quote is needed only for FX. Definitive failures stay outside completed history;
+see [FUNDING.md](FUNDING.md) and [QUOTES.md](QUOTES.md).
 
 Implemented balance reads:
 
@@ -151,7 +160,7 @@ No action moves real money. Destination accounts can be inspected but cannot ini
 
 ## Rate, cache, and quote sequence
 
-Decisions: [D-007](DECISIONS.md#d-007), [D-008](DECISIONS.md#d-008), [D-018](DECISIONS.md#d-018); open precision choice: [O-002](DECISIONS.md#o-002). Tasks: [T06-01](tasks/TASKS-06.md#t06-01), [T06-02](tasks/TASKS-06.md#t06-02).
+Decisions: [D-007](DECISIONS.md#d-007), [D-008](DECISIONS.md#d-008), [D-018](DECISIONS.md#d-018), [D-023](DECISIONS.md#d-023), [D-032](DECISIONS.md#d-032). Tasks: [T06-01](tasks/TASKS-06.md#t06-01), [T06-02](tasks/TASKS-06.md#t06-02).
 
 ```mermaid
 sequenceDiagram
@@ -160,6 +169,7 @@ sequenceDiagram
     participant API as Quote handler/service
     participant FX as Frankfurter
     participant Cache as SQLite rate cache
+    participant DB as SQLite immutable quotes
     User->>UI: Enter source, target and amount
     UI->>API: Request preview
     API->>API: Validate currency pair and amount
@@ -176,12 +186,21 @@ sequenceDiagram
             API-->>UI: 503 Problem Details; no operation
         end
     end
-    API->>API: Prepare server-validated quote, expiry and rounded target amount
+    API->>DB: Begin immediate reservation after network work
+    API->>API: Revalidate context, funds and cache eligibility at issuance
+    API->>DB: Persist immutable rounded terms with a full 60-second hold
+    DB-->>API: Commit preview, no funds reserved or moved
     API-->>UI: Preview amount, rate, source date, cache status and expiry
-    User->>UI: Confirm within one minute
+    Note over UI,API: Reviewed confirmation UI and monetary submission remain T07/T08
 ```
 
-The API may return a prior reference **source date** even when a rate was fetched just now. Cache eligibility is based on fetch time, while the one-minute quote expiry is a separate confirmation rule. The implementation of server-owned quote storage is open; the client must not be trusted to supply the applied rate.
+The API may return a prior reference **source date** even when a rate was fetched
+just now. Cache eligibility is checked at issuance; an issued quote retains its
+full minute if the cache later crosses 24 hours. Readback never fetches or extends
+terms. Internal confirmation rechecks exact input/context/funds, and a scoped
+after-record step atomically registers at most one successful use. Failed attempts
+do not consume it. See [QUOTES.md](QUOTES.md); the browser does not yet request or
+confirm quotes through its operation forms.
 
 ## Code flow for a completed money operation
 
@@ -224,7 +243,15 @@ sequenceDiagram
     API-->>UI: JSON result or Problem Details
 ```
 
-The implemented internal boundary now acquires `BEGIN IMMEDIATE` before its synchronous callback, then commits/rolls back required account/wallet creation, transaction, and entries together. Escaped scopes and promise callbacks are rejected. A test-only technical-success table verifies the eventual atomic result-recording seam. The HTTP/key/quote interactions in this sequence are still future integration: check for an already recorded result before a fresh FX call or quote-expiry check, then recheck under the reservation to handle races. Do not hold the reservation during network work. The exact handling of in-progress keys, pre-key validation, retention, and unavailable idempotency storage remains [O-006](DECISIONS.md#o-006). See [JOURNAL.md](JOURNAL.md).
+The implemented boundary acquires `BEGIN IMMEDIATE` before its synchronous
+callback and commits/rolls back creation, transactions, entries and technical
+success together. Escaped scopes and promise callbacks are rejected. Funding
+already implements durable original outcomes under D-030. Quote use joins the
+journal failure latch even if its error is caught inside the after-record hook.
+Conversion/transfer HTTP/key integration is still future work: replay an existing
+result before quote expiry/use checks, then recheck the key under the reservation.
+Do not hold it during network work. See [JOURNAL.md](JOURNAL.md) and
+[QUOTES.md](QUOTES.md).
 
 ## Cross-currency transfer sequence
 

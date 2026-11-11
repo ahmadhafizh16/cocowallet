@@ -1,6 +1,6 @@
 # HTTP API design: draft
 
-**Status:** Account/wallet reads, simulated funding POSTs and fresh-first reference metadata are implemented under D-029–D-031, with maintained OpenAPI contracts. Quote/conversion/transfer/history contracts, generation and Swagger UI remain future work. See [FUNDING.md](FUNDING.md) and [RATES.md](RATES.md).
+**Status:** Account/wallet reads, simulated funding POSTs, fresh-first reference metadata and immutable one-minute quotes are implemented under D-029–D-032, with maintained OpenAPI contracts. Conversion/transfer submission, history contracts, generation and Swagger UI remain future work. See [FUNDING.md](FUNDING.md), [RATES.md](RATES.md) and [QUOTES.md](QUOTES.md).
 
 ## Implemented operational endpoints
 
@@ -11,11 +11,13 @@
 | GET | `/api/ready` | 200 JSON when the migrated metadata table is readable; otherwise 503 Problem Details with `DATABASE_NOT_READY`. |
 | GET | `/api/accounts` | Persistent main account and destinations; role/default/creation time/inspect-only metadata. |
 | GET | `/api/accounts/{accountId}/wallets` | One account and its snapshot-consistent exact balances as decimal minor-unit strings. |
-| GET | `/api/openapi` | OpenAPI 3.1 document for implemented reads/funding/operational routes; not Swagger UI. |
+| GET | `/api/openapi` | OpenAPI 3.1 document for implemented routes, including reference metadata and quotes; not Swagger UI. |
 | POST | `/api/deposits` | Explicit simulated deposit; required UUID key and durable original-result replay. |
 | POST | `/api/withdrawals` | Explicit simulated withdrawal; protected debit and durable error/success replay. |
 | GET | `/api/currencies` | Fresh-first eligible fiat list with pinned precision, original fetch time and eligible cached fallback. |
 | GET | `/api/rates?base=USD&quote=EUR` | Exact direct reference observation with source/fetch dates and fresh/cached provenance; not a binding quote. |
+| POST | `/api/quotes` | Persist immutable conversion/cross-currency transfer preview terms; no funds reservation or money idempotency key. |
+| GET | `/api/quotes/{quoteId}` | Read immutable terms and active/expired/consumed state without refreshing the rate or expiry. |
 
 Routes are in `src/app/`; Jest tests verify isolated database reads, safe errors and read-response/spec agreement. Wallet GETs never seed or mutate storage and return `Cache-Control: no-store`. Missing initialization/storage is 503, unknown account is 404, empty/null-character path ID is 400. Read codes are `ACCOUNT_NOT_INITIALIZED`, `WALLET_DATA_UNAVAILABLE`, `ACCOUNT_NOT_FOUND` and `INVALID_ACCOUNT_ID`; all use safe Problem Details. Unsupported methods retain Next.js's 405 with no mutation/body contract. See [the fixed read shapes](BACKEND_READS.md).
 
@@ -25,6 +27,13 @@ coverage is checked by the actual CSV row, never inferred from currency listing.
 Invalid query/codes are 400; unavailable metadata/storage is safe 503; all
 responses remain no-store. See [the reference contract](RATES.md). No FX GET can
 confirm a quote, alter a wallet or authorize a money-moving operation.
+
+The [fixed quote contract](QUOTES.md) binds exact original input and recipient
+context, records exact source/target amounts and provenance, and starts a full
+60-second hold after final validation. Cache eligibility is checked at issuance;
+crossing its 24-hour boundary later does not shorten the issued hold. No preview
+creates a recipient/wallet or moves money. Internal confirmation/consumption seams
+are ready for later services, but no conversion/transfer HTTP submission exists.
 
 The [interface](UI_FOUNDATION.md) now reads stored balances but validates/reviews
 money drafts locally. Deposit/withdrawal confirmations now use the fixed funding
@@ -47,14 +56,13 @@ remain disabled. Operational readiness does not imply accounts have been seeded.
 | --- | --- | --- |
 | POST | `/api/wallets` | Add a supported fiat wallet to the main account. |
 | PATCH | `/api/accounts/{accountId}/default-currency` | Change the main account's default currency; destinations are read-only. |
-| POST | `/api/quotes` | Preview an FX conversion or cross-currency transfer with a one-minute quote. |
 | POST | `/api/conversions` | Confirm a conversion, creating the target wallet if required. |
 | POST | `/api/transfers` | Transfer to an existing or newly created simulated account. |
 | GET | `/api/transactions` | List/filter an account's transactions. |
 | GET | `/api/transactions/{transactionId}` | Inspect an individual transaction. |
 
 These remaining examples are not finalized write/history contracts. The two
-account GETs above are implemented; decide default updates, quote shapes,
+account GETs and quote routes above are implemented; decide default updates,
 pagination and remaining resource names before implementing their routes.
 
 ## Funding request/response contract
@@ -79,7 +87,7 @@ The names, fields, example IDs, successful response statuses, and payloads in th
 | Change main default | Main `accountId` plus fiat code | Updated default; missing-wallet behavior remains open | [D-004](DECISIONS.md#d-004), [O-004](DECISIONS.md#o-004) |
 | List currencies | Implemented GET; no body | Exact contract superseded by [RATES.md](RATES.md), including D-031 fresh-first fallback | [D-004](DECISIONS.md#d-004), [D-031](DECISIONS.md#d-031) |
 | Deposit / withdrawal | Main wallet ID, decimal-string amount, fictional provider, `Idempotency-Key` | Completed transaction and affected balance | [D-005](DECISIONS.md#d-005), [D-006](DECISIONS.md#d-006), [D-019](DECISIONS.md#d-019) |
-| FX quote | Operation kind, source wallet, amount, target currency, and destination context when needed | Server-owned quote reference, displayed amounts, rate, source date, fetched/cached state, expiry | [D-007](DECISIONS.md#d-007), [D-008](DECISIONS.md#d-008) |
+| FX quote | Implemented POST/GET; exact fields in [QUOTES.md](QUOTES.md) supersede this proposal | Immutable terms and lifecycle state; no funds reservation | [D-032](DECISIONS.md#d-032) |
 | Convert | Server quote reference and `Idempotency-Key` | One completed conversion, debit/credit amounts, and retained rate metadata | [D-009](DECISIONS.md#d-009), [D-018](DECISIONS.md#d-018), [D-019](DECISIONS.md#d-019) |
 | Transfer | Source wallet, destination account ID, amount, target/default-currency information, quote reference when FX is needed, and `Idempotency-Key` | One completed transfer and destination identity; the credited wallet/account is created when needed | [D-010](DECISIONS.md#d-010), [D-018](DECISIONS.md#d-018), [D-019](DECISIONS.md#d-019) |
 | Transaction list | Account ID and optional type, currency, date filters | Completed records, newest first; pagination is open | [D-012](DECISIONS.md#d-012), [O-003](DECISIONS.md#o-003) |
@@ -99,7 +107,8 @@ Idempotency-Key: example-request-001
 }
 ```
 
-Illustrative FX preview; the rate is fictional and the field names are not final:
+Historical illustrative FX preview, **superseded** by [QUOTES.md](QUOTES.md)
+and the implemented OpenAPI schemas; not a current response shape:
 
 ```json
 {

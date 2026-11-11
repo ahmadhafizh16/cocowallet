@@ -1,5 +1,6 @@
 import { fundingPath, fundingSchemas } from "./funding-openapi";
 import { referencePaths, referenceSchemas } from "./rates-openapi";
+import { quotePaths, quoteSchemas } from "./quotes-openapi";
 
 const json = (schema: object) => ({ "application/json": { schema } });
 const reference = (name: string) => ({ $ref: `#/components/schemas/${name}` });
@@ -21,10 +22,11 @@ export const readApiDocument = {
     title: "CocoWallet simulated wallet API",
     version: "0.1.0",
     description:
-      "Local-only simulated wallet with exact account reads, durable simulated funding and fresh-first Frankfurter reference metadata. Binding FX quotes, conversions, transfers and full history APIs are not implemented. No authentication: do not expose the Docker port publicly.",
+      "Local-only simulated wallet with exact reads, durable simulated funding, fresh-first reference metadata and immutable one-minute server quotes. Conversion/transfer submission and full history APIs remain unimplemented. No authentication: do not expose the Docker port publicly.",
   },
   servers: [{ url: "/" }],
   paths: {
+    ...quotePaths,
     ...referencePaths,
     "/api/deposits": fundingPath("deposit"),
     "/api/withdrawals": fundingPath("withdrawal"),
@@ -120,6 +122,7 @@ export const readApiDocument = {
   },
   components: {
     schemas: {
+      ...quoteSchemas,
       ...referenceSchemas,
       ...fundingSchemas,
       Account: {

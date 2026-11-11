@@ -1,6 +1,6 @@
 # Proposed implementation plan
 
-**Status:** Persistent reads, durable funding and T06-01 reference metadata are verified. Frankfurter requests are fresh-first with exact CSV decimals and eligible persistent fallback; no UI or new money action changed. Next is T06-02's server-owned one-minute quote, followed by conversion/transfer and remaining wallet management, valuation/history and API/Swagger acceptance. UI feedback remains deferred. See [RATES.md](RATES.md), [KANBAN.md](KANBAN.md) and [READINESS.md](READINESS.md); local commit rules remain D-021/D-022.
+**Status:** Persistent reads, durable funding, fresh-first reference metadata and T06-02's immutable one-minute quote backend are verified. Quotes bind exact input, reserve no funds and support one successful use; no UI or new money action is enabled. Next is T07-01's atomic conversion service, followed by reviewed submission/UI, transfers and remaining wallet management, valuation/history and API/Swagger acceptance. UI feedback remains deferred. See [QUOTES.md](QUOTES.md), [KANBAN.md](KANBAN.md) and [READINESS.md](READINESS.md); local commit rules remain D-021/D-022.
 
 ## Tasks
 

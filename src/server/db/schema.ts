@@ -205,3 +205,38 @@ export const fxRateCache = sqliteTable(
     check("fx_distinct_pair", sql`${table.base} != ${table.quote}`),
   ],
 );
+
+export const fxQuotes = sqliteTable(
+  "fx_quotes",
+  {
+    id: text("id").primaryKey(),
+    operation: text("operation").notNull(),
+    sourceAccountId: text("source_account_id")
+      .notNull()
+      .references(() => accounts.id, { onDelete: "restrict" }),
+    sourceWalletId: text("source_wallet_id")
+      .notNull()
+      .references(() => wallets.id, { onDelete: "restrict" }),
+    request: text("request").notNull(),
+    terms: text("terms").notNull(),
+    issuedAt: text("issued_at").notNull(),
+    expiresAt: text("expires_at").notNull(),
+  },
+  (table) => [
+    check(
+      "fx_quote_operation",
+      sql`${table.operation} IN ('conversion','transfer')`,
+    ),
+  ],
+);
+
+export const fxQuoteUses = sqliteTable("fx_quote_uses", {
+  quoteId: text("quote_id")
+    .primaryKey()
+    .references(() => fxQuotes.id, { onDelete: "restrict" }),
+  transactionId: text("transaction_id")
+    .notNull()
+    .unique()
+    .references(() => transactions.id, { onDelete: "restrict" }),
+  usedAt: text("used_at").notNull(),
+});

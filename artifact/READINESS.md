@@ -18,9 +18,10 @@
 - [ ] Finish the feature-specific requests, quote binding, and error schemas in [O-003](DECISIONS.md#o-003) and [API_DESIGN.md](API_DESIGN.md) before finalizing HTTP/Swagger endpoints.
 
 Funding requests/receipts/problems are fixed in [IDEMPOTENCY.md](IDEMPOTENCY.md)
-and described by the implemented OpenAPI document. Quote/transfer/history
-contracts, generator and Swagger UI remain open; this checkbox is not global
-approval for those unrelated endpoints.
+and described by the implemented OpenAPI document. D-032 also fixes the immutable
+preview/readback and internal confirmation/consumption rules in [QUOTES.md](QUOTES.md).
+Conversion/transfer submission, history contracts, generator and Swagger UI remain
+open; this checkbox is not global approval for those unrelated endpoints.
 
 ## Before visual design and feature completion
 
