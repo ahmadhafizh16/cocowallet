@@ -75,6 +75,10 @@ export function WalletDashboardSkeleton() {
                   <CardContent className="wallet-card-content">
                     <Skeleton className="wallet-skeleton-total" />
                     <Skeleton className="wallet-skeleton-caption" />
+                    <div className="wallet-balance-history" aria-hidden="true">
+                      <Skeleton className="wallet-skeleton-history-heading" />
+                      <Skeleton className="wallet-skeleton-chart" />
+                    </div>
                     <div className="wallet-quick-actions">
                       {Array.from({ length: 4 }, (_, index) => (
                         <Skeleton

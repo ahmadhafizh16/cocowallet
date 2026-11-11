@@ -7,6 +7,7 @@ import {
   ArrowUpRight,
   Check,
   ChevronDown,
+  CircleDollarSign,
   Copy,
   Eye,
   EyeOff,
@@ -53,10 +54,11 @@ import {
 } from "@/components/ui/tooltip";
 import { ThemeMenu } from "@/features/theme/theme-menu";
 import { useHydrated } from "@/lib/use-hydrated";
+import { BalanceHistory } from "./balance-history";
+import { CurrencyFlag } from "./currency-flag";
 import { OperationWorkspace } from "./operation-workspace";
 import { type Operation } from "./operation-model";
 import {
-  CURRENCY_SYMBOLS,
   displayBalance,
   hasZeroTotal,
   walletsForAccount,
@@ -105,6 +107,16 @@ export function WalletDashboard({ model }: { model: WalletOverview }) {
   const isMain = account?.role === "main";
   const wallets = walletsForAccount(model.wallets, account?.id);
   const zeroTotal = hasZeroTotal(wallets);
+  const invalidHistory =
+    model.balanceHistory !== undefined && !Array.isArray(model.balanceHistory);
+  const histories = Array.isArray(model.balanceHistory)
+    ? model.balanceHistory.filter(
+        (series) => series && series.accountId === account?.id,
+      )
+    : [];
+  // Ambiguous duplicate series are not combined or silently selected.
+  const balanceHistory =
+    invalidHistory || histories.length > 1 ? null : histories[0];
   const copyFeedback =
     copyResult?.accountId === account?.id ? (copyResult?.message ?? "") : "";
   const emptyHistoryHeading =
@@ -362,7 +374,10 @@ export function WalletDashboard({ model }: { model: WalletOverview }) {
                 >
                   <CardHeader className="wallet-card-header wallet-section-head">
                     <CardTitle>
-                      <h2 id="total-heading">Approximate total</h2>
+                      <h2 id="total-heading" className="wallet-panel-title">
+                        <CircleDollarSign aria-hidden="true" />
+                        Approximate total
+                      </h2>
                     </CardTitle>
                     <Button
                       variant="ghost"
@@ -409,6 +424,11 @@ export function WalletDashboard({ model }: { model: WalletOverview }) {
                             ? "Presentation only · Not a stored balance"
                             : "A combined total needs connected exchange rates."}
                     </p>
+                    <BalanceHistory
+                      series={balanceHistory}
+                      accountId={account?.id}
+                      hidden={hidden}
+                    />
                     <div
                       className="wallet-quick-actions"
                       aria-label="Quick actions"
@@ -419,6 +439,7 @@ export function WalletDashboard({ model }: { model: WalletOverview }) {
                             variant="secondary"
                             key={action}
                             className="wallet-quick-action"
+                            data-operation={action}
                             disabled={!isMain || !hydrated}
                             onClick={(event) =>
                               openOperation(action, event.currentTarget)
@@ -449,7 +470,10 @@ export function WalletDashboard({ model }: { model: WalletOverview }) {
                 >
                   <CardHeader className="wallet-card-header wallet-section-head">
                     <CardTitle>
-                      <h2 id="history-heading">Recent transactions</h2>
+                      <h2 id="history-heading" className="wallet-panel-title">
+                        <History aria-hidden="true" />
+                        Recent transactions
+                      </h2>
                     </CardTitle>
                     <Select
                       value={historyFilter}
@@ -504,7 +528,13 @@ export function WalletDashboard({ model }: { model: WalletOverview }) {
                 <CardHeader className="wallet-card-header">
                   <div className="wallet-section-head">
                     <CardTitle>
-                      <h2 id="currencies-heading">Currency wallets</h2>
+                      <h2
+                        id="currencies-heading"
+                        className="wallet-panel-title"
+                      >
+                        <Wallet aria-hidden="true" />
+                        Currency wallets
+                      </h2>
                     </CardTitle>
                     <Badge variant="secondary" className="wallet-count-badge">
                       {wallets.length}{" "}
@@ -526,7 +556,7 @@ export function WalletDashboard({ model }: { model: WalletOverview }) {
                               className="wallet-currency-token"
                               aria-hidden="true"
                             >
-                              {CURRENCY_SYMBOLS[wallet.currency]}
+                              <CurrencyFlag currency={wallet.currency} />
                             </span>
                             <div>
                               <p className="wallet-currency-code">

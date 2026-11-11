@@ -54,7 +54,10 @@ test("captures the rendered overview at its shipping sizes and themes", async ({
   const capture = (name: string) =>
     page.screenshot({
       path: resolve(reviewDirectory, `${name}.png`),
-      fullPage: true,
+      // Full-page screenshots resize the viewport when content is taller.
+      // Radix Select correctly dismisses on resize; capture portaled menus in
+      // their actual viewport instead of changing the state under inspection.
+      fullPage: !name.includes("menu") && !name.includes("actions"),
       animations: "disabled",
     });
   await page.setViewportSize({ width: 1440, height: 1000 });
@@ -76,14 +79,21 @@ test("captures the rendered overview at its shipping sizes and themes", async ({
     .click();
   await capture("account-menu");
   await page.keyboard.press("Escape");
+  await expect(page.locator('[data-slot="dropdown-menu-content"]')).toHaveCount(
+    0,
+  );
   await page.getByRole("button", { name: "Color theme", exact: true }).click();
   await capture("theme-menu");
   await page.keyboard.press("Escape");
+  await expect(page.locator('[data-slot="dropdown-menu-content"]')).toHaveCount(
+    0,
+  );
   await page
     .getByRole("combobox", { name: "Filter transactions", exact: true })
     .click();
   await capture("history-menu");
   await page.keyboard.press("Escape");
+  await expect(page.locator('[data-slot="select-content"]')).toHaveCount(0);
   await page.emulateMedia({ colorScheme: "dark" });
   await openMoneyForm(page, "Convert");
   await page.getByLabel("You convert", { exact: true }).fill("1.005");
@@ -97,6 +107,8 @@ test("captures the rendered overview at its shipping sizes and themes", async ({
     .click();
   await capture("currency-menu-dark");
   await page.keyboard.press("Escape");
+  await expect(page.locator('[data-slot="select-content"]')).toHaveCount(0);
+  await expect(page.getByRole("dialog")).toBeVisible();
   await closeMoneyForm(page);
   await page.setViewportSize({ width: 390, height: 844 });
   await page

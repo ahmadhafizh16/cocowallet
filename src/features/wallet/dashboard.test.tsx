@@ -3,7 +3,24 @@
 import { act } from "react";
 import { createRoot, type Root } from "react-dom/client";
 import { WalletDashboard } from "./dashboard";
-import { createPreviewOverview, type WalletOverview } from "./types";
+import {
+  createPreviewOverview,
+  type BalanceHistorySeries,
+  type WalletOverview,
+} from "./types";
+
+const recordedHistory = (
+  accountId: string,
+  balanceMinor: string,
+): BalanceHistorySeries => ({
+  accountId,
+  currency: "USD",
+  exponent: 2,
+  points: [
+    { recordedAt: "2026-10-01T00:00:00.000Z", balanceMinor: "0" },
+    { recordedAt: "2026-10-02T00:00:00.000Z", balanceMinor },
+  ],
+});
 
 const environment = globalThis as typeof globalThis & {
   IS_REACT_ACT_ENVIRONMENT?: boolean;
@@ -66,10 +83,17 @@ describe("wallet presentation interactions", () => {
           balanceMinor: "4250",
         },
       ],
+      balanceHistory: [
+        recordedHistory(base.activeAccountId, "12345"),
+        recordedHistory("recipient", "4250"),
+      ],
     });
     expect(host.querySelector(".wallet-currency-list")?.textContent).toContain(
       "123.45",
     );
+    expect(
+      host.querySelector(".wallet-balance-history table")?.textContent,
+    ).toContain("123.45");
     const selector = host.querySelector<HTMLButtonElement>(
       'button[aria-label="Account being inspected"]',
     )!;
@@ -86,6 +110,12 @@ describe("wallet presentation interactions", () => {
     expect(balances.textContent).toContain("42.50");
     expect(balances.textContent).not.toContain("123.45");
     expect(balances.querySelectorAll("li")).toHaveLength(1);
+    expect(
+      host.querySelector(".wallet-balance-history table")?.textContent,
+    ).toContain("42.50");
+    expect(
+      host.querySelector(".wallet-balance-history table")?.textContent,
+    ).not.toContain("123.45");
     expect(host.querySelector(".wallet-inspect-hint")?.textContent).toContain(
       "main account only",
     );
@@ -110,6 +140,7 @@ describe("wallet presentation interactions", () => {
         },
       ],
       activeAccountId: "recipient",
+      balanceHistory: [recordedHistory(base.activeAccountId, "12345")],
     });
     expect(host.querySelector(".wallet-currency-list")).toBeNull();
     expect(
@@ -118,10 +149,15 @@ describe("wallet presentation interactions", () => {
     expect(host.querySelector(".wallet-total-value")?.textContent).toBe(
       "Unavailable",
     );
+    expect(host.querySelector(".wallet-balance-history svg")).toBeNull();
+    expect(
+      host.querySelector(".wallet-balance-history")?.textContent,
+    ).toContain("History not connected");
   });
 
   it("hides every balance and restores values without changing the model", async () => {
     const model = createPreviewOverview();
+    model.balanceHistory = [recordedHistory(model.activeAccountId, "998877")];
     await render(model);
     const button = host.querySelector<HTMLButtonElement>(
       'button[aria-label="Hide monetary amounts"]',
@@ -137,6 +173,10 @@ describe("wallet presentation interactions", () => {
       host.querySelector(".wallet-total-value")?.textContent,
     ).not.toContain("0.00");
     expect(host.querySelector('input[name="amount"]')).toBeNull();
+    const history = host.querySelector(".wallet-balance-history")!;
+    expect(history.textContent).toContain("Balance history hidden");
+    expect(history.querySelector("svg, table, details, time")).toBeNull();
+    expect(history.innerHTML).not.toMatch(/9,988\.77|998877|2026-10/);
     await act(() => button.click());
     expect(host.querySelector(".wallet-total-value")?.textContent).toContain(
       "0.00",
@@ -144,5 +184,22 @@ describe("wallet presentation interactions", () => {
     expect(model.wallets.every((wallet) => wallet.balanceMinor === "0")).toBe(
       true,
     );
+    expect(
+      host.querySelector(".wallet-balance-history table")?.textContent,
+    ).toContain("9,988.77");
+  });
+
+  it("does not invent preview history or choose an ambiguous duplicate series", async () => {
+    const model = createPreviewOverview();
+    await render(model);
+    expect(host.querySelectorAll(".wallet-currency-flag")).toHaveLength(3);
+    expect(host.querySelector(".wallet-balance-history svg")).toBeNull();
+    const history = recordedHistory(model.activeAccountId, "12345");
+    await render({ ...model, balanceHistory: [history, history] });
+    expect(host.querySelector(".wallet-balance-history svg")).toBeNull();
+    expect(host.querySelector(".wallet-balance-history table")).toBeNull();
+    expect(
+      host.querySelector(".wallet-balance-history")?.getAttribute("data-state"),
+    ).toBe("invalid");
   });
 });

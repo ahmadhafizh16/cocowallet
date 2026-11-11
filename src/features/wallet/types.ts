@@ -18,12 +18,23 @@ export type AccountView = {
   defaultCurrency: WalletCurrency;
 };
 
+/** Recorded, fully valued USD totals supplied by a future history service.
+ * Never infer these from today's wallets, local drafts, or missing FX rates. */
+export type BalanceHistorySeries = {
+  accountId: string;
+  currency: "USD";
+  exponent: 2;
+  points: { recordedAt: string; balanceMinor: string }[];
+};
+
 export type WalletOverview = {
   mode: "interface-preview";
   accounts: AccountView[];
   activeAccountId: string;
   wallets: WalletView[];
   transactions: [];
+  /** Absent means disconnected; an explicitly supplied empty series has no records. */
+  balanceHistory?: BalanceHistorySeries[];
 };
 
 /** Honest first-run presentation, not database seeding or a balance response. */
