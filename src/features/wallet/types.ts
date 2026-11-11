@@ -1,3 +1,5 @@
+import type { FundingReceipt } from "../funding/contracts";
+
 /** Presentation contracts; never use browser state as an accounting authority. */
 export type WalletCurrency = "USD" | "EUR" | "GBP";
 
@@ -31,11 +33,11 @@ export type UsdTotalView =
   { status: "available"; balanceMinor: string } | { status: "unavailable" };
 
 export type WalletOverview = {
-  mode: "interface-preview" | "connected-readonly";
+  mode: "interface-preview" | "connected-readonly" | "connected-funding";
   accounts: AccountView[];
   activeAccountId: string;
   wallets: WalletView[];
-  transactions: [];
+  transactions: FundingReceipt[];
   /** Absent means disconnected; an explicitly supplied empty series has no records. */
   balanceHistory?: BalanceHistorySeries[];
   /** Server-supplied totals; unavailable never means a zero balance. */

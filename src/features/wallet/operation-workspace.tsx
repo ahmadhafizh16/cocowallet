@@ -28,6 +28,11 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useHydrated } from "@/lib/use-hydrated";
+import { useRouter } from "next/navigation";
+import { useFunding } from "../funding/use-funding";
+import { FundingPanel } from "../funding/funding-panel";
+import { createFundingKey } from "../funding/request-key";
+import { formatAmount } from "../money/money";
 import {
   captureMotionFrame,
   DIALOG_MOTION_SELECTOR,
@@ -69,6 +74,7 @@ export function OperationWorkspace({
   wallets: suppliedWallets,
   hidden,
   balancesConnected = false,
+  fundingEnabled = false,
   open,
   onOpenChange,
   returnFocusRef,
@@ -78,11 +84,18 @@ export function OperationWorkspace({
   wallets: WalletView[];
   hidden: boolean;
   balancesConnected?: boolean;
+  fundingEnabled?: boolean;
   open: boolean;
   onOpenChange: (open: boolean) => void;
   returnFocusRef?: RefObject<HTMLElement | null>;
 }) {
   const hydrated = useHydrated();
+  const router = useRouter();
+  const funding = useFunding(fundingEnabled, () => router.refresh());
+  const canFund =
+    fundingEnabled && (operation === "deposit" || operation === "withdraw");
+  const fundingPanel =
+    fundingEnabled && (funding.intent || funding.storageBlocked);
   const wallets = walletsForAccount(suppliedWallets, account?.id);
   const prefix = useId();
   const formRef = useRef<HTMLFormElement>(null);
@@ -185,342 +198,434 @@ export function OperationWorkspace({
     );
   }
 
+  function confirmFunding() {
+    if (!review || !canFund || hidden) return;
+    try {
+      void funding.send({
+        version: 1,
+        key: createFundingKey(),
+        kind: operation === "deposit" ? "deposit" : "withdrawal",
+        request: {
+          walletId: review.wallet.id,
+          amount: formatAmount(review.minor, review.wallet.exponent),
+          provider: review.provider,
+        },
+      });
+    } catch {
+      setErrors((current) => ({
+        ...current,
+        [operation]: {
+          form: "A secure retry key could not be created. Nothing was submitted.",
+        },
+      }));
+    }
+  }
+
   function closeWorkspace() {
     captureMotionFrame(DIALOG_MOTION_SELECTOR, false);
     onOpenChange(false);
   }
 
   return (
-    <Dialog open={open && account?.role === "main"} onOpenChange={onOpenChange}>
-      <DialogContent
-        id="operations"
-        className="wallet-operation-dialog"
-        onOpenAutoFocus={(event) => {
-          event.preventDefault();
-          focusInitial();
-        }}
-        onCloseAutoFocus={(event) => {
-          if (returnFocusRef?.current) {
-            event.preventDefault();
-            returnFocusRef.current.focus();
-          }
-        }}
+    <>
+      {fundingPanel && account?.role === "main" && !open && (
+        <div className="wallet-preview-notice" role="status">
+          <p>
+            {funding.result
+              ? "A funding result is ready to review."
+              : funding.storageBlocked
+                ? "Funding is blocked until recovery storage is available."
+                : "An unresolved submission needs confirmation. New funding is paused."}
+          </p>
+          <Button
+            variant="outline"
+            onClick={(event) => {
+              if (returnFocusRef) returnFocusRef.current = event.currentTarget;
+              onOpenChange(true);
+            }}
+          >
+            Review submission
+          </Button>
+        </div>
+      )}
+      <Dialog
+        open={open && account?.role === "main"}
+        onOpenChange={onOpenChange}
       >
-        <DialogHeader>
-          <DialogTitle>{title}</DialogTitle>
-          <DialogDescription>{DESCRIPTIONS[operation]}</DialogDescription>
-        </DialogHeader>
-        {review ? (
-          <div className="wallet-dialog-review space-y-5">
-            <h3 ref={reviewRef} tabIndex={-1} className="text-lg font-semibold">
-              Review {OPERATION_NOUNS[operation]}
-            </h3>
-            <p className="text-sm text-muted-foreground">
-              These details have not been submitted.
-            </p>
-            <dl className="wallet-dialog-facts space-y-3 text-sm">
-              <div className="flex justify-between gap-4">
-                <dt className="text-muted-foreground">From account</dt>
-                <dd className="min-w-0 text-right wrap-anywhere">
-                  {review.accountId}
-                </dd>
-              </div>
-              <div className="flex justify-between gap-4">
-                <dt className="text-muted-foreground">Amount</dt>
-                <dd className="min-w-0 text-right wrap-anywhere">
-                  {hidden
-                    ? "Amount hidden"
-                    : `${displayAmount(review.minor, review.wallet.exponent)} ${review.wallet.currency}`}
-                </dd>
-              </div>
-              {(operation === "deposit" || operation === "withdraw") && (
+        <DialogContent
+          id="operations"
+          className="wallet-operation-dialog"
+          onOpenAutoFocus={(event) => {
+            event.preventDefault();
+            focusInitial();
+          }}
+          onCloseAutoFocus={(event) => {
+            if (returnFocusRef?.current) {
+              event.preventDefault();
+              returnFocusRef.current.focus();
+            }
+          }}
+        >
+          <DialogHeader>
+            <DialogTitle>
+              {fundingPanel ? "Funding submission" : title}
+            </DialogTitle>
+            <DialogDescription>
+              {fundingPanel
+                ? "Inspect or recover the original simulated funding submission. Keep its retry key unchanged while the outcome is unresolved."
+                : canFund
+                  ? "Review and confirm a simulated wallet operation. Providers are fictional; no real funds move."
+                  : DESCRIPTIONS[operation]}
+            </DialogDescription>
+          </DialogHeader>
+          {fundingPanel ? (
+            <FundingPanel
+              funding={funding}
+              hidden={hidden}
+              onClose={closeWorkspace}
+              onAnother={() => {
+                funding.startAnother();
+                editReview();
+              }}
+            />
+          ) : review ? (
+            <div className="wallet-dialog-review space-y-5">
+              <h3
+                ref={reviewRef}
+                tabIndex={-1}
+                className="text-lg font-semibold"
+              >
+                Review {OPERATION_NOUNS[operation]}
+              </h3>
+              <p className="text-sm text-muted-foreground">
+                These details have not been submitted.
+              </p>
+              <dl className="wallet-dialog-facts space-y-3 text-sm">
                 <div className="flex justify-between gap-4">
-                  <dt className="text-muted-foreground">Fictional provider</dt>
-                  <dd>
-                    {
-                      PROVIDERS.find(
-                        (provider) => provider.code === review.provider,
-                      )?.label
-                    }
-                  </dd>
-                </div>
-              )}
-              {operation === "transfer" && (
-                <div className="flex justify-between gap-4">
-                  <dt className="text-muted-foreground">Simulated recipient</dt>
+                  <dt className="text-muted-foreground">From account</dt>
                   <dd className="min-w-0 text-right wrap-anywhere">
-                    {review.recipient}
-                    <span className="block text-muted-foreground">
-                      Not verified; no account created.
-                    </span>
+                    {review.accountId}
                   </dd>
                 </div>
-              )}
-              {operation === "convert" && (
-                <>
-                  <div className="flex justify-between gap-4">
-                    <dt className="text-muted-foreground">Receive currency</dt>
-                    <dd>{review.targetCurrency}</dd>
-                  </div>
+                <div className="flex justify-between gap-4">
+                  <dt className="text-muted-foreground">Amount</dt>
+                  <dd className="min-w-0 text-right wrap-anywhere">
+                    {hidden
+                      ? "Amount hidden"
+                      : `${displayAmount(review.minor, review.wallet.exponent)} ${review.wallet.currency}`}
+                  </dd>
+                </div>
+                {(operation === "deposit" || operation === "withdraw") && (
                   <div className="flex justify-between gap-4">
                     <dt className="text-muted-foreground">
-                      Rate and receive amount
-                    </dt>
-                    <dd>Not available</dd>
-                  </div>
-                </>
-              )}
-            </dl>
-            <p
-              id={fieldId("connection")}
-              className="flex items-start gap-2 text-sm text-muted-foreground"
-            >
-              <LockKeyhole
-                className="mt-0.5 size-4 shrink-0"
-                aria-hidden="true"
-              />
-              Service not connected. Final submission is unavailable.
-            </p>
-            <Button
-              className="w-full"
-              disabled
-              aria-describedby={fieldId("connection")}
-            >
-              {OPERATION_LABELS[operation]} unavailable
-            </Button>
-            <DialogFooter>
-              <Button variant="ghost" onClick={editReview}>
-                <ArrowLeft aria-hidden="true" />
-                Edit details
-              </Button>
-              <Button variant="outline" onClick={closeWorkspace}>
-                Back to overview
-              </Button>
-            </DialogFooter>
-          </div>
-        ) : (
-          <form
-            ref={formRef}
-            onSubmit={submit}
-            noValidate
-            className="wallet-dialog-form"
-            data-entry={returningToEdit ? "back" : "initial"}
-          >
-            <FieldSet
-              disabled={!hydrated}
-              className="m-0 min-w-0 gap-0 border-0 p-0"
-              aria-label={title}
-            >
-              <FieldGroup>
-                {operation === "transfer" && (
-                  <Field data-invalid={!!errors.recipient}>
-                    <FieldLabel htmlFor={fieldId("recipient")}>
-                      Simulated recipient account ID
-                    </FieldLabel>
-                    <Input
-                      id={fieldId("recipient")}
-                      name="recipient"
-                      value={draft.recipient}
-                      onChange={(event) =>
-                        updateDraft("recipient", event.target.value)
-                      }
-                      placeholder="Enter an account ID"
-                      autoComplete="off"
-                      autoCapitalize="none"
-                      spellCheck={false}
-                      maxLength={128}
-                      aria-invalid={!!errors.recipient}
-                      aria-describedby={`${fieldId("recipient-hint")}${errors.recipient ? ` ${fieldId("recipient-error")}` : ""}`}
-                    />
-                    <FieldDescription id={fieldId("recipient-hint")}>
-                      IDs are not verified or saved in this preview.
-                    </FieldDescription>
-                    {errors.recipient && (
-                      <FieldError id={fieldId("recipient-error")}>
-                        {errors.recipient}
-                      </FieldError>
-                    )}
-                  </Field>
-                )}
-                {(operation === "deposit" || operation === "withdraw") && (
-                  <Field data-invalid={!!errors.provider}>
-                    <FieldLabel htmlFor={fieldId("provider")}>
                       Fictional provider
-                    </FieldLabel>
-                    <Select
-                      name="provider"
-                      value={draft.provider}
-                      onValueChange={(value) => updateDraft("provider", value)}
-                      disabled={!hydrated}
-                    >
-                      <SelectTrigger
-                        id={fieldId("provider")}
-                        aria-invalid={!!errors.provider}
-                        aria-describedby={
-                          errors.provider
-                            ? fieldId("provider-error")
-                            : undefined
-                        }
-                      >
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {PROVIDERS.map((provider) => (
-                          <SelectItem key={provider.code} value={provider.code}>
-                            {provider.label}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    {errors.provider && (
-                      <FieldError id={fieldId("provider-error")}>
-                        {errors.provider}
-                      </FieldError>
-                    )}
-                  </Field>
+                    </dt>
+                    <dd>
+                      {
+                        PROVIDERS.find(
+                          (provider) => provider.code === review.provider,
+                        )?.label
+                      }
+                    </dd>
+                  </div>
                 )}
-                <Field data-invalid={!!errors.amount || !!errors.currency}>
-                  <div className="flex items-center justify-between gap-3">
-                    <FieldLabel htmlFor={fieldId("amount")}>
-                      {amountLabel}
-                    </FieldLabel>
-                    <Select
-                      name="currency"
-                      value={draft.currency}
-                      onValueChange={(value) =>
-                        updateDraft("currency", value as WalletCurrency)
-                      }
-                      disabled={!hydrated || wallets.length === 0}
-                    >
-                      <SelectTrigger
-                        aria-label="Source currency"
-                        className="w-28 shrink-0"
-                        aria-invalid={!!errors.currency}
-                        aria-describedby={
-                          errors.currency
-                            ? fieldId("currency-error")
-                            : undefined
-                        }
-                      >
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {wallets.map((wallet) => (
-                          <SelectItem key={wallet.id} value={wallet.currency}>
-                            {wallet.currency}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                {operation === "transfer" && (
+                  <div className="flex justify-between gap-4">
+                    <dt className="text-muted-foreground">
+                      Simulated recipient
+                    </dt>
+                    <dd className="min-w-0 text-right wrap-anywhere">
+                      {review.recipient}
+                      <span className="block text-muted-foreground">
+                        Not verified; no account created.
+                      </span>
+                    </dd>
                   </div>
-                  {errors.currency && (
-                    <FieldError id={fieldId("currency-error")}>
-                      {errors.currency}
-                    </FieldError>
-                  )}
-                  <div className="relative">
-                    <span
-                      aria-hidden="true"
-                      className="pointer-events-none absolute top-1/2 left-3.5 -translate-y-1/2 text-xl text-muted-foreground"
-                    >
-                      {CURRENCY_SYMBOLS[draft.currency]}
-                    </span>
-                    <Input
-                      className="h-14 pl-10 text-2xl font-medium tracking-tight md:text-2xl"
-                      id={fieldId("amount")}
-                      name="amount"
-                      type="text"
-                      readOnly={hidden}
-                      inputMode="decimal"
-                      value={hidden ? "" : draft.amount}
-                      onChange={(event) =>
-                        updateDraft("amount", event.target.value)
-                      }
-                      placeholder={hidden ? "Hidden" : "0.00"}
-                      maxLength={MAX_AMOUNT_INPUT_LENGTH}
-                      autoComplete="off"
-                      aria-invalid={!!errors.amount}
-                      aria-describedby={`${fieldId("available")}${errors.amount ? ` ${fieldId("amount-error")}` : ""}`}
-                    />
-                  </div>
-                  <FieldDescription id={fieldId("available")}>
-                    {sourceWallet
-                      ? hidden
-                        ? "Balance hidden"
-                        : `${displayBalance(sourceWallet)} ${sourceWallet.currency} · ${balancesConnected ? "Journal-derived balance" : "Preview balance"}`
-                      : "Balance unavailable"}
-                  </FieldDescription>
-                  {errors.amount && (
-                    <FieldError id={fieldId("amount-error")}>
-                      {errors.amount}
-                    </FieldError>
-                  )}
-                </Field>
+                )}
                 {operation === "convert" && (
-                  <Field data-invalid={!!errors.targetCurrency}>
-                    <FieldLabel htmlFor={fieldId("target")}>
-                      Receive currency
-                    </FieldLabel>
-                    <Select
-                      name="targetCurrency"
-                      value={draft.targetCurrency}
-                      onValueChange={(value) =>
-                        updateDraft("targetCurrency", value as WalletCurrency)
-                      }
-                      disabled={!hydrated || wallets.length < 2}
-                    >
-                      <SelectTrigger
-                        id={fieldId("target")}
-                        aria-invalid={!!errors.targetCurrency}
-                        aria-describedby={
-                          errors.targetCurrency
-                            ? fieldId("target-error")
-                            : undefined
-                        }
-                      >
-                        <SelectValue placeholder="Choose a receiving currency" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {wallets.map((wallet) => (
-                          <SelectItem
-                            key={wallet.id}
-                            value={wallet.currency}
-                            disabled={wallet.currency === draft.currency}
-                          >
-                            {wallet.currency}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    {errors.targetCurrency && (
-                      <FieldError id={fieldId("target-error")}>
-                        {errors.targetCurrency}
-                      </FieldError>
-                    )}
-                  </Field>
+                  <>
+                    <div className="flex justify-between gap-4">
+                      <dt className="text-muted-foreground">
+                        Receive currency
+                      </dt>
+                      <dd>{review.targetCurrency}</dd>
+                    </div>
+                    <div className="flex justify-between gap-4">
+                      <dt className="text-muted-foreground">
+                        Rate and receive amount
+                      </dt>
+                      <dd>Not available</dd>
+                    </div>
+                  </>
                 )}
-                {errors.form && <FieldError>{errors.form}</FieldError>}
-              </FieldGroup>
-              <div className="mt-6 grid gap-3">
-                <Button type="submit" className="w-full">
-                  Review {OPERATION_NOUNS[operation]}
-                  <ArrowRight aria-hidden="true" />
+              </dl>
+              <p
+                id={fieldId("connection")}
+                className="flex items-start gap-2 text-sm text-muted-foreground"
+              >
+                <LockKeyhole
+                  className="mt-0.5 size-4 shrink-0"
+                  aria-hidden="true"
+                />
+                {canFund
+                  ? "Confirmation records this simulation once. Uncertain results must be retried with the original request."
+                  : "Service not connected. Final submission is unavailable."}
+              </p>
+              <Button
+                className="w-full"
+                disabled={!canFund || !funding.ready || hidden}
+                onClick={confirmFunding}
+                aria-describedby={fieldId("connection")}
+              >
+                {canFund
+                  ? `Confirm simulated ${operation === "deposit" ? "deposit" : "withdrawal"}`
+                  : `${OPERATION_LABELS[operation]} unavailable`}
+              </Button>
+              {hidden && canFund && (
+                <p className="text-sm text-muted-foreground">
+                  Show amounts before confirming.
+                </p>
+              )}
+              {errors.form && <FieldError>{errors.form}</FieldError>}
+              <DialogFooter>
+                <Button variant="ghost" onClick={editReview}>
+                  <ArrowLeft aria-hidden="true" />
+                  Edit details
                 </Button>
-                <Button
-                  variant="ghost"
-                  className="w-full"
-                  onClick={closeWorkspace}
-                >
+                <Button variant="outline" onClick={closeWorkspace}>
                   Back to overview
                 </Button>
-              </div>
-              <FieldDescription className="mt-3 text-center">
-                Closing keeps this draft. Reloading clears it.
-              </FieldDescription>
-            </FieldSet>
-          </form>
-        )}
-      </DialogContent>
-    </Dialog>
+              </DialogFooter>
+            </div>
+          ) : (
+            <form
+              ref={formRef}
+              onSubmit={submit}
+              noValidate
+              className="wallet-dialog-form"
+              data-entry={returningToEdit ? "back" : "initial"}
+            >
+              <FieldSet
+                disabled={!hydrated}
+                className="m-0 min-w-0 gap-0 border-0 p-0"
+                aria-label={title}
+              >
+                <FieldGroup>
+                  {operation === "transfer" && (
+                    <Field data-invalid={!!errors.recipient}>
+                      <FieldLabel htmlFor={fieldId("recipient")}>
+                        Simulated recipient account ID
+                      </FieldLabel>
+                      <Input
+                        id={fieldId("recipient")}
+                        name="recipient"
+                        value={draft.recipient}
+                        onChange={(event) =>
+                          updateDraft("recipient", event.target.value)
+                        }
+                        placeholder="Enter an account ID"
+                        autoComplete="off"
+                        autoCapitalize="none"
+                        spellCheck={false}
+                        maxLength={128}
+                        aria-invalid={!!errors.recipient}
+                        aria-describedby={`${fieldId("recipient-hint")}${errors.recipient ? ` ${fieldId("recipient-error")}` : ""}`}
+                      />
+                      <FieldDescription id={fieldId("recipient-hint")}>
+                        IDs are not verified or saved in this preview.
+                      </FieldDescription>
+                      {errors.recipient && (
+                        <FieldError id={fieldId("recipient-error")}>
+                          {errors.recipient}
+                        </FieldError>
+                      )}
+                    </Field>
+                  )}
+                  {(operation === "deposit" || operation === "withdraw") && (
+                    <Field data-invalid={!!errors.provider}>
+                      <FieldLabel htmlFor={fieldId("provider")}>
+                        Fictional provider
+                      </FieldLabel>
+                      <Select
+                        name="provider"
+                        value={draft.provider}
+                        onValueChange={(value) =>
+                          updateDraft("provider", value)
+                        }
+                        disabled={!hydrated}
+                      >
+                        <SelectTrigger
+                          id={fieldId("provider")}
+                          aria-invalid={!!errors.provider}
+                          aria-describedby={
+                            errors.provider
+                              ? fieldId("provider-error")
+                              : undefined
+                          }
+                        >
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {PROVIDERS.map((provider) => (
+                            <SelectItem
+                              key={provider.code}
+                              value={provider.code}
+                            >
+                              {provider.label}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      {errors.provider && (
+                        <FieldError id={fieldId("provider-error")}>
+                          {errors.provider}
+                        </FieldError>
+                      )}
+                    </Field>
+                  )}
+                  <Field data-invalid={!!errors.amount || !!errors.currency}>
+                    <div className="flex items-center justify-between gap-3">
+                      <FieldLabel htmlFor={fieldId("amount")}>
+                        {amountLabel}
+                      </FieldLabel>
+                      <Select
+                        name="currency"
+                        value={draft.currency}
+                        onValueChange={(value) =>
+                          updateDraft("currency", value as WalletCurrency)
+                        }
+                        disabled={!hydrated || wallets.length === 0}
+                      >
+                        <SelectTrigger
+                          aria-label="Source currency"
+                          className="w-28 shrink-0"
+                          aria-invalid={!!errors.currency}
+                          aria-describedby={
+                            errors.currency
+                              ? fieldId("currency-error")
+                              : undefined
+                          }
+                        >
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {wallets.map((wallet) => (
+                            <SelectItem key={wallet.id} value={wallet.currency}>
+                              {wallet.currency}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    {errors.currency && (
+                      <FieldError id={fieldId("currency-error")}>
+                        {errors.currency}
+                      </FieldError>
+                    )}
+                    <div className="relative">
+                      <span
+                        aria-hidden="true"
+                        className="pointer-events-none absolute top-1/2 left-3.5 -translate-y-1/2 text-xl text-muted-foreground"
+                      >
+                        {CURRENCY_SYMBOLS[draft.currency]}
+                      </span>
+                      <Input
+                        className="h-14 pl-10 text-2xl font-medium tracking-tight md:text-2xl"
+                        id={fieldId("amount")}
+                        name="amount"
+                        type="text"
+                        readOnly={hidden}
+                        inputMode="decimal"
+                        value={hidden ? "" : draft.amount}
+                        onChange={(event) =>
+                          updateDraft("amount", event.target.value)
+                        }
+                        placeholder={hidden ? "Hidden" : "0.00"}
+                        maxLength={MAX_AMOUNT_INPUT_LENGTH}
+                        autoComplete="off"
+                        aria-invalid={!!errors.amount}
+                        aria-describedby={`${fieldId("available")}${errors.amount ? ` ${fieldId("amount-error")}` : ""}`}
+                      />
+                    </div>
+                    <FieldDescription id={fieldId("available")}>
+                      {sourceWallet
+                        ? hidden
+                          ? "Balance hidden"
+                          : `${displayBalance(sourceWallet)} ${sourceWallet.currency} · ${balancesConnected ? "Journal-derived balance" : "Preview balance"}`
+                        : "Balance unavailable"}
+                    </FieldDescription>
+                    {errors.amount && (
+                      <FieldError id={fieldId("amount-error")}>
+                        {errors.amount}
+                      </FieldError>
+                    )}
+                  </Field>
+                  {operation === "convert" && (
+                    <Field data-invalid={!!errors.targetCurrency}>
+                      <FieldLabel htmlFor={fieldId("target")}>
+                        Receive currency
+                      </FieldLabel>
+                      <Select
+                        name="targetCurrency"
+                        value={draft.targetCurrency}
+                        onValueChange={(value) =>
+                          updateDraft("targetCurrency", value as WalletCurrency)
+                        }
+                        disabled={!hydrated || wallets.length < 2}
+                      >
+                        <SelectTrigger
+                          id={fieldId("target")}
+                          aria-invalid={!!errors.targetCurrency}
+                          aria-describedby={
+                            errors.targetCurrency
+                              ? fieldId("target-error")
+                              : undefined
+                          }
+                        >
+                          <SelectValue placeholder="Choose a receiving currency" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {wallets.map((wallet) => (
+                            <SelectItem
+                              key={wallet.id}
+                              value={wallet.currency}
+                              disabled={wallet.currency === draft.currency}
+                            >
+                              {wallet.currency}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      {errors.targetCurrency && (
+                        <FieldError id={fieldId("target-error")}>
+                          {errors.targetCurrency}
+                        </FieldError>
+                      )}
+                    </Field>
+                  )}
+                  {errors.form && <FieldError>{errors.form}</FieldError>}
+                </FieldGroup>
+                <div className="mt-6 grid gap-3">
+                  <Button type="submit" className="w-full">
+                    Review {OPERATION_NOUNS[operation]}
+                    <ArrowRight aria-hidden="true" />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    className="w-full"
+                    onClick={closeWorkspace}
+                  >
+                    Back to overview
+                  </Button>
+                </div>
+                <FieldDescription className="mt-3 text-center">
+                  Closing keeps this draft. Reloading clears it.
+                </FieldDescription>
+              </FieldSet>
+            </form>
+          )}
+        </DialogContent>
+      </Dialog>
+    </>
   );
 }

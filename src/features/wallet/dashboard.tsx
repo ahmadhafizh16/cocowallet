@@ -54,6 +54,7 @@ import {
 } from "@/components/ui/tooltip";
 import { ThemeMenu } from "@/features/theme/theme-menu";
 import { useHydrated } from "@/lib/use-hydrated";
+import { RecentFunding } from "../funding/recent-funding";
 import { BalanceHistory } from "./balance-history";
 import { CurrencyFlag } from "./currency-flag";
 import { OperationWorkspace } from "./operation-workspace";
@@ -108,7 +109,15 @@ export function WalletDashboard({ model }: { model: WalletOverview }) {
   const isMain = account?.role === "main";
   const wallets = walletsForAccount(model.wallets, account?.id);
   const zeroTotal = hasZeroTotal(wallets);
-  const balancesConnected = model.mode === "connected-readonly";
+  const balancesConnected = model.mode !== "interface-preview";
+  const fundingEnabled = model.mode === "connected-funding";
+  const recentFunding = model.transactions.filter(
+    (receipt) =>
+      receipt.accountId === account?.id &&
+      (historyFilter === "all" ||
+        receipt.type ===
+          (historyFilter === "withdraw" ? "withdrawal" : historyFilter)),
+  );
   const suppliedTotal = account ? model.usdTotals?.[account.id] : undefined;
   const totalLabel =
     suppliedTotal !== undefined
@@ -128,10 +137,12 @@ export function WalletDashboard({ model }: { model: WalletOverview }) {
     invalidHistory || histories.length > 1 ? null : histories[0];
   const copyFeedback =
     copyResult?.accountId === account?.id ? (copyResult?.message ?? "") : "";
-  const emptyHistoryHeading = balancesConnected
-    ? "Transaction history not connected"
-    : (HISTORY_FILTERS.find((filter) => filter.value === historyFilter)
-        ?.empty ?? HISTORY_FILTERS[0].empty);
+  const emptyHistoryHeading = fundingEnabled
+    ? "No matching completed funding"
+    : balancesConnected
+      ? "Transaction history not connected"
+      : (HISTORY_FILTERS.find((filter) => filter.value === historyFilter)
+          ?.empty ?? HISTORY_FILTERS[0].empty);
 
   useEffect(() => {
     function syncHash() {
@@ -261,6 +272,8 @@ export function WalletDashboard({ model }: { model: WalletOverview }) {
                     ? "Balances are a snapshot of stored journal entries. Reload to refresh. "
                     : "Balances are presentation-only, not stored. "}
                   Form drafts stay on this page and clear when you reload.
+                  {fundingEnabled &&
+                    " Only unresolved submissions temporarily use per-tab recovery storage."}
                 </p>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -384,12 +397,25 @@ export function WalletDashboard({ model }: { model: WalletOverview }) {
                     : "Interface preview"}
                 </strong>{" "}
                 —{" "}
-                {balancesConnected
-                  ? "money operations and history are not connected."
-                  : "operations are not connected."}{" "}
+                {fundingEnabled
+                  ? "deposits and withdrawals are simulated. Conversion and transfers are not connected."
+                  : balancesConnected
+                    ? "money operations and history are not connected."
+                    : "operations are not connected."}{" "}
                 No real funds move.
               </p>
             </div>
+            <OperationWorkspace
+              operation={operation}
+              account={account}
+              wallets={wallets}
+              hidden={hidden}
+              balancesConnected={balancesConnected}
+              fundingEnabled={fundingEnabled}
+              open={operationOpen}
+              onOpenChange={setOperationOpen}
+              returnFocusRef={operationTriggerRef}
+            />
             <div className="wallet-dashboard-grid">
               <div className="wallet-column">
                 <Card
@@ -521,31 +547,46 @@ export function WalletDashboard({ model }: { model: WalletOverview }) {
                       </SelectContent>
                     </Select>
                   </CardHeader>
-                  <CardContent className="wallet-card-content wallet-history-empty">
-                    <span className="wallet-empty-symbol">
-                      <ArrowDownLeft aria-hidden="true" />
-                    </span>
-                    <div>
-                      <h3>{emptyHistoryHeading}</h3>
-                      <p>
-                        {isMain
-                          ? balancesConnected
-                            ? "Completed transactions will appear when the history service is connected."
-                            : "Transactions will appear here when wallet services are connected."
-                          : "Destination history is not connected. Main-account activity is not shown here."}
-                      </p>
-                      {historyFilter !== "all" && (
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => setHistoryFilter("all")}
-                          className="wallet-reset-filter"
-                        >
-                          Clear filter
-                        </Button>
-                      )}
-                    </div>
-                  </CardContent>
+                  {fundingEnabled && (
+                    <p className="mb-4 text-sm text-muted-foreground">
+                      Latest 50 completed deposits and withdrawals. Other
+                      transaction history and balance-history valuations are not
+                      connected.
+                    </p>
+                  )}
+                  {fundingEnabled && recentFunding.length > 0 ? (
+                    <CardContent className="wallet-card-content">
+                      <RecentFunding receipts={recentFunding} hidden={hidden} />
+                    </CardContent>
+                  ) : (
+                    <CardContent className="wallet-card-content wallet-history-empty">
+                      <span className="wallet-empty-symbol">
+                        <ArrowDownLeft aria-hidden="true" />
+                      </span>
+                      <div>
+                        <h3>{emptyHistoryHeading}</h3>
+                        <p>
+                          {isMain
+                            ? fundingEnabled
+                              ? "Completed simulated deposits and withdrawals will appear here; rejected attempts are not transactions."
+                              : balancesConnected
+                                ? "Completed transactions will appear when the history service is connected."
+                                : "Transactions will appear here when wallet services are connected."
+                            : "Destination history is not connected. Main-account activity is not shown here."}
+                        </p>
+                        {historyFilter !== "all" && (
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => setHistoryFilter("all")}
+                            className="wallet-reset-filter"
+                          >
+                            Clear filter
+                          </Button>
+                        )}
+                      </div>
+                    </CardContent>
+                  )}
                 </Card>
               </div>
               <Card
@@ -626,16 +667,6 @@ export function WalletDashboard({ model }: { model: WalletOverview }) {
             </div>
           </main>
         </div>
-        <OperationWorkspace
-          operation={operation}
-          account={account}
-          wallets={wallets}
-          hidden={hidden}
-          balancesConnected={balancesConnected}
-          open={operationOpen}
-          onOpenChange={setOperationOpen}
-          returnFocusRef={operationTriggerRef}
-        />
       </div>
     </TooltipProvider>
   );

@@ -67,7 +67,9 @@ test("read APIs document exact amounts, return safe errors and expose no mutatio
   expect(spec.components.schemas.Wallet.properties.balanceMinor.type).toBe(
     "string",
   );
-  expect(spec.paths["/api/deposits"]).toBeUndefined();
+  expect(spec.paths["/api/deposits"].post.parameters[0].name).toBe(
+    "Idempotency-Key",
+  );
   const unsupported = await request.post("/api/accounts", {
     data: { id: "not-created", role: "destination" },
   });

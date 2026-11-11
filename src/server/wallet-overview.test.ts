@@ -36,7 +36,7 @@ describe("database-backed wallet overview", () => {
 
   it("uses stored IDs and true zero journal balances, never preview identities or history", () => {
     const model = getStoredWalletOverview(database);
-    expect(model.mode).toBe("connected-readonly");
+    expect(model.mode).toBe("connected-funding");
     expect(model.activeAccountId).toBe(id);
     expect(model.wallets).toHaveLength(3);
     expect(

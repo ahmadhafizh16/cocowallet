@@ -2,6 +2,7 @@ import "server-only";
 import { AccountDataError } from "@/features/accounts/errors";
 import { readOverviewSnapshot } from "@/features/accounts/read";
 import type { OverviewSnapshot } from "@/features/accounts/types";
+import { readRecentFunding } from "@/features/funding/read";
 import { assertBalanceMinor } from "@/features/money/money";
 import type {
   UsdTotalView,
@@ -80,5 +81,9 @@ export function toWalletOverview(snapshot: OverviewSnapshot): WalletOverview {
 export function getStoredWalletOverview(
   database: WalletDatabase,
 ): WalletOverview {
-  return toWalletOverview(readOverviewSnapshot(database));
+  return database.sqlite.transaction(() => ({
+    ...toWalletOverview(readOverviewSnapshot(database)),
+    mode: "connected-funding" as const,
+    transactions: readRecentFunding(database),
+  }))();
 }

@@ -32,7 +32,7 @@ test("the overview has two columns and no permanent form or conflicting conversi
       ),
   ).toBe(2);
   await expect(
-    page.getByText("money operations and history are not connected.", {
+    page.getByText("deposits and withdrawals are simulated.", {
       exact: false,
     }),
   ).toBeVisible();
@@ -124,8 +124,11 @@ test("reviews a deposit without submitting money or losing draft input", async (
   await expect(page.getByRole("dialog")).toContainText("25.00 USD");
   await expect(page.getByRole("dialog")).toContainText("Community Bank");
   await expect(
-    page.getByRole("button", { name: "Deposit unavailable", exact: true }),
-  ).toBeDisabled();
+    page.getByRole("button", {
+      name: "Confirm simulated deposit",
+      exact: true,
+    }),
+  ).toBeEnabled();
   await page.getByRole("button", { name: "Edit details", exact: true }).click();
   await expect(page.getByLabel("You add", { exact: true })).toBeFocused();
   await closeMoneyForm(page);
@@ -226,7 +229,7 @@ test("zero balances cannot be withdrawn or converted and service guidance preced
     await openMoneyForm(page, action);
     await expect(
       page.getByRole("dialog").locator('[data-slot="dialog-description"]'),
-    ).toContainText(/not connected|Neither is connected/);
+    ).toContainText(/not connected|simulated wallet operation/);
     await page.getByLabel(label, { exact: true }).fill("1.00");
     await page.getByRole("button", { name: review, exact: true }).click();
     await expect(page.getByRole("alert")).toContainText(
@@ -306,7 +309,7 @@ test("history filters use shadcn Select and have a useful reset", async ({
   await chooseOption(page, "Filter transactions", "Deposits");
   await expect(
     page.getByRole("heading", {
-      name: "Transaction history not connected",
+      name: "No matching completed funding",
       exact: true,
     }),
   ).toBeVisible();
@@ -314,7 +317,7 @@ test("history filters use shadcn Select and have a useful reset", async ({
   await expect(filter).toContainText("All activity");
   await expect(
     page.getByRole("heading", {
-      name: "Transaction history not connected",
+      name: "No matching completed funding",
       exact: true,
     }),
   ).toBeVisible();

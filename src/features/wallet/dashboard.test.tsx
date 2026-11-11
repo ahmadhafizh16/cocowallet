@@ -3,6 +3,9 @@
 import { act } from "react";
 import { createRoot, type Root } from "react-dom/client";
 import { WalletDashboard } from "./dashboard";
+jest.mock("next/navigation", () => ({
+  useRouter: () => ({ refresh: jest.fn() }),
+}));
 import {
   createPreviewOverview,
   type BalanceHistorySeries,
@@ -235,5 +238,40 @@ describe("wallet presentation interactions", () => {
     expect(host.querySelector(".wallet-currency-list")?.textContent).toContain(
       "123.45",
     );
+  });
+
+  it("isolates completed funding, filters withdrawals and removes records during privacy", async () => {
+    const model = createPreviewOverview();
+    model.mode = "connected-funding";
+    model.transactions = [
+      {
+        requestKey: "key",
+        transactionId: "receipt-id",
+        type: "withdrawal",
+        status: "completed",
+        accountId: model.activeAccountId,
+        walletId: model.wallets[0]!.id,
+        currency: "USD",
+        exponent: 2,
+        amountMinor: "2550",
+        balanceMinor: "7450",
+        provider: "demo_bank",
+        createdAt: "2026-11-11T00:00:00.000Z",
+      },
+    ];
+    await render(model);
+    expect(
+      host.querySelector('[aria-label="Completed simulated funding"]')
+        ?.textContent,
+    ).toContain("25.50 USD");
+    const hide = host.querySelector<HTMLButtonElement>(
+      '[aria-label="Hide monetary amounts"]',
+    )!;
+    await act(() => hide.click());
+    expect(
+      host.querySelector('[aria-label="Completed simulated funding"]'),
+    ).toBeNull();
+    expect(host.textContent).not.toContain("receipt-id");
+    expect(host.textContent).not.toContain("2026-11-11T");
   });
 });
