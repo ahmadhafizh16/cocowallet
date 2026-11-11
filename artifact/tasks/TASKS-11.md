@@ -24,7 +24,7 @@ Status is mirrored in [KANBAN.md](../KANBAN.md).
 ### T11-02
 
 **Responsive app shell, theme, and component foundation**  
-**Status:** To do.  
+**Status:** In progress. Building the approved frosted shell, responsive navigation, theme controls, reusable components, and skeleton/empty/error/validation states. See [the surface brief](../WALLET_SURFACE.md).
 **Decisions:** [D-003](../DECISIONS.md#d-003), [D-013](../DECISIONS.md#d-013), [D-014](../DECISIONS.md#d-014), [D-015](../DECISIONS.md#d-015).  
 **Depends on:** [T01-02](TASKS-01.md#t01-02), [T11-01](#t11-01).  
 **Implementation:** Assemble a coherent app shell and reusable shadcn/ui components with Lucide icons, responsive navigation, account switching, and light/dark themes following system preference. Define design tokens and component states from the reviewed Impeccable direction.

@@ -1,8 +1,8 @@
 # Project kanban
 
-**Last updated:** Money/journal core is verified. Impeccable product context and the reference-led frosted wallet sketch are user-approved; T11-01 is complete. Responsive shell implementation (T11-02) is next; wallet API/idempotency integration remains future work.
+**Last updated:** The approved frosted wallet shell is in progress under T11-02, including skeletons and honest interaction states. Wallet API/idempotency integration remains future work.
 
-**Scope:** 32 implementation tasks: **23 to do**, **0 in progress**, **0 blocked**, **9 done**. Planning activities completed below do not count as implemented features.
+**Scope:** 32 implementation tasks: **22 to do**, **1 in progress**, **0 blocked**, **9 done**. Planning activities completed below do not count as implemented features.
 
 Each task links to its detailed description, source PRD, decision IDs, dependencies, and acceptance tests. The Angular-style, one-intention-per-commit rule and local Git workflow in [D-021](DECISIONS.md#d-021) and [D-022](DECISIONS.md#d-022) apply to every task. A task moves to **Done** only when its acceptance criteria are verified and the PRD, decisions, diagrams, API documentation, and handover are updated as needed.
 
@@ -65,7 +65,6 @@ See Done for the verified money/journal core.
 ### Interface — [PRD-11](prd/PRD-11-interface.md)
 
 See Done for the approved product context and visual direction.
-- [ ] [T11-02](tasks/TASKS-11.md#t11-02) — Responsive shell, theme, and components.
 - [ ] [T11-03](tasks/TASKS-11.md#t11-03) — Accessibility, motion, and design review.
 
 ### Verification and handover — [PRD-12](prd/PRD-12-quality.md)
@@ -76,7 +75,7 @@ See Done for the approved product context and visual direction.
 
 ## In progress
 
-_No task is currently in progress at this design-approval checkpoint._
+- [ ] [T11-02](tasks/TASKS-11.md#t11-02) — Approved frosted shell, responsive navigation, themes, skeletons, and reusable components.
 
 ## Blocked
 
