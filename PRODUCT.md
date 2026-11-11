@@ -46,7 +46,7 @@ A local, persistent wallet simulation with exact journal-based accounting, ficti
 
 Implemented: the Docker/Next.js foundation, health/readiness endpoints, migrations and accounting tables, exact-money utilities, journal-derived snapshot balances, and serialized atomic journal writes. Evidence and verification are recorded in [the handover](artifact/HANDOVER.md).
 
-Not yet implemented: account seeding, wallet HTTP journeys, full durable idempotency, Frankfurter integration and quotes, Swagger, and the wallet interface. The `/` route is a technical JSON scaffold, not a wallet screen. Installed shadcn/Lucide/Tailwind tooling is not an existing visual system. Consult [the kanban](artifact/KANBAN.md) before presenting any planned capability as available.
+At initialization, account seeding, wallet HTTP journeys, durable idempotency, Frankfurter/quotes, Swagger, and the interface did not exist. The approved frosted interface-preview shell now exists at `/`, with reusable controls and skeleton/empty/error/review states. Zero values are explicitly presentation-only; services remain disconnected and final submissions are disabled. Account/API/FX integration is future work. See [the interface record](artifact/UI_FOUNDATION.md) and [kanban](artifact/KANBAN.md) before presenting planned capabilities as available.
 
 ### Deliberately open decisions
 
@@ -66,7 +66,7 @@ Not yet implemented: account seeding, wallet HTTP journeys, full durable idempot
 
 - [The main PRD](artifact/PRD.md), [decision register](artifact/DECISIONS.md), feature PRDs, and linked task files contain the confirmed scope and explicit proposals/open questions.
 - [The handover](artifact/HANDOVER.md), [money contract](artifact/MONEY.md), and [journal contract](artifact/JOURNAL.md) record implemented behavior and verification; they are not customer or marketing evidence.
-- Existing implementation paths include `src/features/money/`, `src/features/journal/`, `src/server/db/`, and `src/app/route.ts`. No wallet screen is available yet as incumbent visual authority.
+- Implementation paths include `src/features/money/`, `src/features/journal/`, `src/server/db/`, and the interface in `src/features/wallet/`, `src/components/ui/`, and `src/app/page.tsx`. The approved sketch and built shell are visual authority; do not restart identity exploration during feature integration.
 - No customer testimonials, adoption figures, performance benchmarks, regulated status, or product-brand assets were supplied or approved during initialization. Do not fabricate them.
 
 ## Product Principles

@@ -1,0 +1,145 @@
+/** @jest-environment jsdom */
+
+import { act } from "react";
+import { createRoot, type Root } from "react-dom/client";
+import { WalletDashboard } from "./dashboard";
+import { createPreviewOverview, type WalletOverview } from "./types";
+
+const environment = globalThis as typeof globalThis & {
+  IS_REACT_ACT_ENVIRONMENT?: boolean;
+};
+
+describe("wallet presentation interactions", () => {
+  let host: HTMLDivElement;
+  let root: Root;
+  beforeEach(() => {
+    environment.IS_REACT_ACT_ENVIRONMENT = true;
+    Object.defineProperty(window, "matchMedia", {
+      configurable: true,
+      writable: true,
+      value: jest.fn((media: string) => ({
+        matches: false,
+        media,
+        onchange: null,
+        addEventListener: jest.fn(),
+        removeEventListener: jest.fn(),
+        addListener: jest.fn(),
+        removeListener: jest.fn(),
+        dispatchEvent: () => true,
+      })),
+    });
+    host = document.createElement("div");
+    document.body.append(host);
+    root = createRoot(host);
+  });
+  afterEach(async () => {
+    await act(() => root.unmount());
+    host.remove();
+    delete environment.IS_REACT_ACT_ENVIRONMENT;
+  });
+
+  const render = async (model: WalletOverview) => {
+    await act(() => root.render(<WalletDashboard model={model} />));
+  };
+
+  it("switches account-scoped balances and makes destinations inspect-only", async () => {
+    const base = createPreviewOverview();
+    const usd = base.wallets[0]!;
+    await render({
+      ...base,
+      accounts: [
+        ...base.accounts,
+        {
+          id: "recipient",
+          label: "Recipient",
+          role: "destination",
+          defaultCurrency: "USD",
+        },
+      ],
+      wallets: [
+        { ...usd, balanceMinor: "12345" },
+        ...base.wallets.slice(1),
+        {
+          ...usd,
+          id: "recipient-usd",
+          accountId: "recipient",
+          balanceMinor: "4250",
+        },
+      ],
+    });
+    expect(host.querySelector(".wallet-currency-list")?.textContent).toContain(
+      "123.45",
+    );
+    const selector = host.querySelector<HTMLSelectElement>(
+      'select[aria-label="Account being inspected"]',
+    )!;
+    await act(() => {
+      selector.value = "recipient";
+      selector.dispatchEvent(new Event("change", { bubbles: true }));
+    });
+    const balances = host.querySelector(".wallet-currency-list")!;
+    expect(balances.textContent).toContain("42.50");
+    expect(balances.textContent).not.toContain("123.45");
+    expect(balances.querySelectorAll("li")).toHaveLength(1);
+    expect(host.querySelector(".wallet-inspect-state")?.textContent).toContain(
+      "inspect-only",
+    );
+    expect(host.querySelector(".wallet-operation-form")).toBeNull();
+    expect(
+      [
+        ...host.querySelectorAll<HTMLButtonElement>(".wallet-quick-action"),
+      ].every((button) => button.disabled),
+    ).toBe(true);
+  });
+
+  it("does not reuse main-account balances for a destination without data", async () => {
+    const base = createPreviewOverview();
+    await render({
+      ...base,
+      accounts: [
+        {
+          id: "recipient",
+          label: "Recipient",
+          role: "destination",
+          defaultCurrency: "USD",
+        },
+      ],
+      activeAccountId: "recipient",
+    });
+    expect(host.querySelector(".wallet-currency-list")).toBeNull();
+    expect(
+      host.querySelector(".wallet-currencies-empty")?.textContent,
+    ).toContain("Balances not connected");
+    expect(host.querySelector(".wallet-total-value")?.textContent).toBe(
+      "Unavailable",
+    );
+  });
+
+  it("hides every balance and restores values without changing the model", async () => {
+    const model = createPreviewOverview();
+    await render(model);
+    const button = host.querySelector<HTMLButtonElement>(
+      'button[aria-label="Hide monetary amounts"]',
+    )!;
+    await act(() => button.click());
+    expect(button.getAttribute("aria-pressed")).toBe("true");
+    expect(
+      [...host.querySelectorAll(".wallet-currency-amount")].every(
+        (element) => !element.textContent?.includes("0.00"),
+      ),
+    ).toBe(true);
+    expect(
+      host.querySelector(".wallet-total-value")?.textContent,
+    ).not.toContain("0.00");
+    expect(
+      host.querySelector<HTMLInputElement>('input[name="amount"]')?.readOnly,
+    ).toBe(true);
+    await act(() => button.click());
+    expect(host.querySelector(".wallet-total-value")?.textContent).toContain(
+      "0.00",
+    );
+    expect(model.wallets.every((wallet) => wallet.balanceMinor === "0")).toBe(
+      true,
+    );
+  });
+});

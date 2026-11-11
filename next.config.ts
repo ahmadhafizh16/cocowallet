@@ -3,6 +3,7 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   poweredByHeader: false,
   reactStrictMode: true,
+  devIndicators: false,
   // Private Compose hostname used by real-browser tests; do not allow arbitrary origins.
   allowedDevOrigins: ["wallet.test"],
   serverExternalPackages: ["better-sqlite3"],

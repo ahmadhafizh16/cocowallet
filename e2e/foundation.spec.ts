@@ -13,9 +13,12 @@ test("the app exposes a healthy, uncached foundation endpoint", async ({
   });
 });
 
-test("a real browser can reach the technical scaffold", async ({ page }) => {
+test("a real browser can reach the wallet interface", async ({ page }) => {
   const response = await page.goto("/");
 
   expect(response?.status()).toBe(200);
-  expect(await response?.json()).toMatchObject({ milestone: "foundation" });
+  await expect(page.getByRole("main")).toBeVisible();
+  await expect(
+    page.getByRole("heading", { name: "Your wallet, at a glance." }),
+  ).toBeVisible();
 });

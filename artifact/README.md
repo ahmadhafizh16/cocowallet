@@ -1,6 +1,6 @@
 # Digital wallet planning
 
-These documents distinguish agreed decisions, proposals, and implemented work. The **platform and money/journal core are implemented**: Docker/Node 26, health/readiness, versioned accounting tables, exact arithmetic, snapshot balances, and atomic serialized writes. Wallet HTTP flows, full idempotency, account seeding, rates/quotes, Swagger, and the interface remain future work. Impeccable initialization captured the confirmed product context in [PRODUCT.md](../PRODUCT.md); visual direction remains next. Consult the kanban rather than assuming a draft PRD describes completed features.
+These documents distinguish decisions, proposals, and implemented work. The **platform, money/journal core, and interface-preview shell exist**: Docker/Node 26, health/readiness, accounting, and the approved frosted UI with skeleton/empty/error/review states. Wallet APIs, full idempotency, account seeding, rates/quotes, and Swagger remain future work; preview controls cannot move money. Consult the kanban rather than assuming a draft PRD describes completed features.
 
 - [Main PRD](PRD.md): product scope and links to the smaller feature PRDs.
 - [Decision register](DECISIONS.md): stable `D-###` decisions and `O-###` open questions.
@@ -12,6 +12,7 @@ These documents distinguish agreed decisions, proposals, and implemented work. T
 - [Exact money](MONEY.md): bounds, parsing, rational FX rounding, and serialization.
 - [Currency metadata](CURRENCY_METADATA.md): pinned accounting precision, source/license, and update rules.
 - [Journal implementation](JOURNAL.md): storage, snapshot reads, serialized writes, tests, and integration boundaries.
+- [Interface foundation](UI_FOUNDATION.md): shell, skeletons, safeguards, verification, and unconnected services.
 - [Diagrams](DIAGRAMS.md): proposed architecture, data relationships, business flows, and code flow.
 - [API design](API_DESIGN.md): proposed HTTP contract, sequence diagram, and OpenAPI/Swagger approach.
 - [Idempotency discussion](IDEMPOTENCY.md): the selected failed-retry policy, alternatives, and examples.

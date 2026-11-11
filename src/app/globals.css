@@ -407,6 +407,31 @@ svg {
   text-align: center;
   font-size: 12px;
 }
+@media (prefers-reduced-transparency: reduce) {
+  :root,
+  :root[data-theme="dark"] {
+    --glass: var(--solid);
+    --inner: var(--solid);
+  }
+  body::before,
+  body::after {
+    display: none;
+  }
+  .ui-dialog-overlay {
+    backdrop-filter: none;
+  }
+}
+@media (forced-colors: active) {
+  body::before,
+  body::after {
+    display: none;
+  }
+  .ui-button,
+  .ui-input,
+  .theme-select {
+    border: 1px solid ButtonText;
+  }
+}
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;

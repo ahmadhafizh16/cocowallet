@@ -1,6 +1,6 @@
 # Proposed implementation plan
 
-**Status:** Git and platform tasks T00-01 through T01-03 are verified; wallet implementation has not started. Individual task statuses are in [KANBAN.md](KANBAN.md); [PRD.md](PRD.md) links each task group to its source feature PRD and decisions. Follow the Angular-style, one-intention-per-commit rule in [D-021](DECISIONS.md#d-021) and Git setup in [D-022](DECISIONS.md#d-022). See [READINESS.md](READINESS.md) for feature-stage checks.
+**Status:** Platform and money/journal tasks are verified. The user approved the frosted wallet sketch and selected interface-first implementation; T11-02 is in progress before account/API integration. Individual task statuses are in [KANBAN.md](KANBAN.md); [PRD.md](PRD.md) links each task group to its source feature PRD and decisions. Follow the Angular-style, one-intention-per-commit rule in [D-021](DECISIONS.md#d-021) and Git setup in [D-022](DECISIONS.md#d-022). See [READINESS.md](READINESS.md) for feature-stage checks.
 
 ## Tasks
 
@@ -15,6 +15,12 @@
 9. **Design refinement and quality** — Apply the agreed Impeccable design workflow, address accessibility and responsive states, add Jest unit/integration tests and Playwright browser tests, and update handover documentation.
 
 Tasks 5–8 depend on the persistence foundation. Their exact ordering can change after product decisions.
+
+**Confirmed current order:** approved design → responsive interface shell with
+skeleton/empty/error/validation states → main-account seeding and API integration
+→ connected money workflows and history. Interface-first does not permit sketch
+amounts to become stored balances or unconnected controls to claim success. See
+the [wallet surface brief](WALLET_SURFACE.md).
 
 ## Dependency overview
 

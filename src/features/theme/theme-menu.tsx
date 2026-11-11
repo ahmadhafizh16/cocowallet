@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useSyncExternalStore } from "react";
 import { Monitor, Moon, Sun } from "lucide-react";
+import { useHydrated } from "@/lib/use-hydrated";
 import {
   THEME_STORAGE_KEY,
   isThemePreference,
@@ -55,6 +56,7 @@ function subscribe(onChange: () => void) {
 }
 
 export function ThemeMenu() {
+  const hydrated = useHydrated();
   const preference = useSyncExternalStore(
     subscribe,
     readPreference,
@@ -85,6 +87,7 @@ export function ThemeMenu() {
         <Icon aria-hidden="true" size={17} />
         <span className="sr-only">Color theme</span>
         <select
+          disabled={!hydrated}
           value={preference}
           onChange={(event) => changePreference(event.target.value)}
         >
