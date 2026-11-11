@@ -255,7 +255,8 @@ success together. Escaped scopes and promise callbacks are rejected. Funding
 already implements durable original outcomes under D-030. Quote use joins the
 journal failure latch even if its error is caught inside the after-record hook.
 Conversion now implements these rules through the endpoint and shared recovery UI;
-transfer integration is still future work. Replay an existing
+the internal transfer service also implements atomic creation/accounting/results,
+but transfer HTTP/UI integration is future work. Replay an existing
 result before quote expiry/use checks, then recheck the key under the reservation.
 Do not hold it during network work. See [JOURNAL.md](JOURNAL.md) and
 [QUOTES.md](QUOTES.md).
@@ -263,6 +264,14 @@ Do not hold it during network work. See [JOURNAL.md](JOURNAL.md) and
 ## Cross-currency transfer sequence
 
 Decisions: [D-003](DECISIONS.md#d-003), [D-008](DECISIONS.md#d-008), [D-010](DECISIONS.md#d-010), [D-018](DECISIONS.md#d-018), [D-019](DECISIONS.md#d-019). Tasks: [T08-01](tasks/TASKS-08.md#t08-01), [T08-02](tasks/TASKS-08.md#t08-02).
+
+The service-side atomic steps are implemented in [TRANSFERS.md](TRANSFERS.md).
+This end-to-end UI/API journey remains proposed: no transfer route or confirmed
+browser send exists. Actual service replay occurs before quote/funds checks,
+then again under `BEGIN IMMEDIATE`; successful quote use and the original retained
+receipt commit with recipient/wallet creation and both entries. Same-currency
+service sends never request a rate; only missing default metadata may fetch the
+catalog outside the writer. T09-01 history is required before T08-02 inspection.
 
 ```mermaid
 sequenceDiagram

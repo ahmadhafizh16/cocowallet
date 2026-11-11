@@ -1,6 +1,6 @@
 # Digital wallet planning
 
-These documents distinguish decisions, proposals, and implemented work. The platform, exact journal core, persistent reads, durable funding, fresh-first metadata and reviewed quote-bound conversion flow exist. Conversion includes explicit expiry/reconfirmation and shared same-key recovery. Transfers, full history/valuation and Swagger remain future work. Quote previews move/reserve no funds. Consult the kanban rather than assuming a draft PRD describes completed features.
+These documents distinguish decisions, proposals, and implemented work. The platform, exact journal core, persistent reads, durable funding, fresh-first metadata and reviewed quote-bound conversion flow exist. Conversion includes explicit expiry/reconfirmation and shared same-key recovery. The internal atomic transfer service has isolated tests; transfer HTTP/UI, full history/valuation and Swagger remain future work. Quote previews move/reserve no funds. Consult the kanban rather than assuming a draft PRD describes completed features.
 
 - [Main PRD](PRD.md): product scope and links to the smaller feature PRDs.
 - [Decision register](DECISIONS.md): stable `D-###` decisions and `O-###` open questions.
@@ -24,6 +24,7 @@ These documents distinguish decisions, proposals, and implemented work. The plat
 - [Reference metadata](RATES.md): fresh-first Frankfurter fiat catalog and exact decimal rates with bounded persistent fallback.
 - [Server-owned quotes](QUOTES.md): immutable full-minute previews/readback, exact binding, no reservation and internal single-success safeguards.
 - [Reviewed conversions](CONVERSIONS.md): exact quote-bound accounting, target creation, documented endpoint, expiry/reconfirmation and original-key recovery.
+- [Atomic simulated transfers](TRANSFERS.md): internal same/FX transfer service, recipient/wallet creation and globally retained original results; no transfer HTTP/UI submission.
 - [Diagrams](DIAGRAMS.md): proposed architecture, data relationships, business flows, and code flow.
 - [API design](API_DESIGN.md): proposed HTTP contract, sequence diagram, and OpenAPI/Swagger approach.
 - [Idempotency discussion](IDEMPOTENCY.md): the selected failed-retry policy, alternatives, and examples.

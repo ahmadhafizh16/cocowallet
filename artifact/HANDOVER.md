@@ -1,12 +1,12 @@
 # Handover
 
-**Status:** Twenty-two of 36 tasks are closed. T07-02 connects reviewed quotes,
-expiry/reconfirmation, documented conversion submission, shared original-key
-recovery and receipt/balance refresh. The board has 12 To do, 2 In progress
-(remaining Swagger acceptance), and 22 Done. Existing visual design is preserved
-and visual feedback deferred. Next is T08-01's atomic transfer service. Transfers
-remain disabled; full history/valuation, wallet management and Swagger retain their tasks.
-See [CONVERSIONS.md](CONVERSIONS.md).
+**Status:** Twenty-three of 36 tasks are closed. T08-01's internal atomic transfer
+service is verified, with recipient/wallet creation and durable global-key results.
+The board has 11 To do, 2 In progress (remaining Swagger acceptance), and 23 Done.
+Existing visual design is preserved and visual feedback deferred. Transfer HTTP/UI
+submission remains disabled; T09-01 history/API prerequisites (including T10-01
+shared HTTP) come before T08-02's connected flow. Full history/valuation, wallet
+management and Swagger retain their tasks. See [TRANSFERS.md](TRANSFERS.md).
 
 ## Implemented modules and commands
 
@@ -33,6 +33,7 @@ See [CONVERSIONS.md](CONVERSIONS.md).
 | `src/features/quotes/`, `src/app/api/quotes/`, `drizzle/0005_immutable_fx_quotes.sql` | Immutable exact-input/recipient-bound full-minute previews/readback; no reservation, internal confirmation checks and scoped atomic single-success consumption. No monetary submission endpoint. |
 | `scripts/e2e-reference-provider.mjs`, `e2e/zzz-quotes.spec.ts` | Guarded deterministic provider preload only for the disposable production server; no-money preview and disabled-submission browser checks. |
 | `src/features/conversions/`, `src/app/api/conversions/`, `drizzle/0006_conversion_results.sql` | Atomic target creation/debit/credit/use/results, strict documented POST, quote review/expiry/reconfirmation, eligible target selection and completed-conversion reads. Mutual triggers/services enforce global money-key ownership. |
+| `src/features/transfers/`, `drizzle/0007_transfer_results.sql` | Internal atomic same/FX transfers, exact arbitrary recipient IDs, default/selected-wallet creation and durable original receipts/errors; global keys across all money services. No transfer route or browser confirmation/recovery. |
 | `src/features/submissions/` | Shared funding/conversion recovery hook and result panel; original-key/input/quote retries in one backward-compatible per-tab slot, verified before sending and cleared only on known results. |
 | `e2e/zzzz-conversions.spec.ts` | Guarded isolated conversion review/confirmation, missing wallet, expiry, unavailable terms, lost-response recovery, storage, theme/viewport/focus/privacy journeys. |
 | `scripts/start-funding-e2e.ts`, `e2e/zz-funding.spec.ts` | Refuse ordinary runtime target; successful monetary browser writes use only the disposable isolated server/database. |
@@ -63,7 +64,30 @@ Stop the dev compiler before `docker compose run --rm app npm run check`, then u
 
 Application DB: `/app/data/wallet.sqlite` in Compose's `wallet-data` volume. Tests use isolated temporary SQLite files. Normal shutdown is `docker compose down` without deleting volumes. Before applying journal migrations, the stopped app's database was backed up with SQLite's backup API to `/app/data/wallet.sqlite.pre-journal-1794390597589.bak`. Backup creation is verified; a full restore drill is not claimed.
 
-Current connected-conversion verification: final full Docker check/build passes
+Current transfer-backend verification: full Docker check/build passes **1,114 Jest
+tests in 48 suites**, including 119 transfer service/receipt/concurrency cases.
+Artifact checks cover **55 documents / 36 tasks**. Transfer HTTP/UI remain disabled;
+no frontend source, dependency or real-provider integration changed.
+
+Verified backup `/app/data/wallet.sqlite.pre-transfers-1794425889020.bak` preceded
+two migration 0007 runs. Every prior non-migration table is bigint-safely unchanged;
+all seven prior migration rows remain, with one new row. Six new retention/global
+key triggers exist; the new outcome table is empty. Runtime remains **1 account /
+3 wallets / 0 transactions / 0 journal entries / 0 funding attempts / 0 conversion
+attempts / 0 transfer attempts**, with empty reference caches and quote/use tables.
+Integrity is `ok`, FK violations zero. No runtime money/recipient/quote test seed,
+live-provider check, restore drill or push was introduced. All **63 production
+Chromium regressions** pass against a fresh guarded disposable server; this does
+not claim a transfer confirmation journey. Development resumed with
+`.next/dev.pre-transfers-1794426161873` retained. A browser verified enabled funding
+review, documented conversion API, absent transfer API and **300 stable frames**,
+with zero extra navigations/page/console errors or financial/reference requests.
+Bounded in-thread Verify review checks source/graph relationships and every
+migration trigger, including recorded SQL parse gaps; no independent-agent audit
+or exhaustive correctness/security certification is claimed. See
+[TRANSFERS.md](TRANSFERS.md).
+
+Historical connected-conversion verification: final full Docker check/build passes
 **995 Jest tests in 45 suites** and all **63 production Chromium checks** pass on
 the disposable server. Ten new conversion checks include exact balances/bounded
 history, no-money review, missing target creation, expiry/reconfirmation,
@@ -157,7 +181,7 @@ funding verification supersedes its disconnected-write boundary, not its evidenc
 The last production npm audit was clean; 23 low/moderate development-tool findings
 remain in [DEPENDENCIES.md](DEPENDENCIES.md); no new dependency was installed.
 
-Artifact validation verifies **54 documents / 36 tasks**. The previous
+Artifact validation verifies **55 documents / 36 tasks**. The previous
 T11-02 design-extraction counts and verdict are historical, not certification of
 T11-04. Current production captures include desktop light/dark, 1688/1769px,
 tablet, mobile, dialogs/menus, validation/review, loading and errors. Independent

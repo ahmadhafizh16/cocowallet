@@ -7,12 +7,20 @@ Status is mirrored in [KANBAN.md](../KANBAN.md).
 ### T08-01
 
 **Simulated destination and atomic transfer service**  
-**Status:** To do.  
+**Status:** Done.
 **Decisions:** [D-003](../DECISIONS.md#d-003), [D-008](../DECISIONS.md#d-008), [D-010](../DECISIONS.md#d-010), [D-012](../DECISIONS.md#d-012), [D-018](../DECISIONS.md#d-018), [D-019](../DECISIONS.md#d-019).  
 **Depends on:** [T02-03](TASKS-02.md#t02-03), [T03-01](TASKS-03.md#t03-01), [T06-02](TASKS-06.md#t06-02), [T10-02](TASKS-10.md#t10-02).  
 **Implementation:** Resolve or create a simulated destination by entered ID, honor its default or selected currency, reject the main account's own ID, and use a server-owned quote only when currencies differ. Under a serialized write transaction, revalidate funds/quote, create any destination/account wallet, record the transfer, and append debit/credit entries atomically.
 
 **Acceptance and tests:** A new GBP-default destination receives the displayed GBP amount from a USD transfer; same-currency transfers do not call FX. Test existing IDs, optional target currencies, missing wallets, rollback of new destinations, duplicate successes, concurrent debit attempts, self-ID rejection, and rate metadata.
+
+**Implementation evidence:** [TRANSFERS.md](../TRANSFERS.md) defines the internal
+async contract, serialized creation/journal/quote/result boundary and original-key
+recovery. Full Docker check/build passes 1,114 Jest tests, including 119 transfer
+cases. Backed-up migration 0007 was applied twice with prior rows preserved;
+all 63 production Chromium regressions pass. Restored development remained stable
+for 300 frames without reloads/errors or financial/reference requests. No transfer
+endpoint/UI is added; T09-01 history/API prerequisites remain before T08-02.
 
 ### T08-02
 

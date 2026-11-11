@@ -208,7 +208,9 @@ successful browser money operations use only the guarded disposable server.
   errors or financial/reference/quote requests. No runtime money was used to
   demonstrate the feature. Artifact checks cover **54 documents / 36 tasks**.
 
-Next dependency is **T08-01's atomic simulated transfer service**, then T08-02's
-reviewed transfer UI. Do not enable transfer submission merely because its quote
-preview exists. Preserve exact accounting, inspect-only destinations, original-key
-recovery, privacy and the current visual identity.
+T08-01 now adds the [internal atomic transfer service](TRANSFERS.md), extending
+global key ownership across funding/conversion/transfers. Migrate through 0007
+before these services resume. T09-01's history queries/API is the next dependency
+before T08-02's reviewed transfer UI. Do not enable transfer submission merely
+because its service/quote preview exists. Preserve exact accounting, inspect-only
+destinations, original-key recovery, privacy and the current visual identity.

@@ -196,8 +196,10 @@ export function submitFunding(
       }
       if (
         database.sqlite
-          .prepare("SELECT key FROM conversion_attempts WHERE key=?")
-          .get(key)
+          .prepare(
+            "SELECT key FROM conversion_attempts WHERE key=? UNION ALL SELECT key FROM transfer_attempts WHERE key=? LIMIT 1",
+          )
+          .get(key, key)
       )
         return conflict();
       const body = executeFunding(database, scope, kind, key, input);

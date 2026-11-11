@@ -266,3 +266,27 @@ export const conversionAttempts = sqliteTable(
     ),
   ],
 );
+
+export const transferAttempts = sqliteTable(
+  "transfer_attempts",
+  {
+    key: text("key").primaryKey(),
+    request: text("request").notNull(),
+    status: text("status").notNull(),
+    response: text("response").notNull(),
+    transactionId: text("transaction_id")
+      .unique()
+      .references(() => transactions.id, { onDelete: "restrict" }),
+    createdAt: createdAt(),
+  },
+  (table) => [
+    check(
+      "transfer_status",
+      sql`${table.status} IN ('200', '400', '404', '409')`,
+    ),
+    check(
+      "transfer_result_shape",
+      sql`(${table.status} = '200' AND ${table.transactionId} IS NOT NULL) OR (${table.status} != '200' AND ${table.transactionId} IS NULL)`,
+    ),
+  ],
+);

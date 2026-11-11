@@ -195,8 +195,10 @@ export function submitConversion(
       }
       if (
         database.sqlite
-          .prepare("SELECT key FROM funding_attempts WHERE key=?")
-          .get(key)
+          .prepare(
+            "SELECT key FROM funding_attempts WHERE key=? UNION ALL SELECT key FROM transfer_attempts WHERE key=? LIMIT 1",
+          )
+          .get(key, key)
       )
         return conflict();
       const body = executeConversion(

@@ -240,9 +240,11 @@ separate conversion outcomes, exact quote/original-input binding and global key
 ownership across funding/conversion. Replay precedes quote/current-funds/clock
 checks; target creation, journal, quote use and success commit together. See
 [CONVERSIONS.md](CONVERSIONS.md). T07-02 now adds the documented conversion endpoint,
-explicit quote/confirmation UI and shared per-tab original-key recovery. Transfer
-services, full history and Swagger remain separate work; the backend alone never
-implied those features.
+explicit quote/confirmation UI and shared per-tab original-key recovery.
+T08-01 now extends global ownership/retention to the internal transfer service,
+including atomic simulated-recipient/wallet creation, quote-bound FX and rate-free
+same-currency sends. See [TRANSFERS.md](TRANSFERS.md). Transfer HTTP/UI, full history
+and Swagger remain separate work; the backend alone never implied those features.
 
 ### O-007
 

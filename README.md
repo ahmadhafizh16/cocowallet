@@ -2,11 +2,11 @@
 
 A local-only multi-currency wallet simulation built with Next.js and Node 26. Product requirements, decisions, diagrams, and progress are in [`artifact/`](artifact/README.md).
 
-**Current milestone:** Persistent accounts, exact journal balances and reviewed simulated funding/conversion power the existing interface. Conversion uses immutable server-owned one-minute quotes, explicit confirmation and same-key recovery. Quotes reserve no funds. Transfers, valuation and full history/Swagger remain separate work. The existing visual design is preserved and visual refinements stay deferred. See [`artifact/CONVERSIONS.md`](artifact/CONVERSIONS.md), [`artifact/QUOTES.md`](artifact/QUOTES.md) and [`artifact/FUNDING.md`](artifact/FUNDING.md).
+**Current milestone:** Persistent accounts, exact journal balances and reviewed simulated funding/conversion power the existing interface. Internal atomic transfers now have isolated service tests, but no submission endpoint or UI wiring. Quotes reserve no funds. Transfer UI, valuation and full history/Swagger remain separate work. The existing visual design is preserved and visual refinements stay deferred. See [`artifact/TRANSFERS.md`](artifact/TRANSFERS.md), [`artifact/CONVERSIONS.md`](artifact/CONVERSIONS.md) and [`artifact/QUOTES.md`](artifact/QUOTES.md).
 
 The internal atomic conversion service now supports exact quote-bound accounting,
 missing target currency/wallet creation and durable original-result replay. Retry
-keys cannot be reused across funding and conversion. `POST /api/conversions` and
+keys cannot be reused across funding, conversion and internal transfers. `POST /api/conversions` and
 the existing Convert dialog now connect that service, with explicit expiry and
 reconfirmation; see [`artifact/CONVERSIONS.md`](artifact/CONVERSIONS.md).
 
@@ -24,7 +24,7 @@ docker compose up -d app
 
 Open `http://localhost:3000/api/health` for the health endpoint. Use `APP_PORT=3100 docker compose up -d app` if port 3000 is already occupied.
 
-`/api/ready` verifies SQLite and its migrated metadata table; it is not a full schema-version or seeded-account check. Seven migrations create metadata, accounting/invariants, retained funding/conversion outcomes, reference caches and immutable quote/use tables. Migration and seed commands are safe to repeat and run explicitly, never during a GET or production build. Seeding creates startup accounts/wallets, never funds, history, quotes or provider snapshots. On a fresh database, migrate and seed before opening `/`. Existing installations must back up SQLite and run `db:migrate` through migration 0006 before new funding requests or the conversion service use shared key ownership; no volume reset is needed.
+`/api/ready` verifies SQLite and its migrated metadata table; it is not a full schema-version or seeded-account check. Eight migrations create metadata, accounting/invariants, retained funding/conversion/transfer outcomes, reference caches and immutable quote/use tables. Migration and seed commands are safe to repeat and run explicitly, never during a GET or production build. Seeding creates startup accounts/wallets, never funds, history, quotes or provider snapshots. On a fresh database, migrate and seed before opening `/`. Existing installations must back up SQLite and run `db:migrate` through migration 0007 before funding/conversion resume using shared key ownership; no volume reset is needed.
 
 APIs: account/wallet GETs, `POST /api/deposits`, `POST /api/withdrawals`, `POST /api/conversions`, `GET /api/currencies`, `GET /api/rates?base=USD&quote=EUR`, `POST /api/quotes`, `GET /api/quotes/{quoteId}`, and `GET /api/openapi`. Money submissions require a UUID key; identical retries replay the original result indefinitely, while changed input is rejected. Amounts/rates are exact strings and responses are not cached. Reference GETs update technical caches, never money/wallets; eligible fallback is less than 24 hours old, without invented reciprocal/cross rates. Quote creation stores a preview with a full 60-second hold after final validation, but moves/reserves no funds and creates no recipient/wallet. Swagger UI, transfer submission and full history endpoints remain unimplemented.
 

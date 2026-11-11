@@ -1,6 +1,6 @@
 # PRD-08 — Transfers to simulated accounts
 
-**Status:** Draft; no transfer implementation exists.  
+**Status:** T08-01's internal atomic service and isolated tests exist; transfer HTTP submission, confirmation/recovery UI and incoming history remain unimplemented. See [TRANSFERS.md](../TRANSFERS.md).
 **Decisions:** [D-003](../DECISIONS.md#d-003), [D-004](../DECISIONS.md#d-004), [D-008](../DECISIONS.md#d-008), [D-010](../DECISIONS.md#d-010), [D-012](../DECISIONS.md#d-012), [D-018](../DECISIONS.md#d-018), [D-019](../DECISIONS.md#d-019).  
 **Tasks:** [T08-01–T08-02](../tasks/TASKS-08.md).  
 **Diagram:** [Cross-currency transfer sequence](../DIAGRAMS.md#cross-currency-transfer-sequence).

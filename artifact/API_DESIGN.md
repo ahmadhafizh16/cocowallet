@@ -1,12 +1,19 @@
 # HTTP API design: draft
 
-**Status:** Account/wallet reads, simulated funding/conversion POSTs, fresh-first reference metadata and immutable quotes are implemented with maintained OpenAPI contracts. T07-02's connected conversion flow is verified. Transfers, full history contracts, generation and Swagger UI remain future work. See [FUNDING.md](FUNDING.md), [RATES.md](RATES.md), [QUOTES.md](QUOTES.md) and [CONVERSIONS.md](CONVERSIONS.md).
+**Status:** Account/wallet reads, simulated funding/conversion POSTs, fresh-first reference metadata and immutable quotes are implemented with maintained OpenAPI contracts. T07-02's connected conversion flow is verified. T08-01 adds an internal atomic service, not a transfer endpoint; transfer HTTP/UI, full history contracts, generation and Swagger UI remain future work. See [FUNDING.md](FUNDING.md), [RATES.md](RATES.md), [QUOTES.md](QUOTES.md), [CONVERSIONS.md](CONVERSIONS.md) and [TRANSFERS.md](TRANSFERS.md).
 
 T07-01's atomic service now backs `POST /api/conversions` under T07-02.
 Funding/conversion retry keys share ownership, including recorded failures;
 existing funding receipt/status shapes are unchanged. One recovery slot blocks
 cross-feature submissions while an outcome is unknown. See the exact contract and
 scope in [CONVERSIONS.md](CONVERSIONS.md).
+
+The [internal transfer contract](TRANSFERS.md) now shares global key ownership
+with funding/conversion. Transfer confirmation accepts an optional target resolved
+to recipient default and a required default for unknown recipients; FX requires
+an existing reviewed quote, while same-currency sends never request a rate.
+`/api/transfers` remains a candidate route, absent from the implemented OpenAPI
+document. No transfer browser recovery is implied by this backend service.
 
 ## Implemented operational endpoints
 
@@ -40,7 +47,7 @@ context, records exact source/target amounts and provenance, and starts a full
 60-second hold after final validation. Cache eligibility is checked at issuance;
 crossing its 24-hour boundary later does not shorten the issued hold. No preview
 creates a recipient/wallet or moves money. Internal confirmation/consumption seams
-support the connected conversion flow. Transfer submission still does not exist.
+support the connected conversion flow and internal transfer service. Transfer HTTP/UI submission still does not exist.
 
 The [interface](UI_FOUNDATION.md) now reads stored balances but validates/reviews
 money drafts locally. Funding/conversion use explicit server confirmation and

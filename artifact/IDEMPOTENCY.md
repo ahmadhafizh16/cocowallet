@@ -106,3 +106,17 @@ for compatibility; its version-1 discriminant may now be `conversion`. Ordinary
 drafts/quotes are not saved. A conversion recovery attempt uses the original quote
 even after expiry so committed success replays before quote validation. No
 automatic new key, replacement quote or reload submission is allowed.
+
+## Internal transfer extension
+
+[TRANSFERS.md](TRANSFERS.md) extends indefinite original-result retention and
+global key ownership to T08-01. Canonical input includes transfer, exact source/
+recipient/amount and optional target/default/normalized quote ID; omission and an
+explicit default are different accepted input. Preflight replay precedes optional
+metadata work; serialized replay precedes quote/funds/clock validation. Recipient,
+wallet, metadata, exact journal, any quote use and success commit together.
+Known pre-write failures are retained outside completed history; storage/lock/
+post-creation failures are nondefinitive and require the same input/key/quote.
+Same-currency transfers have no quote. Mutual service checks/insert triggers now
+cover funding, conversion and transfers without rewriting old outcomes. Transfer
+HTTP submission and browser recovery remain T08-02, not implemented here.
