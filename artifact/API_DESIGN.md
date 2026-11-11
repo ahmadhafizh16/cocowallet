@@ -2,6 +2,12 @@
 
 **Status:** Account/wallet reads, simulated funding POSTs, fresh-first reference metadata and immutable one-minute quotes are implemented under D-029–D-032, with maintained OpenAPI contracts. Conversion/transfer submission, history contracts, generation and Swagger UI remain future work. See [FUNDING.md](FUNDING.md), [RATES.md](RATES.md) and [QUOTES.md](QUOTES.md).
 
+T07-01 additionally implements the internal atomic conversion service and durable
+original-result storage in [CONVERSIONS.md](CONVERSIONS.md). It is not an HTTP
+handler or OpenAPI path. Funding/conversion retry keys share ownership, including
+recorded failures; existing funding receipt/status shapes are unchanged. T07-02
+must finish the submission/recovery/confirmation HTTP and UI acceptance separately.
+
 ## Implemented operational endpoints
 
 | Method | Route | Result |

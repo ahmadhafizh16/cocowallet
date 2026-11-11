@@ -240,3 +240,29 @@ export const fxQuoteUses = sqliteTable("fx_quote_uses", {
     .references(() => transactions.id, { onDelete: "restrict" }),
   usedAt: text("used_at").notNull(),
 });
+
+/** Retained conversion outcomes; global key exclusivity with funding is also
+ * enforced by migration triggers, without rewriting existing funding records. */
+export const conversionAttempts = sqliteTable(
+  "conversion_attempts",
+  {
+    key: text("key").primaryKey(),
+    request: text("request").notNull(),
+    status: text("status").notNull(),
+    response: text("response").notNull(),
+    transactionId: text("transaction_id")
+      .unique()
+      .references(() => transactions.id, { onDelete: "restrict" }),
+    createdAt: createdAt(),
+  },
+  (table) => [
+    check(
+      "conversion_status",
+      sql`${table.status} IN ('200', '400', '404', '409')`,
+    ),
+    check(
+      "conversion_result_shape",
+      sql`(${table.status} = '200' AND ${table.transactionId} IS NOT NULL) OR (${table.status} != '200' AND ${table.transactionId} IS NULL)`,
+    ),
+  ],
+);

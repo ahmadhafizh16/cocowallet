@@ -23,6 +23,10 @@ preview/readback and internal confirmation/consumption rules in [QUOTES.md](QUOT
 Conversion/transfer submission, history contracts, generator and Swagger UI remain
 open; this checkbox is not global approval for those unrelated endpoints.
 
+T07-01's internal service is defined in [CONVERSIONS.md](CONVERSIONS.md), with
+global funding/conversion key ownership and atomic creation/accounting/quote use.
+Its HTTP/recovery UI remains T07-02; no final submission is enabled by backend tests.
+
 ## Before visual design and feature completion
 
 - [x] Confirm Impeccable product context, code-first, and the approved frosted direction in [PRODUCT.md](../PRODUCT.md), `.impeccable/config.json`, and [DESIGN_REFERENCE.md](DESIGN_REFERENCE.md). The implemented shell has skeleton/state tests and a recorded [design review](DESIGN_REVIEW.md); feature PRDs, handover, decisions, tasks, and diagrams remain under `artifact/`.

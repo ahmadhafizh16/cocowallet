@@ -164,19 +164,19 @@ export function submitFunding(
           "SELECT request, status, response FROM funding_attempts WHERE key = ?",
         )
         .get(key);
+      const conflict = (): FundingResult => ({
+        status: 409,
+        body: fundingProblem(
+          409,
+          "IDEMPOTENCY_KEY_REUSED",
+          "This key belongs to different input. Recover the original request; do not replace its key.",
+          false,
+          key,
+        ),
+        replayed: false,
+      });
       if (existing) {
-        if (existing.request !== canonical)
-          return {
-            status: 409,
-            body: fundingProblem(
-              409,
-              "IDEMPOTENCY_KEY_REUSED",
-              "This key belongs to different input. Recover the original request; do not replace its key.",
-              false,
-              key,
-            ),
-            replayed: false,
-          };
+        if (existing.request !== canonical) return conflict();
         const body = confirmedResult(
           JSON.parse(existing.response),
           Number(existing.status),
@@ -194,6 +194,12 @@ export function submitFunding(
           throw new Error("Invalid stored outcome.");
         return { status, body, replayed: true };
       }
+      if (
+        database.sqlite
+          .prepare("SELECT key FROM conversion_attempts WHERE key=?")
+          .get(key)
+      )
+        return conflict();
       const body = executeFunding(database, scope, kind, key, input);
       const status = "transactionId" in body ? 200 : body.status;
       database.db

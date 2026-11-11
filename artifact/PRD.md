@@ -9,6 +9,10 @@ conversion/transfer submission, quote UI, full history/valuation and Swagger rem
 future work. Visual feedback is deferred. See [QUOTES.md](QUOTES.md), linked feature
 PRDs and [KANBAN.md](KANBAN.md) for actual acceptance boundaries.
 
+T07-01 now adds the internal atomic conversion service, including missing target
+creation, exact quote use and durable original-result replay. This does not enable
+conversion submission or UI confirmation; see [CONVERSIONS.md](CONVERSIONS.md).
+
 ## Goal
 
 Build a simple digital wallet for one simulated user. The user can hold balances in multiple currencies, simulate deposits and withdrawals, convert funds, make transfers, and inspect balances and transaction history.

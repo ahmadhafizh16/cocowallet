@@ -234,6 +234,13 @@ mechanics to future conversion/transfer submission remains their implementation
 work. D-032 requires existing monetary results to replay before quote expiry/use
 checks; preview itself needs no money key and moves no funds.
 
+T07-01 now extends this policy to the internal conversion service: immutable
+separate conversion outcomes, exact quote/original-input binding and global key
+ownership across funding/conversion. Replay precedes quote/current-funds/clock
+checks; target creation, journal, quote use and success commit together. See
+[CONVERSIONS.md](CONVERSIONS.md). Conversion HTTP/recovery UI and transfer services
+are still separate implementation work, not implied by that internal boundary.
+
 ### O-007
 
 **Resolved by D-022:** Local Git is initialized on `main`, and baseline commits are separated by intention. The installed Impeccable engine is excluded while remaining available locally. No remote or push was performed.

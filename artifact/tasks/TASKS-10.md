@@ -42,6 +42,11 @@ separate technical records; unknown/storage failures remain same-key retries.
 See [FUNDING.md](../FUNDING.md). Future quote/transfer request shapes are not
 implemented by this funding-specific boundary.
 
+T07-01 now adds a separate retained conversion-result boundary with global key
+ownership across funding/conversion, original-result replay before quote checks,
+and atomic creation/journal/quote use. See [CONVERSIONS.md](../CONVERSIONS.md).
+Conversion HTTP/recovery UI and transfers remain their feature tasks.
+
 ### T10-03
 
 **OpenAPI generation, Swagger UI, and contract tests**  

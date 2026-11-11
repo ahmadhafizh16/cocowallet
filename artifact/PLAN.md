@@ -1,6 +1,6 @@
 # Proposed implementation plan
 
-**Status:** Persistent reads, durable funding, fresh-first reference metadata and T06-02's immutable one-minute quote backend are verified. Quotes bind exact input, reserve no funds and support one successful use; no UI or new money action is enabled. Next is T07-01's atomic conversion service, followed by reviewed submission/UI, transfers and remaining wallet management, valuation/history and API/Swagger acceptance. UI feedback remains deferred. See [QUOTES.md](QUOTES.md), [KANBAN.md](KANBAN.md) and [READINESS.md](READINESS.md); local commit rules remain D-021/D-022.
+**Status:** Persistent reads, funding, fresh-first metadata, immutable quotes and T07-01's internal atomic conversion service are verified. Conversion includes target creation, exact accounting/quote use and durable replay, but no new HTTP/UI submission is enabled. Next is T07-02's reviewed conversion confirmation/recovery flow, then transfers and remaining wallet management, valuation/history and API/Swagger acceptance. UI feedback remains deferred. See [CONVERSIONS.md](CONVERSIONS.md), [KANBAN.md](KANBAN.md) and [READINESS.md](READINESS.md); local commit rules remain D-021/D-022.
 
 ## Tasks
 

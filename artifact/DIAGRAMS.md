@@ -2,6 +2,11 @@
 
 **Status:** Persistent reads/funding, fresh-first reference metadata and immutable one-minute quote preview/readback are implemented. Funding retains atomic original outcomes; quotes have separate immutable terms/use metadata and internal confirmation safeguards. Conversion/transfer submission, reviewed quote UI and full history/valuation remain future features. The [decision register](DECISIONS.md) is authoritative when a diagram and an open question conflict.
 
+T07-01 also implements the internal atomic conversion service: global
+funding/conversion key ownership, retained original results and atomic target
+creation/journal/quote use. Submission endpoints and confirmation UI stay disabled;
+see [CONVERSIONS.md](CONVERSIONS.md).
+
 ## Implemented foundation flow
 
 ```mermaid
@@ -248,7 +253,8 @@ callback and commits/rolls back creation, transactions, entries and technical
 success together. Escaped scopes and promise callbacks are rejected. Funding
 already implements durable original outcomes under D-030. Quote use joins the
 journal failure latch even if its error is caught inside the after-record hook.
-Conversion/transfer HTTP/key integration is still future work: replay an existing
+The conversion service now implements these key/quote rules internally;
+conversion HTTP/recovery UI and transfer integration are still future work. Replay an existing
 result before quote expiry/use checks, then recheck the key under the reservation.
 Do not hold it during network work. See [JOURNAL.md](JOURNAL.md) and
 [QUOTES.md](QUOTES.md).

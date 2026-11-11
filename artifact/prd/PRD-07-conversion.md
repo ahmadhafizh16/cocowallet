@@ -1,6 +1,6 @@
 # PRD-07 — Main-account currency conversion
 
-**Status:** Draft; no conversion implementation exists.  
+**Status:** T07-01's internal atomic conversion service is implemented and verified; see [CONVERSIONS.md](../CONVERSIONS.md). Submission endpoints, reviewed confirmation/recovery UI and connected conversion history remain T07-02 and later history work.
 **Decisions:** [D-004](../DECISIONS.md#d-004), [D-007](../DECISIONS.md#d-007), [D-008](../DECISIONS.md#d-008), [D-009](../DECISIONS.md#d-009), [D-018](../DECISIONS.md#d-018), [D-019](../DECISIONS.md#d-019).  
 **Tasks:** [T07-01–T07-02](../tasks/TASKS-07.md).  
 **Diagrams:** [Rate and quote sequence](../DIAGRAMS.md#rate-cache-and-quote-sequence) and [money-operation code flow](../DIAGRAMS.md#code-flow-for-a-completed-money-operation).
@@ -27,4 +27,4 @@ As the user, I can convert funds between fiat currencies in my main account, see
 
 ## Tests and open items
 
-Depends on [PRD-02](PRD-02-journal.md), [PRD-03](PRD-03-accounts.md), and [PRD-06](PRD-06-rates.md). Test exact and tie rounding, target-wallet creation, quote expiry, FX cache fallback, rollback, parallel spending, stable success/error replay, and the confirmation flow. The exact API contract and idempotency storage/recovery details remain [O-003](../DECISIONS.md#o-003) and [O-006](../DECISIONS.md#o-006).
+Depends on [PRD-02](PRD-02-journal.md), [PRD-03](PRD-03-accounts.md), and [PRD-06](PRD-06-rates.md). Test exact and tie rounding, target-wallet creation, quote expiry, FX cache fallback, rollback, parallel spending, stable success/error replay, and the confirmation flow. [CONVERSIONS.md](../CONVERSIONS.md) fixes internal service/result storage for this slice. Final HTTP and browser recovery/confirmation retain [O-003](../DECISIONS.md#o-003) and T07-02; full history retains T09.

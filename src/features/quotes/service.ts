@@ -55,7 +55,11 @@ export async function createQuote(
       ? currencyMetadata(database, before.recipient.defaultCurrency)
       : undefined;
     let catalogFetchedAt: string | undefined;
-    if (!targetMetadata || (before.recipient && !before.recipient.existed)) {
+    if (
+      !targetMetadata ||
+      !before.targetWalletId ||
+      (before.recipient && !before.recipient.existed)
+    ) {
       const catalog = await getCurrencyCatalog(database, dependencies);
       catalogFetchedAt = catalog.fetchedAt;
       const target = catalog.currencies.find(

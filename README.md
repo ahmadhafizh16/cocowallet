@@ -4,6 +4,11 @@ A local-only multi-currency wallet simulation built with Next.js and Node 26. Pr
 
 **Current milestone:** Persistent accounts, exact journal balances and safely reviewed simulated funding power the existing interface. Fresh-first reference APIs and immutable server-owned one-minute quote previews/readback are implemented. Quotes bind exact input and reserve no funds; conversion/transfer submission, valuation and full history/Swagger remain separate work. The UI is unchanged and visual refinements stay deferred. See [`artifact/QUOTES.md`](artifact/QUOTES.md), [`artifact/RATES.md`](artifact/RATES.md) and [`artifact/FUNDING.md`](artifact/FUNDING.md).
 
+The internal atomic conversion service now supports exact quote-bound accounting,
+missing target currency/wallet creation and durable original-result replay. Retry
+keys cannot be reused across funding and conversion. This does **not** enable a
+conversion endpoint or the confirmation UI; see [`artifact/CONVERSIONS.md`](artifact/CONVERSIONS.md).
+
 ## Development environment
 
 Requirements: Docker Engine and Docker Compose. Host Node 26 is not required.
@@ -18,7 +23,7 @@ docker compose up -d app
 
 Open `http://localhost:3000/api/health` for the health endpoint. Use `APP_PORT=3100 docker compose up -d app` if port 3000 is already occupied.
 
-`/api/ready` verifies SQLite and its migrated metadata table; it is not a full schema-version or seeded-account check. Six migrations create metadata, accounting/invariants, immutable funding outcomes, reference caches and immutable quote/use tables. Migration and seed commands are safe to repeat and run explicitly, never during a GET or production build. Seeding creates startup accounts/wallets, never funds, history, quotes or provider snapshots. On a fresh database, migrate and seed before opening `/`. Existing installations must back up SQLite and run `db:migrate` through migration 0005 before using quote APIs; no volume reset is needed.
+`/api/ready` verifies SQLite and its migrated metadata table; it is not a full schema-version or seeded-account check. Seven migrations create metadata, accounting/invariants, retained funding/conversion outcomes, reference caches and immutable quote/use tables. Migration and seed commands are safe to repeat and run explicitly, never during a GET or production build. Seeding creates startup accounts/wallets, never funds, history, quotes or provider snapshots. On a fresh database, migrate and seed before opening `/`. Existing installations must back up SQLite and run `db:migrate` through migration 0006 before new funding requests or the conversion service use shared key ownership; no volume reset is needed.
 
 APIs: account/wallet GETs, `POST /api/deposits`, `POST /api/withdrawals`, `GET /api/currencies`, `GET /api/rates?base=USD&quote=EUR`, `POST /api/quotes`, `GET /api/quotes/{quoteId}`, and `GET /api/openapi`. Funding requires a UUID key; identical retries replay the original result indefinitely, while changed input is rejected. Amounts/rates are exact strings and responses are not cached. Reference GETs update technical caches, never money/wallets; eligible fallback is less than 24 hours old, without invented reciprocal/cross rates. Quote creation stores a preview with a full 60-second hold after final validation, but moves/reserves no funds and creates no recipient/wallet. Swagger UI, conversion/transfer submission and full history endpoints remain unimplemented.
 

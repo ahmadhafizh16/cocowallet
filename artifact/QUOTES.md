@@ -46,6 +46,9 @@ Responses are no-store and POST origin/JSON/body guards match local-only policy.
 - Fetch reference metadata before a writer transaction. Validate the source and
   destination again under a short immediate reservation before persisting terms.
   Current funds and final target bounds must suffice; no funds are reserved.
+  A missing target wallet requires eligible catalog metadata at issuance, even
+  when its currency already exists in storage; exact-pair fallback alone does not
+  authorize creating a wallet. Confirmation uses the pinned terms, never network.
 - Recheck cached-rate eligibility **at issuance**, including after any writer
   wait. Only then start the 60-second hold. Expiry is strict: `now >= expiresAt`
   is expired. At confirmation, do not re-fetch or shorten the issued hold because
@@ -122,7 +125,8 @@ here resolve only this slice of O-003, not those unrelated pending contracts.
   were read directly and exercised in isolated SQLite tests. No independent-agent
   review, exhaustive security certification or performance claim is implied.
 
-Next dependency is **T07-01's atomic conversion service**, including durable
-idempotent replay before quote checks and atomic missing-wallet creation. T07-02
+T07-01 now implements the atomic conversion service, including durable replay
+before quote checks and atomic missing-wallet creation; see
+[CONVERSIONS.md](CONVERSIONS.md). Next is **T07-02**: it
 must finish reviewed confirmation/expiry UI before enabling conversion submission;
 T08 retains the corresponding simulated-transfer work. No push is authorized.

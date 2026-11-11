@@ -90,3 +90,13 @@ Neither A nor B changes the agreed rule for a **successful** commit: replaying t
   original input/key. Missing/blocked/corrupt recovery storage blocks new writes.
   Clear known context; ordinary drafts/history are not persisted. Hiding balances
   also hides recovery/receipt amounts. Closing a dialog never forgets uncertainty.
+
+## Internal conversion extension
+
+[CONVERSIONS.md](CONVERSIONS.md) applies the same retained-original-result policy
+to the server-only T07-01 service. Canonical input includes conversion, normalized
+quote UUID and exact source-wallet/amount/target strings. Funding and conversion
+now share key ownership, enforced by both services and mutual insert triggers;
+existing funding results are unchanged. Replay precedes quote/current-funds/clock
+checks, and receipt/key/journal/quote use commit atomically. Unknown outcomes keep
+the same key and quote; the HTTP/recovery UI remains T07-02, not enabled here.

@@ -43,6 +43,13 @@
       "when": 1794418409121,
       "tag": "0005_immutable_fx_quotes",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "6",
+      "when": 1794420581290,
+      "tag": "0006_conversion_results",
+      "breakpoints": true
     }
   ]
 }

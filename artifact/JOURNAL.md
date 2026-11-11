@@ -71,8 +71,10 @@ in the same transaction as accounting. Tests demonstrate this seam using a
 **test-only** result table: reopening and replaying the same success inserts no new
 entries; failure to save technical success rolls accounting back. This is **not**
 the final key schema, fingerprinting, stable error replay, or recovery policy.
-Funding now supplies those guarantees through [FUNDING.md](FUNDING.md); adapting
-them to conversion/transfer submission remains T07/T08.
+Funding supplies those guarantees through [FUNDING.md](FUNDING.md). T07-01 also
+implements internal atomic conversion, including missing currency/wallet creation,
+quote use and retained original outcomes; see [CONVERSIONS.md](CONVERSIONS.md).
+Conversion submission/recovery UI remains T07-02 and transfers remain T08.
 
 ## Verification
 
