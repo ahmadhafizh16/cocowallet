@@ -6,7 +6,7 @@ export type Operation = "deposit" | "withdraw" | "convert" | "transfer";
 export type OperationDraft = {
   amount: string;
   currency: WalletCurrency;
-  targetCurrency: WalletCurrency;
+  targetCurrency: WalletCurrency | "";
   recipient: string;
   provider: string;
 };
@@ -44,6 +44,13 @@ export const OPERATION_LABELS: Record<Operation, string> = {
   transfer: "Transfer",
 };
 
+export const OPERATION_NOUNS: Record<Operation, string> = {
+  deposit: "deposit",
+  withdraw: "withdrawal",
+  convert: "conversion",
+  transfer: "transfer",
+};
+
 export function createDraft(
   wallets: WalletView[],
   currency: WalletCurrency,
@@ -56,7 +63,7 @@ export function createDraft(
     amount: "",
     currency: source,
     targetCurrency:
-      wallets.find((wallet) => wallet.currency !== source)?.currency ?? source,
+      wallets.find((wallet) => wallet.currency !== source)?.currency ?? "",
     recipient: "",
     provider: "demo_bank",
   };
@@ -94,11 +101,16 @@ export function validateOperation({
       minor = parseAmount(draft.amount, wallet.exponent);
     } catch (error) {
       errors.amount =
-        error instanceof MoneyError && error.code === "invalid_precision"
-          ? `Use no more than ${wallet.exponent} decimal places for ${wallet.currency}.`
-          : error instanceof MoneyError && error.code === "amount_out_of_range"
-            ? "Enter a positive amount within the supported range."
-            : "Enter a positive amount with a dot for decimals, without commas, spaces, or leading zeros.";
+        draft.amount === ""
+          ? "Enter an amount."
+          : /^(?:0|0\.0+)(?![\s\S])/u.test(draft.amount)
+            ? "Enter an amount greater than 0."
+            : error instanceof MoneyError && error.code === "invalid_precision"
+              ? `Use no more than ${wallet.exponent} decimal places for ${wallet.currency}.`
+              : error instanceof MoneyError &&
+                  error.code === "amount_out_of_range"
+                ? "Enter a positive amount within the supported range."
+                : "Use a decimal amount, for example 12.50.";
     }
 
     const balance = walletBalance(wallet);
@@ -108,7 +120,7 @@ export function validateOperation({
     } else if (minor !== null && operation !== "deposit" && minor > balance) {
       errors.amount =
         balance === 0n
-          ? "Insufficient preview balance. This wallet starts at zero; connected funding is needed before funds can leave it."
+          ? "Insufficient preview balance. This wallet has no funds, and deposit submission is not connected."
           : "This amount exceeds the available preview balance. Enter a smaller amount.";
     } else if (
       minor !== null &&
@@ -143,7 +155,10 @@ export function validateOperation({
     ) ||
       draft.targetCurrency === draft.currency)
   ) {
-    errors.targetCurrency = "Choose a different available target currency.";
+    errors.targetCurrency =
+      draft.targetCurrency === ""
+        ? "Choose a receiving currency."
+        : "Choose a different available target currency.";
   }
 
   if (Object.keys(errors).length || !wallet || minor === null)
@@ -155,7 +170,7 @@ export function validateOperation({
       accountId: account.id,
       minor,
       wallet,
-      targetCurrency: draft.targetCurrency,
+      targetCurrency: draft.targetCurrency || wallet.currency,
       recipient: draft.recipient,
       provider: draft.provider,
     },

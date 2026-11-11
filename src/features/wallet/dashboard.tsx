@@ -3,10 +3,10 @@
 import { useEffect, useRef, useState } from "react";
 import {
   ArrowDownLeft,
-  ArrowRight,
   ArrowRightLeft,
   ArrowUpRight,
   Check,
+  ChevronDown,
   Copy,
   Eye,
   EyeOff,
@@ -15,14 +15,45 @@ import {
   Info,
   Plus,
   Send,
-  SlidersHorizontal,
   Wallet,
 } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Separator } from "@/components/ui/separator";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { ThemeMenu } from "@/features/theme/theme-menu";
 import { useHydrated } from "@/lib/use-hydrated";
 import { OperationWorkspace } from "./operation-workspace";
-import { OPERATION_LABELS, type Operation } from "./operation-model";
+import { type Operation } from "./operation-model";
 import {
   CURRENCY_SYMBOLS,
   displayBalance,
@@ -35,14 +66,21 @@ const NAVIGATION = [
   { id: "overview", label: "Overview", icon: House },
   { id: "wallets", label: "Wallets", icon: Wallet },
   { id: "history", label: "History", icon: History },
-  { id: "operations", label: "Actions", icon: Send },
-  { id: "account", label: "Account", icon: SlidersHorizontal },
 ] as const;
+
 const ACTIONS = [
-  { operation: "deposit", icon: Plus },
-  { operation: "withdraw", icon: ArrowUpRight },
-  { operation: "convert", icon: ArrowRightLeft },
-  { operation: "transfer", icon: Send },
+  { operation: "deposit", label: "Deposit", icon: Plus },
+  { operation: "withdraw", label: "Withdraw", icon: ArrowUpRight },
+  { operation: "convert", label: "Convert", icon: ArrowRightLeft },
+  { operation: "transfer", label: "Send money", icon: Send },
+] as const;
+
+const HISTORY_FILTERS = [
+  { value: "all", label: "All activity", empty: "No activity yet" },
+  { value: "deposit", label: "Deposits", empty: "No deposits to show." },
+  { value: "withdraw", label: "Withdrawals", empty: "No withdrawals to show." },
+  { value: "convert", label: "Conversions", empty: "No conversions to show." },
+  { value: "transfer", label: "Transfers", empty: "No transfers to show." },
 ] as const;
 
 export function WalletDashboard({ model }: { model: WalletOverview }) {
@@ -50,28 +88,27 @@ export function WalletDashboard({ model }: { model: WalletOverview }) {
   const [activeAccountId, setActiveAccount] = useState(model.activeAccountId);
   const [hidden, setHidden] = useState(false);
   const [operation, setOperation] = useState<Operation>("transfer");
+  const [operationOpen, setOperationOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("overview");
   const [historyFilter, setHistoryFilter] = useState("all");
   const [copyResult, setCopyResult] = useState<{
     accountId: string;
     message: string;
   }>();
-  const dashboardRef = useRef<HTMLDivElement>(null);
+  const operationTriggerRef = useRef<HTMLElement | null>(null);
+  const mobileActionsRef = useRef<HTMLButtonElement>(null);
+  const menuOpeningOperationRef = useRef(false);
   const account =
     model.accounts.find((item) => item.id === activeAccountId) ??
     model.accounts[0];
   const isMain = account?.role === "main";
   const wallets = walletsForAccount(model.wallets, account?.id);
   const zeroTotal = hasZeroTotal(wallets);
-  const defaultWallet = wallets.find(
-    (wallet) => wallet.currency === account?.defaultCurrency,
-  );
-  const conversionSource = defaultWallet ?? wallets[0];
-  const conversionTarget = wallets.find(
-    (wallet) => wallet.currency !== conversionSource?.currency,
-  );
   const copyFeedback =
     copyResult?.accountId === account?.id ? (copyResult?.message ?? "") : "";
+  const emptyHistoryHeading =
+    HISTORY_FILTERS.find((filter) => filter.value === historyFilter)?.empty ??
+    HISTORY_FILTERS[0].empty;
 
   useEffect(() => {
     function syncHash() {
@@ -83,21 +120,17 @@ export function WalletDashboard({ model }: { model: WalletOverview }) {
     return () => window.removeEventListener("hashchange", syncHash);
   }, []);
 
-  function openOperation(next: Operation) {
-    if (!isMain) return;
+  function openOperation(next: Operation, trigger: HTMLElement | null) {
+    if (!isMain || !hydrated) return;
+    operationTriggerRef.current = trigger;
     setOperation(next);
-    setActiveSection("operations");
-    requestAnimationFrame(() => {
-      const heading =
-        dashboardRef.current?.querySelector<HTMLElement>("#operation-heading");
-      heading?.focus({ preventScroll: true });
-      heading?.scrollIntoView({
-        behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
-          ? "instant"
-          : "smooth",
-        block: "start",
-      });
-    });
+    setOperationOpen(true);
+  }
+
+  function inspectAccount(id: string) {
+    setOperationOpen(false);
+    setActiveAccount(id);
+    setCopyResult(undefined);
   }
 
   async function copyAccountId() {
@@ -117,426 +150,436 @@ export function WalletDashboard({ model }: { model: WalletOverview }) {
   }
 
   return (
-    <div className="wallet-app" ref={dashboardRef}>
-      <header className="wallet-topbar">
-        <a
-          href="#overview"
-          className="wallet-brand"
-          onClick={() => setActiveSection("overview")}
-          aria-label="Wallet overview"
-        >
-          <span className="wallet-brand-mark">
-            <Wallet aria-hidden="true" />
-          </span>
-          <span className="wallet-brand-name">
-            wallet<span>Multi-currency simulation</span>
-          </span>
-        </a>
-        <div className="wallet-top-meta">
-          <span className="wallet-preview-label">Interface preview</span>
-          <ThemeMenu />
-          <label className="wallet-account-select">
-            <span className="wallet-avatar" aria-hidden="true">
-              {isMain ? "MA" : "ID"}
+    <TooltipProvider delayDuration={200}>
+      <div className="wallet-app">
+        <header className="wallet-topbar">
+          <a
+            href="#overview"
+            className="wallet-brand"
+            onClick={() => setActiveSection("overview")}
+            aria-label="Wallet overview"
+          >
+            <span className="wallet-brand-mark">
+              <Wallet aria-hidden="true" />
             </span>
-            <span className="wallet-sr-only">Account being inspected</span>
-            <select
-              aria-label="Account being inspected"
-              disabled={!hydrated || model.accounts.length === 0}
-              value={account?.id ?? ""}
-              onChange={(event) => {
-                setActiveAccount(event.target.value);
-                setCopyResult(undefined);
-              }}
-            >
-              {model.accounts.map((item) => (
-                <option key={item.id} value={item.id}>
-                  {item.label}
-                  {item.role === "destination" ? " · Inspect only" : ""}
-                </option>
+            <span className="wallet-brand-name">wallet</span>
+          </a>
+          <div className="wallet-top-meta">
+            <ThemeMenu />
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="ghost"
+                  className="wallet-account-trigger"
+                  aria-label="Account being inspected"
+                  disabled={!hydrated || model.accounts.length === 0}
+                >
+                  <span className="wallet-avatar" aria-hidden="true">
+                    <Wallet />
+                  </span>
+                  <span className="wallet-account-trigger-name">
+                    {account?.label ?? "No account"}
+                  </span>
+                  <ChevronDown aria-hidden="true" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="wallet-account-menu">
+                <DropdownMenuLabel>Inspect account</DropdownMenuLabel>
+                <DropdownMenuRadioGroup
+                  value={account?.id ?? ""}
+                  onValueChange={inspectAccount}
+                >
+                  {model.accounts.map((item) => (
+                    <DropdownMenuRadioItem
+                      key={item.id}
+                      value={item.id}
+                      className="wallet-account-option"
+                    >
+                      <span>{item.label}</span>
+                      {item.role === "destination" && (
+                        <Badge variant="outline">Inspect only</Badge>
+                      )}
+                    </DropdownMenuRadioItem>
+                  ))}
+                </DropdownMenuRadioGroup>
+                <DropdownMenuSeparator />
+                <div className="wallet-account-details">
+                  <p className="wallet-supporting">Account ID</p>
+                  <p className="wallet-account-id" tabIndex={0}>
+                    {account?.id ?? "Account unavailable"}
+                  </p>
+                  <p className="wallet-supporting">
+                    Default currency ·{" "}
+                    {account?.defaultCurrency ?? "Unavailable"}
+                  </p>
+                </div>
+                <DropdownMenuItem
+                  disabled={!account}
+                  onSelect={(event) => {
+                    event.preventDefault();
+                    void copyAccountId();
+                  }}
+                >
+                  {copyFeedback === "Account ID copied." ? (
+                    <Check aria-hidden="true" />
+                  ) : (
+                    <Copy aria-hidden="true" />
+                  )}
+                  Copy account ID
+                </DropdownMenuItem>
+                <p className="wallet-copy-feedback" role="status">
+                  {copyFeedback}
+                </p>
+                <DropdownMenuSeparator />
+                <DropdownMenuLabel>About this preview</DropdownMenuLabel>
+                <p className="wallet-account-about">
+                  Balances are presentation-only, not stored. Form drafts stay
+                  on this page and clear when you reload.
+                </p>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+        </header>
+        <div className="wallet-workspace">
+          <nav className="wallet-rail" aria-label="Wallet navigation">
+            <div className="wallet-rail-group">
+              {NAVIGATION.map(({ id, label, icon: Icon }) => (
+                <Tooltip key={id}>
+                  <TooltipTrigger asChild>
+                    <Button
+                      asChild
+                      variant="ghost"
+                      size="icon"
+                      className="wallet-nav-button"
+                    >
+                      <a
+                        href={`#${id}`}
+                        aria-label={label}
+                        aria-current={
+                          activeSection === id ? "location" : undefined
+                        }
+                        onClick={() => setActiveSection(id)}
+                      >
+                        <Icon aria-hidden="true" />
+                        <span className="wallet-mobile-nav-label">{label}</span>
+                      </a>
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent side="right">{label}</TooltipContent>
+                </Tooltip>
               ))}
-            </select>
-          </label>
-        </div>
-      </header>
-      <div className="wallet-workspace">
-        <nav className="wallet-rail" aria-label="Wallet navigation">
-          {NAVIGATION.map(({ id, label, icon: Icon }) => (
-            <a
-              href={`#${id}`}
-              key={id}
-              className={`${id === "account" ? "wallet-rail-end" : ""} ${id === "operations" ? "wallet-mobile-transfer" : ""}`}
-              aria-current={activeSection === id ? "location" : undefined}
-              onClick={() => {
-                setActiveSection(id);
-              }}
-            >
-              <span className="wallet-nav-circle">
-                <Icon aria-hidden="true" />
-              </span>
-              {label}
-            </a>
-          ))}
-        </nav>
-        <main id="main-content" className="wallet-main" tabIndex={-1}>
-          <div className="wallet-page-heading" id="overview" tabIndex={-1}>
-            <div>
+            </div>
+            <Separator className="wallet-rail-separator" />
+            <div className="wallet-rail-group wallet-desktop-actions">
+              {ACTIONS.map(({ operation: action, label, icon: Icon }) => (
+                <Tooltip key={action}>
+                  <TooltipTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="wallet-nav-button"
+                      aria-label={label}
+                      aria-haspopup="dialog"
+                      aria-controls="operations"
+                      aria-expanded={operationOpen && operation === action}
+                      disabled={!isMain || !hydrated}
+                      onClick={(event) =>
+                        openOperation(action, event.currentTarget)
+                      }
+                    >
+                      <Icon aria-hidden="true" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent side="right">{label}</TooltipContent>
+                </Tooltip>
+              ))}
+            </div>
+            <div className="wallet-mobile-actions">
+              <DropdownMenu modal={false}>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    ref={mobileActionsRef}
+                    variant="ghost"
+                    className="wallet-nav-button"
+                    aria-label="Money actions"
+                  >
+                    <Send aria-hidden="true" />
+                    <span className="wallet-mobile-nav-label">Actions</span>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent
+                  side="top"
+                  align="end"
+                  sideOffset={12}
+                  className="wallet-actions-menu"
+                  onCloseAutoFocus={(event) => {
+                    if (menuOpeningOperationRef.current) {
+                      event.preventDefault();
+                      menuOpeningOperationRef.current = false;
+                    }
+                  }}
+                >
+                  <DropdownMenuLabel>Money actions</DropdownMenuLabel>
+                  {!isMain && (
+                    <p className="wallet-actions-hint">
+                      Choose the main account to explore these forms.
+                    </p>
+                  )}
+                  {ACTIONS.map(({ operation: action, label, icon: Icon }) => (
+                    <DropdownMenuItem
+                      key={action}
+                      disabled={!isMain || !hydrated}
+                      onSelect={() => {
+                        menuOpeningOperationRef.current = true;
+                        openOperation(action, mobileActionsRef.current);
+                      }}
+                    >
+                      <Icon aria-hidden="true" />
+                      {label}
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
+          </nav>
+          <main id="main-content" className="wallet-main" tabIndex={-1}>
+            <div className="wallet-page-heading" id="overview" tabIndex={-1}>
               <h1>Your wallet, at a glance.</h1>
+              {account?.role === "destination" && (
+                <Badge variant="outline">Inspect only</Badge>
+              )}
+            </div>
+            <div className="wallet-preview-notice">
+              <Info aria-hidden="true" />
               <p>
-                <span className="wallet-connection-dot" />
-                Interface preview · Service connection pending
+                <strong>Interface preview</strong> — operations are not
+                connected. No real funds move.
               </p>
             </div>
-            <span className="wallet-simulation-badge">
-              <Info aria-hidden="true" />
-              Simulation
-              <span className="wallet-desktop-only"> · No real funds</span>
-            </span>
-          </div>
-          <div className="wallet-dashboard-grid">
-            <div className="wallet-column">
-              <section
-                className="wallet-panel wallet-total-panel"
-                aria-labelledby="total-heading"
-              >
-                <div className="wallet-section-head">
-                  <h2 className="wallet-total-heading" id="total-heading">
-                    <Wallet aria-hidden="true" />
-                    Approximate total
-                  </h2>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="wallet-privacy-button"
-                    aria-label="Hide monetary amounts"
-                    aria-pressed={hidden}
-                    disabled={!hydrated}
-                    onClick={() => setHidden((value) => !value)}
-                  >
-                    {hidden ? (
-                      <EyeOff aria-hidden="true" />
-                    ) : (
-                      <Eye aria-hidden="true" />
-                    )}
-                    <span>{hidden ? "Show" : "Hide"}</span>
-                  </Button>
-                </div>
-                <div className="wallet-total">
-                  <span
-                    className={`wallet-total-value${!zeroTotal && !hidden ? " wallet-total-unavailable" : ""}`}
-                  >
-                    {hidden ? (
-                      <span aria-label="Amount hidden">••••</span>
-                    ) : zeroTotal ? (
-                      "$0.00"
-                    ) : (
-                      "Unavailable"
-                    )}
-                  </span>
-                  {zeroTotal && <span className="wallet-total-unit">USD</span>}
-                </div>
-                <p className="wallet-total-note">
-                  {!isMain
-                    ? wallets.length > 0
-                      ? "Inspect-only destination · Preview balances"
-                      : "No destination balances supplied in this preview."
-                    : zeroTotal
-                      ? "Zero-state preview · Not a stored balance"
-                      : "A combined total needs connected exchange rates."}
-                </p>
-                <p className="wallet-quick-label">
-                  Quick actions{!isMain && <span> · Inspect only</span>}
-                </p>
-                <div className="wallet-quick-actions">
-                  {ACTIONS.map(({ operation: action, icon: Icon }) => (
-                    <button
-                      type="button"
-                      key={action}
-                      className="wallet-quick-action"
-                      disabled={!isMain || !hydrated}
-                      onClick={() => openOperation(action)}
-                      aria-controls="operations"
-                      aria-pressed={operation === action && isMain}
-                    >
-                      <span className="wallet-action-circle">
-                        <Icon aria-hidden="true" />
-                      </span>
-                      {OPERATION_LABELS[action]}
-                    </button>
-                  ))}
-                </div>
-              </section>
-              <section
-                className="wallet-panel wallet-history-panel"
-                id="history"
-                aria-labelledby="history-heading"
-              >
-                <div className="wallet-section-head">
-                  <h2 id="history-heading">Recent transactions</h2>
-                  <History className="wallet-heading-icon" aria-hidden="true" />
-                </div>
-                <label className="wallet-history-filter">
-                  <span>Show</span>
-                  <select
-                    aria-label="Filter transactions"
-                    disabled={!hydrated}
-                    value={historyFilter}
-                    onChange={(event) => setHistoryFilter(event.target.value)}
-                  >
-                    <option value="all">All activity</option>
-                    <option value="deposit">Deposits</option>
-                    <option value="withdraw">Withdrawals</option>
-                    <option value="convert">Conversions</option>
-                    <option value="transfer">Transfers</option>
-                  </select>
-                </label>
-                <div className="wallet-history-empty">
-                  <span className="wallet-empty-symbol">
-                    <ArrowDownLeft aria-hidden="true" />
-                  </span>
-                  <h3>
-                    {historyFilter === "all"
-                      ? "A fresh start."
-                      : `No ${historyFilter === "withdraw" ? "withdrawals" : historyFilter === "convert" ? "conversions" : `${historyFilter}s`} to show.`}
-                  </h3>
-                  <p>
-                    {isMain
-                      ? "Your activity will live here once wallet services are connected. Previewing a form won’t create a transaction."
-                      : "Destination history is not connected. This view does not reuse main-account activity."}
-                  </p>
-                  {historyFilter !== "all" ? (
+            <div className="wallet-dashboard-grid">
+              <div className="wallet-column">
+                <Card
+                  className="wallet-panel wallet-total-panel"
+                  aria-labelledby="total-heading"
+                >
+                  <CardHeader className="wallet-card-header wallet-section-head">
+                    <CardTitle>
+                      <h2 id="total-heading">Approximate total</h2>
+                    </CardTitle>
                     <Button
                       variant="ghost"
                       size="sm"
-                      onClick={() => setHistoryFilter("all")}
+                      className="wallet-privacy-button"
+                      aria-label="Hide monetary amounts"
+                      aria-pressed={hidden}
+                      disabled={!hydrated}
+                      onClick={() => setHidden((value) => !value)}
                     >
-                      Clear filter
+                      {hidden ? (
+                        <EyeOff aria-hidden="true" />
+                      ) : (
+                        <Eye aria-hidden="true" />
+                      )}
+                      <span>{hidden ? "Show" : "Hide"}</span>
                     </Button>
-                  ) : (
-                    <Button
-                      variant="secondary"
-                      size="sm"
-                      disabled={!isMain || !hydrated}
-                      onClick={() => openOperation("deposit")}
+                  </CardHeader>
+                  <CardContent className="wallet-card-content">
+                    <div className="wallet-total">
+                      <span
+                        className={`wallet-total-value${!zeroTotal && !hidden ? " wallet-total-unavailable" : ""}`}
+                      >
+                        {hidden ? (
+                          <span aria-label="Amount hidden">••••</span>
+                        ) : zeroTotal ? (
+                          "$0.00"
+                        ) : (
+                          "Unavailable"
+                        )}
+                      </span>
+                      {zeroTotal && (
+                        <span className="wallet-total-unit">USD</span>
+                      )}
+                    </div>
+                    <p className="wallet-total-note">
+                      {!account
+                        ? "No account balances supplied."
+                        : !isMain
+                          ? wallets.length > 0
+                            ? "Inspect-only destination · Presentation balances"
+                            : "No destination balances supplied."
+                          : zeroTotal
+                            ? "Presentation only · Not a stored balance"
+                            : "A combined total needs connected exchange rates."}
+                    </p>
+                    <div
+                      className="wallet-quick-actions"
+                      aria-label="Quick actions"
                     >
-                      Explore a deposit
-                      <ArrowRight aria-hidden="true" />
-                    </Button>
-                  )}
-                </div>
-                <p className="wallet-history-footnote">
-                  <Info aria-hidden="true" />
-                  Nothing has been submitted or moved.
-                </p>
-              </section>
-            </div>
-            <div className="wallet-column">
-              <div className="wallet-summary-grid">
-                <section className="wallet-panel wallet-mini-panel">
-                  <h2>Currency wallets</h2>
-                  <strong>{wallets.length || (isMain ? 0 : "—")}</strong>
-                  <p>
-                    {wallets.length > 0
-                      ? wallets.map((wallet) => wallet.currency).join(", ") ||
-                        "No wallets available"
-                      : "Not connected"}
-                  </p>
-                </section>
-                <section className="wallet-panel wallet-mini-panel">
-                  <h2>Default currency</h2>
-                  <strong className="wallet-default-currency">
-                    {account?.defaultCurrency ?? "—"}
-                  </strong>
-                  <p>{defaultWallet?.name ?? "Account preference"}</p>
-                </section>
+                      {ACTIONS.map(
+                        ({ operation: action, label, icon: Icon }) => (
+                          <Button
+                            variant="secondary"
+                            key={action}
+                            className="wallet-quick-action"
+                            disabled={!isMain || !hydrated}
+                            onClick={(event) =>
+                              openOperation(action, event.currentTarget)
+                            }
+                            aria-haspopup="dialog"
+                            aria-controls="operations"
+                            aria-expanded={
+                              operationOpen && operation === action
+                            }
+                          >
+                            <Icon aria-hidden="true" />
+                            {label}
+                          </Button>
+                        ),
+                      )}
+                    </div>
+                    {account?.role === "destination" && (
+                      <p className="wallet-inspect-hint">
+                        Money actions are available from the main account only.
+                      </p>
+                    )}
+                  </CardContent>
+                </Card>
+                <Card
+                  className="wallet-panel wallet-history-panel"
+                  id="history"
+                  aria-labelledby="history-heading"
+                >
+                  <CardHeader className="wallet-card-header wallet-section-head">
+                    <CardTitle>
+                      <h2 id="history-heading">Recent transactions</h2>
+                    </CardTitle>
+                    <Select
+                      value={historyFilter}
+                      onValueChange={setHistoryFilter}
+                      disabled={!hydrated}
+                    >
+                      <SelectTrigger
+                        aria-label="Filter transactions"
+                        className="wallet-history-filter"
+                      >
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {HISTORY_FILTERS.map(({ value, label }) => (
+                          <SelectItem key={value} value={value}>
+                            {label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </CardHeader>
+                  <CardContent className="wallet-card-content wallet-history-empty">
+                    <span className="wallet-empty-symbol">
+                      <ArrowDownLeft aria-hidden="true" />
+                    </span>
+                    <div>
+                      <h3>{emptyHistoryHeading}</h3>
+                      <p>
+                        {isMain
+                          ? "Transactions will appear here when wallet services are connected."
+                          : "Destination history is not connected. Main-account activity is not shown here."}
+                      </p>
+                      {historyFilter !== "all" && (
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => setHistoryFilter("all")}
+                          className="wallet-reset-filter"
+                        >
+                          Clear filter
+                        </Button>
+                      )}
+                    </div>
+                  </CardContent>
+                </Card>
               </div>
-              <section
+              <Card
                 className="wallet-panel wallet-currencies-panel"
                 id="wallets"
                 aria-labelledby="currencies-heading"
               >
-                <div className="wallet-section-head">
-                  <h2 id="currencies-heading">Your currencies</h2>
-                  <span className="wallet-supporting">
-                    {isMain ? "Preview" : "Inspect only"}
-                  </span>
-                </div>
-                {wallets.length > 0 ? (
-                  <ul className="wallet-currency-list">
-                    {wallets.map((wallet) => (
-                      <li className="wallet-currency-row" key={wallet.id}>
-                        <div className="wallet-currency-identity">
-                          <span
-                            className="wallet-currency-token"
-                            aria-hidden="true"
-                          >
-                            {CURRENCY_SYMBOLS[wallet.currency]}
-                          </span>
-                          <div>
-                            <p className="wallet-currency-code">
-                              {wallet.currency}
-                              {wallet.currency === account?.defaultCurrency && (
-                                <span className="wallet-default-badge">
-                                  Default
-                                </span>
-                              )}
-                            </p>
-                            <p className="wallet-currency-name">
-                              {wallet.name}
-                            </p>
+                <CardHeader className="wallet-card-header">
+                  <div className="wallet-section-head">
+                    <CardTitle>
+                      <h2 id="currencies-heading">Currency wallets</h2>
+                    </CardTitle>
+                    <Badge variant="secondary" className="wallet-count-badge">
+                      {wallets.length}{" "}
+                      {wallets.length === 1 ? "wallet" : "wallets"}
+                    </Badge>
+                  </div>
+                  <CardDescription className="wallet-currencies-description">
+                    Default currency ·{" "}
+                    {account?.defaultCurrency ?? "Unavailable"}
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="wallet-card-content">
+                  {wallets.length > 0 ? (
+                    <ul className="wallet-currency-list">
+                      {wallets.map((wallet) => (
+                        <li className="wallet-currency-row" key={wallet.id}>
+                          <div className="wallet-currency-identity">
+                            <span
+                              className="wallet-currency-token"
+                              aria-hidden="true"
+                            >
+                              {CURRENCY_SYMBOLS[wallet.currency]}
+                            </span>
+                            <div>
+                              <p className="wallet-currency-code">
+                                {wallet.currency}
+                              </p>
+                              <p className="wallet-currency-name">
+                                {wallet.name}
+                              </p>
+                            </div>
                           </div>
-                        </div>
-                        <p className="wallet-currency-amount">
-                          {hidden ? (
-                            <span aria-label="Amount hidden">••••</span>
-                          ) : (
-                            displayBalance(wallet)
-                          )}
-                          <span>{wallet.currency}</span>
-                        </p>
-                      </li>
-                    ))}
-                  </ul>
-                ) : (
-                  <div className="wallet-currencies-empty">
-                    <Wallet aria-hidden="true" />
-                    <h3>
-                      {isMain
-                        ? "No currency wallets yet."
-                        : "Balances not connected."}
-                    </h3>
-                    <p>
-                      {isMain
-                        ? "Currency wallets will appear here when the account service is connected."
-                        : "The preview contains main-account wallets only. Destination balances are not inferred."}
-                    </p>
-                  </div>
-                )}
-              </section>
-              <section
-                className="wallet-panel wallet-conversion-panel"
-                id="conversion"
-                aria-labelledby="conversion-heading"
-              >
-                <div className="wallet-section-head">
-                  <h2 id="conversion-heading">A different currency?</h2>
-                  <ArrowRightLeft
-                    className="wallet-heading-icon"
-                    aria-hidden="true"
-                  />
-                </div>
-                <p className="wallet-convert-caption">
-                  See both sides before you convert.
-                </p>
-                <div className="wallet-conversion-strip">
-                  <div>
-                    <span>
-                      You convert · {conversionSource?.currency ?? "—"}
-                    </span>
-                    <strong>—</strong>
-                  </div>
-                  <ArrowRight aria-hidden="true" />
-                  <div>
-                    <span>
-                      You receive · {conversionTarget?.currency ?? "—"}
-                    </span>
-                    <strong>Not quoted</strong>
-                  </div>
-                </div>
-                <div className="wallet-rate-row">
-                  <span>No exchange rate connected</span>
-                  <Info aria-hidden="true" />
-                </div>
-                <Button
-                  variant="secondary"
-                  className="wallet-full-button"
-                  disabled={!isMain || !hydrated}
-                  onClick={() => openOperation("convert")}
-                >
-                  Explore conversion
-                  <ArrowRight aria-hidden="true" />
-                </Button>
-              </section>
+                          <p className="wallet-currency-amount">
+                            {hidden ? (
+                              <span aria-label="Amount hidden">••••</span>
+                            ) : (
+                              displayBalance(wallet)
+                            )}
+                            <span>{wallet.currency}</span>
+                          </p>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <div className="wallet-currencies-empty">
+                      <Wallet aria-hidden="true" />
+                      <h3>
+                        {isMain
+                          ? "No currency wallets yet."
+                          : "Balances not connected."}
+                      </h3>
+                      <p>
+                        {isMain
+                          ? "Currency wallets will appear when the account service is connected."
+                          : "No balances were supplied for this destination. They are not inferred from the main account."}
+                      </p>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
             </div>
-            <div className="wallet-column">
-              <OperationWorkspace
-                operation={operation}
-                account={account}
-                wallets={wallets}
-                hidden={hidden}
-              />
-              <section
-                className="wallet-panel wallet-account-panel"
-                id="account"
-                aria-labelledby="account-heading"
-              >
-                <div className="wallet-section-head">
-                  <h2 id="account-heading">Your account</h2>
-                  <span className="wallet-supporting">
-                    {isMain
-                      ? "Main · Preview"
-                      : account
-                        ? "Destination · Inspect only"
-                        : "Not connected"}
-                  </span>
-                </div>
-                <div className="wallet-account-sheet">
-                  <div className="wallet-account-sheet-head">
-                    <strong>Multi-currency wallet</strong>
-                    <span>
-                      <Info aria-hidden="true" />
-                      Simulation
-                    </span>
-                  </div>
-                  <p className="wallet-account-id">
-                    {account?.id ?? "Account unavailable"}
-                  </p>
-                  <div className="wallet-account-sheet-foot">
-                    <span>
-                      Default currency ·{" "}
-                      {account?.defaultCurrency ?? "Unavailable"}
-                    </span>
-                    <button
-                      type="button"
-                      disabled={!account || !hydrated}
-                      onClick={copyAccountId}
-                    >
-                      {copyFeedback === "Account ID copied." ? (
-                        <Check aria-hidden="true" />
-                      ) : (
-                        <Copy aria-hidden="true" />
-                      )}
-                      Copy ID
-                    </button>
-                  </div>
-                </div>
-                <p className="wallet-copy-feedback" role="status">
-                  {copyFeedback}
-                </p>
-                <details className="wallet-about">
-                  <summary>About this preview</summary>
-                  <p>
-                    Presentation-only values, not database balances. Wallet
-                    services, bank connections, recipients, and exchange rates
-                    are not connected. No real funds or payment cards.
-                  </p>
-                  <p>
-                    Form details stay in this page’s memory and are cleared when
-                    you reload. Theme is a display preference.
-                  </p>
-                </details>
-              </section>
-            </div>
-          </div>
-          <footer className="wallet-footer">
-            <span>
-              <strong>Simulation, not a bank.</strong> No real money or payment
-              services.
-            </span>
-            <span>Interface preview · Connection pending</span>
-          </footer>
-        </main>
+          </main>
+        </div>
+        <OperationWorkspace
+          operation={operation}
+          account={account}
+          wallets={wallets}
+          hidden={hidden}
+          open={operationOpen}
+          onOpenChange={setOperationOpen}
+          returnFocusRef={operationTriggerRef}
+        />
       </div>
-    </div>
+    </TooltipProvider>
   );
 }

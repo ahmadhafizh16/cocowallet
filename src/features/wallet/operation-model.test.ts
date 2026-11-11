@@ -167,6 +167,38 @@ describe("preview operation validation", () => {
     ).toMatch(/exceed/u);
   });
 
+  it.each([
+    ["", "Enter an amount."],
+    ["0", "Enter an amount greater than 0."],
+    ["0.00", "Enter an amount greater than 0."],
+    ["abc", "Use a decimal amount, for example 12.50."],
+  ])(
+    "explains amount %p without a generic parser lecture",
+    (amount, message) => {
+      expect(
+        validateOperation({
+          operation: "deposit",
+          draft: { ...draft, amount },
+          account,
+          wallets: model.wallets,
+        }).errors.amount,
+      ).toBe(message);
+    },
+  );
+
+  it("does not default conversion to the same currency when only one wallet exists", () => {
+    const initial = createDraft([usd], "USD");
+    expect(initial.targetCurrency).toBe("");
+    expect(
+      validateOperation({
+        operation: "convert",
+        draft: { ...initial, amount: "1.00" },
+        account,
+        wallets: [usd],
+      }).errors.targetCurrency,
+    ).toBe("Choose a receiving currency.");
+  });
+
   it("never validates another account’s source or target wallets", () => {
     const wallets = model.wallets.map((wallet) => ({
       ...wallet,

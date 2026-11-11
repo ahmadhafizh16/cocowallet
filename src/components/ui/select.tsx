@@ -58,7 +58,7 @@ export function SelectContent({
       <SelectPrimitive.Content
         data-slot="select-content"
         className={cn(
-          "relative z-50 max-h-(--radix-select-content-available-height) max-w-[calc(100vw-2rem)] min-w-[8rem] overflow-x-hidden overflow-y-auto rounded-md border border-border bg-popover text-popover-foreground shadow-md",
+          "relative z-70 max-h-(--radix-select-content-available-height) max-w-[calc(100vw-2rem)] min-w-[8rem] overflow-x-hidden overflow-y-auto rounded-md border border-border bg-popover text-popover-foreground shadow-md",
           position === "popper" && "min-w-(--radix-select-trigger-width)",
           className,
         )}

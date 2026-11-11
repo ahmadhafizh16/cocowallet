@@ -1,8 +1,17 @@
 "use client";
 
 import { useEffect, useState, useSyncExternalStore } from "react";
-import { Monitor, Moon, Sun } from "lucide-react";
+import { ChevronDown, Monitor, Moon, Sun } from "lucide-react";
 import { useHydrated } from "@/lib/use-hydrated";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuLabel,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import {
   THEME_STORAGE_KEY,
   isThemePreference,
@@ -83,19 +92,47 @@ export function ThemeMenu() {
 
   return (
     <div className="theme-control">
-      <label className="theme-select">
-        <Icon aria-hidden="true" size={17} />
-        <span className="sr-only">Color theme</span>
-        <select
-          disabled={!hydrated}
-          value={preference}
-          onChange={(event) => changePreference(event.target.value)}
-        >
-          <option value="system">System</option>
-          <option value="light">Light</option>
-          <option value="dark">Dark</option>
-        </select>
-      </label>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button
+            variant="outline"
+            disabled={!hydrated}
+            aria-label="Color theme"
+            className="theme-menu-button rounded-full"
+          >
+            <Icon aria-hidden="true" />
+            <span className="theme-menu-label">
+              {preference === "system"
+                ? "System"
+                : preference === "light"
+                  ? "Light"
+                  : "Dark"}
+            </span>
+            <ChevronDown aria-hidden="true" className="theme-menu-chevron" />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          <DropdownMenuLabel>Appearance</DropdownMenuLabel>
+          <DropdownMenuRadioGroup
+            value={preference}
+            onValueChange={changePreference}
+            aria-label="Color theme"
+          >
+            <DropdownMenuRadioItem value="system">
+              <Monitor aria-hidden="true" />
+              System
+            </DropdownMenuRadioItem>
+            <DropdownMenuRadioItem value="light">
+              <Sun aria-hidden="true" />
+              Light
+            </DropdownMenuRadioItem>
+            <DropdownMenuRadioItem value="dark">
+              <Moon aria-hidden="true" />
+              Dark
+            </DropdownMenuRadioItem>
+          </DropdownMenuRadioGroup>
+        </DropdownMenuContent>
+      </DropdownMenu>
       {storageUnavailable && (
         <span className="theme-storage-note" role="status">
           Theme applies for this visit; browser storage is unavailable.

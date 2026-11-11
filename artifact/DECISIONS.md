@@ -54,7 +54,7 @@
 
 ### D-013
 
-**Interface:** Use shadcn/ui and Lucide React for a modern fintech interface, light and dark themes with system preference, smooth transitions, and reduced-motion support. The user approved the reference-led frosted wallet sketch: pale-blue translucent panels, diffuse navy backdrop, rounded/raised controls, labelled icons, and the adapted three-column desktop layout. See [DESIGN_REFERENCE.md](DESIGN_REFERENCE.md) for approval and scope. The built shell now follows that direction; [DESIGN.md](../DESIGN.md) records its actual tokens and reusable visual rules. [UI_FOUNDATION.md](UI_FOUNDATION.md) distinguishes the implemented interface preview from future connected features. Icons8 MCP remains removed.
+**Interface:** Use shadcn/ui and Lucide React for a modern fintech interface, light and dark themes with system preference, smooth transitions, and reduced-motion support. The original approved sketch established pale-blue translucent panels, diffuse navy backdrop, rounded/raised controls, labelled icons, and three columns. [D-025](#d-025) supersedes that topology and desktop label treatment with two columns, icon tooltips, and draft-preserving money dialogs, retaining the frosted identity. See [DESIGN_REFERENCE.md](DESIGN_REFERENCE.md) for historical approval and [WALLET_REDESIGN.md](WALLET_REDESIGN.md) for the current brief. [DESIGN.md](../DESIGN.md) records actual tokens and reusable rules; [UI_FOUNDATION.md](UI_FOUNDATION.md) separates the preview from future connected features. Icons8 MCP remains removed.
 
 ### D-014
 
@@ -99,6 +99,17 @@
 ### D-024
 
 **SQLite write serialization:** Use a top-level synchronous `BEGIN IMMEDIATE` boundary before checking journal-derived funds. Create required account/wallet rows, the completed transaction, all entries, and eventual technical success metadata in that one transaction. Reject nested/deferred outer transactions and promise callbacks; close scoped writers immediately and roll back even caught scope-method failures. Fetch rates before acquiring the reservation and later validate server-owned quotes inside it. Propagate lock/storage failures without automatic retries; full durable-result policy remains D-019/T10-02. See [JOURNAL.md](JOURNAL.md).
+
+### D-025
+
+**Focused wallet redesign:** After reviewing the built shell and light/dark
+critique, the user chose a two-column overview and popup Send money from the left
+menu, permitted icon-only desktop navigation with tooltips, requested actual
+shadcn foundations throughout forms and utility controls, and approved execution.
+This supersedes D-013's original three-column topology and always-visible desktop
+labels, not the frosted visual identity or simulation boundary. Use accessible
+names/focus tooltips, usable mobile labels, draft-preserving dialogs for money
+actions, and styled account/theme/history controls. See [WALLET_REDESIGN.md](WALLET_REDESIGN.md).
 
 ## Questions and resolutions
 

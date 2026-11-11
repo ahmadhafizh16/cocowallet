@@ -1,8 +1,8 @@
 # Project kanban
 
-**Last updated:** T11-02 is complete: the approved frosted shell, themes, skeletons, interaction states, bounded visual review, and built design-system documentation are verified. Account data, wallet APIs, and idempotency integration remain future work.
+**Last updated:** T11-04 is in progress: user-approved two-column redesign, popup money forms, icon tooltips, and consistent shadcn interactions. Account data, wallet APIs, and idempotency integration remain future work.
 
-**Scope:** 32 implementation tasks: **22 to do**, **0 in progress**, **0 blocked**, **10 done**. Planning activities completed below do not count as implemented features.
+**Scope:** 33 implementation tasks: **22 to do**, **1 in progress**, **0 blocked**, **10 done**. Planning activities completed below do not count as implemented features.
 
 Each task links to its detailed description, source PRD, decision IDs, dependencies, and acceptance tests. The Angular-style, one-intention-per-commit rule and local Git workflow in [D-021](DECISIONS.md#d-021) and [D-022](DECISIONS.md#d-022) apply to every task. A task moves to **Done** only when its acceptance criteria are verified and the PRD, decisions, diagrams, API documentation, and handover are updated as needed.
 
@@ -76,7 +76,7 @@ See Done for the approved direction and verified interface-preview foundation.
 
 ## In progress
 
-_No task is currently in progress at this interface-preview checkpoint._
+- [ ] [T11-04](tasks/TASKS-11.md#t11-04) — Two-column frosted redesign, popup workflows, icon tooltips, consistent shadcn controls, and critique corrections.
 
 ## Blocked
 

@@ -6,8 +6,9 @@ export function Skeleton({ className, ...props }: ComponentProps<"div">) {
   return (
     <div
       {...props}
+      data-slot="skeleton"
       aria-hidden="true"
-      className={cn("ui-skeleton", className)}
+      className={cn("ui-skeleton rounded-md bg-accent", className)}
     />
   );
 }

@@ -1,18 +1,19 @@
 import { expect, test } from "@playwright/test";
+import { chooseTheme } from "./helpers";
 
 test("uses system theme, saves an explicit preference, and restores system behavior", async ({
   page,
 }) => {
   await page.emulateMedia({ colorScheme: "dark" });
   await page.goto("/");
-  const theme = page.getByLabel("Color theme");
+  const theme = page.getByRole("button", { name: "Color theme", exact: true });
   await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
-  await theme.selectOption("light");
+  await chooseTheme(page, "Light");
   await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
   await page.reload();
-  await expect(theme).toHaveValue("light");
+  await expect(theme).toContainText("Light");
   await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
-  await theme.selectOption("system");
+  await chooseTheme(page, "System");
   await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
   await page.emulateMedia({ colorScheme: "light" });
   await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
@@ -36,7 +37,7 @@ test("keeps theme controls usable when browser storage is blocked", async ({
     });
   });
   await page.goto("/");
-  await page.getByLabel("Color theme").selectOption("dark");
+  await chooseTheme(page, "Dark");
   await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
   await expect(
     page.getByText(
@@ -74,7 +75,7 @@ test("unknown routes offer a working way back to the overview", async ({
   ).toBeVisible();
 });
 
-for (const width of [320, 390, 820, 1280, 1440]) {
+for (const width of [320, 390, 820, 1280, 1440, 1688, 1769]) {
   test(`the wallet shell fits a ${width}px viewport`, async ({ page }) => {
     await page.setViewportSize({ width, height: 900 });
     await page.goto("/");

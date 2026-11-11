@@ -70,19 +70,24 @@ describe("wallet presentation interactions", () => {
     expect(host.querySelector(".wallet-currency-list")?.textContent).toContain(
       "123.45",
     );
-    const selector = host.querySelector<HTMLSelectElement>(
-      'select[aria-label="Account being inspected"]',
+    const selector = host.querySelector<HTMLButtonElement>(
+      'button[aria-label="Account being inspected"]',
     )!;
     await act(() => {
-      selector.value = "recipient";
-      selector.dispatchEvent(new Event("change", { bubbles: true }));
+      selector.dispatchEvent(
+        new KeyboardEvent("keydown", { key: "Enter", bubbles: true }),
+      );
     });
+    const destination = [
+      ...document.querySelectorAll<HTMLElement>('[role="menuitemradio"]'),
+    ].find((item) => item.textContent?.includes("Recipient"))!;
+    await act(() => destination.click());
     const balances = host.querySelector(".wallet-currency-list")!;
     expect(balances.textContent).toContain("42.50");
     expect(balances.textContent).not.toContain("123.45");
     expect(balances.querySelectorAll("li")).toHaveLength(1);
-    expect(host.querySelector(".wallet-inspect-state")?.textContent).toContain(
-      "inspect-only",
+    expect(host.querySelector(".wallet-inspect-hint")?.textContent).toContain(
+      "main account only",
     );
     expect(host.querySelector(".wallet-operation-form")).toBeNull();
     expect(
@@ -131,9 +136,7 @@ describe("wallet presentation interactions", () => {
     expect(
       host.querySelector(".wallet-total-value")?.textContent,
     ).not.toContain("0.00");
-    expect(
-      host.querySelector<HTMLInputElement>('input[name="amount"]')?.readOnly,
-    ).toBe(true);
+    expect(host.querySelector('input[name="amount"]')).toBeNull();
     await act(() => button.click());
     expect(host.querySelector(".wallet-total-value")?.textContent).toContain(
       "0.00",

@@ -61,3 +61,20 @@ feature tasks or T11-03's cross-feature accessibility acceptance.
 **Implementation:** Audit the finished UI for semantic structure, focus order, contrast, narrow layouts, light/dark states, clear loading/empty/errors, and reduced-motion behavior. Since no automatic Impeccable hook is installed, follow the skill's manual detector guidance after UI changes and inspect rendered screens.
 
 **Acceptance and tests:** User journeys are keyboard operable and readable at representative screen sizes and both themes; reduced motion is respected; findings and limitations are recorded and fixed or explicitly tracked. Detector results are not presented as a substitute for visual or browser testing.
+
+### T11-04
+
+**Two-column redesign and consistent shadcn interactions**
+
+**Status:** In progress. The user approved the [redesign brief](../WALLET_REDESIGN.md) and requested implementation.
+
+**Decisions:** [D-013](../DECISIONS.md#d-013), [D-014](../DECISIONS.md#d-014), [D-025](../DECISIONS.md#d-025).
+
+**Depends on:** [T11-02](#t11-02).
+
+**Implementation:** Replace the persistent form column with draft-preserving money dialogs, simplify the overview to two columns, add icon tooltips and coherent registry-derived shadcn controls, refine light/dark hierarchy, and correct the critique's conversion/validation issues. Keep all accounting and disconnected-service boundaries.
+
+**Acceptance and tests:** Follow the brief's viewport, state, keyboard/focus,
+privacy, isolation and no-financial-request checks; update skeletons; run Docker
+and production-browser verification; complete independent finish review and
+reconcile design/handover documents. Do not close future connected feature tasks.

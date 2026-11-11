@@ -3,6 +3,13 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme inline {
+  --color-background: var(--ground);
+  --color-card: var(--glass);
+  --color-card-foreground: var(--ink);
+  --color-secondary: var(--inner);
+  --color-secondary-foreground: var(--ink);
+  --color-muted: var(--inner);
+  --color-danger-ground: var(--danger-ground);
   --color-foreground: var(--ink);
   --color-input: var(--control-border);
   --color-input-surface: var(--control-surface);
@@ -21,10 +28,10 @@
 
 :root {
   color-scheme: light;
-  --ground: #eaf1f5;
-  --glass: rgb(255 255 255 / 58%);
-  --inner: rgb(255 255 255 / 40%);
-  --solid: #f5f8fa;
+  --ground: #edf3f7;
+  --glass: rgb(255 255 255 / 78%);
+  --inner: rgb(255 255 255 / 55%);
+  --solid: #f7fafc;
   --edge: rgb(255 255 255 / 85%);
   --line: rgb(74 97 122 / 17%);
   --control-border: #a6b6c7;
@@ -45,20 +52,20 @@
     5px 6px 16px rgb(145 165 184 / 16%), -4px -4px 14px rgb(255 255 255 / 65%);
   --font-ui:
     ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  --radius-panel: 27px;
-  --radius-control: 14px;
+  --radius-panel: 24px;
+  --radius-control: 12px;
 }
 
 :root[data-theme="dark"] {
   color-scheme: dark;
-  --ground: #14212d;
-  --glass: rgb(36 54 72 / 80%);
-  --inner: rgb(65 88 111 / 26%);
-  --solid: #263b50;
+  --ground: #101b26;
+  --glass: rgb(31 49 66 / 90%);
+  --inner: rgb(68 91 114 / 32%);
+  --solid: #1d3042;
   --edge: rgb(188 207 226 / 16%);
   --line: rgb(188 207 226 / 20%);
   --control-border: #63809b;
-  --control-surface: #203348;
+  --control-surface: #243b50;
   --ink: #edf3fb;
   --secondary: #b4c6d9;
   --navy: #a7c4e9;
@@ -107,7 +114,7 @@ body::before {
     transparent 70%
   );
   filter: blur(50px);
-  opacity: 0.8;
+  opacity: 0.35;
 }
 body::after {
   content: "";
@@ -126,13 +133,13 @@ body::after {
   color: var(--on-navy);
   background: var(--navy);
 }
-h1,
-h2,
-h3,
-p {
-  margin: 0;
-}
 @layer base {
+  h1,
+  h2,
+  h3,
+  p {
+    margin: 0;
+  }
   button,
   input,
   select,
@@ -170,11 +177,11 @@ a {
 svg {
   flex-shrink: 0;
 }
-:focus-visible:not([data-slot="input"]):not([data-slot="select-trigger"]):not(
-    [data-slot="select-item"]
-  ) {
-  outline: 3px solid var(--navy);
-  outline-offset: 4px;
+@layer base {
+  :focus-visible {
+    outline: 3px solid var(--navy);
+    outline-offset: 4px;
+  }
 }
 .sr-only {
   position: absolute;
@@ -202,73 +209,6 @@ svg {
   transform: translateY(0);
 }
 
-.ui-button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 9px;
-  font-weight: 500;
-  border: 1px solid transparent;
-  text-decoration: none;
-  white-space: normal;
-  text-align: center;
-  border-radius: 999px;
-  transition:
-    background-color 160ms ease,
-    box-shadow 160ms ease;
-}
-.ui-button svg {
-  width: 18px;
-  height: 18px;
-}
-.ui-button-default {
-  min-height: 44px;
-  padding: 10px 19px;
-  font-size: 13px;
-}
-.ui-button-sm {
-  min-height: 40px;
-  padding: 8px 13px;
-  font-size: 12px;
-}
-.ui-button-icon {
-  min-width: 44px;
-  min-height: 44px;
-  padding: 11px;
-}
-.ui-button-primary {
-  background: var(--navy);
-  color: var(--on-navy);
-  box-shadow: 0 5px 14px -7px rgb(36 60 91 / 45%);
-}
-.ui-button-primary:hover:not(:disabled) {
-  background: var(--navy-hover);
-}
-.ui-button-secondary,
-.ui-button-circle {
-  background: var(--inner);
-  border-color: var(--edge);
-  box-shadow: var(--raised);
-}
-.ui-button-secondary:hover:not(:disabled),
-.ui-button-circle:hover:not(:disabled) {
-  background: var(--solid);
-}
-.ui-button-ghost {
-  color: var(--navy);
-  background: transparent;
-}
-.ui-button-ghost:hover:not(:disabled) {
-  background: var(--inner);
-}
-.ui-button-danger {
-  color: var(--danger);
-  background: var(--danger-ground);
-}
-.ui-button:disabled {
-  opacity: 0.52;
-  box-shadow: none;
-}
 .ui-skeleton {
   border-radius: 8px;
   min-height: 16px;
@@ -289,7 +229,7 @@ svg {
 }
 .ui-dialog-content {
   position: fixed;
-  z-index: 51;
+  z-index: 60;
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
@@ -304,18 +244,17 @@ svg {
 }
 .ui-dialog-header {
   padding-right: 28px;
-  margin-bottom: 25px;
+  margin-bottom: 0;
 }
 .ui-dialog-title {
-  font-size: 21px;
+  font-size: 24px;
   line-height: 1.25;
   font-weight: 600;
   letter-spacing: -0.02em;
 }
 .ui-dialog-description {
-  margin-top: 8px;
   color: var(--secondary);
-  font-size: 13px;
+  font-size: 14px;
 }
 .ui-dialog-footer {
   display: flex;
@@ -329,30 +268,23 @@ svg {
   right: 10px;
   top: 10px;
 }
+@media (max-width: 640px) {
+  .ui-dialog-content {
+    width: calc(100vw - 16px);
+    max-height: calc(100dvh - 16px);
+    padding: 24px 20px;
+  }
+  .theme-menu-button {
+    width: 44px;
+    padding-inline: 10px;
+  }
+  .theme-menu-label,
+  .theme-menu-chevron {
+    display: none;
+  }
+}
 .theme-control {
   position: relative;
-}
-.theme-select {
-  display: inline-flex;
-  align-items: center;
-  min-height: 44px;
-  gap: 7px;
-  padding: 0 10px 0 13px;
-  border-radius: 999px;
-  background: var(--glass);
-  border: 1px solid var(--edge);
-  box-shadow: var(--raised);
-}
-.theme-select select {
-  font-size: 12px;
-  padding: 10px 3px;
-  max-width: 91px;
-  border: 0;
-  background: transparent;
-}
-.theme-select option {
-  background: var(--solid);
-  color: var(--ink);
 }
 .theme-storage-note {
   position: absolute;
@@ -432,10 +364,12 @@ svg {
   body::after {
     display: none;
   }
-  .ui-button,
+  [data-slot="button"],
+  [data-slot="tooltip-trigger"],
+  [data-slot="dropdown-menu-trigger"],
   [data-slot="input"],
   [data-slot="select-trigger"],
-  .theme-select {
+  [data-slot="dropdown-menu-content"] {
     border: 1px solid ButtonText;
   }
 }
