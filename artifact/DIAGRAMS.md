@@ -1,6 +1,6 @@
 # Architecture and flow diagrams
 
-**Status:** Persistent reads and simulated funding are connected to the exact journal. Funding POSTs retain original results atomically and support reviewed confirmation/recovery. Quotes, conversion/transfer and full history/valuation remain future features. The [decision register](DECISIONS.md) is authoritative when a diagram and an open question conflict.
+**Status:** Persistent reads/funding and fresh-first Frankfurter reference metadata are implemented. Funding retains atomic original outcomes; metadata has separate bounded catalog/exact-pair cache fallback. Binding quotes, conversion/transfer and full history/valuation remain future features. The [decision register](DECISIONS.md) is authoritative when a diagram and an open question conflict.
 
 ## Implemented foundation flow
 
@@ -14,6 +14,10 @@ flowchart LR
     Next --> Funding[POST deposit or withdrawal: reviewed simulation]
     Funding --> Atomic[Immediate reservation: replay or validate and record]
     Atomic --> Connection
+    Next --> Reference[GET currencies or rates: reference metadata only]
+    Reference --> Upstream[Frankfurter v2: active catalog and exact CSV pair]
+    Reference --> Cache[Separate technical caches: validated fallback under 24h]
+    Cache --> Connection
     Reads --> Services[Account metadata and snapshot journal reads]
     Services --> Runtime
     Ready --> Runtime[src/server/db/runtime.ts]

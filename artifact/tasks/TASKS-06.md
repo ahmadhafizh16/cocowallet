@@ -7,12 +7,20 @@ Status is mirrored in [KANBAN.md](../KANBAN.md).
 ### T06-01
 
 **Frankfurter adapter, currency listing, and rate cache**  
-**Status:** To do.  
-**Decisions:** [D-004](../DECISIONS.md#d-004), [D-007](../DECISIONS.md#d-007), [D-018](../DECISIONS.md#d-018).  
+**Status:** Done.
+**Decisions:** [D-004](../DECISIONS.md#d-004), [D-007](../DECISIONS.md#d-007), [D-018](../DECISIONS.md#d-018), [D-031](../DECISIONS.md#d-031).
 **Depends on:** [T01-03](TASKS-01.md#t01-03), [T02-01](TASKS-02.md#t02-01).  
 **Implementation:** Implement a server-only Frankfurter client with timeout, response validation, fiat listing, exact pair/rate/source-date handling, and a persistent or otherwise agreed 24-hour fetched-rate fallback. Validate pair coverage instead of assuming any two listed currencies are convertible. Keep original precision needed for decimal-safe calculations.
 
-**Acceptance and tests:** Mock API success, timeout, unavailable pair, malformed data, and exact 24-hour boundaries. A fallback uses only the requested eligible pair, records/labels its fetch and source dates separately, and fails without inventing a rate when none exists. Catalog-offline behavior remains [O-005](../DECISIONS.md#o-005).
+**Acceptance and tests:** Mock API success, timeout, unavailable pair, malformed data, and exact 24-hour boundaries. A fallback uses only the requested eligible pair, records/labels its fetch and source dates separately, and fails without inventing a rate when none exists. D-031 resolves the catalog-offline portion of O-005.
+
+**Current slice:** D-031 resolves catalog-offline behavior as fresh-first with
+validated cache fallback under 24 hours. Server-only v2 catalog/CSV adapter,
+persistent technical caches and documented GET metadata endpoints are implemented
+and verified: **867 Jest / 51 production Chromium checks**. The separate isolated
+live smoke confirmed exact CSV/provenance and unchanged offline fallback. Runtime
+backup, repeated migration, unchanged accounting records and stable development
+are verified in [RATES.md](../RATES.md). No quote, money action or UI change.
 
 ### T06-02
 

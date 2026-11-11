@@ -1,11 +1,11 @@
 # Handover
 
-**Status:** Eighteen of 36 tasks are closed: persistent reads, durable funding
-idempotency and protected deposit/withdrawal services are implemented. Reviewed
-simulated confirmations, receipts, recovery and refreshed balances are connected.
-The board has 16 To do, 2 In progress (their remaining Swagger acceptance), and
-18 Done. Visual feedback remains deferred. FX, conversion/transfer, full history/
-valuation and Swagger UI remain separate work. See [FUNDING.md](FUNDING.md).
+**Status:** Nineteen of 36 tasks are closed. T06-01 adds fresh-first reference
+catalog/rates and persistent exact-pair fallback to the existing reads/funding.
+The board has 15 To do, 2 In progress (remaining Swagger acceptance), and 19 Done.
+The UI remains unchanged and visual feedback deferred. Next is T06-02's
+server-owned one-minute quote; conversion/transfer, full valuation/history and
+Swagger UI remain separate work. See [RATES.md](RATES.md).
 
 ## Implemented modules and commands
 
@@ -27,6 +27,8 @@ valuation and Swagger UI remain separate work. See [FUNDING.md](FUNDING.md).
 | `src/app/api/accounts/`, `src/server/http/`, `src/app/api/openapi/` | Uncached reads plus shared funding HTTP boundary, safe problems and maintained OpenAPI contracts. Swagger UI remains unimplemented. |
 | `src/features/funding/`, `src/app/api/deposits/`, `src/app/api/withdrawals/` | Exact simulated funding, immutable durable original results, same-key retries, per-tab recovery, receipts and bounded completed-funding visibility. |
 | `drizzle/0003_funding_results.sql` | Retained technical outcome table and immutable update/delete triggers; no seeded funds or transactions. |
+| `src/features/rates/`, `src/app/api/currencies/`, `src/app/api/rates/` | Server-only fixed-origin Frankfurter catalog and exact CSV pair observations; fresh-first validation, bounded timeout/size and original-time eligible fallback. No binding quote or monetary change. |
+| `drizzle/0004_reference_rate_cache.sql`, `scripts/smoke-rates.ts` | Mutable technical caches separate from financial records; optional guarded live check uses only an isolated disposable database. |
 | `scripts/start-funding-e2e.ts`, `e2e/zz-funding.spec.ts` | Refuse ordinary runtime target; successful monetary browser writes use only the disposable isolated server/database. |
 | `src/server/wallet-overview.ts` | Dynamic-page adapter, prototype-safe account totals, exact rate-free main USD totals, unavailable FX/destination valuation, no dropped unsupported currencies. |
 | `components.json`, `postcss.config.mjs`, `src/lib/utils.ts` | shadcn/Lucide/Tailwind configuration and tested class helper used by the local UI components. |
@@ -55,7 +57,22 @@ Stop the dev compiler before `docker compose run --rm app npm run check`, then u
 
 Application DB: `/app/data/wallet.sqlite` in Compose's `wallet-data` volume. Tests use isolated temporary SQLite files. Normal shutdown is `docker compose down` without deleting volumes. Before applying journal migrations, the stopped app's database was backed up with SQLite's backup API to `/app/data/wallet.sqlite.pre-journal-1794390597589.bak`. Backup creation is verified; a full restore drill is not claimed.
 
-Current funding verification and commands are in [FUNDING.md](FUNDING.md). The
+Current reference-stage verification: full Docker check/build passes **867 Jest
+tests** in 37 suites; all **51 production Chromium regressions** pass on the
+disposable funding database. Separate live verification on an isolated database
+confirmed the current CSV format, 154 eligible pinned fiat codes and identical
+exact USD→EUR cached fallback. See [RATES.md](RATES.md) for observed timestamps,
+reproduction and limits; routine tests never depend on that live result.
+
+Backup `/app/data/wallet.sqlite.pre-rates-1794417122922.bak` preceded two successful
+migration runs. Bigint-safe comparison confirms existing account/wallet/currency,
+transaction/journal and funding rows are unchanged; both new caches are empty,
+integrity `ok`, FK violations zero. No test funds/provider snapshots were added
+to the runtime wallet and no restore drill is claimed. Development resumed after
+retaining `.next/dev.pre-rates-1794417237408`; 300 stable browser frames, zero
+reloads/errors and zero financial/reference requests protect the unchanged page.
+
+Historical funding verification and commands are in [FUNDING.md](FUNDING.md). The
 full Docker check/build passes **786 Jest tests** and all **51 production
 Chromium checks** pass on the final build. Funding receipts fit 320px/1440px in
 both themes with keyboard confirmation, focus recovery and privacy checks. The
@@ -64,7 +81,7 @@ wallet. A SQLite backup at `/app/data/wallet.sqlite.pre-funding-1794415716427.ba
 preceded two successful migration runs. Persistent counts remain 1 account /
 3 wallets / 0 transactions / 0 journal entries / 0 funding attempts; integrity
 is `ok`, FK violations are zero, both retention triggers exist. No restore drill
-or real provider call is claimed.
+or real funding-provider call is claimed.
 
 Development was restored after retaining `.next/dev.pre-funding-1794415843825`.
 A real browser verified 300 stable frames, zero extra reloads/page errors/console
@@ -78,7 +95,7 @@ funding verification supersedes its disconnected-write boundary, not its evidenc
 The last production npm audit was clean; 23 low/moderate development-tool findings
 remain in [DEPENDENCIES.md](DEPENDENCIES.md); no new dependency was installed.
 
-Artifact validation verifies **51 documents / 36 tasks**. The previous
+Artifact validation verifies **52 documents / 36 tasks**. The previous
 T11-02 design-extraction counts and verdict are historical, not certification of
 T11-04. Current production captures include desktop light/dark, 1688/1769px,
 tablet, mobile, dialogs/menus, validation/review, loading and errors. Independent
@@ -200,7 +217,7 @@ Tests open their own temporary database through `openDatabase`, apply committed 
 
 ## Next steps
 
-Next are catalog/FX quotes, conversion/transfer, full history/valuation and the
+Next are server-owned one-minute FX quotes, conversion/transfer, full history/valuation and the
 remaining API/Swagger acceptance in dependency order. T03-02/T03-03 and
 T10-01/T10-03 retain partial/future work; T04-02/T05-02 remain in progress solely
 for their Swagger acceptance. O-006 is resolved for funding by D-030. Preserve the

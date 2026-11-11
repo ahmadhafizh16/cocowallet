@@ -2,7 +2,7 @@
 
 A local-only multi-currency wallet simulation built with Next.js and Node 26. Product requirements, decisions, diagrams, and progress are in [`artifact/`](artifact/README.md).
 
-**Current milestone:** Persistent accounts and exact journal balances power the existing overview. Deposits/withdrawals now have explicit simulated confirmation, durable duplicate protection, receipts and per-tab recovery for unresolved submissions. Providers are fictional and no real funds move. Conversion, transfers, FX and full history/Swagger remain separate work; visual refinements stay deferred. See [`artifact/FUNDING.md`](artifact/FUNDING.md).
+**Current milestone:** Persistent accounts, exact journal balances and safely reviewed simulated funding power the existing interface. Frankfurter fiat-catalog and exact-rate APIs now try fresh data first, persist validated successes and use eligible cached data only on failure. Binding FX quotes, conversion/transfers, portfolio valuation and full history/Swagger remain separate work; visual refinements stay deferred. See [`artifact/RATES.md`](artifact/RATES.md) and [`artifact/FUNDING.md`](artifact/FUNDING.md).
 
 ## Development environment
 
@@ -18,9 +18,9 @@ docker compose up -d app
 
 Open `http://localhost:3000/api/health` for the health endpoint. Use `APP_PORT=3100 docker compose up -d app` if port 3000 is already occupied.
 
-`/api/ready` verifies SQLite and its migrated metadata table; it is not a full application-schema version or seeded-account check. Four migrations create operational metadata, accounting tables/invariants and immutable funding outcomes. Migration and seed commands are safe to repeat and run explicitly, never during a GET request or production build. Seeding creates missing startup accounts/wallets, never funds or transaction history. On a fresh database, both commands are required before opening `/`. Existing installations must apply migration 0003 before using the updated page.
+`/api/ready` verifies SQLite and its migrated metadata table; it is not a full schema-version or seeded-account check. Five migrations create metadata, accounting/invariants, immutable funding outcomes and separate reference caches. Migration and seed commands are safe to repeat and run explicitly, never during a GET or production build. Seeding creates startup accounts/wallets, never funds, history or provider snapshots. On a fresh database, migrate and seed before opening `/`. Existing installations must run `db:migrate` to add migration 0004 before using reference APIs; no volume reset is needed.
 
-APIs: account/wallet GETs, `POST /api/deposits`, `POST /api/withdrawals` and the specification at `GET /api/openapi`. Funding requires a UUID `Idempotency-Key`; identical retries replay the original result indefinitely, while changed input is rejected. Amounts are exact strings and responses are not cached. Swagger UI, FX/conversion/transfer and full history endpoints remain unimplemented.
+APIs: account/wallet GETs, `POST /api/deposits`, `POST /api/withdrawals`, `GET /api/currencies`, `GET /api/rates?base=USD&quote=EUR`, and `GET /api/openapi`. Funding requires a UUID key; identical retries replay the original result indefinitely, while changed input is rejected. Amounts/rates are exact strings and HTTP responses are not cached. Reference GETs may update technical caches, never money/wallets. Cached data must be less than 24 hours old; no reciprocal or cross rate is invented. Metadata reads are not binding quotes. Swagger UI, conversion/transfer and full history endpoints remain unimplemented.
 
 The application service runs as the non-root `node` user. It uses separate named volumes for Linux dependencies, Next.js output, and SQLite data, so host dependencies cannot overwrite native modules in the container. The host port is bound to `127.0.0.1`; this no-auth simulation must not be exposed publicly.
 
@@ -48,6 +48,11 @@ so Next's private-network HMR handshake does not block client hydration. It does
 not allow arbitrary origins or change the localhost-only host-port binding.
 
 Jest covers exact accounting, atomic seeding, snapshot reads, funding concurrency/rollback/replay and client recovery. Read/visual Chromium checks can use the ordinary local server. **Monetary browser tests must use the disposable funding-e2e server** in [`artifact/FUNDING.md`](artifact/FUNDING.md); they refuse the ordinary runtime target. Never fund the persistent wallet as test setup. Retain the same key/input after a timeout/storage failure; do not start a replacement attempt while its outcome is unknown.
+
+Reference tests mock the network and clock. The optional live check is separate:
+`docker compose run --rm -e DATABASE_PATH=/tmp/opencode/rates-smoke.sqlite -e WALLET_RATES_SMOKE=1 app node --conditions=react-server --import tsx scripts/smoke-rates.ts`.
+It refuses the runtime database. The root page makes no provider request in this
+stage, so ordinary funding/reads stay independent of Frankfurter outages.
 
 For the complete local check (including a production build), stop the development compiler first:
 

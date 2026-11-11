@@ -3,8 +3,9 @@
 **Status:** Persistent account reads and durable simulated deposits/withdrawals
 now connect the existing interface to exact journal accounting. Reviewed
 confirmation, original-key recovery and partial completed-funding visibility work.
-FX/quotes, conversion/transfer, full history/valuation and Swagger remain future
-work; visual feedback is deferred. See [FUNDING.md](FUNDING.md), linked feature
+T06-01 reference catalog/rates and bounded persistent fallback now exist; binding
+quotes, conversion/transfer, full history/valuation and Swagger remain future
+work. Visual feedback is deferred. See [RATES.md](RATES.md), linked feature
 PRDs and [KANBAN.md](KANBAN.md) for actual acceptance boundaries.
 
 ## Goal

@@ -27,4 +27,9 @@ approval for those unrelated endpoints.
 - [x] Confirm Impeccable product context, code-first, and the approved frosted direction in [PRODUCT.md](../PRODUCT.md), `.impeccable/config.json`, and [DESIGN_REFERENCE.md](DESIGN_REFERENCE.md). The implemented shell has skeleton/state tests and a recorded [design review](DESIGN_REVIEW.md); feature PRDs, handover, decisions, tasks, and diagrams remain under `artifact/`.
 - [ ] Resolve the display/default-currency questions in [O-004](DECISIONS.md#o-004), including destination USD totals and date-filter boundaries, before finalizing their UI/API acceptance criteria.
 - [ ] Define and test the safe SQLite backup/restore and offline currency-catalog behavior in [O-005](DECISIONS.md#o-005). Avoid assuming a live database can be safely copied without accounting for active journal/WAL state.
+
+D-031 resolves the catalog portion: fresh request first, cache valid success,
+fallback only after failure and only within 24 hours. T06-01 tests that policy
+without changing current funding availability. Backup creation is verified;
+the broader restore drill remains open, so this checkbox is not globally closed.
 - [ ] Verify local-only access for the no-auth API/Swagger UI, deterministic mocked FX/clock tests, isolated test data, concurrency, rollback, and restart/volume persistence. These are tracked by the linked feature tasks and [PRD-12](prd/PRD-12-quality.md).

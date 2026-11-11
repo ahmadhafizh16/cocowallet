@@ -1,6 +1,6 @@
 # Proposed implementation plan
 
-**Status:** Persistent reads and durable simulated funding now connect the existing interface to exact journal writes. T10-02/T04-01/T05-01 implement retained retry results and protected services; reviewed deposit/withdrawal submission, recovery and receipts work. Their Swagger acceptance remains pending T10-03. UI refinements stay deferred. Next are catalog/FX, quotes, conversion/transfer, full valuation/history and the remaining API/Swagger work. See [FUNDING.md](FUNDING.md), [KANBAN.md](KANBAN.md) and [READINESS.md](READINESS.md); local commit rules remain D-021/D-022.
+**Status:** Persistent reads, durable funding and T06-01 reference metadata are verified. Frankfurter requests are fresh-first with exact CSV decimals and eligible persistent fallback; no UI or new money action changed. Next is T06-02's server-owned one-minute quote, followed by conversion/transfer and remaining wallet management, valuation/history and API/Swagger acceptance. UI feedback remains deferred. See [RATES.md](RATES.md), [KANBAN.md](KANBAN.md) and [READINESS.md](READINESS.md); local commit rules remain D-021/D-022.
 
 ## Tasks
 

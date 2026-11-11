@@ -166,6 +166,17 @@ result is known; ordinary drafts still clear on reload. Deposit/withdrawal HTTP
 contracts are fixed in [IDEMPOTENCY.md](IDEMPOTENCY.md). FX/history decisions are
 not resolved by this approval. No real payments or provider integrations.
 
+### D-031
+
+**Fresh-first reference metadata:** The user clarified the offline catalog rule:
+try the fresh Frankfurter list on every request, validate and cache successes,
+and use the cache only when that request fails, within the discussed 24-hour
+limit. Never use cache-first behavior. Missing/expired catalogs block new currency
+selection, not existing wallet reads or simulated funding. Rates use only an
+exact-pair fallback fetched less than 24 hours ago. Catalog and rate source/fetch
+times remain distinct; future timestamps and the exact 24-hour boundary are
+ineligible. Implement T06-01 without enabling quotes/conversion/transfers.
+
 ## Questions and resolutions
 
 ### O-001
@@ -178,9 +189,10 @@ not resolved by this approval. No real payments or provider integrations.
 
 ### O-003
 
-**API details:** D-029/D-030 finalize account/wallet GETs and simulated funding
-POSTs, including their exact receipt/problem/idempotency contracts and maintained
-OpenAPI document. Quote/conversion/transfer/history shapes, generation and full
+**API details:** D-029–D-031 finalize account/wallet GETs, simulated funding
+POSTs and reference metadata GETs, including their exact receipt/problem,
+idempotency/provenance contracts and maintained OpenAPI document.
+Quote/conversion/transfer/history shapes, generation and full
 filtering/pagination stay open in [API_DESIGN.md](API_DESIGN.md). Swagger UI is not implemented.
 
 ### O-004
@@ -190,6 +202,9 @@ filtering/pagination stay open in [API_DESIGN.md](API_DESIGN.md). Swagger UI is 
 ### O-005
 
 **Operational details:** Confirm offline currency-catalog behavior, backup/restore procedure, any maximum transaction limits, and whether additional simulated provider failures are required. No such provider states or limits are currently approved.
+
+The catalog-offline portion is resolved by D-031. Backup/restore verification,
+additional business limits and provider failure states remain open, not approved.
 
 ### O-006
 

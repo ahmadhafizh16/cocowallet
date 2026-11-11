@@ -20,6 +20,10 @@ Funding now adds structural/business validation, safe 409 conflicts, exact recei
 shared request helpers and actual response/schema tests. FX/quote validation and
 the broader generated-schema workflow remain; this task is not globally closed.
 
+T06-01 additionally documents and tests eligible-catalog/exact-rate GET responses,
+including safe 400/503 metadata failures. Binding quote/confirmation validation
+still belongs to its next stage; a reference observation cannot move money.
+
 ### T10-02
 
 **Durable idempotency contract and implementation**  

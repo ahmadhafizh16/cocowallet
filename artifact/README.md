@@ -21,6 +21,7 @@ These documents distinguish decisions, proposals, and implemented work. The **pl
 - [Balance card](BALANCE_CARD.md): currency flags, theme-independent gradient and truthful recorded-history presentation.
 - [Backend read integration](BACKEND_READS.md): persistent account initialization, exact read APIs and the connected read-only overview.
 - [Simulated funding](FUNDING.md): durable retry protection, deposit/withdrawal confirmation, narrow per-tab recovery and isolated monetary tests.
+- [Reference metadata](RATES.md): fresh-first Frankfurter fiat catalog and exact decimal rates with bounded persistent fallback.
 - [Diagrams](DIAGRAMS.md): proposed architecture, data relationships, business flows, and code flow.
 - [API design](API_DESIGN.md): proposed HTTP contract, sequence diagram, and OpenAPI/Swagger approach.
 - [Idempotency discussion](IDEMPOTENCY.md): the selected failed-retry policy, alternatives, and examples.

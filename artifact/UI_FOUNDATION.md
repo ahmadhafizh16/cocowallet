@@ -107,7 +107,7 @@ and retained validation/review/privacy behavior.
 
 ### Current verification and scope
 
-The application passes the full Docker check, including **786 Jest tests** and
+The application passes the full Docker check, including **867 Jest tests** and
 production build, plus **51 Chromium checks** against the isolated build. Coverage includes
 theme/storage, keyboard entry, draft/error focus, no financial submission, privacy,
 zero-balance/self-transfer errors, clipboard fallback, history reset, 404 navigation,

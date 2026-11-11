@@ -46,13 +46,13 @@ A local, persistent wallet simulation with exact journal-based accounting, ficti
 
 Implemented before interface work: the Docker/Next.js foundation, health/readiness endpoints, migrations and accounting tables, exact-money utilities, journal-derived snapshot balances, and serialized atomic journal writes. Evidence and verification are recorded in [the handover](artifact/HANDOVER.md).
 
-The approved interface reads persistent accounts and exact journal balances. Explicit repeatable seeding initializes startup wallets without funding them. Simulated deposit/withdrawal POSTs now couple durable outcomes to journal writes; reviewed confirmation, immutable same-key recovery, receipts and refreshed balances are connected. Recent visibility is limited to the latest 50 successful funding receipts. FX, conversions/transfers, full history APIs/valuations and Swagger UI remain unimplemented. See [funding](artifact/FUNDING.md), [backend reads](artifact/BACKEND_READS.md) and [kanban](artifact/KANBAN.md).
+The approved interface reads persistent accounts and exact journal balances. Simulated funding has durable reviewed confirmation, same-key recovery, receipts and partial completed-funding visibility. T06-01 adds server-only Frankfurter fiat-catalog and exact-rate GETs, fresh-first validated cache fallback under 24 hours and separate source/fetch dates. These services do not yet supply binding quotes, portfolio valuations or new UI. One-minute quotes, conversion/transfer, full history/valuation and Swagger remain unimplemented. See [reference metadata](artifact/RATES.md), [funding](artifact/FUNDING.md) and [kanban](artifact/KANBAN.md).
 
 ### Deliberately open decisions
 
 - [O-003](artifact/DECISIONS.md#o-003): final HTTP routes and schemas, quote contract, OpenAPI generator, filtering/pagination, and error details.
 - [O-004](artifact/DECISIONS.md#o-004): whether inspected destinations also show a USD total, date-filter time-zone boundaries, and changing the main default to a currency without a wallet.
-- [O-005](artifact/DECISIONS.md#o-005): offline currency-catalog behavior, backup/restore, additional limits, and additional simulated provider failures. No extra pending/failed provider states or additional transaction limits are approved.
+- [O-005](artifact/DECISIONS.md#o-005): backup/restore, additional limits and simulated provider failures remain open. D-031 resolves catalog offline behavior: try fresh first on every request, cache valid success, and only fall back after failure using data less than 24 hours old. No extra business limits or provider states are approved.
 - O-006 is resolved for current funding by D-030; extending it to future quote/transfer request shapes remains their implementation work.
 
 ## Brand Commitments

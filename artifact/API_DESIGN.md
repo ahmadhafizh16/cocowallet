@@ -1,12 +1,12 @@
 # HTTP API design: draft
 
-**Status:** Account/wallet reads and simulated funding POSTs are implemented under D-029/D-030, with a hand-maintained OpenAPI document. Quote/conversion/transfer/history contracts, schema generation and Swagger UI remain future work. See [BACKEND_READS.md](BACKEND_READS.md) and [FUNDING.md](FUNDING.md).
+**Status:** Account/wallet reads, simulated funding POSTs and fresh-first reference metadata are implemented under D-029–D-031, with maintained OpenAPI contracts. Quote/conversion/transfer/history contracts, generation and Swagger UI remain future work. See [FUNDING.md](FUNDING.md) and [RATES.md](RATES.md).
 
 ## Implemented operational endpoints
 
 | Method | Route | Result |
 | --- | --- | --- |
-| GET | `/` | Dynamic Node server-rendered overview backed by persisted accounts and journal balances; money submissions/history remain disconnected. |
+| GET | `/` | Dynamic stored-account/journal overview with reviewed simulated funding and partial completed-funding visibility. |
 | GET | `/api/health` | 200 JSON liveness response with `Cache-Control: no-store`. |
 | GET | `/api/ready` | 200 JSON when the migrated metadata table is readable; otherwise 503 Problem Details with `DATABASE_NOT_READY`. |
 | GET | `/api/accounts` | Persistent main account and destinations; role/default/creation time/inspect-only metadata. |
@@ -14,8 +14,17 @@
 | GET | `/api/openapi` | OpenAPI 3.1 document for implemented reads/funding/operational routes; not Swagger UI. |
 | POST | `/api/deposits` | Explicit simulated deposit; required UUID key and durable original-result replay. |
 | POST | `/api/withdrawals` | Explicit simulated withdrawal; protected debit and durable error/success replay. |
+| GET | `/api/currencies` | Fresh-first eligible fiat list with pinned precision, original fetch time and eligible cached fallback. |
+| GET | `/api/rates?base=USD&quote=EUR` | Exact direct reference observation with source/fetch dates and fresh/cached provenance; not a binding quote. |
 
 Routes are in `src/app/`; Jest tests verify isolated database reads, safe errors and read-response/spec agreement. Wallet GETs never seed or mutate storage and return `Cache-Control: no-store`. Missing initialization/storage is 503, unknown account is 404, empty/null-character path ID is 400. Read codes are `ACCOUNT_NOT_INITIALIZED`, `WALLET_DATA_UNAVAILABLE`, `ACCOUNT_NOT_FOUND` and `INVALID_ACCOUNT_ID`; all use safe Problem Details. Unsupported methods retain Next.js's 405 with no mutation/body contract. See [the fixed read shapes](BACKEND_READS.md).
+
+Reference GETs may update only technical caches. Every request tries fresh data
+before fallback, which must be validated and less than 24 hours old. Exact-pair
+coverage is checked by the actual CSV row, never inferred from currency listing.
+Invalid query/codes are 400; unavailable metadata/storage is safe 503; all
+responses remain no-store. See [the reference contract](RATES.md). No FX GET can
+confirm a quote, alter a wallet or authorize a money-moving operation.
 
 The [interface](UI_FOUNDATION.md) now reads stored balances but validates/reviews
 money drafts locally. Deposit/withdrawal confirmations now use the fixed funding
@@ -38,7 +47,6 @@ remain disabled. Operational readiness does not imply accounts have been seeded.
 | --- | --- | --- |
 | POST | `/api/wallets` | Add a supported fiat wallet to the main account. |
 | PATCH | `/api/accounts/{accountId}/default-currency` | Change the main account's default currency; destinations are read-only. |
-| GET | `/api/currencies` | List available fiat currencies. |
 | POST | `/api/quotes` | Preview an FX conversion or cross-currency transfer with a one-minute quote. |
 | POST | `/api/conversions` | Confirm a conversion, creating the target wallet if required. |
 | POST | `/api/transfers` | Transfer to an existing or newly created simulated account. |
@@ -69,7 +77,7 @@ The names, fields, example IDs, successful response statuses, and payloads in th
 | Inspect wallets | `accountId` path parameter | Wallet IDs, fiat codes, exact balances, and any applicable USD-total/unavailable indication | [D-003](DECISIONS.md#d-003), [D-011](DECISIONS.md#d-011), [O-004](DECISIONS.md#o-004) |
 | Add wallet | Main `accountId` and supported fiat code | Created wallet ID and zero journal-derived balance | [D-004](DECISIONS.md#d-004), [D-018](DECISIONS.md#d-018) |
 | Change main default | Main `accountId` plus fiat code | Updated default; missing-wallet behavior remains open | [D-004](DECISIONS.md#d-004), [O-004](DECISIONS.md#o-004) |
-| List currencies | No body | Supported fiat codes/names; offline-catalog policy remains open | [D-004](DECISIONS.md#d-004), [O-005](DECISIONS.md#o-005) |
+| List currencies | Implemented GET; no body | Exact contract superseded by [RATES.md](RATES.md), including D-031 fresh-first fallback | [D-004](DECISIONS.md#d-004), [D-031](DECISIONS.md#d-031) |
 | Deposit / withdrawal | Main wallet ID, decimal-string amount, fictional provider, `Idempotency-Key` | Completed transaction and affected balance | [D-005](DECISIONS.md#d-005), [D-006](DECISIONS.md#d-006), [D-019](DECISIONS.md#d-019) |
 | FX quote | Operation kind, source wallet, amount, target currency, and destination context when needed | Server-owned quote reference, displayed amounts, rate, source date, fetched/cached state, expiry | [D-007](DECISIONS.md#d-007), [D-008](DECISIONS.md#d-008) |
 | Convert | Server quote reference and `Idempotency-Key` | One completed conversion, debit/credit amounts, and retained rate metadata | [D-009](DECISIONS.md#d-009), [D-018](DECISIONS.md#d-018), [D-019](DECISIONS.md#d-019) |

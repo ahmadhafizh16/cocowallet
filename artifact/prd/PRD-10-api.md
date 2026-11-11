@@ -1,6 +1,6 @@
 # PRD-10 — HTTP API and Swagger
 
-**Status:** Account/wallet reads, funding POSTs, durable original-result replay and their hand-maintained OpenAPI contracts are implemented under D-029/D-030. Quote/conversion/transfer/full history contracts, schema generation and Swagger UI remain future work. See [FUNDING.md](../FUNDING.md).
+**Status:** Account/wallet reads, funding POSTs, durable replay and fresh-first reference metadata GETs have maintained OpenAPI contracts under D-029–D-031. Binding quote/conversion/transfer/full history contracts, generation and Swagger UI remain future work. See [RATES.md](../RATES.md).
 **Decisions:** [D-002](../DECISIONS.md#d-002), [D-003](../DECISIONS.md#d-003), [D-016](../DECISIONS.md#d-016), [D-017](../DECISIONS.md#d-017), [D-019](../DECISIONS.md#d-019).  
 **Tasks:** [T10-01–T10-03](../tasks/TASKS-10.md).  
 **Diagrams:** [API contract flow](../API_DESIGN.md#proposed-api-contract-flow) and [money-operation code flow](../DIAGRAMS.md#code-flow-for-a-completed-money-operation).

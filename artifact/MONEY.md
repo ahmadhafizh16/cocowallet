@@ -58,9 +58,10 @@ Reject rounded-zero credits and final amount/balance overflow atomically.
 Rates must be positive plain decimal strings, at most 36 integer digits and 36
 fractional digits (73 characters including a dot). Reject unsupported precision
 or notation rather than truncate it. No decimal library or floating-point money
-calculation is needed. The future adapter must preserve original provider numeric
-lexemes, or use a documented text/CSV representation; converting a parsed JSON
-number back to a string cannot recover lost precision. If reciprocal rates become
+calculation is needed. The implemented [reference adapter](RATES.md) preserves
+original provider decimal text through documented CSV and reuses the exported
+exact `parseRate` validator; converting a parsed JSON number back to a string
+cannot recover lost precision. If reciprocal rates become
 necessary, invert an exact rational, never a floating-point number.
 
 ## Verification
