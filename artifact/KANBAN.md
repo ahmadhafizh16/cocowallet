@@ -1,7 +1,7 @@
 # Project kanban
 
-**Last updated:** Local Git and baseline setup verified; Docker foundation in progress. No wallet functionality exists yet.  
-**Scope:** 32 implementation tasks: **29 to do**, **1 in progress**, **0 blocked**, **2 done**. Planning activities completed below do not count as implemented features.
+**Last updated:** Git and Docker foundation verified; Next.js scaffold in progress. No wallet functionality exists yet.  
+**Scope:** 32 implementation tasks: **28 to do**, **1 in progress**, **0 blocked**, **3 done**. Planning activities completed below do not count as implemented features.
 
 Each task links to its detailed description, source PRD, decision IDs, dependencies, and acceptance tests. The Angular-style, one-intention-per-commit rule and local Git workflow in [D-021](DECISIONS.md#d-021) and [D-022](DECISIONS.md#d-022) apply to every task. A task moves to **Done** only when its acceptance criteria are verified and the PRD, decisions, diagrams, API documentation, and handover are updated as needed.
 
@@ -13,7 +13,6 @@ See the In progress and Done sections for Git setup.
 
 ### Platform — [PRD-01](prd/PRD-01-platform.md)
 
-- [ ] [T01-02](tasks/TASKS-01.md#t01-02) — Scaffold Next.js and quality tooling.
 - [ ] [T01-03](tasks/TASKS-01.md#t01-03) — SQLite connection, migrations, and volume lifecycle.
 
 ### Journal and money — [PRD-02](prd/PRD-02-journal.md)
@@ -78,7 +77,7 @@ See the In progress and Done sections for Git setup.
 
 ## In progress
 
-- [ ] [T01-01](tasks/TASKS-01.md#t01-01) — Docker-first Node 26 workflow.
+- [ ] [T01-02](tasks/TASKS-01.md#t01-02) — Scaffold Next.js and quality tooling.
 
 ## Blocked
 
@@ -88,6 +87,7 @@ _No task is currently blocked by an explicit unresolved decision or external blo
 
 - [x] [T00-01](tasks/TASKS-00.md#t00-01) — Local Git initialized on `main`; targeted ignores verified.
 - [x] [T00-02](tasks/TASKS-00.md#t00-02) — Baseline separated by intention; checksum-verified skill restoration and corruption rejection tested.
+- [x] [T01-01](tasks/TASKS-01.md#t01-01) — Node 26/non-root Compose image, npm access, and all named volumes verified across recreation.
 
 ## Done — planning only
 

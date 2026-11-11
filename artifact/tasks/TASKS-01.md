@@ -7,7 +7,7 @@ Status is mirrored in [KANBAN.md](../KANBAN.md).
 ### T01-01
 
 **Docker-first Node 26 workflow**  
-**Status:** In progress. Node 26 and npm registry access verified in Docker; Compose configuration is next.  
+**Status:** Done. Digest-pinned Node 26 image, non-root UID, registry access, writable volumes, and persistence across container recreation verified.  
 **Decisions:** [D-001](../DECISIONS.md#d-001), [D-002](../DECISIONS.md#d-002), [D-016](../DECISIONS.md#d-016), [D-022](../DECISIONS.md#d-022).  
 **Depends on:** [T00-02](TASKS-00.md#t00-02).  
 **Implementation:** Add a Node 26-based Docker/Compose development environment, host-local port boundary, persistent SQLite volume, source mount, and a plan to isolate container-built dependencies. Verify registry/DNS access and document non-destructive startup/shutdown and volume handling. Do not assume an app scaffold already exists.
@@ -17,7 +17,7 @@ Status is mirrored in [KANBAN.md](../KANBAN.md).
 ### T01-02
 
 **Scaffold Next.js and quality tooling**  
-**Status:** To do.  
+**Status:** In progress. Scaffold and quality tooling are the next intention.  
 **Decisions:** [D-001](../DECISIONS.md#d-001), [D-013](../DECISIONS.md#d-013), [D-015](../DECISIONS.md#d-015), [D-016](../DECISIONS.md#d-016), [D-021](../DECISIONS.md#d-021).  
 **Depends on:** [T01-01](#t01-01).  
 **Implementation:** Create the Next.js App Router TypeScript project with npm and a committed lockfile; configure strict TypeScript, ESLint, Prettier defaults, Jest/`next/jest`, Playwright, shadcn/ui, and Lucide. Preserve the existing `artifact/` and `.opencode/` files. Keep framework entry points thin and leave feature directories ready for the agreed organization. Split commits by intention rather than automatically combining the whole scaffold.
