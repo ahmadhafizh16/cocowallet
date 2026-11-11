@@ -1,6 +1,7 @@
 # PRD-01 — Application platform and persistence
 
-**Status:** Draft; no app or container exists.  
+**Status:** Git and platform task foundation implemented and verified. Account/wallet seed data, full backup/restore, and feature UI remain governed by later PRDs/tasks.
+
 **Decisions:** [D-001](../DECISIONS.md#d-001), [D-002](../DECISIONS.md#d-002), [D-015](../DECISIONS.md#d-015), [D-016](../DECISIONS.md#d-016), [D-020](../DECISIONS.md#d-020), [D-021](../DECISIONS.md#d-021), [D-022](../DECISIONS.md#d-022).  
 **Tasks:** [T00-01–T00-02](../tasks/TASKS-00.md), [T01-01–T01-03](../tasks/TASKS-01.md).  
 **Diagram:** [System and Docker boundary](../DIAGRAMS.md#system-and-docker-boundary).

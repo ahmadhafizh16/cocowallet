@@ -1,6 +1,6 @@
 # Proposed implementation plan
 
-**Status:** Draft; sequencing and scope depend on the answers in the PRD. No application implementation has started. Individual tasks and live statuses are in [KANBAN.md](KANBAN.md); [PRD.md](PRD.md) links each task group to its source feature PRD and decisions. Follow the Angular-style, one-intention-per-commit rule in [D-021](DECISIONS.md#d-021) and Git setup in [D-022](DECISIONS.md#d-022). See [READINESS.md](READINESS.md) for outstanding setup and feature-stage checks.
+**Status:** Git and platform tasks T00-01 through T01-03 are verified; wallet implementation has not started. Individual task statuses are in [KANBAN.md](KANBAN.md); [PRD.md](PRD.md) links each task group to its source feature PRD and decisions. Follow the Angular-style, one-intention-per-commit rule in [D-021](DECISIONS.md#d-021) and Git setup in [D-022](DECISIONS.md#d-022). See [READINESS.md](READINESS.md) for feature-stage checks.
 
 ## Tasks
 

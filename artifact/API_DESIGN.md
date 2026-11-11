@@ -1,6 +1,16 @@
 # HTTP API design: draft
 
-**Status:** Endpoint names and payloads are proposals for discussion; no application endpoint or OpenAPI document exists yet.
+**Status:** Wallet endpoint names/payloads remain proposals; OpenAPI/Swagger is not implemented. The operational routes below exist and are tested.
+
+## Implemented operational endpoints
+
+| Method | Route | Result |
+| --- | --- | --- |
+| GET | `/` | JSON foundation milestone; not a wallet interface. |
+| GET | `/api/health` | 200 JSON liveness response with `Cache-Control: no-store`. |
+| GET | `/api/ready` | 200 JSON when the migrated metadata table is readable; otherwise 503 Problem Details with `DATABASE_NOT_READY`. |
+
+Operational routes are in `src/app/`; Jest tests verify health and readiness, including an isolated unmigrated database failure. The wallet candidate routes below have not been implemented or finalized.
 
 **Decision references:** [D-003](DECISIONS.md#d-003), [D-007](DECISIONS.md#d-007), [D-008](DECISIONS.md#d-008), [D-010](DECISIONS.md#d-010), [D-017](DECISIONS.md#d-017), [D-018](DECISIONS.md#d-018), and [D-019](DECISIONS.md#d-019). Detailed requirements and tasks: [PRD-10](prd/PRD-10-api.md) and [Tasks 10](tasks/TASKS-10.md).
 

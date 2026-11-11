@@ -1,22 +1,62 @@
 # Handover
 
-**Status:** Planning only. No application code, database, or dependencies have been created.
+**Status:** Git and platform foundation implemented. Five of 32 tasks are verified; wallet/account/journal features, FX integration, Swagger, and interface design are not implemented.
+
+## Implemented modules and commands
+
+| Path | Responsibility |
+| --- | --- |
+| `Dockerfile`, `compose.yaml` | Digest-pinned Node 26.13.0, non-root app, native-build tools, localhost port, named volumes, optional Chromium test image. |
+| `src/app/api/health/route.ts` | Uncached liveness response. |
+| `src/app/api/ready/route.ts` | SQLite/migrated-schema readiness; safe 503 Problem Details on failure. |
+| `src/server/db/connection.ts` | Explicit SQLite/Drizzle connection, foreign keys, WAL, full synchronous writes, five-second busy timeout. |
+| `src/server/db/runtime.ts` | Lazy server-only app connection, deliberately refused under Jest. |
+| `src/server/db/migrate.ts`, `scripts/migrate.ts`, `drizzle/` | Explicit versioned metadata migration; no account or journal schema yet. |
+| `components.json`, `postcss.config.mjs`, `src/lib/utils.ts` | shadcn/Lucide/Tailwind configuration and tested class helper; not an implemented wallet design. |
+| `scripts/check-artifacts.mjs` | Checks Markdown links, decision/task references, board status alignment, and task dependency cycles. |
+
+Fresh local setup and checks:
+
+```sh
+docker compose build app
+docker compose run --rm app npm ci
+docker compose run --rm app npm run db:migrate
+docker compose up -d app
+docker compose --profile test build browser-tests
+docker compose --profile test run --rm browser-tests
+```
+
+Stop the dev compiler before `docker compose run --rm app npm run check`, then use `docker compose up -d app` to resume. The check command runs artifact validation, Prettier check, lint, type check, Jest, and production build. A clean install was repeated after adding Python/Make/G++ and using the supported node-gyp header setting; relying on an incremental native install initially concealed that requirement.
+
+Application DB: `/app/data/wallet.sqlite` in Compose's `wallet-data` volume. Tests use isolated temporary SQLite files. Normal shutdown is `docker compose down` without deleting volumes. No full backup/restore procedure is claimed verified yet.
+
+Verification evidence: 10 Jest tests and 2 real-Chromium Playwright smoke tests passed; clean `npm ci`, repeat migration, lint/format/type checks, and production build passed. A test-only operational marker survived app container recreation and was then removed; no user transaction data was deleted. The production npm audit is clean; the full development audit has 23 low/moderate findings documented in [DEPENDENCIES.md](DEPENDENCIES.md).
 
 ## Current environment
 
 - The workspace was empty before the draft documents were added.
 - The available host `node` command reports v24.22.1; the application will run on Node.js 26 in Docker, avoiding a requirement to install Node 26 on the host.
 - The `sqlite3` CLI was not found. It is optional if the selected application driver manages the SQLite file.
-- Docker and Docker Compose are installed; the Docker engine responded to a version check. A Docker-first workflow is agreed, but no application container configuration exists yet.
+- Docker and Compose run the actual application. The development server is reachable at `http://localhost:3000`; `/` is currently JSON rather than a wallet screen. Health and readiness are separate endpoints.
 - Git is initialized on `main`; baseline commits separate ignore rules, feature requirements, architecture decisions, and vendored design tooling. Automatic Angular-style commits by intention are authorized; no remote or push is automatic.
 - Impeccable is installed and loadable project-locally in `.opencode/skills/impeccable`, with the `/impeccable` command in `.opencode/commands/impeccable.md`; its bundled Linux engine reports version 4.8.2. It was installed without optional automatic hooks. Initialization has not run and `PRODUCT.md` does not yet exist. Before design, follow the [getting-started guide](https://impeccable.style/tutorials/getting-started/), run `/impeccable init`, and review the resulting product context. After UI edits, follow the skill's manual detector instruction because no automatic hook is active.
 - The approximately 22 MB Impeccable Linux engine is excluded from Git and retained locally. `sh scripts/setup-impeccable.sh` restores the pinned, checksum-verified engine; online restoration and corrupt-source rejection were tested in isolation. See [TOOLING.md](TOOLING.md).
 - Host npm/network requests timed out during installation; a direct IPv4-first Node fetch succeeded, but the npm installer still stalled. The skill was installed with the verified cached official CLI and an official locally downloaded bundle. Diagnose Node 26/npm networking inside Docker before relying on dependency installs.
 - The project-local Icons8 MCP configuration has been removed at the user's request. Lucide React is the selected icon library; no icon package is installed yet.
 
-## Core implementation guidance — proposed
+## Important implemented safeguard
 
-No core code exists yet. When implementation starts, document the important actual modules and decisions here instead of presenting pseudocode as working code.
+The runtime connection explicitly refuses test access (`src/server/db/runtime.ts`):
+
+```ts
+if (process.env.NODE_ENV === "test") {
+  throw new Error("Tests must use an explicitly isolated database connection.");
+}
+```
+
+Tests open their own temporary database through `openDatabase`, apply committed migrations, and close/remove only their own fixtures. The readiness test covers both a migrated schema and a safe unavailable response when the isolated schema is missing.
+
+## Next-stage implementation guidance
 
 - Derive balances from integer-minor-unit journal entries; use decimal-safe arithmetic for rates, half-up conversion rounding, and currency-specific precision and numeric limits. Guard SQLite integer and aggregation overflow as well as JavaScript precision/serialization limits.
 - The selected driver is `better-sqlite3`; verify native binary/build compatibility with Node 26 before committing dependency versions. Use Jest/`next/jest` for unit and integration tests and Playwright for browser flows.

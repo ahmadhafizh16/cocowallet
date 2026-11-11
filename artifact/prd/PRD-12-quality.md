@@ -1,6 +1,7 @@
 # PRD-12 — Verification and handover
 
-**Status:** Draft; no application tests or release workflow exist.  
+**Status:** Critical-feature verification remains to do. The platform now has 10 Jest tests, 2 Playwright smoke tests, and local lint/format/type/build checks; these do not replace future wallet journey tests.
+
 **Decisions:** [D-002](../DECISIONS.md#d-002), [D-015](../DECISIONS.md#d-015), [D-016](../DECISIONS.md#d-016), [D-018](../DECISIONS.md#d-018), [D-020](../DECISIONS.md#d-020).  
 **Tasks:** [T12-01–T12-03](../tasks/TASKS-12.md).  
 **Diagrams:** [System boundary](../DIAGRAMS.md#system-and-docker-boundary) and [money-operation code flow](../DIAGRAMS.md#code-flow-for-a-completed-money-operation).

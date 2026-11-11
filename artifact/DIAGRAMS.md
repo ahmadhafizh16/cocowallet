@@ -1,6 +1,25 @@
 # Architecture and flow diagrams
 
-**Status:** These Mermaid diagrams are planning artifacts, not a description of implemented code. Route names, physical table/column names, and the exact code layout remain proposals. The [decision register](DECISIONS.md) is authoritative when a diagram and an open question conflict.
+**Status:** The platform diagram below documents the implemented foundation. The subsequent wallet/account/journal/FX diagrams are still proposals, not completed features. The [decision register](DECISIONS.md) is authoritative when a diagram and an open question conflict.
+
+## Implemented foundation flow
+
+```mermaid
+flowchart LR
+    Local[Local browser or API client] -->|127.0.0.1:3000| Next[Next.js on Node 26 in Docker]
+    Next --> Health[GET /api/health: liveness]
+    Next --> Ready[GET /api/ready: schema readiness]
+    Ready --> Runtime[src/server/db/runtime.ts]
+    Runtime --> Connection[connection.ts: Drizzle and better-sqlite3]
+    CLI[npm run db:migrate] --> Migrations[Committed Drizzle SQL and metadata]
+    Migrations --> Connection
+    Connection --> SQLite[(SQLite operational metadata)]
+    SQLite --- Volume[Persistent wallet-data volume]
+    Jest[Jest: isolated temporary databases] --> Connection
+    Browser[Playwright: pinned Chromium container] -->|wallet.test:3000| Next
+```
+
+The application database currently contains operational metadata and migration tracking, not accounts or wallet balances. Ordinary unit/integration tests create their own temporary files and cannot use the configured runtime connection. The following sections remain the future feature design.
 
 ## System and Docker boundary
 

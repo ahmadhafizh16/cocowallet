@@ -1,6 +1,6 @@
 # Digital wallet planning
 
-These documents are **planning drafts**, not a claim that the application exists. Agreed decisions and unresolved questions are distinguished explicitly. No application code, API, database, or Docker application configuration has been implemented yet.
+These documents distinguish agreed decisions, proposals, and implemented work. The **Git/platform foundation is implemented**: Docker/Node 26, Next.js health/readiness routes, SQLite metadata migrations, and foundation tests. Wallet operations, journal/account tables, Swagger, and the wallet interface are not implemented yet; consult the kanban rather than assuming a draft PRD describes completed features.
 
 - [Main PRD](PRD.md): product scope and links to the smaller feature PRDs.
 - [Decision register](DECISIONS.md): stable `D-###` decisions and `O-###` open questions.
@@ -8,6 +8,7 @@ These documents are **planning drafts**, not a claim that the application exists
 - [Implementation plan](PLAN.md): milestones, dependency order, and completion criteria.
 - [Readiness checklist](READINESS.md): what to settle or verify before each implementation stage.
 - [Shared tooling](TOOLING.md): restore and verify the excluded design engine.
+- [Dependency notes](DEPENDENCIES.md): verified versions, compatibility decisions, and development-tool advisories.
 - [Diagrams](DIAGRAMS.md): proposed architecture, data relationships, business flows, and code flow.
 - [API design](API_DESIGN.md): proposed HTTP contract, sequence diagram, and OpenAPI/Swagger approach.
 - [Idempotency discussion](IDEMPOTENCY.md): the selected failed-retry policy, alternatives, and examples.

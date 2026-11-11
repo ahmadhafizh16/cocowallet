@@ -1,6 +1,6 @@
 # Product requirements: simulated multi-currency wallet
 
-**Status:** Draft overview; see the linked feature PRDs for detailed requirements and acceptance criteria. No application code exists yet.
+**Status:** Feature planning overview. The Git/Docker/Next.js/SQLite foundation is implemented and tested; the wallet features remain to do. See the linked feature PRDs for requirements and the kanban for actual completion.
 
 ## Goal
 

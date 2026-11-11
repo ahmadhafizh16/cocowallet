@@ -1,6 +1,6 @@
 # Implementation readiness
 
-**Status:** Planning checklist; items are not additional features unless the linked decision or PRD says so. The Docker/app foundation can be planned without answering every later implementation question. No application code has been written.
+**Status:** Foundation verified; the remaining questions apply to later feature stages. Items are not additional features unless the linked decision or PRD says so.
 
 ## Before the first implementation work
 
@@ -8,7 +8,7 @@
 - [x] Choose to exclude the approximately 22 MB Impeccable engine binary from Git while retaining its local copy ([D-022](DECISIONS.md#d-022)).
 - [x] Initialize the local repository, establish targeted ignore rules, and create small baseline commits; see [T00-01–T00-02](tasks/TASKS-00.md).
 - [x] Document and verify versioned, integrity-checked restoration of the excluded engine ([TOOLING.md](TOOLING.md)); online restoration and corrupt-source rejection passed without deleting the installed engine.
-- [ ] Verify Node 26, npm registry/network access, `better-sqlite3`, and the persistent SQLite volume **inside Docker** in [T01-01–T01-03](tasks/TASKS-01.md). Host npm installation timed out previously, so Docker connectivity should be tested rather than assumed.
+- [x] Verify Node 26.13.0, npm access, clean `npm ci`, native `better-sqlite3`, Drizzle migration, and persistence **inside Docker** in [T01-01–T01-03](tasks/TASKS-01.md). The image includes native-build tools; no host Node upgrade was required.
 - [x] Establish targeted ignore rules for secrets, dependencies, build/test outputs, SQLite files, and platform engines while keeping shared design context.
 
 ## Before implementing money movement

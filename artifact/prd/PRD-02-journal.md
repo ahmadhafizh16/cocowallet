@@ -1,6 +1,7 @@
 # PRD-02 — Journal, money, and atomicity
 
-**Status:** Draft; no schema or money module exists.  
+**Status:** Draft; no journal schema or money module exists. The separate operational-metadata schema and SQLite connection are implemented under PRD-01.
+
 **Decisions:** [D-006](../DECISIONS.md#d-006), [D-018](../DECISIONS.md#d-018), [D-019](../DECISIONS.md#d-019).  
 **Tasks:** [T02-01–T02-03](../tasks/TASKS-02.md).  
 **Diagrams:** [Logical data relationships](../DIAGRAMS.md#logical-data-relationships) and [money-operation code flow](../DIAGRAMS.md#code-flow-for-a-completed-money-operation).
