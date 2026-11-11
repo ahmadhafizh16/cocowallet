@@ -203,6 +203,15 @@ activity between requests can shift records across pages; no cursor/snapshot-tok
 guarantee is implied. T09-01 implements read-only queries/API, not T09-02's full
 history interface or T08-02's transfer submission.
 
+### D-034
+
+**History interface placement:** The user selected **Expand existing panel**:
+keep compact recent activity, add Browse full history, and put filters, numbered
+pages and inline transaction-detail/back navigation in that same card. Do not
+introduce a separate page or modal. Inherit the existing visual world and preserve
+money drafts/recovery, account isolation and privacy. This does not resolve
+destination valuation, wallet/default management or Swagger. See [HISTORY.md](HISTORY.md).
+
 ## Questions and resolutions
 
 ### O-001
@@ -266,8 +275,9 @@ explicit quote/confirmation UI and shared per-tab original-key recovery.
 T08-01 now extends global ownership/retention to the internal transfer service,
 including atomic simulated-recipient/wallet creation, quote-bound FX and rate-free
 same-currency sends. See [TRANSFERS.md](TRANSFERS.md). T08-02 now connects transfer
-HTTP/UI and shared original-key recovery; full history
-and Swagger remain separate work; the backend alone never implied those features.
+HTTP/UI and shared original-key recovery; T09-02 subsequently adds full-history
+browsing/details under D-034. Swagger remains separate work; the backend alone
+never implied those features.
 
 ### O-007
 

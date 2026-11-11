@@ -1,11 +1,12 @@
-# Completed history queries and API
+# Completed history queries, API and interface
 
-**Status:** T09-01's read-only backend is implemented and verified with the full
-Docker check/build and production regressions.
-The existing interface still shows its latest 50 funding/conversion receipts;
-T09-02's full history UI is not enabled here. T08-02 now connects transfers and
-inspect-only incoming recent activity through these GETs; see [TRANSFERS.md](TRANSFERS.md).
-Historical backend-only checkpoint notes below predate that integration.
+**Status:** T09-01's backend and T08-02's scoped recent activity are verified.
+T09-02 now adds user-approved full browsing inside the existing history panel,
+with explicit filters, numbered pages and inline detail/back navigation, verified
+by the final Docker checks and production browser suite. The compact overview,
+visual system and money flows
+are preserved. No new route/endpoint, dependency, migration or accounting behavior.
+Historical backend-only checkpoint notes below predate these interface integrations.
 
 ## Approved contract — D-033
 
@@ -160,3 +161,88 @@ T08-02 subsequently connects reviewed transfers/recovery and scoped incoming
 recent activity through these GETs. T09-02 still owns full history list/detail
 browsing. The original backend checkpoint alone did not enable either interface;
 see [TRANSFERS.md](TRANSFERS.md) for the connected boundary and its verification.
+
+## T09-02 — inline full-history browsing
+
+The user confirmed **Expand existing panel** rather than a separate page (D-034).
+The existing recent panel remains compact; **Browse full history** opens filters,
+numbered pages and transaction detail in that same card. It introduces no new
+route, overlay, permanent column, identity, token/CSS change or valuation.
+
+- Type, either-side currency and inclusive UTC-day filters apply **explicitly**.
+  Editing controls alone makes no request; invalid/noncanonical days and reversed
+  ranges retain text, focus the invalid control and leave applied results unchanged.
+  Dates use exact YYYY-MM-DD text, not browser-local timestamp conversion. Applied
+  filters are stated separately from staged input. Clear resets filters/page 1;
+  reapplying unchanged filters is an intentional read refresh.
+- Currency choices come from known pinned accounting precision, including historical
+  units such as CLF—not today's fiat/provider catalog. No catalog/rate/quote is
+  fetched by browsing. Historical source/target facts remain exact decimal strings.
+- Numbered pages use the approved **50 records** per UI page. Previous/next, first
+  page and direct positive safe-integer page entry use the existing API contract.
+  Counts share the server snapshot; activity between requests may shift boundaries.
+  Empty filters, empty accounts and pages beyond the end are distinct truthful states.
+- A named row button opens a **separate scoped detail GET**, not a row-derived
+  fabricated detail. Provider, source/target accounts/wallets/currencies/amounts,
+  status/time and recorded rate/source/fetch/cache metadata are shown as applicable.
+  Same-currency transfers explicitly have no FX. Incoming rates retain original
+  source→target direction. No retry key, quote, original balance or current valuation
+  is invented/exposed. Optional exact transaction-ID lookup makes missing-record
+  inspection reachable without requiring a list entry.
+- Back preserves applied filters/page and restores the originating row when it is
+  still present; otherwise it focuses the browse heading. Filter/page actions focus
+  the results context after completion. Closing full browsing restores its trigger.
+  Account switches remount the workspace, clearing filters/details/lookup instead
+  of reusing another account's context. Destination money actions stay disabled.
+- Loading uses the existing decorative Skeleton and a status announcement. Missing
+  details, failed reads and malformed/unmatched data have safe read-only retries,
+  never previous-page/foreign-account/row-fact fallbacks. Query/revision/account
+  changes, privacy and unmount cancel reads; late responses are ignored. Requests
+  time out after 15 seconds without an automatic retry or minimum loading delay.
+- Privacy removes filters, records, counts and timestamps from the DOM and pauses
+  history reads. Showing amounts resumes the in-memory context. Ordinary browsing
+  is not persisted to URL/browser storage and clears on reload; it never reads,
+  clears or overwrites the shared unresolved monetary recovery record.
+- Shared client guards now validate recent/full pages and detail context, role/
+  direction, precision/arithmetic, filter membership, counts/offsets and order.
+  Pagination uses exact bigint offsets; historical Unicode ID ties follow SQLite's
+  UTF-8/code-point order, not JavaScript's UTF-16 surrogate order. Server query and
+  monetary contracts remain unchanged.
+
+### Interface verification
+
+Final Docker `npm run check` passes **1,455 Jest tests in 61 suites**, formatting,
+lint, TypeScript, artifact checks (**57 documents / 36 tasks**) and production build.
+All **89 production Chromium checks** pass on a freshly recreated guarded server,
+including **11 history journeys**. Isolated tests cover exact amounts, context/
+role/filter bindings, numbered-page edges, old Unicode IDs, late responses, privacy,
+retry/timeout and informative row names. Browsers cover all operations, >50-record
+paging, explicit filters in a non-UTC zone, detail/back focus, incoming inspection,
+missing/error/malformed states, privacy/reload and unchanged monetary recovery.
+
+The earlier conversion expiry failure was a test-clock lag behind server quote
+issuance. Both expiry simulations now anchor to the returned `issuedAt + 1ms` and
+dispatch focus; production expiry/clock safeguards were not relaxed. Both targeted
+expiry checks and the final full suite pass.
+
+The actual 320/1440 light/dark list/detail matrix and six reachable states are
+captured from document top at CSS-pixel scale in `.impeccable/review/history-flow/`,
+with region metadata and original-pixel panel crops. The single changed-target
+detector returned `[]`. A fresh independent review requested one accessible-row
+summary correction. Exact amounts/currencies and UTC time now accompany type/ID;
+static and browser assertions plus the production accessibility tree verify it.
+The reviewer scored **1/1 fixes resolved**, `disposition: ship` at that fix scope.
+See [DESIGN_REVIEW.md](DESIGN_REVIEW.md); no global WCAG/security/performance claim.
+
+Verified backup `/app/data/wallet.sqlite.pre-history-ui-1794433924150.bak`
+preceded checks. After development restoration and actual empty-runtime browsing,
+all **14 runtime tables including migration metadata** remain bigint-safely
+row-identical: **1 account / 3 wallets / 0 transactions / 0 journal entries /
+0 funding attempts / 0 conversion attempts / 0 transfer attempts**, with empty
+reference caches and quote/use tables. Integrity `ok`; FK violations zero.
+Development retained `.next/dev.pre-history-ui-1794435466636` and passed **300 stable
+frames**, empty full-history/privacy/back focus and enabled funding review, with
+zero extra document navigations, page/console errors or financial/reference requests.
+The initial same-document Next.js bootstrap history event is not a reload.
+No normal-wallet funding, migration, dependency, live-provider check, restore drill
+or remote push was introduced.

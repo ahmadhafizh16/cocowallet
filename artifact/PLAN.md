@@ -1,6 +1,6 @@
 # Proposed implementation plan
 
-**Status:** Persistent account/history reads, funding, fresh-first metadata and reviewed conversion/transfer flows are verified. T08-02 connects atomic transfers to reviewed same/FX terms, shared recovery and inspect-only incoming recent activity. Next is T09-02's full-history list/detail interface; wallet management, valuation and API/Swagger acceptance remain separate milestones. Existing visual identity is preserved and visual feedback deferred. See [TRANSFERS.md](TRANSFERS.md), [KANBAN.md](KANBAN.md) and [READINESS.md](READINESS.md); local commit rules remain D-021/D-022.
+**Status:** Persistent reads, funding, metadata and reviewed conversion/transfer flows are verified. T09-02 completes user-approved in-panel history filters/numbered pages/inline details, with final Docker/Jest/Chromium checks and the review fix verified. Wallet/default management, valuation and API/Swagger acceptance remain separate milestones. Existing visual identity is preserved and visual feedback deferred. See [HISTORY.md](HISTORY.md), [KANBAN.md](KANBAN.md) and [READINESS.md](READINESS.md); local commit rules remain D-021/D-022.
 
 ## Tasks
 

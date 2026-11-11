@@ -1,7 +1,7 @@
 # PRD-09 — Transaction history and details
 
-**Status:** T09-01's read-only queries/detail API are implemented and verified. The user selected inclusive UTC days and numbered pages under D-033. T08-02 connects bounded incoming recent activity for inspect-only destinations. T09-02's full-history browsing remains separate work. See [HISTORY.md](../HISTORY.md) and [TRANSFERS.md](../TRANSFERS.md).
-**Decisions:** [D-003](../DECISIONS.md#d-003), [D-006](../DECISIONS.md#d-006), [D-012](../DECISIONS.md#d-012), [D-017](../DECISIONS.md#d-017), [D-018](../DECISIONS.md#d-018), [D-033](../DECISIONS.md#d-033).
+**Status:** T09-01–T09-02 are verified. Full-history browsing/detail expands the existing panel (user-selected D-034), using D-033's UTC days and numbered pages. Final Docker checks pass 1,455 Jest / 89 production Chromium checks. Destinations remain inspect-only, with original incoming FX direction. See [HISTORY.md](../HISTORY.md).
+**Decisions:** [D-003](../DECISIONS.md#d-003), [D-006](../DECISIONS.md#d-006), [D-012](../DECISIONS.md#d-012), [D-017](../DECISIONS.md#d-017), [D-018](../DECISIONS.md#d-018), [D-033](../DECISIONS.md#d-033), [D-034](../DECISIONS.md#d-034).
 **Tasks:** [T09-01–T09-02](../tasks/TASKS-09.md).  
 **Diagrams:** [Logical data relationships](../DIAGRAMS.md#logical-data-relationships) and [business operations](../DIAGRAMS.md#business-operations-and-history).
 

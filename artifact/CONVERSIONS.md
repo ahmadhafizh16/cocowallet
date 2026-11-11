@@ -4,7 +4,8 @@
 quote/confirmation/recovery UI and bounded receipt visibility are implemented.
 The existing layout, branding, flags, typography and motion are preserved.
 T08-02 now connects transfers through the same recovery slot; see [TRANSFERS.md](TRANSFERS.md).
-Full-history browsing/valuation and Swagger retain their tasks. Historical
+T09-02 now adds in-panel full-history browsing/details; valuation and Swagger retain
+their tasks. Historical
 conversion-only checkpoints below do not describe the later transfer milestone.
 
 ## Internal contract

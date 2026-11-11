@@ -26,9 +26,18 @@ history UI or transfer submission is enabled.
 ### T09-02
 
 **History list and transaction detail interface**  
-**Status:** To do.  
-**Decisions:** [D-003](../DECISIONS.md#d-003), [D-012](../DECISIONS.md#d-012), [D-013](../DECISIONS.md#d-013), [D-017](../DECISIONS.md#d-017).  
+**Status:** Done.
+**Decisions:** [D-003](../DECISIONS.md#d-003), [D-012](../DECISIONS.md#d-012), [D-013](../DECISIONS.md#d-013), [D-017](../DECISIONS.md#d-017), [D-033](../DECISIONS.md#d-033), [D-034](../DECISIONS.md#d-034).
 **Depends on:** [T09-01](#t09-01), [T11-02](TASKS-11.md#t11-02).  
 **Implementation:** Render account-aware transaction lists, type/currency/date filters, and an individual detail view with provider/destination and stored FX metadata where applicable. Provide empty, loading, missing-record, and error states with accessible controls.
 
 **Acceptance and tests:** Browser tests inspect a completed operation, filter and clear results, switch to a destination's incoming history, and handle empty/missing records. Rejected operations never appear as completed history.
+
+**Evidence:** User-approved existing-panel expansion (D-034); [HISTORY.md](../HISTORY.md)
+records applied UTC/type/either-currency filters, 50-record numbered pages,
+scoped exact detail/back navigation, privacy/cancellation/error handling and
+unchanged monetary recovery. Final Docker check/build passes **1,455 Jest tests /
+61 suites** and all **89 production Chromium checks**, including 11 history journeys.
+Independent review's sole accessible-summary fix was scored **resolved**, `ship`
+at that fix scope. All 14 runtime tables match the verified backup; restored
+development passed 300 stable frames and actual empty full-history browsing.

@@ -1,6 +1,6 @@
 # PRD-10 — HTTP API and Swagger
 
-**Status:** Account/wallet/history reads, funding/conversion/transfer POSTs, durable replay, fresh-first reference metadata and immutable quotes have maintained OpenAPI contracts. T08-02 connects transfers through shared HTTP safeguards, reviewed terms and original-key recovery. Full-history browsing, full generation and Swagger UI remain future work. See [TRANSFERS.md](../TRANSFERS.md), [HISTORY.md](../HISTORY.md) and [HTTP.md](../HTTP.md).
+**Status:** Account/wallet/history reads, funding/conversion/transfer POSTs, durable replay, reference metadata and immutable quotes have maintained OpenAPI contracts. T09-02 adds full-history UI through the existing scoped GETs, without a new endpoint/schema. Full generation and Swagger UI remain future work. See [HISTORY.md](../HISTORY.md), [TRANSFERS.md](../TRANSFERS.md) and [HTTP.md](../HTTP.md).
 **Decisions:** [D-002](../DECISIONS.md#d-002), [D-003](../DECISIONS.md#d-003), [D-016](../DECISIONS.md#d-016), [D-017](../DECISIONS.md#d-017), [D-019](../DECISIONS.md#d-019).  
 **Tasks:** [T10-01–T10-03](../tasks/TASKS-10.md).  
 **Diagrams:** [API contract flow](../API_DESIGN.md#proposed-api-contract-flow) and [money-operation code flow](../DIAGRAMS.md#code-flow-for-a-completed-money-operation).

@@ -1,6 +1,6 @@
 # HTTP API design: draft
 
-**Status:** Account/wallet/history reads, simulated funding/conversion/transfer POSTs, fresh-first reference metadata and immutable quotes are implemented with maintained OpenAPI contracts. T08-02 connects reviewed transfers, shared recovery and inspect-only incoming recent history. Full-history browsing, full generation and Swagger UI remain future work. See [TRANSFERS.md](TRANSFERS.md), [HISTORY.md](HISTORY.md) and [HTTP.md](HTTP.md).
+**Status:** Account/wallet/history reads, simulated funding/conversion/transfer POSTs, fresh-first reference metadata and immutable quotes are implemented with maintained OpenAPI contracts. T09-02 now connects full-history filters/paging/inline detail through the existing scoped GETs; no new endpoint or response shape. Full generation and Swagger UI remain future work. See [HISTORY.md](HISTORY.md), [TRANSFERS.md](TRANSFERS.md) and [HTTP.md](HTTP.md).
 
 T07-01's atomic service now backs `POST /api/conversions` under T07-02.
 Funding/conversion retry keys share ownership, including recorded failures;

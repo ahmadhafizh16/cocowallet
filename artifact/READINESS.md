@@ -27,13 +27,19 @@ remain open; this checkbox is not global approval for unrelated endpoints.
 T07-01's internal service is defined in [CONVERSIONS.md](CONVERSIONS.md), with
 global funding/conversion key ownership and atomic creation/accounting/quote use.
 T07-02 adds the documented endpoint, reviewed quote/expiry/reconfirmation UI and
-shared original-key recovery. This does not approve transfers or full history,
-and backend tests alone are not treated as browser acceptance.
+shared original-key recovery. T08-02 subsequently connects reviewed transfers;
+T09-02 connects user-approved in-panel full history. Backend tests alone are not
+treated as browser acceptance.
 
 ## Before visual design and feature completion
 
 - [x] Confirm Impeccable product context, code-first, and the approved frosted direction in [PRODUCT.md](../PRODUCT.md), `.impeccable/config.json`, and [DESIGN_REFERENCE.md](DESIGN_REFERENCE.md). The implemented shell has skeleton/state tests and a recorded [design review](DESIGN_REVIEW.md); feature PRDs, handover, decisions, tasks, and diagrams remain under `artifact/`.
 - [ ] Resolve the display/default-currency questions in [O-004](DECISIONS.md#o-004), including destination USD totals and date-filter boundaries, before finalizing their UI/API acceptance criteria.
+
+D-033 resolves history's date-filter boundary as inclusive UTC calendar days;
+D-034 fixes its existing-panel placement. Destination valuation and main-default/
+missing-wallet behavior remain open, so O-004 is not globally closed.
+
 - [ ] Define and test the safe SQLite backup/restore and offline currency-catalog behavior in [O-005](DECISIONS.md#o-005). Avoid assuming a live database can be safely copied without accounting for active journal/WAL state.
 
 D-031 resolves the catalog portion: fresh request first, cache valid success,

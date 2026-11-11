@@ -1,5 +1,39 @@
 # Wallet shell design review
 
+## T09-02 — in-panel history review
+
+The user selected **Expand existing panel** (D-034). Compact recent activity,
+filters/numbered pages and inline scoped details inherit the incumbent Operate
+world. No route/modal, CSS/token, brand, flag, gradient, typography or motion
+change. `DESIGN.md` and `.impeccable/design.json` remain unchanged.
+
+An independent fresh-context reviewer inspected the required full-document
+320/1440 light/dark list/detail matrix plus loading, empty, invalid-day, missing,
+read-error and hidden states in `.impeccable/review/history-flow/`, with native-pixel
+panel crops and region metadata. The reviewer used current source, product/design
+authority and the user-approved panel placement, without rendering or editing.
+The single changed-target detector returned `[]`; that static scan is not a
+contrast, screen-reader, WCAG, security or performance certification.
+
+**Initial disposition: `fix`.** Type, material, ground, branding, approved panel
+placement, exact facts, responsive states, account/privacy and entry/back/close
+focus matched or were accepted adaptations. The sole material finding: the
+explicit row accessible name suppressed the visible amounts/currencies/time,
+leaving assistive-technology users with type plus an opaque transaction ID.
+The row name now includes the visible exact amounts/currencies and recorded UTC
+time as well as type/ID. A static regression, exact browser accessible-name
+assertions and the production accessibility tree cover that correction.
+
+**Verdict pass: `ship`; 1/1 material fixes resolved.** The same reviewer rechecked
+all 14 refreshed full captures, 18 original-pixel panel crops and their region
+metadata, scoring the semantic fix from source/tests and the actual accessibility
+tree. No fix-introduced visual regression was found. This is approval of the listed
+fix, not a new whole-surface audit. The detector predates the aria-label-only
+correction and was not rerun. Final Docker checks pass **1,455 Jest / 89 production
+Chromium checks**. No design-system files changed; the incumbent type/palette/
+material/control language remains authoritative. This does not close T11-03 or
+resolve deferred visual feedback.
+
 ## T08-02 — connected-transfer review
 
 **Bounded in-thread verdict: `ship` at connected-transfer scope.** Transfer entry,

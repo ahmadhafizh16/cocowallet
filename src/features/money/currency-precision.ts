@@ -27,3 +27,11 @@ export function getCurrencyExponent(code: string): number {
 
   return exponent;
 }
+
+/** Historical filtering uses pinned accounting codes, not today's fiat provider
+ * catalog. Return a fresh list so callers cannot mutate the precision registry. */
+export function listAccountingCurrencies(): string[] {
+  return Object.keys(currencyPrecision)
+    .filter((code) => typeof currencyPrecision[code] === "number")
+    .sort();
+}

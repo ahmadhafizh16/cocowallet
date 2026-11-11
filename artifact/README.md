@@ -1,6 +1,6 @@
 # Digital wallet planning
 
-These documents distinguish decisions, proposals, and implemented work. The platform, exact journal core, persistent account/history reads, durable funding, fresh-first metadata, shared HTTP boundaries and reviewed conversion/transfer flows exist. Transfers share original-key recovery; destinations remain inspect-only with incoming recent facts. History uses inclusive UTC days and user-selected numbered pages. Full-history browsing/valuation and Swagger remain future work. Quote previews move/reserve no funds. Consult the kanban rather than assuming a draft PRD describes completed features.
+These documents distinguish decisions, proposals, and implemented work. The platform, exact journal core, persistent account/history reads, durable funding, metadata, shared HTTP boundaries and reviewed conversion/transfer flows exist. T09-02 adds in-panel full-history browsing/details through scoped GETs with inclusive UTC days and numbered pages. Destinations stay inspect-only and monetary recovery is unchanged. Valuation, wallet/default management and Swagger remain future work. Consult the kanban rather than assuming a draft PRD describes completed features.
 
 - [Main PRD](PRD.md): product scope and links to the smaller feature PRDs.
 - [Decision register](DECISIONS.md): stable `D-###` decisions and `O-###` open questions.
@@ -26,7 +26,7 @@ These documents distinguish decisions, proposals, and implemented work. The plat
 - [Reviewed conversions](CONVERSIONS.md): exact quote-bound accounting, target creation, documented endpoint, expiry/reconfirmation and original-key recovery.
 - [Simulated transfers](TRANSFERS.md): atomic same/FX service, reviewed endpoint/UI, exact recipient/default context, globally retained outcomes, shared recovery and inspect-only incoming recent activity.
 - [Shared HTTP contracts](HTTP.md): reusable request guards/schema definitions, exact JSON, safe Problem Details and common write boundaries; no new endpoint or Swagger UI.
-- [History queries/API](HISTORY.md): account-scoped completed facts, inclusive UTC-day filters and user-selected numbered pages; no full-history UI or transfer submission.
+- [History queries/API/interface](HISTORY.md): scoped completed facts, inclusive UTC-day/type/either-currency filters, numbered pages and user-selected in-panel detail/back browsing; no valuation or money submission from history.
 - [Diagrams](DIAGRAMS.md): proposed architecture, data relationships, business flows, and code flow.
 - [API design](API_DESIGN.md): proposed HTTP contract, sequence diagram, and OpenAPI/Swagger approach.
 - [Idempotency discussion](IDEMPOTENCY.md): the selected failed-retry policy, alternatives, and examples.

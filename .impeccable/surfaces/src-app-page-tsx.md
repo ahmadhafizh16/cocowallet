@@ -2,7 +2,7 @@
 version: 1
 slug: "src-app-page-tsx"
 primary_target: "src/app/page.tsx"
-related_targets: ["src/features/wallet/dashboard.tsx","src/features/wallet/wallet.css","src/features/wallet/operation-workspace.tsx","src/features/submissions/submission-panel.tsx","src/features/conversions/quote-review.tsx","src/features/transfers/transfer-review.tsx","src/features/history/recent-transactions.tsx","src/features/funding/recent-funding.tsx","src/app/loading.tsx","src/app/error.tsx"]
+related_targets: ["src/features/wallet/dashboard.tsx","src/features/wallet/wallet.css","src/features/wallet/operation-workspace.tsx","src/features/submissions/submission-panel.tsx","src/features/conversions/quote-review.tsx","src/features/transfers/transfer-review.tsx","src/features/history/recent-transactions.tsx","src/features/history/workspace.tsx","src/features/history/use-history.ts","src/features/history/transaction-facts.tsx","src/features/funding/recent-funding.tsx","src/app/loading.tsx","src/app/error.tsx"]
 ---
 
 # Wallet overview surface
@@ -17,7 +17,17 @@ journal-backed balance snapshots and exploring local money drafts. The user has
 paused visual feedback while backend workflows are integrated. Reviewed simulated
 deposits/withdrawals, conversions and transfers connect through shared durable
 retry/recovery. Destination inspection uses scoped incoming recent history, while
-full-history browsing and valuation remain separate. See `artifact/TRANSFERS.md`.
+T09-02 subsequently connects full-history browsing below; valuation remains
+separate. See `artifact/TRANSFERS.md` and `artifact/HISTORY.md`.
+
+T09-02 extends this existing panel, not the visual world. The user confirmed
+“Expand existing panel”: retain compact recent activity, add a Browse full history
+entry, and show filters/numbered pages and inline record details in that same card.
+No route/modal, new identity or durable token change. Applied filters use inclusive
+UTC days and either affected currency; detail/back navigation keeps the list's
+filters/page. Account switches clear detail/filter context; privacy removes records,
+counts and timestamps. Loading, empty, missing, retry, keyboard/focus return and
+long-content states use the incumbent controls. Ordinary browsing stays in memory.
 
 ## Direction contract
 
@@ -76,8 +86,9 @@ incorrect and is withdrawn; this machine's seed support was not unavailable.
    Transfers now use exact recipient/default/target context, no-FX same-currency
    review or expiring server terms, explicit confirmation and that same recovery
    slot. Recent activity is the selected account's latest 50 matching completed
-   facts, including incoming destination transfers, not a full history/valuation
-   service. Unknown totals stay unavailable; destinations stay inspect-only.
+facts, including incoming destination transfers, not a full history/valuation
+   service by themselves. Full browsing/details use the approved in-panel T09-02
+   extension. Unknown totals stay unavailable; destinations stay inspect-only.
 - The scene is a local evaluation at a desk or on a phone under normal ambient
   light; light follows the supplied reference, dark follows system/user preference.
 

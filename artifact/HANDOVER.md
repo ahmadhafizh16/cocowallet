@@ -1,11 +1,11 @@
 # Handover
 
-**Status:** Twenty-six of 36 tasks are closed. T08-02's reviewed transfer endpoint/
-confirmation/shared recovery and inspect-only incoming recent activity are verified.
-The board has 8 To do, 2 In progress (remaining funding/withdrawal Swagger acceptance),
-and 26 Done. Existing visual design, exact accounting and original-key rules are
-preserved. Next is T09-02's full-history list/detail interface; valuation, wallet
-management and Swagger remain separate work. See [TRANSFERS.md](TRANSFERS.md).
+**Status:** Twenty-seven of 36 tasks are closed. T09-02's user-approved in-panel
+history filters/numbered pages/inline detail are implemented and verified.
+The board has 7 To do, 2 In progress (remaining funding/withdrawal Swagger
+acceptance), and 27 Done. Existing visual design, accounting, account isolation,
+privacy and original-key recovery are preserved. Valuation, wallet/default
+management and Swagger remain separate. See [HISTORY.md](HISTORY.md).
 
 ## Implemented modules and commands
 
@@ -28,12 +28,14 @@ management and Swagger remain separate work. See [TRANSFERS.md](TRANSFERS.md).
 | `src/lib/contracts.ts`, `src/lib/problem-details.ts`, `src/server/http/schema-parts.ts` | Shared runtime guards/published structural schemas, safe Problem Details and common response/schema parts; domain money/precision/quote validation stays feature-owned. |
 | `src/server/http/request-input.ts`, `responses.ts`, `funding-handler.ts`, `conversion-handler.ts` | Bounded fatal-UTF-8 JSON, direct-origin/media policy, lossless plain JSON/no-store/replay responses and thin monetary adapters. Post-commit serialization failure keeps original-key recovery. |
 | `src/test/json-contract.ts` | Reusable test-only assertion for the document's explicit schema subset; not a standards-compliant validator, generator or shipping client dependency. |
-| `src/features/history/`, `src/app/api/transactions/`, `src/server/http/history-*` | Read-only account-scoped completed facts, inclusive UTC days, numbered pages/counts in one snapshot, scoped detail 404, exact stored amounts/rates and maintained OpenAPI. No current balances/keys/valuation or full-history UI wiring. |
+| `src/features/history/`, `src/app/api/transactions/`, `src/server/http/history-*` | Account-scoped completed facts, inclusive UTC days, numbered pages/counts in one snapshot, scoped detail 404, exact stored amounts/rates, maintained OpenAPI and in-panel browsing/detail. No current balances/keys/valuation. |
 | `e2e/zzzzz-history.spec.ts` | Guarded disposable-server API checks for confirmed facts, either conversion currency, UTC filters, numbered pages, errors, GET-only registration and unchanged balances after reads. |
 | `src/app/api/transfers/`, `src/server/http/transfer*` | Thin same-origin/bounded-JSON adapter over the existing atomic service, shared strict schemas, retained definitive outcomes and safe original-key uncertainty. |
 | `src/features/transfers/transfer-review.tsx`, `src/features/submissions/` | Exact arbitrary recipient/default/target review; no-FX same-currency or validated expiring FX terms; transfer routing/receipt validation in the unchanged historical recovery slot alongside old funding/conversions. |
-| `src/features/history/recent-transactions.tsx`, `preview.ts` | Selected-account first 50 matching completed facts; validated GETs, cancellation/revision isolation, loading/empty/retry/privacy, incoming direction without reciprocal FX or valuation. Not full history browsing. |
+| `src/features/history/recent-transactions.tsx`, `preview.ts` | Compact first 50 matching completed facts plus shared recent/full/detail guards; validated scoped facts, exact arithmetic/filter/count/order checks and incoming direction without reciprocal FX or valuation. |
 | `e2e/zzzzzz-transfers.spec.ts` | Guarded production transfer confirmation/recovery, recipient/default/target behavior, incoming inspection/read-only permissions, expiry/funds/self-ID/storage errors and light/dark 320/1440 captures. |
+| `src/features/history/workspace.tsx`, `use-history.ts`, `transaction-facts.tsx` | In-panel staged/applied filters, numbered paging, GET-bound exact detail, safe missing/error/retry/privacy, focus/back navigation and scoped cancellation. No new route/storage or monetary write. |
+| `e2e/zzzzzzz-history-ui.spec.ts` | Guarded >50-record browsing, all operation details, UTC/either-currency filters, account switching, errors/missing/privacy, unchanged monetary recovery and 320/1440 light/dark captures. |
 | `src/features/funding/`, `src/app/api/deposits/`, `src/app/api/withdrawals/` | Exact simulated funding, immutable durable original results, same-key retries, per-tab recovery, receipts and bounded completed-funding visibility. |
 | `drizzle/0003_funding_results.sql` | Retained technical outcome table and immutable update/delete triggers; no seeded funds or transactions. |
 | `src/features/rates/`, `src/app/api/currencies/`, `src/app/api/rates/` | Server-only fixed-origin Frankfurter catalog and exact CSV pair observations; fresh-first validation, bounded timeout/size and original-time eligible fallback. No binding quote or monetary change. |
@@ -41,7 +43,7 @@ management and Swagger remain separate work. See [TRANSFERS.md](TRANSFERS.md).
 | `src/features/quotes/`, `src/app/api/quotes/`, `drizzle/0005_immutable_fx_quotes.sql` | Immutable exact-input/recipient-bound full-minute previews/readback; no reservation, internal confirmation checks and scoped atomic single-success consumption. No monetary submission endpoint. |
 | `scripts/e2e-reference-provider.mjs`, `e2e/zzz-quotes.spec.ts` | Guarded deterministic provider preload only for the disposable production server; no-money preview and disabled-submission browser checks. |
 | `src/features/conversions/`, `src/app/api/conversions/`, `drizzle/0006_conversion_results.sql` | Atomic target creation/debit/credit/use/results, strict documented POST, quote review/expiry/reconfirmation, eligible target selection and completed-conversion reads. Mutual triggers/services enforce global money-key ownership. |
-| `src/features/transfers/`, `drizzle/0007_transfer_results.sql` | Internal atomic same/FX transfers, exact arbitrary recipient IDs, default/selected-wallet creation and durable original receipts/errors; global keys across all money services. No transfer route or browser confirmation/recovery. |
+| `src/features/transfers/`, `drizzle/0007_transfer_results.sql` | Atomic same/FX transfers, exact arbitrary recipient IDs, default/selected-wallet creation and durable original receipts/errors; global money keys with documented route and reviewed browser confirmation/recovery. |
 | `src/features/submissions/` | Shared funding/conversion recovery hook and result panel; original-key/input/quote retries in one backward-compatible per-tab slot, verified before sending and cleared only on known results. |
 | `e2e/zzzz-conversions.spec.ts` | Guarded isolated conversion review/confirmation, missing wallet, expiry, unavailable terms, lost-response recovery, storage, theme/viewport/focus/privacy journeys. |
 | `scripts/start-funding-e2e.ts`, `e2e/zz-funding.spec.ts` | Refuse ordinary runtime target; successful monetary browser writes use only the disposable isolated server/database. |
@@ -51,7 +53,7 @@ management and Swagger remain separate work. See [TRANSFERS.md](TRANSFERS.md).
 | `src/components/brand/`, `public/brand/`, `src/app/icon.svg` | Approved CocoWallet inline vector logo, theme-aware wordmark, unchanged downloadable variants, and matching favicon. |
 | `src/features/theme/`, `src/app/globals.css` | Approved frosted tokens, light/dark/system preference, pre-paint theme bootstrap, storage fallback, and reduced-motion styles. |
 | `src/app/page.tsx`, `layout.tsx`, `loading.tsx`, `error.tsx`, `not-found.tsx` | Dynamic Node stored-balance overview, styles/metadata, skip link, loading/error boundaries and branded 404. No build-time DB read/seed. |
-| `src/features/wallet/` | Existing overview, snapshots, local drafts, reviewed simulated funding/conversion, privacy and matching skeleton. Latest 50 completed funding/conversion receipts only; transfer final actions remain disabled. Preview factory is test-only. |
+| `src/features/wallet/` | Existing overview, snapshots, local drafts, reviewed simulated funding/conversion/transfers, privacy and matching skeleton. Compact recent activity and inline full-history workspace; destinations inspect-only. Preview factory is test-only. |
 | `src/features/wallet/balance-history.tsx`, `currency-flag.tsx` | Validated account-scoped recorded-USD chart and exact-value disclosure; honest disconnected/private states; deterministic local currency vectors. No history source or valuation service is connected. |
 | `DESIGN.md`, `.impeccable/design.json` | Extracted light/dark visual tokens, canonical design guidance, and version-2 component-preview extensions; actual application styles remain in source CSS. |
 | `scripts/check-artifacts.mjs` | Checks Markdown links, decision/task references, board status alignment, and task dependency cycles. |
@@ -72,7 +74,33 @@ Stop the dev compiler before `docker compose run --rm app npm run check`, then u
 
 Application DB: `/app/data/wallet.sqlite` in Compose's `wallet-data` volume. Tests use isolated temporary SQLite files. Normal shutdown is `docker compose down` without deleting volumes. Before applying journal migrations, the stopped app's database was backed up with SQLite's backup API to `/app/data/wallet.sqlite.pre-journal-1794390597589.bak`. Backup creation is verified; a full restore drill is not claimed.
 
-Current transfer integration: full Docker check/build passes **1,416 Jest tests in
+Current history interface: final full Docker check/build passes **1,455 Jest tests
+in 61 suites**, formatting/lint/TypeScript and artifact checks (57 documents/36
+tasks). All **89 production Chromium checks** pass on a fresh guarded disposable
+server, including 11 history journeys. User-selected same-panel browsing adds
+explicit UTC/type/either-currency filters, 50-record numbered pages, scoped exact
+detail/back focus, privacy and safe read-only retry. The independent review's sole
+accessible-summary correction was scored **resolved**, `ship` at that fix scope;
+the changed-target detector returned `[]` before the aria-label-only correction.
+Current full captures/region metadata/pixel crops and the production accessibility
+tree live in `.impeccable/review/history-flow/`. See [DESIGN_REVIEW.md](DESIGN_REVIEW.md).
+This is not a whole-application accessibility/security/performance certification.
+
+Verified backup `/app/data/wallet.sqlite.pre-history-ui-1794433924150.bak` preceded
+checks. After restoring development, all **14 runtime tables including migration
+metadata** remain bigint-safely row-identical: **1 account / 3 wallets /
+0 transactions / 0 journal entries / 0 funding attempts / 0 conversion attempts /
+0 transfer attempts**, with empty reference caches and quote/use tables. Integrity
+`ok`; foreign-key violations zero. Development retained
+`.next/dev.pre-history-ui-1794435466636` and passed **300 stable frames**, actual
+empty full-history/privacy/back focus and enabled funding review, with zero extra
+document navigations, page/console errors or financial/reference requests. The
+initial same-document Next.js bootstrap history event is not a reload. Both quote
+expiry simulations now anchor their controlled clocks to returned server issuance;
+production safeguards remain unchanged. No migration/dependency, normal-wallet
+funding, live-provider check, restore drill or remote push. See [HISTORY.md](HISTORY.md).
+
+Historical transfer integration: full Docker check/build passes **1,416 Jest tests in
 57 suites**, formatting/lint/TypeScript and artifact checks (57 documents/36 tasks).
 All **78 production Chromium checks** pass on a fresh guarded disposable server,
 including 13 transfer checks. Representative before/after light/dark 320/1440
@@ -382,9 +410,10 @@ Tests open their own temporary database through `openDatabase`, apply committed 
 
 ## Next steps
 
-Next are T08-01's atomic transfer service and reviewed transfer flow, full history/valuation and the
-remaining API/Swagger acceptance in dependency order. T03-02/T03-03 and
-T10-01/T10-03 retain partial/future work; T04-02/T05-02 remain in progress solely
-for their Swagger acceptance. O-006 is resolved for funding by D-030. Preserve the
-current UI while visual feedback is deferred; no speculative final actions.
+Next are wallet/default management (T03-02), balance valuation (T03-03) and
+remaining generation/Swagger acceptance (T10-03), in dependency order and with
+unresolved O-004 decisions clarified before their affected behavior. T04-02/
+T05-02 remain in progress solely for Swagger acceptance. T09-01/T09-02 and T10-01
+are Done. Preserve the current UI and original-key recovery while visual feedback
+is deferred; no speculative final actions or unapproved default/valuation behavior.
 Follow [PLAN.md](PLAN.md), [READINESS.md](READINESS.md), and [KANBAN.md](KANBAN.md).

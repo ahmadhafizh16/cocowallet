@@ -66,7 +66,9 @@ show receipts and refresh balances/bounded completed activity; unknown outcomes
 retain immutable input/key/quote for explicit recovery. T08-02 now connects
 transfers through that same slot: exact arbitrary IDs/defaults, no-FX same-currency
 or expiring FX review and inspect-only incoming recent facts. The existing visual
-system is retained; full-history browsing and valuation remain separate. See
+system is retained. T09-02 subsequently adds in-panel history filters/numbered pages/
+details through scoped GETs without touching monetary recovery; valuation remains
+separate. See [HISTORY.md](HISTORY.md) and
 [TRANSFERS.md](TRANSFERS.md).
 Client validation never replaces server role, precision, funds or idempotency
 enforcement. See [FUNDING.md](FUNDING.md) and [CONVERSIONS.md](CONVERSIONS.md).

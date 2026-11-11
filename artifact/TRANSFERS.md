@@ -3,8 +3,9 @@
 **Status:** T08-01's atomic service is verified. T08-02 now connects a documented
 transfer endpoint, reviewed same/FX confirmation, shared original-key recovery and
 inspect-only destination balances/incoming recent history, verified under T08-02.
-The existing visual system is preserved. Full-history browsing,
-valuation, wallet management and Swagger remain separate work. No dependency,
+The existing visual system is preserved. T09-02 subsequently adds full-history
+browsing through the scoped GETs; valuation, wallet management and Swagger remain
+separate work. No dependency,
 migration, real-money, banking or payment-provider integration is introduced.
 
 ## Internal contract

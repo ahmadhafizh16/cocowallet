@@ -56,6 +56,7 @@ import { ThemeMenu } from "@/features/theme/theme-menu";
 import { useHydrated } from "@/lib/use-hydrated";
 import { RecentFunding } from "../funding/recent-funding";
 import { RecentTransactions } from "../history/recent-transactions";
+import { HistoryWorkspace } from "../history/workspace";
 import type { TransactionType } from "../history/contracts";
 import { BalanceHistory } from "./balance-history";
 import { CurrencyFlag } from "./currency-flag";
@@ -98,6 +99,8 @@ export function WalletDashboard({ model }: { model: WalletOverview }) {
   const [operationOpen, setOperationOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("overview");
   const [historyFilter, setHistoryFilter] = useState("all");
+  const [historyOpen, setHistoryOpen] = useState(false);
+  const historyTrigger = useRef<HTMLButtonElement>(null);
   const [copyResult, setCopyResult] = useState<{
     accountId: string;
     message: string;
@@ -539,37 +542,56 @@ export function WalletDashboard({ model }: { model: WalletOverview }) {
                     <CardTitle>
                       <h2 id="history-heading" className="wallet-panel-title">
                         <History aria-hidden="true" />
-                        Recent transactions
+                        {historyOpen
+                          ? "Transaction history"
+                          : "Recent transactions"}
                       </h2>
                     </CardTitle>
-                    <Select
-                      value={historyFilter}
-                      onValueChange={setHistoryFilter}
-                      disabled={!hydrated}
-                    >
-                      <SelectTrigger
-                        aria-label="Filter transactions"
-                        className="wallet-history-filter"
+                    {!historyOpen && (
+                      <Select
+                        value={historyFilter}
+                        onValueChange={setHistoryFilter}
+                        disabled={!hydrated}
                       >
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {HISTORY_FILTERS.map(({ value, label }) => (
-                          <SelectItem key={value} value={value}>
-                            {label}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                        <SelectTrigger
+                          aria-label="Filter transactions"
+                          className="wallet-history-filter"
+                        >
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {HISTORY_FILTERS.map(({ value, label }) => (
+                            <SelectItem key={value} value={value}>
+                              {label}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    )}
                   </CardHeader>
-                  {fundingEnabled && (
+                  {fundingEnabled && !historyOpen && (
                     <p className="mb-4 text-sm text-muted-foreground">
                       {model.transferEnabled
-                        ? "Latest 50 matching completed operations for this account. Full history browsing and balance-history valuations remain separate."
+                        ? "Latest 50 matching completed operations for this account. Browse full history for currency/day filters, numbered pages and recorded details. Balance-history valuations remain separate."
                         : "Latest 50 completed deposits, withdrawals and conversions. Other transaction history and balance-history valuations are not connected."}
                     </p>
                   )}
-                  {model.transferEnabled && account ? (
+                  {historyOpen && account ? (
+                    <CardContent className="wallet-card-content">
+                      <HistoryWorkspace
+                        key={account.id}
+                        accountId={account.id}
+                        hidden={hidden}
+                        revision={model}
+                        onClose={() => {
+                          setHistoryOpen(false);
+                          requestAnimationFrame(() =>
+                            historyTrigger.current?.focus(),
+                          );
+                        }}
+                      />
+                    </CardContent>
+                  ) : model.transferEnabled && account ? (
                     <CardContent className="wallet-card-content">
                       <RecentTransactions
                         accountId={account.id}
@@ -586,6 +608,23 @@ export function WalletDashboard({ model }: { model: WalletOverview }) {
                         revision={model}
                         onClear={() => setHistoryFilter("all")}
                       />
+                      <Button
+                        ref={historyTrigger}
+                        variant="outline"
+                        className="mt-5"
+                        disabled={!hydrated}
+                        onClick={() => {
+                          setHistoryOpen(true);
+                          requestAnimationFrame(() =>
+                            document
+                              .getElementById("history")
+                              ?.querySelector<HTMLHeadingElement>("h3")
+                              ?.focus(),
+                          );
+                        }}
+                      >
+                        Browse full history
+                      </Button>
                     </CardContent>
                   ) : fundingEnabled && recentFunding.length > 0 ? (
                     <CardContent className="wallet-card-content">

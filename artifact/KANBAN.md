@@ -1,8 +1,8 @@
 # Project kanban
 
-**Last updated:** T08-02 is complete: documented transfer POST, exact recipient/default/target review, same-currency or expiring FX confirmation, shared original-key recovery and inspect-only destination balances/incoming recent facts. Full Docker check/build passes 1,416 Jest / 78 production Chromium checks. All 14 runtime tables remain unchanged; development is stable for 300 frames without errors or financial/reference requests. Existing visual design is preserved. Next is T09-02's full-history list/detail interface; wallet management, valuation and Swagger remain separate work.
+**Last updated:** T09-02 is complete: user-approved in-panel full-history filters, numbered pages, scoped exact details/back navigation, privacy and safe read-only recovery. Final Docker check/build passes 1,455 Jest / 89 production Chromium checks. The independent review's sole accessible-summary fix is resolved. All 14 runtime tables remain unchanged; restored development is stable for 300 frames with actual empty browsing and no errors or financial/reference requests. Existing visual design and original-key recovery are preserved. Wallet/default management, valuation and Swagger remain separate work.
 
-**Scope:** 36 implementation tasks: **8 to do**, **2 in progress**, **0 blocked**, **26 done**. Planning activities completed below do not count as implemented features.
+**Scope:** 36 implementation tasks: **7 to do**, **2 in progress**, **0 blocked**, **27 done**. Planning activities completed below do not count as implemented features.
 
 Each task links to its detailed description, source PRD, decision IDs, dependencies, and acceptance tests. The Angular-style, one-intention-per-commit rule and local Git workflow in [D-021](DECISIONS.md#d-021) and [D-022](DECISIONS.md#d-022) apply to every task. A task moves to **Done** only when its acceptance criteria are verified and the PRD, decisions, diagrams, API documentation, and handover are updated as needed.
 
@@ -45,7 +45,6 @@ See Done for reference metadata and the verified server-owned quote backend.
 
 ### History — [PRD-09](prd/PRD-09-history.md)
 
-- [ ] [T09-02](tasks/TASKS-09.md#t09-02) — History list and detail interface.
 
 ### HTTP API — [PRD-10](prd/PRD-10-api.md)
 
@@ -100,6 +99,7 @@ _No task is currently blocked by an explicit unresolved decision or external blo
 - [x] [T10-01](tasks/TASKS-10.md#t10-01) — Shared runtime/schema contracts, exact JSON/Problem Details, bounded direct-origin write policy and thin monetary adapters; 1,228 Jest / 63 production Chromium checks, unchanged runtime and stable development verified. Generator/Swagger and future endpoints remain separate tasks.
 - [x] [T09-01](tasks/TASKS-09.md#t09-01) — Account-scoped completed history/detail GETs, either-side currency/UTC-day filters, numbered pages and snapshot counts, exact facts without balances/keys; 1,353 Jest / 65 production Chromium checks. Runtime unchanged and development stable; no transfer submission or full-history UI wiring.
 - [x] [T08-02](tasks/TASKS-08.md#t08-02) — Reviewed transfer POST/UI, exact arbitrary IDs/defaults/target overrides, no-FX or expiring FX terms, shared legacy-slot recovery and inspect-only incoming recent activity; 1,416 Jest / 78 production Chromium checks. Visual identity/runtime data preserved, stable development and bounded ship review verified.
+- [x] [T09-02](tasks/TASKS-09.md#t09-02) — User-approved in-panel full history, explicit UTC/type/either-currency filters, numbered pages, exact scoped details/back focus, privacy and read-only recovery; 1,455 Jest / 89 production Chromium checks. Accessible-summary review fix resolved, visual identity/runtime data preserved and development stable.
 
 ## Done — planning only
 

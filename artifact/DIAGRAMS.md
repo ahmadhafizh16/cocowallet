@@ -6,7 +6,8 @@ T07-01 also implements the internal atomic conversion service: global
 funding/conversion key ownership, retained original results and atomic target
 creation/journal/quote use. T07-02 connects the conversion endpoint and confirmation
 UI. T08-02 now connects reviewed transfers/recovery and scoped incoming recent
-activity; see [TRANSFERS.md](TRANSFERS.md). Full-history browsing remains separate.
+activity; see [TRANSFERS.md](TRANSFERS.md). T09-02 adds user-approved in-panel full
+history browsing/details through the existing scoped GETs (D-034).
 
 ## Implemented foundation flow
 
@@ -167,7 +168,8 @@ No action moves real money. Destination accounts can be inspected but cannot ini
 [HISTORY.md](HISTORY.md) now implements completed journal-backed list/detail GETs,
 required account context, either-side currency filters and inclusive UTC days.
 Numbered pages/counts share one read snapshot, but activity between requests may
-shift page boundaries (D-033). Full-history browsing remains T09-02. T08-02 now supplies inspect-only
+shift page boundaries (D-033). T09-02 now supplies in-panel filters/pages and scoped
+inline detail/back navigation (D-034). T08-02 supplies inspect-only
 incoming recent activity and explicit reviewed transfer writes; GETs themselves
 never authorize a write.
 
