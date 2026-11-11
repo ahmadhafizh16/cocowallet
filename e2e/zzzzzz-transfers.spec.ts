@@ -381,7 +381,26 @@ test("expired FX terms require an explicit fresh quote and a separate confirmati
   page.on("request", (r) => {
     if (r.url().endsWith("/api/transfers")) calls++;
   });
-  await review(page, recipient(), "GBP");
+  const firstResponse = page.waitForResponse(
+    (r) =>
+      new URL(r.url()).pathname === "/api/quotes" &&
+      r.request().method() === "POST",
+  );
+  await enter(page, recipient(), "GBP");
+  await page
+    .getByRole("button", { name: "Review transfer", exact: true })
+    .click();
+  const first = await (await firstResponse).json();
+  await page.clock.setSystemTime(
+    new Date(Date.parse(first.quote.issuedAt) + 1),
+  );
+  await page.evaluate(() => window.dispatchEvent(new Event("focus")));
+  await expect(
+    page.getByRole("button", {
+      name: "Confirm simulated transfer",
+      exact: true,
+    }),
+  ).toBeEnabled();
   await page.clock.fastForward(61000);
   await expect(
     page.getByRole("button", {
@@ -391,10 +410,18 @@ test("expired FX terms require an explicit fresh quote and a separate confirmati
   ).toBeDisabled();
   await expect(page.getByRole("dialog")).toContainText("expired");
   expect(calls).toBe(0);
-  await page.clock.setSystemTime(new Date(Date.now() + 2000));
+  const nextResponse = page.waitForResponse(
+    (r) =>
+      new URL(r.url()).pathname === "/api/quotes" &&
+      r.request().method() === "POST",
+  );
   await page
     .getByRole("button", { name: "Request fresh quote", exact: true })
     .click();
+  const next = await (await nextResponse).json();
+  expect(next.quote.quoteId).not.toBe(first.quote.quoteId);
+  await page.clock.setSystemTime(new Date(Date.parse(next.quote.issuedAt) + 1));
+  await page.evaluate(() => window.dispatchEvent(new Event("focus")));
   await expect(
     page.getByRole("button", {
       name: "Confirm simulated transfer",

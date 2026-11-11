@@ -163,8 +163,26 @@ test("expiry never auto-submits: fresh terms need an explicit request and a sepa
   const firstResponse = page.waitForResponse(
     (r) => r.url().endsWith("/api/quotes") && r.request().method() === "POST",
   );
-  await review(page);
+  await page
+    .locator(".wallet-quick-actions")
+    .getByRole("button", { name: "Convert", exact: true })
+    .click();
+  await page.getByLabel("You convert", { exact: true }).fill("1.00");
+  await page
+    .getByRole("button", { name: "Review conversion", exact: true })
+    .click();
   const first = await (await firstResponse).json();
+  // Anchor controlled time to actual server terms, not the runner's earlier clock.
+  await page.clock.setSystemTime(
+    new Date(Date.parse(first.quote.issuedAt) + 1),
+  );
+  await page.evaluate(() => window.dispatchEvent(new Event("focus")));
+  await expect(
+    page.getByRole("button", {
+      name: "Confirm simulated conversion",
+      exact: true,
+    }),
+  ).toBeEnabled();
   await page.clock.fastForward(61000);
   await expect(
     page.getByRole("button", {
@@ -174,7 +192,6 @@ test("expiry never auto-submits: fresh terms need an explicit request and a sepa
   ).toBeDisabled();
   await expect(page.getByRole("dialog")).toContainText("expired");
   expect(submissions).toBe(0);
-  await page.clock.setSystemTime(new Date(Date.now() + 2000));
   const nextResponse = page.waitForResponse(
     (r) => r.url().endsWith("/api/quotes") && r.request().method() === "POST",
   );
@@ -182,6 +199,8 @@ test("expiry never auto-submits: fresh terms need an explicit request and a sepa
     .getByRole("button", { name: "Request fresh quote", exact: true })
     .click();
   const next = await (await nextResponse).json();
+  await page.clock.setSystemTime(new Date(Date.parse(next.quote.issuedAt) + 1));
+  await page.evaluate(() => window.dispatchEvent(new Event("focus")));
   expect(next.quote.quoteId).not.toBe(first.quote.quoteId);
   await expect(
     page.getByRole("button", {
