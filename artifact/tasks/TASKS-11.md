@@ -15,6 +15,8 @@ Status is mirrored in [KANBAN.md](../KANBAN.md).
 
 **Progress:** Init ran the context launcher once and reviewed repository evidence. The user confirmed local demo/evaluation use, the existing agreed product/interface requirements, and code-first. [PRODUCT.md](../../PRODUCT.md) captures the confirmed record, implementation boundaries, and open questions; `.impeccable/config.json` stores the workflow choice. No `DESIGN.md`, surface concept, or UI was created. Live-picker setup is deferred because the app has no renderable document shell yet. The task is not complete until visual direction is agreed.
 
+**Reference exploration:** The user subsequently supplied a frosted pale-blue banking dashboard and chose to adapt its appearance to our real wallet scope, rather than lock the earlier Atlas proposal. A separate Impeccable HTML sketch now explores that reference in desktop/mobile and light/dark views, with labelled Lucide icons and explicitly illustrative data. See the [reference breakdown and sketch record](../DESIGN_REFERENCE.md). Direction approval remains pending; no application UI or final design contract has been written.
+
 **Acceptance and tests:** The user has reviewed the captured product context and an agreed direction exists before UI coding. Keep any skill-required root context files where the skill discovers them; keep project PRDs/decisions/tasks in `artifact/` per D-020.
 
 ### T11-02
