@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="72" height="72" viewBox="0 0 72 72" fill="none" role="img" aria-labelledby="cocowallet-icon-title">
+  <title id="cocowallet-icon-title">CocoWallet</title>
+  <rect x="4" y="4" width="64" height="64" rx="20" fill="#405e87"/>
+  <path d="M50 22H34C24.6 22 18 27.6 18 36S24.6 50 34 50H50" stroke="#ffffff" stroke-width="6" stroke-linecap="round"/>
+  <path d="M50 31H42a5 5 0 0 0 0 10h8" stroke="#a7c4e9" stroke-width="4" stroke-linecap="round"/>
+  <circle cx="50" cy="36" r="2" fill="#ffffff"/>
+</svg>

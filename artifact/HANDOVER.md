@@ -1,6 +1,6 @@
 # Handover
 
-**Status:** Eleven of 33 tasks are closed, including T11-04's user-approved two-column redesign, production checks, scoped independent verdict and refreshed design documentation. The board has 22 To do, 0 In progress, and 11 Done. Money-moving APIs, full idempotency, FX integration, Swagger, and account seeding remain unimplemented.
+**Status:** Twelve of 34 tasks are closed, including the reviewed two-column redesign and T11-05's standalone CocoWallet SVG logo assets. The board has 22 To do, 0 In progress, and 12 Done. Money-moving APIs, full idempotency, FX integration, Swagger, and account seeding remain unimplemented.
 
 ## Implemented modules and commands
 
@@ -43,7 +43,7 @@ Application DB: `/app/data/wallet.sqlite` in Compose's `wallet-data` volume. Tes
 
 Latest redesign verification: the full Docker check passes artifact validation, formatting, lint, types, **562 Jest tests**, and production build; **33 Chromium tests** pass against that build (2 foundation, 17 interaction, 12 shell, 2 visual). See [UI_FOUNDATION.md](UI_FOUNDATION.md) for coverage and commands. No packages, accounting code, schema, or DB data changed. Earlier journal checks applied/repeated all three migrations, checked integrity/foreign keys, and confirmed zero stored accounts/transactions. UI checks do not seed or move money. Earlier foundation checks covered clean `npm ci` and recreation persistence. The last production npm audit was clean; 23 low/moderate development-tool findings remain in [DEPENDENCIES.md](DEPENDENCIES.md).
 
-Artifact validation verifies **46 documents / 33 tasks**. The previous
+Artifact validation verifies **47 documents / 34 tasks**. The previous
 T11-02 design-extraction counts and verdict are historical, not certification of
 T11-04. Current production captures include desktop light/dark, 1688/1769px,
 tablet, mobile, dialogs/menus, validation/review, loading and errors. Independent
@@ -55,6 +55,12 @@ The manual detector returned 22 advisory inventory mismatches against the old
 document, with no non-advisory findings; it was not rerun to manufacture a clean
 count. This is not WCAG certification. App source is unchanged since the verified
 production build; development-cache recovery is recorded below.
+
+The subsequent logo request supplies the name **CocoWallet**. Full/inverse/icon
+SVG assets live at `public/brand/` and are documented in [BRANDING.md](BRANDING.md).
+XML structure, font/raster independence, Chromium decoding and light/dark/small
+render checks pass. This asset-only delivery does not replace header/favicon or
+change application logic, and it does not claim a fresh full app-suite run.
 
 The exact money/precision checkpoint passes 437 feature-local Jest tests, targeted lint, formatting, and strict TypeScript checks. It adds no runtime package dependency; the precision extract retains its source MIT notice and checksums.
 

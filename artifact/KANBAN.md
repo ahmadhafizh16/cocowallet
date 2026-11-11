@@ -1,8 +1,8 @@
 # Project kanban
 
-**Last updated:** T11-04 is complete: the approved two-column redesign, popup money forms, icon tooltips, and consistent shadcn controls pass production checks and scoped independent review; design documentation is refreshed. Account data, wallet APIs, and idempotency integration remain future work.
+**Last updated:** T11-05 adds the requested standalone CocoWallet SVG logo assets, checked in Chromium at light/dark and small-icon sizes. T11-04's reviewed redesign remains unchanged. Account data, wallet APIs, and idempotency integration remain future work.
 
-**Scope:** 33 implementation tasks: **22 to do**, **0 in progress**, **0 blocked**, **11 done**. Planning activities completed below do not count as implemented features.
+**Scope:** 34 implementation tasks: **22 to do**, **0 in progress**, **0 blocked**, **12 done**. Planning activities completed below do not count as implemented features.
 
 Each task links to its detailed description, source PRD, decision IDs, dependencies, and acceptance tests. The Angular-style, one-intention-per-commit rule and local Git workflow in [D-021](DECISIONS.md#d-021) and [D-022](DECISIONS.md#d-022) apply to every task. A task moves to **Done** only when its acceptance criteria are verified and the PRD, decisions, diagrams, API documentation, and handover are updated as needed.
 
@@ -95,6 +95,7 @@ _No task is currently blocked by an explicit unresolved decision or external blo
 - [x] [T11-01](tasks/TASKS-11.md#t11-01) — User-confirmed product context, code-first workflow, and approved reference-led frosted wallet direction.
 - [x] [T11-02](tasks/TASKS-11.md#t11-02) — Frosted responsive preview shell, registry-derived money-form inputs/selects, themes, skeleton/state coverage, and extracted design system; 557 Jest and 24 production Chromium tests pass.
 - [x] [T11-04](tasks/TASKS-11.md#t11-04) — Two-column overview, draft-preserving popup workflows, icon tooltips, consistent shadcn utilities, critique corrections, refreshed design system, and scoped review; 562 Jest / 33 production Chromium checks pass.
+- [x] [T11-05](tasks/TASKS-11.md#t11-05) — CocoWallet full/inverse/icon SVG assets; self-contained vectors, XML/browser checks, and light/dark/small-size inspection. No automatic app integration.
 
 ## Done — planning only
 

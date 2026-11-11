@@ -89,3 +89,23 @@ were scored **resolved** by the same reviewer, with `disposition: ship` at
 fix-list scope. The user-selected Refresh reconciles DESIGN.md and its sidecar;
 handover/PRDs/diagrams reflect the implementation. See [DESIGN_REVIEW.md](../DESIGN_REVIEW.md)
 for limitations; connected features and T11-03 remain open.
+
+### T11-05
+
+**CocoWallet SVG logo assets**
+
+**Status:** Done. The requested full logo, dark-background variant and standalone
+icon are delivered under `public/brand/`; app integration remains outside this
+asset-only request.
+
+**Decisions:** [D-013](../DECISIONS.md#d-013), [D-026](../DECISIONS.md#d-026).
+
+**Depends on:** [T11-04](#t11-04).
+
+**Implementation:** Create transparent, scalable, accessible SVGs using the
+established palette and the user-supplied name, without external font or raster
+dependencies. No app or database code changed.
+
+**Acceptance and tests:** Verify XML structure/browser decoding and inspect the
+full logo on light/dark plus small-icon sizes. All checks pass; provenance and
+scope are recorded in [BRANDING.md](../BRANDING.md).

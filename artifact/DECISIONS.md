@@ -111,6 +111,14 @@ labels, not the frosted visual identity or simulation boundary. Use accessible
 names/focus tooltips, usable mobile labels, draft-preserving dialogs for money
 actions, and styled account/theme/history controls. See [WALLET_REDESIGN.md](WALLET_REDESIGN.md).
 
+### D-026
+
+**App name and SVG assets:** The user named the app **CocoWallet** and requested
+an SVG logo. Deliver self-contained full, inverse and icon-only vector assets
+in the incumbent navy/icy-blue palette. No font/network/raster dependency or
+automatic header/favicon replacement follows from this asset request. See
+[BRANDING.md](BRANDING.md) for files, provenance and validation.
+
 ## Questions and resolutions
 
 ### O-001

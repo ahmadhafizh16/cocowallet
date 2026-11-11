@@ -4,7 +4,7 @@
 
 **Decisions:** [D-003](../DECISIONS.md#d-003), [D-011](../DECISIONS.md#d-011), [D-013](../DECISIONS.md#d-013), [D-014](../DECISIONS.md#d-014), [D-016](../DECISIONS.md#d-016), [D-025](../DECISIONS.md#d-025).
 
-**Tasks:** [T11-01–T11-04](../tasks/TASKS-11.md).
+**Tasks:** [T11-01–T11-05](../tasks/TASKS-11.md).
 
 **Diagram:** [Business operations and history](../DIAGRAMS.md#business-operations-and-history).
 
@@ -13,6 +13,9 @@
 As the user, I can understand my balances and perform the simulated wallet workflows on a responsive, accessible, modern fintech interface without mistaking the simulation for real payment processing.
 
 ## Requirements
+
+The user-supplied app name is **CocoWallet**; standalone SVG logo delivery and
+its asset-only integration boundary are recorded in [BRANDING.md](../BRANDING.md).
 
 1. Initialize Impeccable with product context and review the resulting `PRODUCT.md` before designing a new interface. Follow the skill's applicable workflow; do not invent a design system or claim design work has been done.
 2. Use registry-derived shadcn/ui foundations and Lucide React, with light/dark themes respecting system preference. Preserve pale-blue glass, navy accents, soft shadows, and rounded panels. Per D-025, use a two-column overview, accessible desktop icon tooltips, labelled mobile navigation, and draft-preserving dialogs for Send money, Deposit, Withdraw, and Convert. Theme/account menus and history filters must be themed shadcn/Radix controls, not native-looking utility selects.

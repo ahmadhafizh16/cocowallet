@@ -16,6 +16,7 @@ These documents distinguish decisions, proposals, and implemented work. The **pl
 - [Redesign brief](WALLET_REDESIGN.md): approved two-column layout, popup money forms, and shadcn-control acceptance.
 - [Design review](DESIGN_REVIEW.md): current and historical evidence, verdict scopes, and limitations.
 - [Built design system](../DESIGN.md): actual visual tokens and reusable interface rules; `.impeccable/design.json` carries component-preview extensions.
+- [CocoWallet logo](BRANDING.md): standalone SVG assets, usage, provenance and checks.
 - [Diagrams](DIAGRAMS.md): proposed architecture, data relationships, business flows, and code flow.
 - [API design](API_DESIGN.md): proposed HTTP contract, sequence diagram, and OpenAPI/Swagger approach.
 - [Idempotency discussion](IDEMPOTENCY.md): the selected failed-retry policy, alternatives, and examples.
