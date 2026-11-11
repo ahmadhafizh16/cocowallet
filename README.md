@@ -24,6 +24,21 @@ docker compose run --rm app npm run build
 docker compose logs app
 ```
 
+## Local verification
+
+```sh
+docker compose run --rm app npm run artifacts:check
+docker compose run --rm app npm run lint
+docker compose run --rm app npm run format:check
+docker compose run --rm app npm test
+docker compose --profile test build browser-tests
+docker compose --profile test run --rm browser-tests
+```
+
+The Playwright image runs Node 26 with its pinned Chromium and required Linux libraries. It addresses the app as `wallet.test` on the private Compose network; the bare `app` hostname can trigger Chromium's HTTPS upgrade for the `.app` namespace. No HTTPS validation is disabled to work around that.
+
+These are foundation smoke tests, not completed wallet journey tests. See [`artifact/DEPENDENCIES.md`](artifact/DEPENDENCIES.md) for test-tool audit findings and dependency compatibility notes.
+
 Stop the development service before building against the same Next output volume to avoid two compilers writing there at once. Existing planning files and the design skill are preserved. Node 26 is enforced by npm; TypeScript 5.9 is pinned for the initial verified Next.js toolchain rather than adopting a new TypeScript major by default.
 
 Normal shutdown will use `docker compose down`, **without `--volumes`**. Removing `wallet-data` explicitly destroys simulated balances/history. No real payment, authentication, or crypto integration is included.

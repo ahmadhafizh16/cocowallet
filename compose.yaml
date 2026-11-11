@@ -6,6 +6,10 @@ services:
       context: .
       target: development
     init: true
+    networks:
+      default:
+        aliases:
+          - wallet.test
     environment:
       DATABASE_PATH: /app/data/wallet.sqlite
       NEXT_TELEMETRY_DISABLED: "1"
@@ -16,6 +20,33 @@ services:
       - dependencies:/app/node_modules
       - next-cache:/app/.next
       - wallet-data:/app/data
+    healthcheck:
+      test:
+        - CMD
+        - node
+        - -e
+        - "fetch('http://127.0.0.1:3000/api/health', {signal: AbortSignal.timeout(5000)}).then(r => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))"
+      interval: 10s
+      timeout: 6s
+      start_period: 30s
+      retries: 3
+
+  browser-tests:
+    profiles: [test]
+    build:
+      context: .
+      target: browser-tests
+    init: true
+    ipc: private
+    shm_size: 1gb
+    environment:
+      BASE_URL: http://wallet.test:3000
+    depends_on:
+      app:
+        condition: service_healthy
+    volumes:
+      - .:/app
+      - dependencies:/app/node_modules:ro
 
 volumes:
   dependencies:

@@ -10,3 +10,10 @@ RUN mkdir -p /app/node_modules /app/.next /app/data \
 USER node
 EXPOSE 3000
 CMD ["npm", "run", "dev"]
+
+FROM development AS browser-tests
+USER root
+ENV PLAYWRIGHT_BROWSERS_PATH=/opt/playwright
+RUN npm exec --yes --package=@playwright/test@1.65.0 -- playwright install --with-deps chromium
+USER node
+CMD ["npm", "run", "test:e2e"]

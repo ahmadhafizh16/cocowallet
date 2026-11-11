@@ -9,3 +9,9 @@ The initial dependency check found that `eslint-config-next` pulls React/import/
 The current ESLint and TypeScript parser dependency ranges resolve Minimatch 10, which npm reports under advisory `GHSA-g3hv-75wg-m249`. Scoped overrides select patched Minimatch 11.0.7 only for ESLint, its config-array utility, and the TypeScript parser. This is a deliberate major-version override: verify linting, clean install, dependency tree, and audit after dependency changes. Do not run `npm audit fix --force` or use legacy peer-dependency bypasses automatically.
 
 Revisit these overrides when upstream ranges accept the fixed release. No application runtime dependency is overridden.
+
+## Test-tool advisories
+
+Installing the selected current Jest 30 runner adds transitive advisories in Glob/Minimatch and Deepmerge: the current full audit reports 19 low/moderate findings through the test toolchain. The earlier lint-only install was clean; that is not a claim that the complete development tree is advisory-free. Do not hide these findings or downgrade automatically to the obsolete Jest version suggested by `npm audit fix --force`.
+
+The production-only audit is checked separately. Review upstream-compatible fixes as part of dependency maintenance; the test runner operates only on this trusted local repository and isolated test fixtures, not untrusted uploaded test/configuration files. No arbitrary Glob or Deepmerge major override has been imposed on Jest merely to silence the audit count.
