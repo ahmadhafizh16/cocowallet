@@ -4,10 +4,20 @@ import type { ComponentProps } from "react";
 import { Dialog as DialogPrimitive } from "radix-ui";
 import { X } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { DIALOG_MOTION_SELECTOR, useMotionOpen } from "@/lib/use-motion-open";
 import { Button } from "./button";
 
-export function Dialog(props: ComponentProps<typeof DialogPrimitive.Root>) {
-  return <DialogPrimitive.Root {...props} />;
+export function Dialog({
+  open,
+  defaultOpen,
+  onOpenChange,
+  ...props
+}: ComponentProps<typeof DialogPrimitive.Root>) {
+  const motion = useMotionOpen(
+    { open, defaultOpen, onOpenChange },
+    DIALOG_MOTION_SELECTOR,
+  );
+  return <DialogPrimitive.Root {...props} {...motion} />;
 }
 export function DialogTrigger(
   props: ComponentProps<typeof DialogPrimitive.Trigger>,

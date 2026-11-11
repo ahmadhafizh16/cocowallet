@@ -4,12 +4,20 @@ import type { ComponentProps } from "react";
 import { Check, Circle } from "lucide-react";
 import { DropdownMenu as DropdownMenuPrimitive } from "radix-ui";
 import { cn } from "@/lib/utils";
+import { useMotionOpen } from "@/lib/use-motion-open";
 
-// Registry-derived shadcn/Radix menus; animation-free to honor the quiet UI.
-export function DropdownMenu(
-  props: ComponentProps<typeof DropdownMenuPrimitive.Root>,
-) {
-  return <DropdownMenuPrimitive.Root {...props} />;
+// Registry-derived shadcn/Radix menus with interruptible, bounded presence motion.
+export function DropdownMenu({
+  open,
+  defaultOpen,
+  onOpenChange,
+  ...props
+}: ComponentProps<typeof DropdownMenuPrimitive.Root>) {
+  const motion = useMotionOpen(
+    { open, defaultOpen, onOpenChange },
+    '[data-slot="dropdown-menu-content"]',
+  );
+  return <DropdownMenuPrimitive.Root {...props} {...motion} />;
 }
 export function DropdownMenuTrigger(
   props: ComponentProps<typeof DropdownMenuPrimitive.Trigger>,

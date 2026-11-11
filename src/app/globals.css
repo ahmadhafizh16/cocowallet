@@ -454,7 +454,7 @@ svg {
 }
 @keyframes wallet-scrim-in {
   from {
-    opacity: 0;
+    opacity: var(--motion-enter-opacity, 0);
   }
   to {
     opacity: 1;
@@ -462,7 +462,7 @@ svg {
 }
 @keyframes wallet-scrim-out {
   from {
-    opacity: 1;
+    opacity: var(--motion-exit-opacity, 1);
   }
   to {
     opacity: 0;
@@ -470,9 +470,9 @@ svg {
 }
 @keyframes wallet-dialog-in {
   from {
-    opacity: 0;
-    translate: 0 12px;
-    scale: 0.985;
+    opacity: var(--motion-enter-opacity, 0);
+    translate: var(--motion-enter-x, 0px) var(--motion-enter-y, 12px);
+    scale: var(--motion-enter-scale, 0.985);
   }
   to {
     opacity: 1;
@@ -482,21 +482,22 @@ svg {
 }
 @keyframes wallet-dialog-out {
   from {
-    opacity: 1;
-    translate: 0 0;
-    scale: 1;
+    opacity: var(--motion-exit-opacity, 1);
+    translate: var(--motion-exit-x, 0px) var(--motion-exit-y, 0px);
+    scale: var(--motion-exit-scale, 1);
   }
   to {
     opacity: 0;
-    translate: 0 6px;
-    scale: 0.99;
+    translate: var(--motion-exit-x, 0px) calc(var(--motion-exit-y, 0px) + 6px);
+    scale: calc(var(--motion-exit-scale, 1) * 0.99);
   }
 }
 @keyframes wallet-menu-in {
   from {
-    opacity: 0;
-    translate: 0 var(--motion-menu-offset);
-    scale: 0.98;
+    opacity: var(--motion-enter-opacity, 0);
+    translate: var(--motion-enter-x, 0px)
+      var(--motion-enter-y, var(--motion-menu-offset));
+    scale: var(--motion-enter-scale, 0.98);
   }
   to {
     opacity: 1;
@@ -506,12 +507,14 @@ svg {
 }
 @keyframes wallet-menu-out {
   from {
-    opacity: 1;
-    scale: 1;
+    opacity: var(--motion-exit-opacity, 1);
+    translate: var(--motion-exit-x, 0px) var(--motion-exit-y, 0px);
+    scale: var(--motion-exit-scale, 1);
   }
   to {
     opacity: 0;
-    scale: 0.985;
+    translate: var(--motion-exit-x, 0px) var(--motion-exit-y, 0px);
+    scale: calc(var(--motion-exit-scale, 1) * 0.985);
   }
 }
 @keyframes wallet-review-in {

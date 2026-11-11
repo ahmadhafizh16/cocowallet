@@ -3,6 +3,7 @@
 import type { ComponentProps } from "react";
 import { Tooltip as TooltipPrimitive } from "radix-ui";
 import { cn } from "@/lib/utils";
+import { useMotionOpen } from "@/lib/use-motion-open";
 
 export function TooltipProvider({
   delayDuration = 200,
@@ -10,8 +11,17 @@ export function TooltipProvider({
 }: ComponentProps<typeof TooltipPrimitive.Provider>) {
   return <TooltipPrimitive.Provider delayDuration={delayDuration} {...props} />;
 }
-export function Tooltip(props: ComponentProps<typeof TooltipPrimitive.Root>) {
-  return <TooltipPrimitive.Root {...props} />;
+export function Tooltip({
+  open,
+  defaultOpen,
+  onOpenChange,
+  ...props
+}: ComponentProps<typeof TooltipPrimitive.Root>) {
+  const motion = useMotionOpen(
+    { open, defaultOpen, onOpenChange },
+    '[data-slot="tooltip-content"]',
+  );
+  return <TooltipPrimitive.Root {...props} {...motion} />;
 }
 export function TooltipTrigger(
   props: ComponentProps<typeof TooltipPrimitive.Trigger>,

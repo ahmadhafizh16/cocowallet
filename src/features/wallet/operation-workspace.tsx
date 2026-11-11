@@ -28,6 +28,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useHydrated } from "@/lib/use-hydrated";
+import {
+  captureMotionFrame,
+  DIALOG_MOTION_SELECTOR,
+} from "@/lib/use-motion-open";
 import { MAX_AMOUNT_INPUT_LENGTH } from "../money/money";
 import {
   createDraft,
@@ -180,6 +184,11 @@ export function OperationWorkspace({
     );
   }
 
+  function closeWorkspace() {
+    captureMotionFrame(DIALOG_MOTION_SELECTOR, false);
+    onOpenChange(false);
+  }
+
   return (
     <Dialog open={open && account?.role === "main"} onOpenChange={onOpenChange}>
       <DialogContent
@@ -283,7 +292,7 @@ export function OperationWorkspace({
                 <ArrowLeft aria-hidden="true" />
                 Edit details
               </Button>
-              <Button variant="outline" onClick={() => onOpenChange(false)}>
+              <Button variant="outline" onClick={closeWorkspace}>
                 Back to overview
               </Button>
             </DialogFooter>
@@ -499,7 +508,7 @@ export function OperationWorkspace({
                 <Button
                   variant="ghost"
                   className="w-full"
-                  onClick={() => onOpenChange(false)}
+                  onClick={closeWorkspace}
                 >
                   Back to overview
                 </Button>

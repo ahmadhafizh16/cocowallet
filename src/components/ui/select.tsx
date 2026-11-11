@@ -5,9 +5,19 @@ import type { ComponentProps } from "react";
 import { Check, ChevronDown, ChevronUp } from "lucide-react";
 import { Select as SelectPrimitive } from "radix-ui";
 import { cn } from "@/lib/utils";
+import { useMotionOpen } from "@/lib/use-motion-open";
 
-export function Select(props: ComponentProps<typeof SelectPrimitive.Root>) {
-  return <SelectPrimitive.Root data-slot="select" {...props} />;
+export function Select({
+  open,
+  defaultOpen,
+  onOpenChange,
+  ...props
+}: ComponentProps<typeof SelectPrimitive.Root>) {
+  const motion = useMotionOpen(
+    { open, defaultOpen, onOpenChange },
+    '[data-slot="select-content"]',
+  );
+  return <SelectPrimitive.Root data-slot="select" {...props} {...motion} />;
 }
 
 export function SelectGroup(
