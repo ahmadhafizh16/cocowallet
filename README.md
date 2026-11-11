@@ -39,6 +39,8 @@ The Playwright image runs Node 26 with its pinned Chromium and required Linux li
 
 These are foundation smoke tests, not completed wallet journey tests. See [`artifact/DEPENDENCIES.md`](artifact/DEPENDENCIES.md) for test-tool audit findings and dependency compatibility notes.
 
+The shadcn component registry, Tailwind 4/PostCSS configuration, Lucide dependency, and class-merging helper are ready for the design phase. No theme palette, wallet layout, or visual component has been claimed as complete; `globals.css` is not attached to a visual page yet.
+
 Stop the development service before building against the same Next output volume to avoid two compilers writing there at once. Existing planning files and the design skill are preserved. Node 26 is enforced by npm; TypeScript 5.9 is pinned for the initial verified Next.js toolchain rather than adopting a new TypeScript major by default.
 
 Normal shutdown will use `docker compose down`, **without `--volumes`**. Removing `wallet-data` explicitly destroys simulated balances/history. No real payment, authentication, or crypto integration is included.
