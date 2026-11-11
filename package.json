@@ -18,17 +18,22 @@
     "test": "jest --runInBand",
     "test:watch": "jest --watch",
     "test:e2e": "playwright test",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "tsx scripts/migrate.ts",
     "artifacts:check": "node scripts/check-artifacts.mjs",
     "check": "npm run artifacts:check && npm run format:check && npm run lint && npm run typecheck && npm test && npm run build"
   },
   "dependencies": {
+    "better-sqlite3": "13.0.3",
     "class-variance-authority": "0.7.1",
     "clsx": "2.1.1",
+    "drizzle-orm": "0.45.4",
     "lucide-react": "1.72.0",
     "next": "16.4.6",
     "radix-ui": "1.8.1",
     "react": "19.3.1",
     "react-dom": "19.3.1",
+    "server-only": "0.0.1",
     "tailwind-merge": "3.7.0"
   },
   "overrides": {
@@ -47,15 +52,18 @@
     "@next/eslint-plugin-next": "16.4.6",
     "@playwright/test": "1.65.0",
     "@tailwindcss/postcss": "4.3.5",
+    "@types/better-sqlite3": "9.6.0",
     "@types/jest": "30.0.0",
     "@types/node": "26.6.6",
     "@types/react": "19.3.0",
     "@types/react-dom": "19.3.0",
+    "drizzle-kit": "0.31.11",
     "eslint": "10.14.0",
     "jest": "30.5.2",
     "jest-environment-jsdom": "30.5.2",
     "prettier": "3.9.10",
     "tailwindcss": "4.3.5",
+    "tsx": "4.23.15",
     "typescript": "5.9.3",
     "typescript-eslint": "8.72.2"
   }
