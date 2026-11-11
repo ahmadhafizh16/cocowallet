@@ -1,8 +1,8 @@
 # Project kanban
 
-**Last updated:** T11-04 is in progress: user-approved two-column redesign, popup money forms, icon tooltips, and consistent shadcn interactions. Account data, wallet APIs, and idempotency integration remain future work.
+**Last updated:** T11-04 is complete: the approved two-column redesign, popup money forms, icon tooltips, and consistent shadcn controls pass production checks and scoped independent review; design documentation is refreshed. Account data, wallet APIs, and idempotency integration remain future work.
 
-**Scope:** 33 implementation tasks: **22 to do**, **1 in progress**, **0 blocked**, **10 done**. Planning activities completed below do not count as implemented features.
+**Scope:** 33 implementation tasks: **22 to do**, **0 in progress**, **0 blocked**, **11 done**. Planning activities completed below do not count as implemented features.
 
 Each task links to its detailed description, source PRD, decision IDs, dependencies, and acceptance tests. The Angular-style, one-intention-per-commit rule and local Git workflow in [D-021](DECISIONS.md#d-021) and [D-022](DECISIONS.md#d-022) apply to every task. A task moves to **Done** only when its acceptance criteria are verified and the PRD, decisions, diagrams, API documentation, and handover are updated as needed.
 
@@ -76,7 +76,7 @@ See Done for the approved direction and verified interface-preview foundation.
 
 ## In progress
 
-- [ ] [T11-04](tasks/TASKS-11.md#t11-04) — Two-column frosted redesign, popup workflows, icon tooltips, consistent shadcn controls, and critique corrections.
+_No task is currently in progress at this interface-preview checkpoint._
 
 ## Blocked
 
@@ -94,6 +94,7 @@ _No task is currently blocked by an explicit unresolved decision or external blo
 - [x] [T02-03](tasks/TASKS-02.md#t02-03) — Immediate serialized writes, atomic account/wallet/accounting rollback, independent-connection spending tests, and technical-success integration seam.
 - [x] [T11-01](tasks/TASKS-11.md#t11-01) — User-confirmed product context, code-first workflow, and approved reference-led frosted wallet direction.
 - [x] [T11-02](tasks/TASKS-11.md#t11-02) — Frosted responsive preview shell, registry-derived money-form inputs/selects, themes, skeleton/state coverage, and extracted design system; 557 Jest and 24 production Chromium tests pass.
+- [x] [T11-04](tasks/TASKS-11.md#t11-04) — Two-column overview, draft-preserving popup workflows, icon tooltips, consistent shadcn utilities, critique corrections, refreshed design system, and scoped review; 562 Jest / 33 production Chromium checks pass.
 
 ## Done — planning only
 

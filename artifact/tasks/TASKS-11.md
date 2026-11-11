@@ -66,7 +66,7 @@ feature tasks or T11-03's cross-feature accessibility acceptance.
 
 **Two-column redesign and consistent shadcn interactions**
 
-**Status:** In progress. The user approved the [redesign brief](../WALLET_REDESIGN.md) and requested implementation.
+**Status:** Done. The user-approved [two-column/dialog redesign](../WALLET_REDESIGN.md), shadcn-control consistency, production verification, independent fix-list verdict, and refreshed design documentation are complete.
 
 **Decisions:** [D-013](../DECISIONS.md#d-013), [D-014](../DECISIONS.md#d-014), [D-025](../DECISIONS.md#d-025).
 
@@ -78,3 +78,14 @@ feature tasks or T11-03's cross-feature accessibility acceptance.
 privacy, isolation and no-financial-request checks; update skeletons; run Docker
 and production-browser verification; complete independent finish review and
 reconcile design/handover documents. Do not close future connected feature tasks.
+
+**Verification:** Full Docker check and optimized build pass with
+562 Jest tests; 33 production Chromium tests cover the new layout, named dialogs,
+focus/keyboard behavior, retained drafts, menus/filter, validation, privacy,
+no financial submission, and 320–1769px viewports. Independent review inspected
+all 24 captures and found no demonstrated material visual gap, but returned
+`fix` for inaccurate seed provenance and stale design documentation. Both fixes
+were scored **resolved** by the same reviewer, with `disposition: ship` at
+fix-list scope. The user-selected Refresh reconciles DESIGN.md and its sidecar;
+handover/PRDs/diagrams reflect the implementation. See [DESIGN_REVIEW.md](../DESIGN_REVIEW.md)
+for limitations; connected features and T11-03 remain open.

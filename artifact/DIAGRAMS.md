@@ -23,15 +23,19 @@ The application database contains operational metadata, migration tracking, and 
 
 ## Implemented interface-first boundary
 
-Tasks: [T11-02](tasks/TASKS-11.md#t11-02). Contract and limitations:
+Tasks: [T11-02](tasks/TASKS-11.md#t11-02), [T11-04](tasks/TASKS-11.md#t11-04). Contract and limitations:
 [UI_FOUNDATION.md](UI_FOUNDATION.md).
 
 ```mermaid
 flowchart LR
     Browser[Local browser] --> Page[GET /: wallet preview]
     Page --> Model[Explicit presentation-only zero state]
-    Model --> Shell[Frosted responsive shell]
-    Shell --> Draft[Local exact input validation and review]
+    Model --> Shell[Two-column frosted overview]
+    Shell --> Trigger[Icon rail or labelled mobile money actions]
+    Trigger --> Dialog[Named shadcn dialog with focus trap and return]
+    Dialog --> Draft[Local exact input validation and review]
+    Dialog --> Memory[Per-operation drafts retained on close]
+    Shell --> Menus[Themed account/theme menus and history Select]
     Draft --> Blocked[Final submission disabled: service not connected]
     Page --> Loading[Next loading boundary: matching skeleton]
     Page --> Error[Error boundary: retry without outcome claims]

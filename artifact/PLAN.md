@@ -1,6 +1,6 @@
 # Proposed implementation plan
 
-**Status:** Platform, money/journal core, and T11-02's interface-first shell are verified. The reviewed frosted preview includes skeleton/state coverage and extracted design documentation; account data and API integration are next. Individual task statuses are in [KANBAN.md](KANBAN.md); [PRD.md](PRD.md) links each task group to its source feature PRD and decisions. Follow the Angular-style, one-intention-per-commit rule in [D-021](DECISIONS.md#d-021) and Git setup in [D-022](DECISIONS.md#d-022). See [READINESS.md](READINESS.md) for feature-stage checks.
+**Status:** Platform, money/journal core, and the interface-first shell are verified. T11-04's approved two-column/dialog refinement, consistent shadcn controls, production checks, scoped review, and refreshed design documentation are complete. Account data and API integration remain next. Individual task statuses are in [KANBAN.md](KANBAN.md); [PRD.md](PRD.md) links task groups to feature PRDs and decisions. Follow the Angular-style, one-intention-per-commit rule in [D-021](DECISIONS.md#d-021) and Git setup in [D-022](DECISIONS.md#d-022). See [READINESS.md](READINESS.md) for feature-stage checks.
 
 ## Tasks
 

@@ -1,20 +1,25 @@
 # Wallet interface foundation
 
-**Scope:** [T11-02](tasks/TASKS-11.md#t11-02), following the user-approved
-[frosted reference](DESIGN_REFERENCE.md), [surface brief](WALLET_SURFACE.md), and
+**Scope:** [T11-02](tasks/TASKS-11.md#t11-02) and [T11-04](tasks/TASKS-11.md#t11-04),
+following the [two-column redesign brief](WALLET_REDESIGN.md), the retained
+[frosted identity](DESIGN_REFERENCE.md), [surface brief](WALLET_SURFACE.md), and
 [PRD-11](prd/PRD-11-interface.md). This is an interface-first implementation,
 not completion of funding, FX, accounts, history, or idempotency APIs.
 
 ## Implemented surface
 
-- `/` is an HTML wallet interface, not the old JSON foundation response. Desktop
-  follows the approved sketch; tablet uses two columns and mobile stacks panels
-  with labelled bottom navigation. “Actions” represents all four workflows.
-- Radix money-form selects, native utility selects, visible labels, landmarks, a skip link, tabular exact money
-  text, focus rings, and field-associated errors support keyboard use. Invalid
-  fields and review headings receive focus; editing returns to the amount.
-- Shared controls include registry-derived shadcn Input/Select components, local
-  button/skeleton styling, and a Radix dialog foundation. Lucide supplies icons.
+- `/` is a two-column wallet overview: total/actions and compact history at left,
+  currency wallets at right. Count/default metadata is integrated; no conversion
+  teaser, permanent form column, or large account object remains. At 1023px and
+  below, content stacks as total, wallets, history; at 760px and below, navigation
+  becomes labelled fixed bottom navigation with a named Actions menu.
+- Desktop icon navigation uses real hover/focus tooltips and accessible names.
+  Money actions open named dialogs with focus trapping, initial focus, Escape,
+  and return to a stable trigger. Invalid fields/review headings receive focus;
+  editing returns to the amount. Landmarks, skip link and tabular exact money stay.
+- Shared controls are registry-derived shadcn Button, Card, Dialog, DropdownMenu,
+  Tooltip, Field/Label, Badge, Separator, Input, Select and Skeleton, adapted to
+  wallet tokens. Theme/account use radio menus; history uses Select. Lucide supplies icons.
   No UI package or font/network dependency was added.
 - System/light/dark applies before paint, follows later system changes, and
   persists as a browser preference. With blocked storage, it works for this visit
@@ -35,9 +40,12 @@ query the database. The interface labels this boundary, including the total's
 “not a stored balance” note. Invalid values become unavailable, not zero. Nonzero
 cross-currency totals are unavailable without rates.
 
-The inline workspace changes between Deposit, Withdraw, Convert, and Transfer.
-It preserves separate drafts, uses the exact amount parser, rejects precision/
-positive/bounds/funds errors, and reviews valid drafts. Providers are fictional;
+An always-mounted `OperationWorkspace` owns Deposit, Withdraw, Convert and Send
+money dialogs. Closing/reopening preserves separate drafts and reviews; reloading
+clears them. It uses the exact parser and distinguishes missing, zero, precision,
+format, bounds and funds errors. Changing source currency clears dependent
+errors and an identical receiving currency; the source is disabled in the target
+options. One conversion has one visible context. Valid drafts can be reviewed. Providers are fictional;
 rates/quotes are not invented; recipients are not verified or saved. The bounded
 recipient input guard is preview validation, **not** a final HTTP ID contract.
 
@@ -65,15 +73,15 @@ durable idempotency are integrated. Client validation is not server security.
 
 ## Verification and remaining scope
 
-### Form-component correction
+### Historical form-component correction (before T11-04)
 
 The user identified that the form controls looked too much like default HTML.
 The amount editor had bypassed the shared Input, and money-form dropdowns used
 native selects. These now use registry-derived shadcn/ui Input and Radix Select
 components with Tailwind semantic tokens, visible field borders/fills, consistent
 focus/error rings, 44px controls, and a 56px amount field. Skeleton dimensions
-follow the corrected fields. Theme/account/history utility selects remain native;
-this change does not claim every control is registry-generated.
+followed the corrected fields. Theme/account/history utility selects were still
+native at that milestone; T11-04 replaces them with themed shadcn/Radix controls.
 
 Sources: official [Input registry](https://ui.shadcn.com/r/styles/new-york-v4/input.json)
 and [Select registry](https://ui.shadcn.com/r/styles/new-york-v4/select.json).
@@ -86,16 +94,22 @@ Browser regressions cover keyboard selection/typeahead, Escape focus restoration
 provider menus at 320px/light, 390px/dark and desktop, computed field boundaries,
 and retained validation/review/privacy behavior.
 
-### Overall scope
+### Current verification and scope
 
-The implementation passes the full Docker check, including **557 Jest tests** and
-production build, plus Chromium checks against that build. Coverage includes
+The redesign passes the full Docker check, including **562 Jest tests** and
+production build, plus **33 Chromium checks** against that build. Coverage includes
 theme/storage, keyboard entry, draft/error focus, no financial submission, privacy,
 zero-balance/self-transfer errors, clipboard fallback, history reset, 404 navigation,
-reduced motion, loading/error rendering, and widths from 320 to 1440px. Destination
+reduced motion, loading/error rendering, and widths from 320 to 1769px. Destination
 isolation uses explicit React fixtures, not fabricated application accounts.
-Visual review covers desktop, tablet, mobile, dark, loading, error, review, and
-invalid-input states. Detector results are not WCAG certification.
+Production captures cover desktop light/dark, user widths 1688/1769px, tablet,
+320/390px mobile, menus, dialogs, loading, error, review, and invalid-input states.
+The two development regressions were fixed without dropping assertions: clipboard
+status lives inside the modal account menu, and the keyboard test awaits Radix's
+scheduled typeahead focus before Enter. Dialog initial focus is synchronous.
+The final inspection also corrected a global reset overriding utility spacing.
+Detector inventory advisories and independent verdict scope belong in
+[DESIGN_REVIEW.md](DESIGN_REVIEW.md), not a claim of WCAG certification.
 
 Connected accounts/history, server quotes, success receipts, and operation outcomes
 remain their own tasks. Cross-feature accessibility/motion acceptance remains

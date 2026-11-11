@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-11-11T12:00:00.512Z",
+  "generatedAt": "2026-11-11T13:09:59Z",
   "title": "Design System: Simulated multi-currency wallet",
   "extensions": {
     "colorMeta": {
@@ -50,28 +50,28 @@
         "role": "neutral",
         "displayName": "Opaque dark control surface",
         "tonalRamp": [
-          "oklch(15% 0.020559 251.751)",
-          "oklch(26.429% 0.033426 251.751)",
-          "oklch(37.857% 0.04203 251.751)",
-          "oklch(49.286% 0.045274 251.751)",
-          "oklch(60.714% 0.042744 251.751)",
-          "oklch(72.143% 0.034763 251.751)",
-          "oklch(83.571% 0.022349 251.751)",
-          "oklch(95% 0.007084 251.751)"
+          "oklch(15% 0.021354 247.154)",
+          "oklch(26.429% 0.034718 247.154)",
+          "oklch(37.857% 0.043655 247.154)",
+          "oklch(49.286% 0.047024 247.154)",
+          "oklch(60.714% 0.044396 247.154)",
+          "oklch(72.143% 0.036107 247.154)",
+          "oklch(83.571% 0.023213 247.154)",
+          "oklch(95% 0.007358 247.154)"
         ]
       },
       "ground": {
         "role": "neutral",
         "displayName": "Icy page ground",
         "tonalRamp": [
-          "oklch(15% 0.004187 232.366)",
-          "oklch(26.429% 0.006808 232.366)",
-          "oklch(37.857% 0.008561 232.366)",
-          "oklch(49.286% 0.009222 232.366)",
-          "oklch(60.714% 0.008706 232.366)",
-          "oklch(72.143% 0.00708 232.366)",
-          "oklch(83.571% 0.004552 232.366)",
-          "oklch(95% 0.001443 232.366)"
+          "oklch(15% 0.003799 236.560)",
+          "oklch(26.429% 0.006177 236.560)",
+          "oklch(37.857% 0.007767 236.560)",
+          "oklch(49.286% 0.008367 236.560)",
+          "oklch(60.714% 0.007899 236.560)",
+          "oklch(72.143% 0.006424 236.560)",
+          "oklch(83.571% 0.004130 236.560)",
+          "oklch(95% 0.001309 236.560)"
         ]
       },
       "glass": {
@@ -106,13 +106,13 @@
         "role": "neutral",
         "displayName": "Solid light surface",
         "tonalRamp": [
-          "oklch(15% 0.001893 236.496)",
-          "oklch(26.429% 0.003079 236.496)",
-          "oklch(37.857% 0.003871 236.496)",
-          "oklch(49.286% 0.00417 236.496)",
-          "oklch(60.714% 0.003937 236.496)",
-          "oklch(72.143% 0.003202 236.496)",
-          "oklch(83.571% 0.002058 236.496)",
+          "oklch(15% 0.001891 236.496)",
+          "oklch(26.429% 0.003074 236.496)",
+          "oklch(37.857% 0.003866 236.496)",
+          "oklch(49.286% 0.004164 236.496)",
+          "oklch(60.714% 0.003931 236.496)",
+          "oklch(72.143% 0.003197 236.496)",
+          "oklch(83.571% 0.002056 236.496)",
           "oklch(95% 0.000652 236.496)"
         ]
       },
@@ -188,7 +188,7 @@
       },
       "navy-hover": {
         "role": "primary",
-        "displayName": "Navy action hover",
+        "displayName": "Retained navy-hover foundation (not current Button hover)",
         "tonalRamp": [
           "oklch(15% 0.033392 257.56)",
           "oklch(26.429% 0.054291 257.56)",
@@ -302,56 +302,56 @@
         "role": "neutral",
         "displayName": "Dark page ground",
         "tonalRamp": [
-          "oklch(15% 0.013346 247.152)",
-          "oklch(26.429% 0.021698 247.152)",
-          "oklch(37.857% 0.027283 247.152)",
-          "oklch(49.286% 0.029389 247.152)",
-          "oklch(60.714% 0.027747 247.152)",
-          "oklch(72.143% 0.022566 247.152)",
-          "oklch(83.571% 0.014508 247.152)",
-          "oklch(95% 0.004598 247.152)"
+          "oklch(15% 0.012229 249.157)",
+          "oklch(26.429% 0.019882 249.157)",
+          "oklch(37.857% 0.025000 249.157)",
+          "oklch(49.286% 0.026929 249.157)",
+          "oklch(60.714% 0.025424 249.157)",
+          "oklch(72.143% 0.020677 249.157)",
+          "oklch(83.571% 0.013293 249.157)",
+          "oklch(95% 0.004214 249.157)"
         ]
       },
       "dark-glass": {
         "role": "neutral",
         "displayName": "Dark frosted outer glass",
         "tonalRamp": [
-          "oklch(15% 0.018093 249.136)",
-          "oklch(26.429% 0.029417 249.136)",
-          "oklch(37.857% 0.036988 249.136)",
-          "oklch(49.286% 0.039843 249.136)",
-          "oklch(60.714% 0.037617 249.136)",
-          "oklch(72.143% 0.030593 249.136)",
-          "oklch(83.571% 0.019668 249.136)",
-          "oklch(95% 0.006234 249.136)"
+          "oklch(15% 0.017658 247.810)",
+          "oklch(26.429% 0.028710 247.810)",
+          "oklch(37.857% 0.036100 247.810)",
+          "oklch(49.286% 0.038886 247.810)",
+          "oklch(60.714% 0.036713 247.810)",
+          "oklch(72.143% 0.029858 247.810)",
+          "oklch(83.571% 0.019195 247.810)",
+          "oklch(95% 0.006085 247.810)"
         ]
       },
       "dark-inner": {
         "role": "neutral",
         "displayName": "Dark inner glass",
         "tonalRamp": [
-          "oklch(15% 0.021408 248.912)",
-          "oklch(26.429% 0.034807 248.912)",
-          "oklch(37.857% 0.043766 248.912)",
-          "oklch(49.286% 0.047144 248.912)",
-          "oklch(60.714% 0.04451 248.912)",
-          "oklch(72.143% 0.036199 248.912)",
-          "oklch(83.571% 0.023272 248.912)",
-          "oklch(95% 0.007376 248.912)"
+          "oklch(15% 0.021298 248.876)",
+          "oklch(26.429% 0.034627 248.876)",
+          "oklch(37.857% 0.043541 248.876)",
+          "oklch(49.286% 0.046901 248.876)",
+          "oklch(60.714% 0.044280 248.876)",
+          "oklch(72.143% 0.036012 248.876)",
+          "oklch(83.571% 0.023152 248.876)",
+          "oklch(95% 0.007339 248.876)"
         ]
       },
       "dark-solid": {
         "role": "neutral",
         "displayName": "Solid dark surface",
         "tonalRamp": [
-          "oklch(15% 0.020752 249.277)",
-          "oklch(26.429% 0.03374 249.277)",
-          "oklch(37.857% 0.042424 249.277)",
-          "oklch(49.286% 0.045699 249.277)",
-          "oklch(60.714% 0.043145 249.277)",
-          "oklch(72.143% 0.035089 249.277)",
-          "oklch(83.571% 0.022559 249.277)",
-          "oklch(95% 0.00715 249.277)"
+          "oklch(15% 0.018681 248.036)",
+          "oklch(26.429% 0.030372 248.036)",
+          "oklch(37.857% 0.038190 248.036)",
+          "oklch(49.286% 0.041137 248.036)",
+          "oklch(60.714% 0.038838 248.036)",
+          "oklch(72.143% 0.031587 248.036)",
+          "oklch(83.571% 0.020307 248.036)",
+          "oklch(95% 0.006437 248.036)"
         ]
       },
       "dark-edge": {
@@ -426,7 +426,7 @@
       },
       "dark-navy-hover": {
         "role": "primary",
-        "displayName": "Pale blue action hover",
+        "displayName": "Retained pale hover foundation (not current Button hover)",
         "tonalRamp": [
           "oklch(15% 0.021229 255.371)",
           "oklch(26.429% 0.034515 255.371)",
@@ -540,31 +540,31 @@
     "typographyMeta": {
       "display": {
         "displayName": "Wallet total",
-        "purpose": "Light-weight total figures; mobile overrides the clamp with 42px."
+        "purpose": "48px total at weight 450; the mobile shell uses 44px. Unavailable totals use local 32px/29px treatments."
       },
       "headline": {
         "displayName": "Page heading",
-        "purpose": "Primary screen heading; mobile uses 20px."
+        "purpose": "28px page heading; mobile uses 26px, then 25px on compact phones."
       },
       "title": {
         "displayName": "Panel title",
-        "purpose": "Compact, semibold panel hierarchy."
+        "purpose": "18px semibold panel headings; local subheadings use 16px."
       },
       "body": {
         "displayName": "Workhorse UI sans",
         "purpose": "Shared native system stack and normal UI copy; tabular numerals are applied by the source CSS."
       },
-      "label": {
-        "displayName": "Supporting label",
-        "purpose": "Field labels, utility copy, hints, and notices; navigation uses weight 500."
+      "supporting": {
+        "displayName": "Supporting dashboard copy",
+        "purpose": "13px secondary dashboard details; not the larger 14px FieldDescription."
       },
-      "navigation": {
-        "displayName": "Navigation label",
-        "purpose": "Visible rail and mobile-bar labels at weight 500."
+      "label": {
+        "displayName": "Field label",
+        "purpose": "14px medium FieldLabel with snug line height; mobile navigation uses a local 13px treatment."
       },
       "button": {
         "displayName": "Action label",
-        "purpose": "Default button size; small buttons use 12px."
+        "purpose": "14px medium shared action labels, including the small size; minimum target size varies independently."
       },
       "amount": {
         "displayName": "Editable amount",
@@ -572,18 +572,18 @@
       },
       "currency-amount": {
         "displayName": "Wallet-row amount",
-        "purpose": "Right-aligned currency figures that wrap instead of truncating."
+        "purpose": "23px medium wallet-row figures; mobile uses 22px, then 20px. Values wrap instead of truncating."
       },
       "dialog-title": {
-        "displayName": "Dialog foundation title",
-        "purpose": "Available dialog foundation, not the shipped inline operation workspace."
+        "displayName": "Money-dialog title",
+        "purpose": "24px semibold title used by all four shipped draft-preserving money dialogs."
       }
     },
     "shadows": [
       {
         "name": "panel-light",
         "value": "0 12px 38px -24px rgb(44 72 105 / 26%)",
-        "purpose": "Light --shadow: ambient separation under outer glass panels and dialog foundations."
+        "purpose": "Light --shadow: ambient separation under outer glass wallet panels and active money dialogs."
       },
       {
         "name": "panel-dark",
@@ -593,7 +593,7 @@
       {
         "name": "raised-light",
         "value": "5px 6px 16px rgb(145 165 184 / 16%), -4px -4px 14px rgb(255 255 255 / 65%)",
-        "purpose": "Light --raised: paired soft offsets on secondary buttons, circular controls, navigation, and theme utility."
+        "purpose": "Light --raised: paired soft offsets on wallet quick actions, selected desktop rail controls, and the compact account trigger; not the canonical secondary Button."
       },
       {
         "name": "raised-dark",
@@ -601,41 +601,51 @@
         "purpose": "Dark --raised: quieter opposing highlight for the same control roles."
       },
       {
-        "name": "primary-action",
-        "value": "0 5px 14px -7px rgb(36 60 91 / 45%)",
-        "purpose": "Shared primary-button shadow in both themes; disabled buttons remove it."
+        "name": "shared-shadow-xs",
+        "value": "0 1px 2px 0 rgb(0 0 0 / 5%)",
+        "purpose": "Tailwind shadow-xs on Input, Select triggers, and secondary/outline/circle Buttons; wallet quick actions override it with --raised."
+      },
+      {
+        "name": "shared-shadow-sm",
+        "value": "0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%)",
+        "purpose": "Tailwind shadow-sm on primary Buttons and the base Card; wallet panels override it with --shadow."
+      },
+      {
+        "name": "shared-shadow-md",
+        "value": "0 4px 6px -1px rgb(0 0 0 / 10%), 0 2px 4px -2px rgb(0 0 0 / 10%)",
+        "purpose": "Tailwind shadow-md on portaled Select content and Tooltip."
+      },
+      {
+        "name": "shared-shadow-lg",
+        "value": "0 10px 15px -3px rgb(0 0 0 / 10%), 0 4px 6px -4px rgb(0 0 0 / 10%)",
+        "purpose": "Tailwind shadow-lg on DropdownMenu content."
       },
       {
         "name": "brand-mark-local",
-        "value": "0 4px 12px rgb(48 76 108 / 14%)",
+        "value": "0 4px 12px rgb(33 55 79 / 12%)",
         "purpose": "Local circular brand-mark treatment, not a generalized elevation step."
       },
       {
-        "name": "account-sheet-local",
-        "value": "0 8px 20px -14px #1d354e",
-        "purpose": "Local inset account sheet, not a payment-card capability."
-      },
-      {
         "name": "mobile-navigation-local",
-        "value": "0 -5px 22px -12px rgb(44 72 105 / 20%)",
+        "value": "0 -5px 22px -12px rgb(33 55 79 / 18%)",
         "purpose": "Local separation above the fixed mobile navigation bar."
       }
     ],
     "motion": [
       {
-        "name": "shared-control-transition",
-        "value": "background-color 160ms ease, box-shadow 160ms ease",
-        "purpose": "Shared button fill and shadow transitions; no lift transform."
+        "name": "shared-button-transition",
+        "value": "color 150ms cubic-bezier(0.4, 0, 0.2, 1), background-color 150ms cubic-bezier(0.4, 0, 0.2, 1), box-shadow 150ms cubic-bezier(0.4, 0, 0.2, 1)",
+        "purpose": "Expanded transition-[color,background-color,box-shadow]; quick actions inherit it. No transform is defined."
       },
       {
-        "name": "quick-action-transition",
-        "value": "background-color 180ms ease, box-shadow 180ms ease",
-        "purpose": "Raised quick-action hover and selected-surface changes."
+        "name": "shared-field-transition",
+        "value": "color 150ms cubic-bezier(0.4, 0, 0.2, 1), box-shadow 150ms cubic-bezier(0.4, 0, 0.2, 1)",
+        "purpose": "Expanded Input/Select transition-[color,box-shadow] using Tailwind defaults."
       },
       {
         "name": "navigation-transition",
-        "value": "background-color 180ms ease",
-        "purpose": "Desktop navigation-circle surface change."
+        "value": "color 160ms ease, background-color 160ms ease, border-color 160ms ease",
+        "purpose": "Explicit desktop rail treatment; menus and dialogs have no opening animation."
       },
       {
         "name": "skeleton-breathe",
@@ -649,12 +659,11 @@
       }
     ],
     "breakpoints": [
-      { "name": "wide-min-width", "value": "1530px" },
       { "name": "compact-max-width", "value": "1190px" },
-      { "name": "tablet-min-width", "value": "701px" },
-      { "name": "tablet-max-width", "value": "990px" },
-      { "name": "mobile-max-width", "value": "700px" },
-      { "name": "narrow-max-width", "value": "380px" },
+      { "name": "stacked-content-max-width", "value": "1023px" },
+      { "name": "mobile-shell-max-width", "value": "760px" },
+      { "name": "dialog-theme-compact-max-width", "value": "640px" },
+      { "name": "compact-phone-max-width", "value": "420px" },
       { "name": "input-text-medium-min-width", "value": "48rem" }
     ]
   },
@@ -663,97 +672,97 @@
       "name": "Primary button",
       "kind": "button",
       "refersTo": "button-primary",
-      "description": "Default review action with live theme roles; this example does not submit funds.",
-      "html": "<button class=\"ds-button-primary\" type=\"button\">Review transfer<svg aria-hidden=\"true\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.7\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M5 12h14\"/><path d=\"m12 5 7 7-7 7\"/></svg></button>",
-      "css": ".ds-button-primary { display: inline-flex; align-items: center; justify-content: center; gap: 9px; min-height: 44px; padding: 10px 19px; border: 1px solid transparent; border-radius: 999px; background: var(--navy); color: var(--on-navy); font-family: var(--font-ui); font-size: 13px; font-weight: 500; line-height: 1.5; white-space: normal; text-align: center; cursor: pointer; box-shadow: 0 5px 14px -7px rgb(36 60 91 / 45%); transition: background-color 160ms ease, box-shadow 160ms ease; } .ds-button-primary svg { width: 18px; height: 18px; flex-shrink: 0; } .ds-button-primary:hover:not(:disabled) { background: var(--navy-hover); } .ds-button-primary:focus-visible { outline: 3px solid var(--navy); outline-offset: 4px; } .ds-button-primary:disabled { opacity: 0.52; box-shadow: none; cursor: not-allowed; } @media (prefers-reduced-motion: reduce) { .ds-button-primary { transition: none; } } @media (forced-colors: active) { .ds-button-primary { border-color: ButtonText; } }"
+      "description": "Current primary/default review control: 12px corners, 44px minimum height, and opacity-based primary hover. Visual example only; no funds are submitted.",
+      "html": "<button class=\"ds-button-primary\" type=\"button\">Review deposit<svg aria-hidden=\"true\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M5 12h14m-7-7 7 7-7 7\"/></svg></button>",
+      "css": ".ds-button-primary { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 8px 16px; border: 0; border-radius: var(--radius-control, 12px); background: var(--navy, #405e87); color: var(--on-navy, #ffffff); font: 500 14px/20px var(--font-ui, ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif); white-space: normal; text-align: center; cursor: pointer; box-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%); transition: color 150ms cubic-bezier(0.4, 0, 0.2, 1), background-color 150ms cubic-bezier(0.4, 0, 0.2, 1), box-shadow 150ms cubic-bezier(0.4, 0, 0.2, 1); } .ds-button-primary svg { width: 16px; height: 16px; flex-shrink: 0; } .ds-button-primary:hover:not(:disabled) { background: color-mix(in oklab, var(--navy, #405e87) 90%, transparent); } .ds-button-primary:focus-visible { outline: none; box-shadow: 0 0 0 3px color-mix(in oklab, var(--navy, #405e87) 30%, transparent), 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%); } .ds-button-primary:disabled { opacity: 0.5; cursor: not-allowed; } @media (prefers-reduced-motion: reduce) { .ds-button-primary { transition: none; } } @media (forced-colors: active) { .ds-button-primary { border: 1px solid ButtonText; } }"
     },
     {
       "name": "Secondary button",
       "kind": "button",
       "refersTo": "button-secondary",
-      "description": "Raised inner-glass alternative action with a solid hover surface.",
-      "html": "<button class=\"ds-button-secondary\" type=\"button\">Explore conversion<svg aria-hidden=\"true\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.7\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M5 12h14\"/><path d=\"m12 5 7 7-7 7\"/></svg></button>",
-      "css": ".ds-button-secondary { display: inline-flex; align-items: center; justify-content: center; gap: 9px; min-height: 44px; padding: 10px 19px; border: 1px solid var(--edge); border-radius: 999px; background: var(--inner); color: var(--ink); font-family: var(--font-ui); font-size: 13px; font-weight: 500; line-height: 1.5; white-space: normal; text-align: center; box-shadow: var(--raised); cursor: pointer; transition: background-color 160ms ease, box-shadow 160ms ease; } .ds-button-secondary svg { width: 18px; height: 18px; flex-shrink: 0; } .ds-button-secondary:hover:not(:disabled) { background: var(--solid); } .ds-button-secondary:focus-visible { outline: 3px solid var(--navy); outline-offset: 4px; } .ds-button-secondary:disabled { opacity: 0.52; box-shadow: none; cursor: not-allowed; } @media (prefers-reduced-motion: reduce) { .ds-button-secondary { transition: none; } } @media (prefers-reduced-transparency: reduce) { .ds-button-secondary { background: var(--solid); } } @media (forced-colors: active) { .ds-button-secondary { border-color: ButtonText; } }"
+      "description": "Canonical secondary Button with a quiet divider border and shadow-xs; the dashboard's more raised quick-action treatment is a local override.",
+      "html": "<button class=\"ds-button-secondary\" type=\"button\">Secondary action</button>",
+      "css": ".ds-button-secondary { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 8px 16px; border: 1px solid var(--line, rgb(74 97 122 / 17%)); border-radius: var(--radius-control, 12px); background: var(--inner, rgb(255 255 255 / 55%)); color: var(--ink, #223349); font: 500 14px/20px var(--font-ui, ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif); white-space: normal; text-align: center; box-shadow: 0 1px 2px 0 rgb(0 0 0 / 5%); cursor: pointer; transition: color 150ms cubic-bezier(0.4, 0, 0.2, 1), background-color 150ms cubic-bezier(0.4, 0, 0.2, 1), box-shadow 150ms cubic-bezier(0.4, 0, 0.2, 1); } .ds-button-secondary:hover:not(:disabled) { background: var(--inner, rgb(255 255 255 / 55%)); } .ds-button-secondary:focus-visible { outline: none; box-shadow: 0 0 0 3px color-mix(in oklab, var(--navy, #405e87) 30%, transparent), 0 1px 2px 0 rgb(0 0 0 / 5%); } .ds-button-secondary:disabled { opacity: 0.5; cursor: not-allowed; } @media (prefers-reduced-motion: reduce) { .ds-button-secondary { transition: none; } } @media (prefers-reduced-transparency: reduce) { .ds-button-secondary { background: var(--solid, #f7fafc); } } @media (forced-colors: active) { .ds-button-secondary { border-color: ButtonText; } }"
     },
     {
-      "name": "Ghost button",
+      "name": "Outline button",
       "kind": "button",
-      "refersTo": "button-ghost",
-      "description": "Low-emphasis editing action; hover introduces inner glass without a lift transform.",
-      "html": "<button class=\"ds-button-ghost\" type=\"button\"><svg aria-hidden=\"true\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.7\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"m12 19-7-7 7-7\"/><path d=\"M19 12H5\"/></svg>Edit details</button>",
-      "css": ".ds-button-ghost { display: inline-flex; align-items: center; justify-content: center; gap: 9px; min-height: 44px; padding: 10px 19px; border: 1px solid transparent; border-radius: 999px; background: transparent; color: var(--navy); font-family: var(--font-ui); font-size: 13px; font-weight: 500; line-height: 1.5; white-space: normal; text-align: center; cursor: pointer; transition: background-color 160ms ease, box-shadow 160ms ease; } .ds-button-ghost svg { width: 18px; height: 18px; flex-shrink: 0; } .ds-button-ghost:hover:not(:disabled) { background: var(--inner); } .ds-button-ghost:focus-visible { outline: 3px solid var(--navy); outline-offset: 4px; } .ds-button-ghost:disabled { opacity: 0.52; box-shadow: none; cursor: not-allowed; } @media (prefers-reduced-motion: reduce) { .ds-button-ghost { transition: none; } } @media (forced-colors: active) { .ds-button-ghost { border-color: ButtonText; } }"
+      "refersTo": "button-outline",
+      "description": "Opaque control-surface alternative, used by Back to overview and the theme trigger; theme adds a local full-round shape.",
+      "html": "<button class=\"ds-button-outline\" type=\"button\">Back to overview</button>",
+      "css": ".ds-button-outline { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 8px 16px; border: 1px solid var(--control-border, #a6b6c7); border-radius: var(--radius-control, 12px); background: var(--control-surface, #f9fbfd); color: var(--ink, #223349); font: 500 14px/20px var(--font-ui, ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif); white-space: normal; text-align: center; box-shadow: 0 1px 2px 0 rgb(0 0 0 / 5%); cursor: pointer; transition: color 150ms cubic-bezier(0.4, 0, 0.2, 1), background-color 150ms cubic-bezier(0.4, 0, 0.2, 1), box-shadow 150ms cubic-bezier(0.4, 0, 0.2, 1); } .ds-button-outline:hover:not(:disabled) { background: var(--inner, rgb(255 255 255 / 55%)); } .ds-button-outline:focus-visible { outline: none; box-shadow: 0 0 0 3px color-mix(in oklab, var(--navy, #405e87) 30%, transparent), 0 1px 2px 0 rgb(0 0 0 / 5%); } .ds-button-outline:disabled { opacity: 0.5; cursor: not-allowed; } @media (prefers-reduced-motion: reduce) { .ds-button-outline { transition: none; } } @media (forced-colors: active) { .ds-button-outline { border-color: ButtonText; } }"
     },
     {
-      "name": "Circle button foundation",
-      "kind": "button",
-      "refersTo": "button-circle",
-      "description": "Available circle variant at icon size, shown with a visible caption as used by the wallet's raised-action language; not a separate shipped deposit flow.",
-      "html": "<figure class=\"ds-circle-example\"><button class=\"ds-button-circle\" type=\"button\" aria-labelledby=\"ds-circle-caption\"><svg aria-hidden=\"true\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.7\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M5 12h14\"/><path d=\"M12 5v14\"/></svg></button><figcaption id=\"ds-circle-caption\">Deposit</figcaption></figure>",
-      "css": ".ds-circle-example { display: inline-flex; flex-direction: column; align-items: center; gap: 9px; margin: 0; color: var(--ink); font-family: var(--font-ui); font-size: 12px; line-height: 1.5; } .ds-button-circle { display: inline-flex; align-items: center; justify-content: center; min-width: 44px; min-height: 44px; padding: 11px; border: 1px solid var(--edge); border-radius: 999px; background: var(--inner); color: var(--ink); box-shadow: var(--raised); cursor: pointer; transition: background-color 160ms ease, box-shadow 160ms ease; } .ds-button-circle svg { width: 18px; height: 18px; flex-shrink: 0; } .ds-button-circle:hover:not(:disabled) { background: var(--solid); } .ds-button-circle:focus-visible { outline: 3px solid var(--navy); outline-offset: 4px; } .ds-button-circle:disabled { opacity: 0.52; box-shadow: none; cursor: not-allowed; } @media (prefers-reduced-motion: reduce) { .ds-button-circle { transition: none; } } @media (prefers-reduced-transparency: reduce) { .ds-button-circle { background: var(--solid); } } @media (forced-colors: active) { .ds-button-circle { border-color: ButtonText; } }"
+      "name": "Theme radio menu",
+      "kind": "custom",
+      "refersTo": "dropdown-menu",
+      "description": "Static visual excerpt of the real DropdownMenu theme utility, also used for account inspection. This preview does not implement selection, persistence, or Radix keyboard behavior.",
+      "html": "<div class=\"ds-theme-example\"><button class=\"ds-theme-trigger\" type=\"button\" aria-label=\"Color theme\"><svg aria-hidden=\"true\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect width=\"20\" height=\"14\" x=\"2\" y=\"3\" rx=\"2\"/><path d=\"M8 21h8m-4-4v4\"/></svg>System<svg aria-hidden=\"true\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"m6 9 6 6 6-6\"/></svg></button><div class=\"ds-theme-menu\"><p class=\"ds-theme-title\">Appearance</p><div class=\"ds-theme-option\"><span class=\"ds-theme-dot\" aria-hidden=\"true\"></span><svg aria-hidden=\"true\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect width=\"20\" height=\"14\" x=\"2\" y=\"3\" rx=\"2\"/><path d=\"M8 21h8m-4-4v4\"/></svg>System</div><div class=\"ds-theme-option\"><svg aria-hidden=\"true\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><circle cx=\"12\" cy=\"12\" r=\"4\"/><path d=\"M12 2v2M12 20v2m-7.07-17.07 1.41 1.41m11.32 11.32 1.41 1.41M2 12h2M20 12h2m-13.66 5.66-1.41 1.41m14.14-14.14-1.41 1.41\"/></svg>Light</div><div class=\"ds-theme-option\"><svg aria-hidden=\"true\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401\"/></svg>Dark</div></div><p class=\"ds-theme-caption\">Visual excerpt — use the shared menu for behavior.</p></div>",
+      "css": ".ds-theme-example { display: grid; justify-items: start; gap: 8px; color: var(--ink, #223349); font: 14px/20px var(--font-ui, ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif); } .ds-theme-trigger { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 8px 16px; border: 1px solid var(--control-border, #a6b6c7); border-radius: 999px; background: var(--control-surface, #f9fbfd); color: var(--ink, #223349); font: inherit; font-weight: 500; box-shadow: 0 1px 2px 0 rgb(0 0 0 / 5%); cursor: pointer; } .ds-theme-trigger svg, .ds-theme-option svg { width: 16px; height: 16px; flex-shrink: 0; } .ds-theme-trigger:hover { background: var(--inner, rgb(255 255 255 / 55%)); } .ds-theme-trigger:focus-visible { outline: none; box-shadow: 0 0 0 3px color-mix(in oklab, var(--navy, #405e87) 30%, transparent); } .ds-theme-menu { min-width: 192px; max-width: calc(100vw - 24px); padding: 4px; border: 1px solid var(--line, rgb(74 97 122 / 17%)); border-radius: var(--radius-control, 12px); background: var(--solid, #f7fafc); box-shadow: 0 10px 15px -3px rgb(0 0 0 / 10%), 0 4px 6px -4px rgb(0 0 0 / 10%); } .ds-theme-title { margin: 0; padding: 8px 12px; font-weight: 500; } .ds-theme-option { position: relative; display: flex; align-items: center; gap: 8px; min-height: 44px; padding: 8px 12px 8px 36px; border-radius: 4px; } .ds-theme-option:hover { background: var(--inner, rgb(255 255 255 / 55%)); } .ds-theme-dot { position: absolute; left: 16px; width: 8px; height: 8px; border-radius: 50%; background: currentColor; } .ds-theme-caption { margin: 0; color: var(--secondary, #4f6175); font-size: 13px; } @media (forced-colors: active) { .ds-theme-trigger, .ds-theme-menu { border-color: ButtonText; } }"
     },
     {
-      "name": "Danger button foundation",
-      "kind": "button",
-      "refersTo": "button-danger",
-      "description": "Available semantic variant only; no destructive action is shipped by this shell and no distinct danger-hover fill is defined.",
-      "html": "<button class=\"ds-button-danger\" type=\"button\">Danger variant</button>",
-      "css": ".ds-button-danger { display: inline-flex; align-items: center; justify-content: center; gap: 9px; min-height: 44px; padding: 10px 19px; border: 1px solid transparent; border-radius: 999px; background: var(--danger-ground); color: var(--danger); font-family: var(--font-ui); font-size: 13px; font-weight: 500; line-height: 1.5; white-space: normal; text-align: center; cursor: pointer; transition: background-color 160ms ease, box-shadow 160ms ease; } .ds-button-danger:hover:not(:disabled) { background: var(--danger-ground); } .ds-button-danger:focus-visible { outline: 3px solid var(--navy); outline-offset: 4px; } .ds-button-danger:disabled { opacity: 0.52; box-shadow: none; cursor: not-allowed; } @media (prefers-reduced-motion: reduce) { .ds-button-danger { transition: none; } } @media (forced-colors: active) { .ds-button-danger { border-color: ButtonText; } }"
+      "name": "Money-dialog review",
+      "kind": "custom",
+      "refersTo": "dialog",
+      "description": "Static in-flow excerpt of the solid, bounded Dialog review. The app owns scrim/portal, Escape, focus trapping/return and preserved drafts. This is not a success state or a functioning dialog.",
+      "html": "<section class=\"ds-dialog\" aria-labelledby=\"ds-dialog-title\"><button class=\"ds-dialog-close\" type=\"button\" aria-label=\"Close dialog\"><svg aria-hidden=\"true\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"m6 6 12 12M18 6 6 18\"/></svg></button><header class=\"ds-dialog-head\"><h2 id=\"ds-dialog-title\">Deposit money</h2><p>Choose a fictional provider and review a deposit draft. Submission is not connected.</p></header><div class=\"ds-dialog-review\"><h3>Review deposit</h3><p>These details have not been submitted.</p><dl><div><dt>Fictional provider</dt><dd>Demo Bank</dd></div></dl><p>Service not connected. Final submission is unavailable.</p><button class=\"ds-dialog-final\" type=\"button\" disabled>Deposit unavailable</button><div class=\"ds-dialog-footer\"><button class=\"ds-dialog-edit\" type=\"button\">Edit details</button></div></div></section>",
+      "css": ".ds-dialog { position: relative; width: min(560px, calc(100vw - 32px)); max-width: 100%; max-height: calc(100dvh - 48px); overflow-y: auto; padding: 30px; border: 1px solid var(--edge, rgb(255 255 255 / 85%)); border-radius: var(--radius-panel, 24px); background: var(--solid, #f7fafc); color: var(--ink, #223349); font: 14px/1.5 var(--font-ui, ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif); box-shadow: var(--shadow, 0 12px 38px -24px rgb(44 72 105 / 26%)); } .ds-dialog-head { padding-right: 28px; } .ds-dialog h2 { margin: 0; font-size: 24px; line-height: 1.25; font-weight: 600; letter-spacing: -0.02em; } .ds-dialog-head p { margin: 8px 0 0; color: var(--secondary, #4f6175); } .ds-dialog-review { display: grid; gap: 20px; margin-top: 20px; } .ds-dialog h3 { margin: 0; font-size: 18px; font-weight: 600; line-height: 28px; } .ds-dialog-review p { margin: 0; color: var(--secondary, #4f6175); } .ds-dialog dl { margin: 0; } .ds-dialog dl > div { display: flex; justify-content: space-between; gap: 16px; } .ds-dialog dt { color: var(--secondary, #4f6175); } .ds-dialog dd { min-width: 0; margin: 0; text-align: right; overflow-wrap: anywhere; } .ds-dialog-final, .ds-dialog-edit, .ds-dialog-close { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 8px 16px; border: 0; border-radius: var(--radius-control, 12px); font: 500 14px/20px var(--font-ui, ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif); cursor: pointer; } .ds-dialog-final { width: 100%; background: var(--navy, #405e87); color: var(--on-navy, #ffffff); box-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%); opacity: 0.5; cursor: not-allowed; } .ds-dialog-edit, .ds-dialog-close { background: transparent; color: var(--ink, #223349); } .ds-dialog-edit:hover, .ds-dialog-close:hover { background: var(--inner, rgb(255 255 255 / 55%)); } .ds-dialog-edit:focus-visible, .ds-dialog-close:focus-visible { outline: none; box-shadow: 0 0 0 3px color-mix(in oklab, var(--navy, #405e87) 30%, transparent); } .ds-dialog-close { position: absolute; top: 10px; right: 10px; width: 44px; height: 44px; padding: 10px; } .ds-dialog-close svg { width: 16px; height: 16px; } .ds-dialog-footer { display: flex; justify-content: flex-end; flex-wrap: wrap; gap: 10px; margin-top: 24px; } @media (max-width: 640px) { .ds-dialog { width: calc(100vw - 16px); max-height: calc(100dvh - 16px); padding: 24px 20px; } } @media (forced-colors: active) { .ds-dialog-final, .ds-dialog-edit, .ds-dialog-close { border: 1px solid ButtonText; } }"
     },
     {
       "name": "Labeled input",
       "kind": "input",
       "refersTo": "input",
-      "description": "Registry-derived shadcn Input with a visible boundary, stronger label and associated hint; invalid styling uses aria-invalid with error copy supplied by the form.",
+      "description": "Current Field/Input treatment: 14px medium label, 8px field gap, opaque 44px control and associated 14px guidance. Error styling requires both aria-invalid and associated explanatory copy.",
       "html": "<div class=\"ds-field\"><label for=\"ds-recipient\">Simulated recipient account ID</label><input class=\"ds-input\" id=\"ds-recipient\" type=\"text\" placeholder=\"Enter an account ID\" autocomplete=\"off\" autocapitalize=\"none\" spellcheck=\"false\" maxlength=\"128\" aria-describedby=\"ds-recipient-hint\"/><p class=\"ds-field-hint\" id=\"ds-recipient-hint\">IDs are not verified or saved in this preview.</p></div>",
-      "css": ".ds-field { display: grid; gap: 7px; min-width: 0; color: var(--ink); font-family: var(--font-ui); font-size: 14px; line-height: 1.5; } .ds-field label { color: var(--ink); font-size: 13px; font-weight: 500; } .ds-input { box-sizing: border-box; width: 100%; min-width: 0; height: 44px; padding: 8px 12px; border: 1px solid var(--control-border); border-radius: var(--radius-control); background: var(--control-surface); color: var(--ink); font-family: var(--font-ui); font-size: 16px; line-height: 1.5; caret-color: var(--navy); box-shadow: 0 1px 2px 0 rgb(0 0 0 / 5%); transition: color 150ms, box-shadow 150ms; } .ds-input::placeholder { color: var(--secondary); opacity: 1; } .ds-input:focus-visible { outline: none; border-color: var(--navy); box-shadow: 0 0 0 3px color-mix(in oklab, var(--navy) 20%, transparent); } .ds-input[aria-invalid=\"true\"] { border-color: var(--danger); box-shadow: 0 0 0 3px color-mix(in oklab, var(--danger) 15%, transparent); } .ds-input:disabled { opacity: 0.5; cursor: not-allowed; } .ds-field-hint { margin: 2px 0 0; color: var(--secondary); font-size: 12px; line-height: 1.5; } .ds-field-error { margin: 5px 0 0; color: var(--danger); font-size: 12px; line-height: 1.5; } @media (min-width: 48rem) { .ds-input { font-size: 14px; } } @media (prefers-reduced-motion: reduce) { .ds-input { transition: none; } } @media (forced-colors: active) { .ds-input { border-color: ButtonText; } }"
+      "css": ".ds-field { display: grid; gap: 8px; min-width: 0; color: var(--ink, #223349); font: 14px/1.5 var(--font-ui, ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif); } .ds-field label { color: var(--ink, #223349); font-size: 14px; line-height: 1.375; font-weight: 500; } .ds-input { width: 100%; min-width: 0; height: 44px; padding: 8px 12px; border: 1px solid var(--control-border, #a6b6c7); border-radius: var(--radius-control, 12px); background: var(--control-surface, #f9fbfd); color: var(--ink, #223349); font: 16px/24px var(--font-ui, ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif); caret-color: var(--navy, #405e87); box-shadow: 0 1px 2px 0 rgb(0 0 0 / 5%); transition: color 150ms cubic-bezier(0.4, 0, 0.2, 1), box-shadow 150ms cubic-bezier(0.4, 0, 0.2, 1); } .ds-input::placeholder { color: var(--secondary, #4f6175); opacity: 1; } .ds-input:focus-visible { outline: none; border-color: var(--navy, #405e87); box-shadow: 0 0 0 3px color-mix(in oklab, var(--navy, #405e87) 20%, transparent), 0 1px 2px 0 rgb(0 0 0 / 5%); } .ds-input[aria-invalid=\"true\"] { border-color: var(--danger, #994238); box-shadow: 0 0 0 3px color-mix(in oklab, var(--danger, #994238) 15%, transparent), 0 1px 2px 0 rgb(0 0 0 / 5%); } .ds-input:disabled { opacity: 0.5; cursor: not-allowed; } .ds-field-hint { margin: 0; color: var(--secondary, #4f6175); font-size: 14px; line-height: 1.5; } .ds-field-error { margin: 0; color: var(--danger, #994238); font-size: 14px; line-height: 20px; } @media (min-width: 48rem) { .ds-input { font-size: 14px; line-height: 20px; } } @media (prefers-reduced-motion: reduce) { .ds-input { transition: none; } } @media (forced-colors: active) { .ds-input { border-color: ButtonText; } }"
     },
     {
-      "name": "Labeled wallet navigation",
+      "name": "Icon rail and labelled mobile navigation",
       "kind": "nav",
       "refersTo": "navigation",
-      "description": "Static placement excerpt of the rail and mobile bar. Actions appears at mobile width and links to the current workspace without changing its selected form; viewport-fixed placement belongs to the wallet shell.",
-      "html": "<nav class=\"ds-nav\" aria-label=\"Wallet navigation\"><a href=\"#overview\" aria-current=\"location\"><span class=\"ds-nav-circle\"><svg aria-hidden=\"true\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8\"/><path d=\"M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z\"/></svg></span>Overview</a><a href=\"#wallets\"><span class=\"ds-nav-circle\"><svg aria-hidden=\"true\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1\"/><path d=\"M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4\"/></svg></span>Wallets</a><a href=\"#history\"><span class=\"ds-nav-circle\"><svg aria-hidden=\"true\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8\"/><path d=\"M3 3v5h5\"/><path d=\"M12 7v5l4 2\"/></svg></span>History</a><a class=\"ds-nav-actions\" href=\"#operations\"><span class=\"ds-nav-circle\"><svg aria-hidden=\"true\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z\"/><path d=\"m21.854 2.147-10.94 10.939\"/></svg></span>Actions</a><a class=\"ds-nav-account\" href=\"#account\"><span class=\"ds-nav-circle\"><svg aria-hidden=\"true\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M10 5H3\"/><path d=\"M12 19H3\"/><path d=\"M14 3v4\"/><path d=\"M16 17v4\"/><path d=\"M21 12h-9\"/><path d=\"M21 19h-5\"/><path d=\"M21 5h-7\"/><path d=\"M8 10v4\"/><path d=\"M8 12H3\"/></svg></span>Account</a></nav>",
-      "css": ".ds-nav { display: flex; flex-direction: column; gap: 22px; color: var(--ink); font-family: var(--font-ui); font-size: 12px; line-height: 1.5; } .ds-nav a { display: flex; flex-direction: column; align-items: center; gap: 7px; border-radius: 12px; color: var(--secondary); font-weight: 500; text-decoration: none; } .ds-nav-circle { display: grid; place-items: center; width: 45px; height: 45px; border: 1px solid var(--edge); border-radius: 50%; background: var(--glass); box-shadow: var(--raised); transition: background-color 180ms ease; } .ds-nav svg { width: 21px; height: 21px; stroke-width: 1.7; } .ds-nav a:hover .ds-nav-circle { background: var(--solid); } .ds-nav a:focus-visible { outline: 3px solid var(--navy); outline-offset: 4px; } .ds-nav a[aria-current] { color: var(--navy); } .ds-nav a[aria-current] .ds-nav-circle { background: var(--solid); box-shadow: var(--raised), inset 0 0 0 1px var(--edge); } .ds-nav a[aria-current] svg { stroke-width: 2.2; } .ds-nav .ds-nav-actions { display: none; } .ds-nav-account { margin-top: auto; } @media (max-width: 700px) { .ds-nav { flex-direction: row; justify-content: space-around; gap: 0; padding: 10px 10px calc(12px + env(safe-area-inset-bottom)); border-top: 1px solid var(--edge); background: var(--solid); box-shadow: 0 -5px 22px -12px rgb(44 72 105 / 20%); } .ds-nav a { gap: 3px; min-width: 51px; } .ds-nav-circle { width: 39px; height: 29px; border: none; border-radius: 20px; background: transparent; box-shadow: none; } .ds-nav a[aria-current] .ds-nav-circle { background: var(--inner); box-shadow: inset 0 0 0 1px var(--line); } .ds-nav svg { width: 19px; height: 19px; } .ds-nav .ds-nav-actions { display: flex; } .ds-nav-account { margin: 0; } } @media (prefers-reduced-motion: reduce) { .ds-nav-circle { transition: none; } } @media (prefers-reduced-transparency: reduce) { .ds-nav-circle { background: var(--solid); } }"
+      "description": "Static placement excerpt: three section links, one representative desktop money-action Button, and mobile Actions. The app uses Radix Tooltip and a money-actions menu; preview CSS models tooltip appearance only, without dialog/menu behavior or fixed viewport placement.",
+      "html": "<nav class=\"ds-nav\" aria-label=\"Wallet navigation\"><div class=\"ds-nav-item\"><a class=\"ds-nav-control\" href=\"#overview\" aria-label=\"Overview\" aria-current=\"location\"><svg aria-hidden=\"true\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8\"/><path d=\"M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z\"/></svg><span class=\"ds-nav-label\">Overview</span></a><span class=\"ds-nav-tooltip\" aria-hidden=\"true\">Overview</span></div><div class=\"ds-nav-item\"><a class=\"ds-nav-control\" href=\"#wallets\" aria-label=\"Wallets\"><svg aria-hidden=\"true\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1\"/><path d=\"M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4\"/></svg><span class=\"ds-nav-label\">Wallets</span></a><span class=\"ds-nav-tooltip\" aria-hidden=\"true\">Wallets</span></div><div class=\"ds-nav-item\"><a class=\"ds-nav-control\" href=\"#history\" aria-label=\"History\"><svg aria-hidden=\"true\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8\"/><path d=\"M3 3v5h5\"/><path d=\"M12 7v5l4 2\"/></svg><span class=\"ds-nav-label\">History</span></a><span class=\"ds-nav-tooltip\" aria-hidden=\"true\">History</span></div><div class=\"ds-nav-separator\" aria-hidden=\"true\"></div><div class=\"ds-nav-item ds-nav-send\"><button class=\"ds-nav-control\" type=\"button\" aria-label=\"Send money\"><svg aria-hidden=\"true\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z\"/><path d=\"m21.854 2.147-10.94 10.939\"/></svg></button><span class=\"ds-nav-tooltip\" aria-hidden=\"true\">Send money</span></div><div class=\"ds-nav-item ds-nav-actions\"><button class=\"ds-nav-control\" type=\"button\" aria-label=\"Money actions\"><svg aria-hidden=\"true\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z\"/><path d=\"m21.854 2.147-10.94 10.939\"/></svg><span class=\"ds-nav-label\">Actions</span></button></div></nav>",
+      "css": ".ds-nav { display: flex; flex-direction: column; align-items: center; gap: 12px; width: 56px; padding-block: 4px; color: var(--ink, #223349); font: 500 14px/calc(1.25 / 0.875) var(--font-ui, ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif); } .ds-nav-item { position: relative; } .ds-nav-control { display: flex; align-items: center; justify-content: center; width: 48px; min-width: 48px; height: 48px; padding: 12px; border: 1px solid transparent; border-radius: 50%; color: var(--secondary, #4f6175); background: transparent; font: inherit; text-decoration: none; cursor: pointer; transition: color 160ms ease, background-color 160ms ease, border-color 160ms ease; } .ds-nav-control svg { width: 20px; height: 20px; flex-shrink: 0; stroke-width: 1.8; } .ds-nav-control:hover { color: var(--ink, #223349); border-color: var(--edge, rgb(255 255 255 / 85%)); background: var(--glass, rgb(255 255 255 / 78%)); } .ds-nav-control[aria-current] { color: var(--navy, #405e87); border-color: var(--edge, rgb(255 255 255 / 85%)); background: var(--solid, #f7fafc); box-shadow: var(--raised, 5px 6px 16px rgb(145 165 184 / 16%), -4px -4px 14px rgb(255 255 255 / 65%)); } .ds-nav-control[aria-current] svg { stroke-width: 2.2; } .ds-nav-control:focus-visible { outline: none; box-shadow: 0 0 0 3px color-mix(in oklab, var(--navy, #405e87) 30%, transparent); } .ds-nav-tooltip { display: none; position: absolute; z-index: 80; left: calc(100% + 8px); top: 50%; transform: translateY(-50%); width: max-content; max-width: 256px; padding: 8px 12px; border-radius: var(--radius-control, 12px); background: var(--ink, #223349); color: var(--ground, #edf3f7); font-weight: 400; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 10%), 0 2px 4px -2px rgb(0 0 0 / 10%); } .ds-nav-item:hover .ds-nav-tooltip, .ds-nav-item:focus-within .ds-nav-tooltip { display: block; } .ds-nav-separator { width: 28px; height: 1px; margin-block: 8px; background: var(--line, rgb(74 97 122 / 17%)); } .ds-nav-label, .ds-nav-actions { display: none; } @media (max-width: 760px) { .ds-nav { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); width: 100%; gap: 0; padding: 8px 12px calc(10px + env(safe-area-inset-bottom)); border-top: 1px solid var(--line, rgb(74 97 122 / 17%)); background: var(--solid, #f7fafc); box-shadow: 0 -5px 22px -12px rgb(33 55 79 / 18%); } .ds-nav-control { flex-direction: column; gap: 5px; width: 100%; min-width: 0; min-height: 60px; height: auto; padding: 8px 2px; border-radius: 14px; font-size: 13px; } .ds-nav-control[aria-current] { border-color: var(--line, rgb(74 97 122 / 17%)); background: var(--inner, rgb(255 255 255 / 55%)); box-shadow: none; } .ds-nav-label, .ds-nav-actions { display: block; } .ds-nav-send, .ds-nav-separator, .ds-nav-item:hover .ds-nav-tooltip, .ds-nav-item:focus-within .ds-nav-tooltip { display: none; } } @media (prefers-reduced-motion: reduce) { .ds-nav-control { transition: none; } } @media (forced-colors: active) { .ds-nav-control { border-color: ButtonText; } }"
     },
     {
-      "name": "Default-currency badge",
+      "name": "Wallet metadata badge",
       "kind": "chip",
-      "refersTo": "default-badge",
-      "description": "A noninteractive metadata badge, not a selectable filter or success state.",
-      "html": "<span class=\"ds-default-badge\">Default</span>",
-      "css": ".ds-default-badge { display: inline; padding: 0 5px; border: 1px solid var(--line); border-radius: 10px; background: var(--inner); color: var(--navy); font-family: var(--font-ui); font-size: 10px; font-weight: 500; line-height: 1.5; } @media (prefers-reduced-transparency: reduce) { .ds-default-badge { background: var(--solid); } }"
+      "refersTo": "badge-secondary",
+      "description": "Current secondary wallet-count Badge: a full-round metadata pill, not the former tiny Default badge or a success indicator.",
+      "html": "<span class=\"ds-count-badge\">3 wallets</span>",
+      "css": ".ds-count-badge { display: inline-flex; width: fit-content; align-items: center; justify-content: center; gap: 4px; padding: 2px 8px; border: 1px solid transparent; border-radius: 999px; background: var(--inner, rgb(255 255 255 / 55%)); color: var(--ink, #223349); font: 500 13px/calc(1 / 0.75) var(--font-ui, ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif); } @media (prefers-reduced-transparency: reduce) { .ds-count-badge { background: var(--solid, #f7fafc); } }"
     },
     {
       "name": "Glass currency panel",
       "kind": "card",
       "refersTo": "wallet-panel",
-      "description": "Outer frosted panel with an honest presentation-only zero balance, a quiet row structure, and wrapping figures.",
-      "html": "<section class=\"ds-panel\" aria-labelledby=\"ds-currencies-title\"><div class=\"ds-panel-head\"><h2 id=\"ds-currencies-title\">Your currencies</h2><span>Preview</span></div><ul class=\"ds-currency-list\"><li class=\"ds-currency-row\"><div class=\"ds-currency-identity\"><span class=\"ds-currency-token\" aria-hidden=\"true\">$</span><div><p class=\"ds-currency-code\">USD</p><p class=\"ds-currency-name\">US dollar</p></div></div><p class=\"ds-currency-amount\">0.00<span>USD</span></p></li></ul></section>",
-      "css": ".ds-panel { min-width: 0; padding: 24px; border: 1px solid var(--edge); border-radius: var(--radius-panel); background: var(--glass); color: var(--ink); font-family: var(--font-ui); font-size: 14px; line-height: 1.5; font-variant-numeric: tabular-nums; box-shadow: var(--shadow); backdrop-filter: blur(22px); -webkit-backdrop-filter: blur(22px); overflow-wrap: anywhere; } .ds-panel-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px 12px; } .ds-panel h2 { margin: 0; font-size: 15px; font-weight: 600; line-height: 1.4; letter-spacing: -0.012em; } .ds-panel-head > span { color: var(--secondary); font-size: 12px; } .ds-currency-list { list-style: none; margin: 9px 0 0; padding: 0; } .ds-currency-row { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); align-items: center; gap: 12px; min-height: 81px; padding: 17px 0; border-bottom: 1px solid var(--line); } .ds-currency-row:last-child { border-bottom: 0; } .ds-currency-identity { display: flex; align-items: center; gap: 11px; min-width: 0; } .ds-currency-identity > div { min-width: 0; } .ds-currency-token { display: grid; place-items: center; flex-shrink: 0; width: 34px; height: 34px; border: 1px solid var(--edge); border-radius: 50%; background: var(--inner); color: var(--navy); font-size: 15px; } .ds-currency-code { margin: 0; font-size: 14px; font-weight: 600; } .ds-currency-name { margin: 2px 0 0; color: var(--secondary); font-size: 12px; } .ds-currency-amount { min-width: 0; margin: 0; text-align: right; font-size: 18px; font-weight: 400; letter-spacing: -0.02em; overflow-wrap: anywhere; } .ds-currency-amount > span { display: block; margin-top: 2px; color: var(--secondary); font-size: 12px; letter-spacing: 0; } @media (min-width: 1530px) { .ds-panel { padding: 27px; } } @media (max-width: 1190px) { .ds-panel { padding: 20px; border-radius: 24px; } .ds-currency-identity { gap: 8px; } } @media (min-width: 701px) and (max-width: 990px) { .ds-panel { padding: 22px; } } @media (max-width: 700px) { .ds-panel { padding: 23px; border-radius: 25px; } } @media (max-width: 380px) { .ds-panel { padding: 20px; } .ds-currency-identity { gap: 7px; } .ds-currency-token { width: 30px; height: 30px; } } @media (prefers-reduced-transparency: reduce) { .ds-panel, .ds-currency-token { background: var(--solid); } }"
+      "description": "Current wallet Card override with 26px desktop inset, 24px radius and one illustrative currency row. Zero is explicitly presentation-only; this excerpt does not seed or query a wallet.",
+      "html": "<section class=\"ds-panel\" aria-labelledby=\"ds-currencies-title\"><div class=\"ds-panel-head\"><h2 id=\"ds-currencies-title\">Currency wallets</h2><span class=\"ds-panel-count\">1 wallet</span></div><p class=\"ds-panel-description\">Default currency · USD</p><ul class=\"ds-currency-list\"><li class=\"ds-currency-row\"><div class=\"ds-currency-identity\"><span class=\"ds-currency-token\" aria-hidden=\"true\">$</span><div><p class=\"ds-currency-code\">USD</p><p class=\"ds-currency-name\">US dollar</p></div></div><p class=\"ds-currency-amount\">0.00<span>USD</span></p></li></ul><p class=\"ds-panel-description\">Presentation only · Not a stored balance</p></section>",
+      "css": ".ds-panel { min-width: 0; padding: 26px; border: 1px solid var(--edge, rgb(255 255 255 / 85%)); border-radius: var(--radius-panel, 24px); background: var(--glass, rgb(255 255 255 / 78%)); color: var(--ink, #223349); font: 14px/1.5 var(--font-ui, ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif); font-variant-numeric: tabular-nums; box-shadow: var(--shadow, 0 12px 38px -24px rgb(44 72 105 / 26%)); backdrop-filter: blur(22px); -webkit-backdrop-filter: blur(22px); overflow-wrap: anywhere; } .ds-panel-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; } .ds-panel h2 { margin: 0; font-size: 18px; font-weight: 600; line-height: 1.4; letter-spacing: -0.015em; } .ds-panel-count { padding: 2px 8px; border: 1px solid transparent; border-radius: 999px; background: var(--inner, rgb(255 255 255 / 55%)); font-size: 13px; font-weight: 500; line-height: calc(1 / 0.75); } .ds-panel-description { margin: 8px 0 0; color: var(--secondary, #4f6175); font-size: 13px; line-height: 1.5; } .ds-currency-list { list-style: none; margin: 18px 0 0; padding: 0; } .ds-currency-row { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); align-items: center; gap: 16px; min-height: 106px; padding-block: 24px; border-bottom: 1px solid var(--line, rgb(74 97 122 / 17%)); } .ds-currency-row:last-child { border-bottom: 0; padding-bottom: 10px; min-height: 92px; } .ds-currency-identity { display: flex; align-items: center; gap: 12px; min-width: 0; } .ds-currency-identity > div { min-width: 0; } .ds-currency-token { display: grid; place-items: center; flex-shrink: 0; width: 42px; height: 42px; border: 1px solid var(--edge, rgb(255 255 255 / 85%)); border-radius: 50%; background: var(--inner, rgb(255 255 255 / 55%)); color: var(--navy, #405e87); font-size: 19px; } .ds-currency-code { margin: 0; font-size: 15px; font-weight: 600; line-height: 1.4; } .ds-currency-name { margin: 3px 0 0; color: var(--secondary, #4f6175); font-size: 13px; } .ds-currency-amount { min-width: 0; margin: 0; text-align: right; font-size: 23px; font-weight: 500; line-height: 1.35; letter-spacing: -0.02em; overflow-wrap: anywhere; } .ds-currency-amount > span { display: block; margin-top: 3px; color: var(--secondary, #4f6175); font-size: 13px; font-weight: 400; letter-spacing: 0; } @media (max-width: 1190px) { .ds-panel { padding: 22px; } .ds-currency-row { gap: 10px; } .ds-currency-identity { gap: 9px; } .ds-currency-token { width: 36px; height: 36px; } } @media (max-width: 760px) { .ds-panel { border-radius: 22px; } .ds-currency-row { min-height: 100px; padding-block: 22px; gap: 12px; } .ds-currency-row:last-child { min-height: 88px; padding-bottom: 10px; } .ds-currency-amount { font-size: 22px; } } @media (max-width: 420px) { .ds-panel { padding: 20px; } .ds-currency-token { width: 32px; height: 32px; font-size: 16px; } .ds-currency-identity { gap: 8px; } .ds-currency-row { grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 8px; } .ds-currency-amount { font-size: 20px; } } @media (prefers-reduced-transparency: reduce) { .ds-panel, .ds-currency-token, .ds-panel-count { background: var(--solid, #f7fafc); } }"
     },
     {
       "name": "Select trigger and menu",
       "kind": "custom",
       "refersTo": "select",
-      "description": "Static visual excerpt of the Select trigger and open menu; the application uses Radix for keyboard navigation, portal placement, typeahead and focus restoration.",
+      "description": "Static visual excerpt of the current Select trigger and open menu, shared by forms and history. The app uses Radix for portal/collision placement, keyboard/typeahead, Escape and focus restoration; the preview does not implement those behaviors.",
       "html": "<div class=\"ds-select-example\"><span class=\"ds-select-label\">Fictional provider</span><button class=\"ds-select-trigger\" type=\"button\">Demo Bank<svg aria-hidden=\"true\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"m6 9 6 6 6-6\"/></svg></button><div class=\"ds-select-menu\"><div class=\"ds-select-option ds-select-selected\">Demo Bank<svg aria-hidden=\"true\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"m20 6-11 11-5-5\"/></svg></div><div class=\"ds-select-option\">Community Bank</div><div class=\"ds-select-option\">Crypto Gateway</div></div></div>",
-      "css": ".ds-select-example { display: grid; gap: 7px; min-width: 0; color: var(--ink); font: 14px/1.5 var(--font-ui); } .ds-select-label { font-size: 13px; font-weight: 500; } .ds-select-trigger { display: flex; align-items: center; justify-content: space-between; gap: 8px; height: 44px; padding: 8px 12px; border: 1px solid var(--control-border); border-radius: var(--radius-control); background: var(--control-surface); color: var(--ink); font: inherit; box-shadow: 0 1px 2px 0 rgb(0 0 0 / 5%); cursor: pointer; } .ds-select-trigger svg, .ds-select-option svg { width: 16px; height: 16px; flex-shrink: 0; } .ds-select-trigger svg { color: var(--secondary); } .ds-select-trigger:focus-visible { outline: none; border-color: var(--navy); box-shadow: 0 0 0 3px color-mix(in oklab, var(--navy) 20%, transparent); } .ds-select-trigger:disabled { opacity: 0.5; cursor: not-allowed; } .ds-select-menu { padding: 4px; border: 1px solid var(--line); border-radius: var(--radius-control); background: var(--solid); box-shadow: 0 4px 6px -1px rgb(0 0 0 / 10%), 0 2px 4px -2px rgb(0 0 0 / 10%); } .ds-select-option { box-sizing: border-box; display: flex; align-items: center; justify-content: space-between; min-height: 44px; padding: 8px; border-radius: 4px; } .ds-select-selected, .ds-select-option:hover { background: var(--inner); } @media (forced-colors: active) { .ds-select-trigger { border-color: ButtonText; } }"
+      "css": ".ds-select-example { display: grid; gap: 8px; min-width: 0; color: var(--ink, #223349); font: 14px/20px var(--font-ui, ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif); } .ds-select-label { font-size: 14px; font-weight: 500; line-height: 1.375; } .ds-select-trigger { display: flex; align-items: center; justify-content: space-between; gap: 8px; width: 100%; min-width: 0; height: 44px; padding: 8px 12px; border: 1px solid var(--control-border, #a6b6c7); border-radius: var(--radius-control, 12px); background: var(--control-surface, #f9fbfd); color: var(--ink, #223349); font: inherit; box-shadow: 0 1px 2px 0 rgb(0 0 0 / 5%); cursor: pointer; transition: color 150ms cubic-bezier(0.4, 0, 0.2, 1), box-shadow 150ms cubic-bezier(0.4, 0, 0.2, 1); } .ds-select-trigger svg, .ds-select-option svg { width: 16px; height: 16px; flex-shrink: 0; } .ds-select-trigger svg { color: var(--secondary, #4f6175); } .ds-select-trigger:focus-visible { outline: none; border-color: var(--navy, #405e87); box-shadow: 0 0 0 3px color-mix(in oklab, var(--navy, #405e87) 20%, transparent), 0 1px 2px 0 rgb(0 0 0 / 5%); } .ds-select-trigger[aria-invalid=\"true\"] { border-color: var(--danger, #994238); box-shadow: 0 0 0 3px color-mix(in oklab, var(--danger, #994238) 15%, transparent); } .ds-select-trigger:disabled { opacity: 0.5; cursor: not-allowed; } .ds-select-menu { padding: 4px; border: 1px solid var(--line, rgb(74 97 122 / 17%)); border-radius: var(--radius-control, 12px); background: var(--solid, #f7fafc); box-shadow: 0 4px 6px -1px rgb(0 0 0 / 10%), 0 2px 4px -2px rgb(0 0 0 / 10%); } .ds-select-option { position: relative; display: flex; align-items: center; min-height: 44px; padding: 8px 32px 8px 8px; border-radius: 4px; } .ds-select-option svg { position: absolute; right: 8px; } .ds-select-selected, .ds-select-option:hover { background: var(--inner, rgb(255 255 255 / 55%)); } @media (prefers-reduced-motion: reduce) { .ds-select-trigger { transition: none; } } @media (forced-colors: active) { .ds-select-trigger { border-color: ButtonText; } }"
     }
   ],
   "narrative": {
     "northStar": "Frosted wallet",
-    "overview": "Icy-blue glass sits over a diffuse navy wash. Rounded panels and softly raised circular controls make the interface tactile without competing with balances, field labels, or review details. The approved reference is adapted to a wallet workspace, not reproduced as a different banking product.\n\nWorkhorse system typography, visible Lucide labels, and restrained navy accents keep task completion ahead of decoration. Light and dark themes share the same material roles. Simulation notices, unavailable information, and disabled final actions remain legible parts of the composition rather than being disguised as successful financial activity.",
+    "overview": "Icy-blue glass sits over a diffuse navy wash. Rounded panels and softly raised controls make the interface tactile without competing with balances, field labels, or review details. The approved reference supplies the material character, not a different banking product or a permanent page topology.\n\nWorkhorse system typography, purposeful Lucide icons, and restrained navy accents keep task completion ahead of decoration. Light and dark themes share the same material roles. Simulation notices, unavailable information, and disabled final actions remain legible parts of the composition rather than being disguised as successful financial activity.",
     "keyCharacteristics": [
       "Icy-blue glass and a diffuse navy backdrop.",
-      "Soft offset depth, rounded panels, and raised circular controls.",
+      "Soft offset depth, rounded panels, and selectively raised controls.",
       "Workhorse UI type with tabular figures and wrapping long values.",
-      "Visible labels, clear focus, and equivalent light/dark roles.",
-      "Plain simulation boundaries and honest unavailable states."
+      "Named desktop icons with real tooltips, visible mobile labels, and clear focus.",
+      "Equivalent light/dark roles and honest unavailable states."
     ],
     "rules": [
       {
         "name": "The Theme Roles Rule",
-        "body": "Use the semantic CSS custom properties in both themes; do not freeze a light surface or white action label into a theme-aware control. The account sheet and brand mark are intentional fixed navy treatments in the source, not replacements for the theme-aware action palette.",
+        "body": "Use semantic CSS properties in both themes; do not freeze light surfaces or white primary-action text into a theme-aware control. The brand mark now follows navy/on-navy roles too.",
         "section": "colors"
       },
       {
@@ -769,19 +778,21 @@
     ],
     "dos": [
       "Do use semantic theme roles for glass, ink, navy actions, and their dark counterparts.",
-      "Do preserve soft offset depth, rounded panels, and raised circular controls.",
+      "Do preserve soft offset depth, rounded panels, and selectively raised controls.",
       "Do use the native UI sans stack, tabular figures, explicit currencies, and wrapping long values.",
-      "Do retain visible task labels, keyboard focus, associated errors, and one loading announcement per busy region.",
+      "Do give desktop icon navigation accessible names and real tooltips; retain visible mobile and quick-action labels.",
+      "Do reuse the shared shadcn/Radix controls, visible focus, associated errors, and one loading announcement per busy region.",
+      "Do preserve dialog drafts, focus return, viewport overflow, and fixed-navigation clearance.",
       "Do honor reduced motion, reduced transparency, and forced-colors treatments.",
       "Do keep simulation, preview, inspect-only, and unavailable states plain and visible."
     ],
     "donts": [
       "Don't freeze light-theme colors into theme-aware controls or use white text on the dark theme's pale primary fill.",
       "Don't replace the icy glass world with warm cream, an unapproved display font, or a different visual identity.",
-      "Don't add hard stacked shadows, ornamental lift animations, or icon-only replacements for visible task labels.",
+      "Don't add hard stacked shadows, ornamental lift animations, or hover-only labels on mobile.",
       "Don't truncate monetary values or account IDs to preserve panel geometry.",
-      "Don't label mobile operation navigation Transfer or reset the selected form when Actions is used.",
-      "Don't depict disconnected services as completed money movement, real payment cards, or live exchange rates.",
+      "Don't restore stale native utility-select or inline-workspace examples that misrepresent the current shared controls.",
+      "Don't depict disconnected services as completed money movement, stored preview balances, real payment cards, or live exchange rates.",
       "Don't turn the wallet's surface-specific column arrangement into a global layout prohibition."
     ]
   }

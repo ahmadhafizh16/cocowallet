@@ -13,7 +13,8 @@ These documents distinguish decisions, proposals, and implemented work. The **pl
 - [Currency metadata](CURRENCY_METADATA.md): pinned accounting precision, source/license, and update rules.
 - [Journal implementation](JOURNAL.md): storage, snapshot reads, serialized writes, tests, and integration boundaries.
 - [Interface foundation](UI_FOUNDATION.md): shell, skeletons, safeguards, verification, and unconnected services.
-- [Design review](DESIGN_REVIEW.md): evidence, one corrected mobile-navigation finding, verdict scope, and limitations.
+- [Redesign brief](WALLET_REDESIGN.md): approved two-column layout, popup money forms, and shadcn-control acceptance.
+- [Design review](DESIGN_REVIEW.md): current and historical evidence, verdict scopes, and limitations.
 - [Built design system](../DESIGN.md): actual visual tokens and reusable interface rules; `.impeccable/design.json` carries component-preview extensions.
 - [Diagrams](DIAGRAMS.md): proposed architecture, data relationships, business flows, and code flow.
 - [API design](API_DESIGN.md): proposed HTTP contract, sequence diagram, and OpenAPI/Swagger approach.

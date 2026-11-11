@@ -2,10 +2,10 @@
 name: Simulated multi-currency wallet
 description: Frosted wallet — icy-blue glass, softly raised controls, and clear financial UI.
 colors:
-  ground: "#eaf1f5"
-  glass: "rgb(255 255 255 / 58%)"
-  inner: "rgb(255 255 255 / 40%)"
-  solid: "#f5f8fa"
+  ground: "#edf3f7"
+  glass: "rgb(255 255 255 / 78%)"
+  inner: "rgb(255 255 255 / 55%)"
+  solid: "#f7fafc"
   edge: "rgb(255 255 255 / 85%)"
   line: "rgb(74 97 122 / 17%)"
   control-border: "#a6b6c7"
@@ -21,14 +21,14 @@ colors:
   danger-ground: "#fae9e5"
   wash: "#b3c6d9"
   wash-deep: "#7b98b6"
-  dark-ground: "#14212d"
-  dark-glass: "rgb(36 54 72 / 80%)"
-  dark-inner: "rgb(65 88 111 / 26%)"
-  dark-solid: "#263b50"
+  dark-ground: "#101b26"
+  dark-glass: "rgb(31 49 66 / 90%)"
+  dark-inner: "rgb(68 91 114 / 32%)"
+  dark-solid: "#1d3042"
   dark-edge: "rgb(188 207 226 / 16%)"
   dark-line: "rgb(188 207 226 / 20%)"
   dark-control-border: "#63809b"
-  dark-control-surface: "#203348"
+  dark-control-surface: "#243b50"
   dark-ink: "#edf3fb"
   dark-secondary: "#b4c6d9"
   dark-navy: "#a7c4e9"
@@ -42,119 +42,127 @@ colors:
   dark-wash-deep: "#426588"
 typography:
   display:
-    fontSize: "clamp(33px, 3.2vw, 45px)"
-    fontWeight: 350
+    fontSize: "48px"
+    fontWeight: 450
     lineHeight: 1.2
-    letterSpacing: "-0.04em"
+    letterSpacing: "-0.035em"
   headline:
-    fontSize: "21px"
+    fontSize: "28px"
     fontWeight: 600
     lineHeight: 1.35
     letterSpacing: "-0.025em"
   title:
-    fontSize: "15px"
+    fontSize: "18px"
     fontWeight: 600
     lineHeight: 1.4
-    letterSpacing: "-0.012em"
+    letterSpacing: "-0.015em"
   body:
     fontFamily: 'ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif'
     fontSize: "14px"
     fontWeight: 400
     lineHeight: 1.5
-  label:
-    fontSize: "12px"
+  supporting:
+    fontSize: "13px"
     fontWeight: 400
     lineHeight: 1.5
-  navigation:
-    fontSize: "12px"
+  label:
+    fontSize: "14px"
     fontWeight: 500
-    lineHeight: 1.5
+    lineHeight: 1.375
   button:
-    fontSize: "13px"
+    fontSize: "14px"
     fontWeight: 500
-    lineHeight: 1.5
+    lineHeight: "20px"
   amount:
     fontSize: "24px"
     fontWeight: 500
     lineHeight: "32px"
     letterSpacing: "-0.025em"
   currency-amount:
-    fontSize: "18px"
-    fontWeight: 400
-    lineHeight: 1.5
+    fontSize: "23px"
+    fontWeight: 500
+    lineHeight: 1.35
     letterSpacing: "-0.02em"
   dialog-title:
-    fontSize: "21px"
+    fontSize: "24px"
     fontWeight: 600
     lineHeight: 1.25
     letterSpacing: "-0.02em"
 rounded:
-  panel: "27px"
-  panel-compact: "24px"
-  panel-mobile: "25px"
-  control: "14px"
-  pill: "999px"
+  panel: "24px"
+  panel-mobile: "22px"
+  control: "12px"
+  notice: "14px"
+  option: "4px"
   circle: "50%"
   skeleton: "8px"
-  account-sheet: "21px"
-  default-badge: "10px"
 spacing:
-  field-gap: "7px"
-  control-gap: "9px"
+  field-gap: "8px"
+  action-gap: "10px"
   inline-gap: "12px"
-  compact-panel-gap: "14px"
-  panel-gap: "18px"
-  compact-panel-inset: "20px"
-  panel-inset: "24px"
-  wide-panel-inset: "27px"
+  inline-inset: "16px"
+  compact-panel-gap: "18px"
+  form-group-gap: "20px"
+  compact-panel-inset: "22px"
+  panel-gap: "24px"
+  panel-inset: "26px"
   dialog-inset: "30px"
+  shell-gutter: "32px"
 components:
   button-primary:
     backgroundColor: "{colors.navy}"
     textColor: "{colors.on-navy}"
     typography: "{typography.button}"
-    rounded: "{rounded.pill}"
-    padding: "10px 19px"
-  button-primary-hover:
-    backgroundColor: "{colors.navy-hover}"
+    rounded: "{rounded.control}"
+    padding: "8px 16px"
   button-primary-dark:
     backgroundColor: "{colors.dark-navy}"
     textColor: "{colors.dark-on-navy}"
-  button-primary-dark-hover:
-    backgroundColor: "{colors.dark-navy-hover}"
   button-secondary:
     backgroundColor: "{colors.inner}"
     textColor: "{colors.ink}"
     typography: "{typography.button}"
-    rounded: "{rounded.pill}"
-    padding: "10px 19px"
-  button-secondary-hover:
-    backgroundColor: "{colors.solid}"
+    rounded: "{rounded.control}"
+    padding: "8px 16px"
+  button-outline:
+    backgroundColor: "{colors.control-surface}"
+    textColor: "{colors.ink}"
+    typography: "{typography.button}"
+    rounded: "{rounded.control}"
+    padding: "8px 16px"
   button-ghost:
     backgroundColor: "transparent"
-    textColor: "{colors.navy}"
+    textColor: "{colors.ink}"
     typography: "{typography.button}"
-    rounded: "{rounded.pill}"
-    padding: "10px 19px"
-  button-ghost-hover:
-    backgroundColor: "{colors.inner}"
+    rounded: "{rounded.control}"
+    padding: "8px 16px"
   button-circle:
     backgroundColor: "{colors.inner}"
     textColor: "{colors.ink}"
-    rounded: "{rounded.pill}"
-    padding: "11px"
-  button-circle-hover:
-    backgroundColor: "{colors.solid}"
-  button-danger:
+    typography: "{typography.button}"
+    padding: "10px"
+    size: "44px"
+  button-destructive:
     backgroundColor: "{colors.danger-ground}"
     textColor: "{colors.danger}"
     typography: "{typography.button}"
-    rounded: "{rounded.pill}"
-    padding: "10px 19px"
+    rounded: "{rounded.control}"
+    padding: "8px 16px"
+  button-link:
+    backgroundColor: "transparent"
+    textColor: "{colors.navy}"
+    typography: "{typography.button}"
+    rounded: "{rounded.control}"
+    padding: "8px 16px"
+  quick-action:
+    backgroundColor: "{colors.inner}"
+    textColor: "{colors.ink}"
+    typography: "{typography.button}"
+    rounded: "{rounded.control}"
+    padding: "10px 8px"
   input:
     backgroundColor: "{colors.control-surface}"
     textColor: "{colors.ink}"
-    typography: "{typography.body}"
     rounded: "{rounded.control}"
     padding: "8px 12px"
     height: "44px"
@@ -176,20 +184,33 @@ components:
     backgroundColor: "{colors.dark-glass}"
     textColor: "{colors.dark-ink}"
   navigation:
+    backgroundColor: "transparent"
     textColor: "{colors.secondary}"
-    typography: "{typography.navigation}"
+    rounded: "{rounded.circle}"
+    padding: "12px"
+    size: "48px"
   navigation-current:
     textColor: "{colors.navy}"
     backgroundColor: "{colors.solid}"
-  default-badge:
+  badge-secondary:
     backgroundColor: "{colors.inner}"
-    textColor: "{colors.navy}"
-    rounded: "{rounded.default-badge}"
-    padding: "0 5px"
+    textColor: "{colors.ink}"
+    padding: "2px 8px"
   skeleton:
     backgroundColor: "{colors.line}"
     rounded: "{rounded.skeleton}"
-  dialog-foundation:
+  dropdown-menu:
+    backgroundColor: "{colors.solid}"
+    textColor: "{colors.ink}"
+    rounded: "{rounded.control}"
+    padding: "4px"
+  tooltip:
+    backgroundColor: "{colors.ink}"
+    textColor: "{colors.ground}"
+    typography: "{typography.body}"
+    rounded: "{rounded.control}"
+    padding: "8px 12px"
+  dialog:
     backgroundColor: "{colors.solid}"
     textColor: "{colors.ink}"
     rounded: "{rounded.panel}"
@@ -203,153 +224,178 @@ components:
 
 **Creative North Star: "Frosted wallet"**
 
-Icy-blue glass sits over a diffuse navy wash. Rounded panels and softly raised circular controls make the interface tactile without competing with balances, field labels, or review details. The approved reference is adapted to a wallet workspace, not reproduced as a different banking product.
+Icy-blue glass sits over a diffuse navy wash. Rounded panels and softly raised controls make the interface tactile without competing with balances, field labels, or review details. The approved reference supplies the material character, not a different banking product or a permanent page topology.
 
-Workhorse system typography, visible Lucide labels, and restrained navy accents keep task completion ahead of decoration. Light and dark themes share the same material roles. Simulation notices, unavailable information, and disabled final actions remain legible parts of the composition rather than being disguised as successful financial activity.
+Workhorse system typography, purposeful Lucide icons, and restrained navy accents keep task completion ahead of decoration. Light and dark themes share the same material roles. Simulation notices, unavailable information, and disabled final actions remain legible parts of the composition rather than being disguised as successful financial activity.
 
 **Key Characteristics:**
 
 - Icy-blue glass and a diffuse navy backdrop.
-- Soft offset depth, rounded panels, and raised circular controls.
+- Soft offset depth, rounded panels, and selectively raised controls.
 - Workhorse UI type with tabular figures and wrapping long values.
-- Visible labels, clear focus, and equivalent light/dark roles.
-- Plain simulation boundaries and honest unavailable states.
+- Named desktop icons with real tooltips, visible mobile labels, and clear focus.
+- Equivalent light/dark roles and honest unavailable states.
 
-This is a code-led record of the reviewed shell. The visual sources are [global styles](src/app/globals.css), [wallet styles](src/features/wallet/wallet.css), [shared controls](src/components/ui/), and the [dashboard](src/features/wallet/dashboard.tsx). Surface composition belongs in [WALLET_SURFACE.md](artifact/WALLET_SURFACE.md); product capabilities belong in [PRODUCT.md](PRODUCT.md). The sidecar extends these tokens with source shadows, motion, breakpoints, and standalone component previews; it does not introduce a new application palette or scale. Synthesized OKLCH tonal ramps are non-normative live-panel previews derived from the source colors' underlying RGB hue/chroma (ignoring alpha), not adopted application tokens or scales.
+This refresh preserves the approved identity and records current [global styles](src/app/globals.css), [wallet styles](src/features/wallet/wallet.css), [shared controls](src/components/ui/), [dashboard](src/features/wallet/dashboard.tsx), and [money dialogs](src/features/wallet/operation-workspace.tsx). Page strategy belongs in the [canonical surface brief](.impeccable/surfaces/src-app-page-tsx.md) and [two-column brief](artifact/WALLET_REDESIGN.md); product capabilities belong in [PRODUCT.md](PRODUCT.md). The direction was explicitly user-pinned; no new visual-world roll was required or performed.
+
+The [sidecar](.impeccable/design.json) extends the frontmatter with shadows, motion, breakpoints, narrative, and standalone visual examples. Its eight-step OKLCH ramps are **non-normative previews**, not an application palette: they derive hue/chroma from the underlying source RGB, ignore alpha, and reduce chroma toward white and black. Examples depict appearance, not functioning Radix widgets or connected financial services. Existing [review captures](.impeccable/review/) are non-shipping evidence, not product assets; this documentation pass generated no raster.
 
 ## Colors
 
-The palette combines icy neutrals with a muted navy accent; dark mode changes their values, not their jobs. Frontmatter names without a prefix are light-theme values. Each `dark-` name is the corresponding replacement under `:root[data-theme="dark"]`; application CSS continues to use the unprefixed custom property in either theme.
+Icy neutrals support one muted navy accent; dark mode changes values, not jobs. Unprefixed frontmatter entries are light-theme custom properties. Each `dark-` entry is the replacement under `:root[data-theme="dark"]`; application components use the same unprefixed semantic property in either theme. The `.dark` class enables the matching Tailwind state variant.
 
 ### Primary
 
-- **Navy** (`navy`, `navy-hover`, `on-navy`): primary actions, selected navigation, focus, and small action icons. Dark mode uses pale blue for the action fill and dark ink for its text; do not carry white primary-button text into that pairing.
-- **Blue wash** (`wash`, `wash-deep`): diffuse background atmosphere, not a data series or status indicator. The upper wash blends these roles through a radial gradient; a quieter lower wash adds depth behind the panels.
+- **Muted navy / pale blue action** (`navy`, `on-navy`): action fill and label, selected navigation, focus, and small action icons. Dark mode pairs pale blue with dark text, not white text.
+- **Navy hover foundation** (`navy-hover`): retained in both source themes, but the current shared primary Button does **not** use it. Its hover reduces primary-fill opacity to (90%); do not restore the old alternate-fill example.
+- **Blue wash** (`wash`, `wash-deep`): diffuse background atmosphere, never a status indicator or rate visualization.
 
 ### Neutral
 
-- **Ground** (`ground`): the full-page base.
-- **Frosted glass** (`glass`): outer panels and utility pills.
-- **Inner glass** (`inner`): fields, raised secondary controls, currency tokens, and inset details.
-- **Solid surface** (`solid`): hover emphasis, the mobile navigation base, native select options, and dialog foundations. Reduced transparency replaces both glass roles with this surface.
-- **Light-catching edge** (`edge`): panel and raised-control outlines. In dark mode it becomes a restrained translucent edge rather than a white outline.
-- **Quiet divider** (`line`): row dividers, menu outlines, and decorative skeleton shapes; separate it from the brighter panel edge and the control boundary.
-- **Control surface / border** (`control-surface`, `control-border`): opaque, theme-aware field fills and visible boundaries for the shadcn money-form controls. Do not substitute a row divider for a field border.
-- **Ink / secondary ink** (`ink`, `secondary`): primary content versus supporting text. Secondary ink is a text role, not a second accent palette.
+- **Ground** (`ground`): full-page base. Dark ground stays distinct from panel and field levels.
+- **Frosted glass** (`glass`): outer wallet panels and selected utility treatments.
+- **Inner glass** (`inner`): quick actions, secondary surfaces, currency tokens, highlighted menu options, and the preview notice. Money inputs use the separate opaque control surface.
+- **Solid surface** (`solid`): dialogs, portaled menus, active desktop navigation, and the fixed mobile bar. Reduced transparency replaces both glass roles with this value.
+- **Light-catching edge / quiet divider** (`edge`, `line`): outer panel/raised-control edges versus row separators and menu boundaries. Neither substitutes for the stronger field boundary.
+- **Control surface / boundary** (`control-surface`, `control-border`): opaque, theme-aware input, Select, and outline-button treatments.
+- **Ink / secondary ink** (`ink`, `secondary`): main content versus supporting text; secondary is not a second accent palette. Tooltips invert ink and page-ground roles, including in dark mode.
 
 ### Semantic states
 
-- **Danger** (`danger`, `danger-ground`): invalid strokes, error text, and the available danger-button foundation. Pair the stroke with readable error copy; color alone does not explain a problem.
-- **Positive** (`positive`, `positive-ground`): defined light/dark semantic tokens. The current shell does not demonstrate a completed money-operation success state; these tokens are not evidence of one.
+- **Danger** (`danger`, `danger-ground`): invalid borders/rings, associated error copy, and the available destructive Button. Explain errors in text, not color alone.
+- **Positive** (`positive`, `positive-ground`): retained semantic foundations, not evidence of a completed operation. The disconnected wallet has no money-success receipt.
 
-**The Theme Roles Rule.** Use the semantic CSS custom properties in both themes; do not freeze a light surface or white action label into a theme-aware control. The account sheet and brand mark are intentional fixed navy treatments in the source, not replacements for the theme-aware action palette.
+The dialog scrim is a local translucent treatment (`rgb(13 28 45 / 40%)`), not a new reusable palette primitive. Shadow colors likewise belong to elevation rather than extra color swatches.
 
-These are extracted visual values, not a claim of WCAG conformance.
+**The Theme Roles Rule.** Use semantic CSS properties in both themes; do not freeze light surfaces or white primary-action text into a theme-aware control. The brand mark now follows navy/on-navy roles too.
+
+These extracted roles and captures are not a claim of WCAG conformance.
 
 ## Typography
 
-**UI font:** the native workhorse sans stack in `typography.body`, exposed as `--font-ui`. Display, body, labels, and figures use this same stack; no paid, display, or separate mono font is required.
+**UI font:** the native workhorse sans stack in `typography.body`, exposed as `--font-ui`. Headings, body, labels, and figures share it; no display-font identity, paid font, separate mono face, or font request was introduced. System sans here serves an Operate interface, not a decorative display treatment.
 
 ### Hierarchy
 
-- **Display:** a light-weight total with tight tracking; the desktop clamp is recorded in the tokens. At the mobile breakpoint the total is fixed at (42px). An unavailable total uses (29px) with tracking (-0.025em), rather than squeezing a long word into the monetary treatment.
-- **Headline:** the page heading; mobile reduces it to (20px). Text can balance over more than one line.
-- **Title:** panel headings. Subheadings use (14px), weight (600), and line height (1.45). The total-panel caption is quieter: (13px), weight (550).
-- **Body:** normal UI copy and form content. Empty-history supporting copy has an observed maximum width of (42ch); this is not a global text-width limit.
-- **Label:** field labels, hints, notices, navigation, and utility copy. Navigation increases the label weight to (500). The default-currency badge uses (10px), weight (500).
-- **Button:** default action labels; the small size uses (12px) rather than the default token size.
-- **Amount / currency amount:** editable amounts use the recorded amount role inside a bounded field, distinct from right-aligned wallet-row figures. Mini-summary figures use (29px), weight (380), line height (1.3), and tracking (-0.035em); default-currency summaries use (26px).
-- **Dialog title:** an available foundation role, not the inline operation heading.
+- **Display:** the total uses the recorded (48px), weight (450) role; mobile uses (44px). Unavailable totals use (32px), then (29px), so a status word is not forced into monetary display geometry.
+- **Headline:** the page heading uses (28px), weight (600); it becomes (26px) in the mobile layout and (25px) at the compact-phone boundary. Allow balanced wrapping.
+- **Title:** panel headings use (18px), weight (600). Panel subheadings use (16px), weight (600), line height (1.45). Currency codes use (15px), weight (600), line height (1.4).
+- **Body / supporting:** normal copy and form descriptions use the body role; secondary dashboard details use the supporting role. Empty-history text has line height (1.6) and a local maximum measure (54ch), not a universal paragraph width.
+- **Label / button:** fields use the label role; default shared actions use the button role. Mobile navigation uses (13px), weight (500), retaining the shared Button's unitless leading. Badge labels are (12px), weight (500); the wallet-count override is (13px), retaining the badge's unitless leading rather than a fixed (16px) line box.
+- **Amount / currency amount:** the editable amount is (24px) with line height (32px) inside a bounded field. Wallet-row figures use the separate currency-amount role; mobile reduces them to (22px), then (20px). The currency symbol is a local (19px) marker, reduced to (16px) on compact phones; the form's inset symbol is (20px).
+- **Dialog title:** a semibold (24px) title labels the active dialog. Review headings use (18px), weight (600), line height (28px).
+
+Local brand text uses (24px), weight (550), line height (1.25), tracking (-0.035em), reducing to (22px). The standalone error heading uses (25px), weight (550), line height (1.3), and its brand line uses (22px). These local values and responsive exceptions are observed treatments, not extra global scale steps.
 
 **The Readable Figures Rule.** Keep tabular numerals, explicit currency labels, and wrapping long values. Format money through the existing minor-unit presentation helpers; do not visually truncate an amount or account ID to preserve a card silhouette.
 
 ## Layout
 
-Use flexible grids, `min-width: 0`, wrapping labels, and panels that expand for content. The shell has a bounded frame (1680px) and a minimum supported CSS viewport width (320px). Reused panel gaps are (18px), tightening to (14px) at the compact breakpoint. Standard panel padding is (24px), rising to (27px) on wide screens; compact, tablet, and mobile overrides are (20px), (22px), and (23px), respectively. At the narrowest breakpoint panels return to (20px).
+Use flexible grids, `min-width: 0`, wrapping labels, and content-sized panels. The shell's minimum CSS viewport width is (320px). Topbar and workspace share an outer maximum width (1536px), including desktop side padding (32px). The workspace reserves a (56px) rail and (28px) gap; desktop panel grids use (24px) gaps and wallet panels use (26px) padding. Forms group fields at (20px), with (8px) gaps inside a field.
 
-The implemented responsive boundaries are wide (minimum 1530px), compact (maximum 1190px), tablet (701–990px), mobile (maximum 700px), and narrow (maximum 380px). They are source breakpoints, not a newly introduced device scale. Mobile side gutters are (18px), then (14px) in the narrow layout. Keep fixed navigation clear of focused controls with the existing bottom padding and safe-area allowance.
+Observed wallet composition is two content columns in a (1.4:1) ratio: total/actions and compact history at left, currency wallets at right. At maximum width (1023px), content stacks as total, currencies, history. At maximum width (760px), the rail becomes a labelled fixed bottom bar. These are current CSS boundaries, not a requirement that every future surface use this topology. The original sketch remains material authority, not a three-column layout prescription.
 
-The wallet's desktop columns, tablet placement, and mobile panel order are surface-specific decisions recorded in [WALLET_SURFACE.md](artifact/WALLET_SURFACE.md). They are not a requirement that every future screen use three columns, or a prohibition on another layout. Preserve the material, readable hierarchy, and resilient content behavior when composing another surface.
+### Responsive behavior
+
+- **Compact desktop (maximum 1190px):** shell side padding (24px), rail gap (20px), panel gap (18px), panel padding (22px), and quick actions in two columns.
+- **Stacked content (maximum 1023px):** panels become one column; quick actions return to four columns while the desktop rail remains.
+- **Mobile shell (maximum 760px):** side padding (20px), panels retain (22px) padding and use the mobile panel radius. Quick actions form a **2×2 grid**. The bottom bar has four labelled destinations/actions, minimum item height (60px), and safe-area padding. Workspace bottom clearance is `calc(116px + env(safe-area-inset-bottom))`; focused controls retain matching scroll clearance.
+- **Compact phone (maximum 420px):** side padding (16px), panel padding (20px), a full-width history filter below its heading, stacked history-empty content, and smaller currency markers/figures.
+- **Dialog/theme control (maximum 640px):** dialog width is `calc(100vw - 16px)`, maximum height `calc(100dvh - 16px)`, padding (24px 20px). Theme trigger hides its text/chevron but retains its accessible name and (44px) target. The account trigger becomes icon-sized at the separate (760px) shell boundary.
+- **Input text (minimum 48rem):** shared Input text changes from (16px) to (14px); the amount editor explicitly remains (24px).
+
+Dialogs are independently bounded and scroll internally; do not make a form fit by clipping its fields or close control. Portaled menus also have available-height/viewport limits. Preserve safe-area clearance and test long content rather than assuming the preview's short labels establish a maximum.
 
 ## Elevation & Depth
 
-Depth is a hybrid of translucent tonal layers, light-catching borders, backdrop blur, and soft offset shadows. Outer panels use the ambient `--shadow`; raised circular and secondary controls use the paired `--raised` shadow. Avoid replacing this with hard stacked offsets or motion-driven lift. The page's blurred washes are decorative and never carry information.
+Depth combines translucent tonal layers, light-catching borders, backdrop blur, and soft offset shadows. Outer wallet panels use `--shadow`; selected desktop navigation and wallet quick actions use paired `--raised` depth. The shared secondary Button alone uses the quieter shadcn shadow, not the wallet-specific raised override. Dark mode keeps canvas, panel, and opaque control levels distinct.
 
 ### Shadow vocabulary
 
-- **Panel shadow:** `--shadow`, with separate light and dark values in the sidecar. It separates glass containers without turning them into floating dialogs.
-- **Raised control:** `--raised`, a soft positive offset plus a lighter opposing offset; dark mode retains the structure with much quieter highlights.
-- **Primary action:** the small source action shadow, also recorded in the sidecar. Disabled buttons remove their shadow.
-- **Account / brand / mobile navigation:** local source shadows, recorded as such rather than generalized into a new elevation scale.
+- **Panel:** `--shadow`, with separate light/dark values in the sidecar; ambient separation under wallet panels and dialogs.
+- **Raised control:** `--raised`, paired soft offsets for quick actions and selected navigation, plus the compact account trigger.
+- **Shared control:** shadcn `shadow-xs` for inputs, Select triggers, secondary/outline/circle Buttons; `shadow-sm` for primary Buttons and the uncustomized Card. Select/Tooltip use `shadow-md`; DropdownMenu uses `shadow-lg`. Exact expansion is recorded in the sidecar.
+- **Brand / bottom navigation:** local source shadows, not new general elevation steps. No permanent navy account sheet remains.
 
-Panel glass uses backdrop blur (22px). The dialog overlay uses blur (5px). Reduced transparency removes the overlay blur and background washes and makes glass/inner surfaces solid. Forced-colors mode removes the washes and supplies visible system-color borders on shared buttons, fields, and the theme control.
+Panel blur is (22px); scrim blur is (5px). Reduced transparency makes glass/inner roles solid, removes decorative washes and scrim blur. Forced colors removes washes and supplies system-color control/menu borders.
+
+The stacking contract is mobile navigation (20), theme storage note (30), dialog overlay (50), dialog content (60), Select/DropdownMenu (70), Tooltip (80), and skip link (100). Keep menus above their owning dialog and the skip link reachable; do not flatten these into one overlay level.
 
 **The Quiet Depth Rule.** Use ambient shadows for panels and paired soft offsets for raised controls; state emphasis comes from surface and border changes, not an invented lift animation.
 
-Control transitions are short color/shadow changes (160ms); navigation and quick-action circles use (180ms). Skeletons breathe over (1.8s), reaching opacity (0.45) midway through the cycle. Reduced motion disables animations and transitions and removes smooth scrolling. Full source values are in the sidecar.
+Shared controls use Tailwind's default transition duration (150ms) and easing for their declared color/shadow properties; the desktop rail explicitly uses (160ms ease). Menus and dialogs have no opening choreography. Skeletons breathe over (1.8s), reaching opacity (0.45) halfway through. Reduced motion disables animations/transitions and smooth scrolling. The sidecar records source motion values rather than the superseded button/quick-action timing scale.
 
 ## Shapes
 
-The silhouette is generously rounded, not uniformly pill-shaped. Panels use the panel radius; compact and mobile overrides use their recorded radii. Fields use the smaller control radius, while action buttons are pills and raised icon controls are circles. The account sheet is an inset rounded rectangle with its own radius. Skeletons echo the destination shape instead of imposing one radius on every placeholder.
+Generously rounded panels contrast with tighter controls: wallet panels/dialogs use the panel radius, mobile wallet panels use the mobile radius, and shared Buttons, Inputs, Select triggers, menu shells, and tooltips use the control radius. Quick-action Buttons currently inherit that same control radius; their raised material is a wallet-local override. The (14px) notice radius also appears on mobile navigation items and the history-filter skeleton; it is not the default Button radius.
 
-Use thin edges (1px) and quiet dividers to distinguish containers and rows. Shared buttons start with a transparent border so state treatments do not change their geometry. Long text belongs inside an expanding, wrapping panel. Keep the account sheet's decorative gradient clipped to its rounded outline; its account ID still wraps.
+Full rounding is reserved for theme/badge pills, the optional circle variant, avatars, desktop rail controls, and currency markers. Shared menu options use small (4px) corners. The uncustomized Card's `rounded-xl` resolves to (12px); the wallet panel overrides it to (24px). Thin (1px) edges and quiet dividers distinguish rows without hard stacked offsets.
+
+Skeletons reserve destination geometry rather than prescribing every final corner: generic shapes use (8px), circles remain circular, mobile navigation glyph placeholders use a local (5px), and some utility/action placeholders are fully rounded. Do not promote those placeholder-only differences into new control variants. The selectable account ID's local (4px) focus shape is not a replacement field radius.
 
 ## Components
 
+The shared foundations are copied registry-derived shadcn/ui source with existing Radix and Lucide dependencies, not a separate new UI package. Preserve [the retained MIT notice](src/components/ui/LICENSE.shadcn). Semantic Tailwind aliases map to wallet custom properties in global styles; prefer the existing components over parallel native utility selects or hand-built focus/menu behavior.
+
 ### Buttons and quick actions
 
-Tactile but restrained. The shared `Button` API provides `primary`, `secondary`, `ghost`, `circle`, and `danger` variants, with `default`, `sm`, and `icon` sizes. These are available foundations; their presence does not imply a shipped destructive action or money-moving flow.
+Restrained, touch-sized controls with purposeful emphasis. `Button` supports `default`, `primary`, `secondary`, `outline`, `ghost`, `circle`, `destructive`, `danger`, and `link`; `default`/`primary` and `destructive`/`danger` are compatibility pairs. Its default variant remains `primary`. Sizes are `default`, `sm`, `lg`, and `icon`, with `asChild` for a real link/trigger element.
 
-- **Primary:** navy fill with on-navy text, a small shadow, and the recorded hover fill. Default size has minimum height (44px) and padding (10px 19px).
-- **Secondary / circle:** inner glass, an edge border, and raised-control depth; hover changes the surface to solid. Icon size has minimum width and height (44px), with padding (11px).
-- **Ghost:** navy text on transparent ground; hover adds inner glass. No extra active transform is defined.
-- **Danger:** semantic danger text and ground. The source defines no distinct danger-hover color; do not invent one.
-- **Small:** minimum height (40px), padding (8px 13px). All shared buttons use weight (500), an icon gap (9px), and wrapping labels.
-- **Focus / disabled:** visible navy outline (3px), offset (4px); disabled opacity (0.52), no shadow, and no hover fill change. Disabled states need explanatory surrounding text when an operation is unavailable.
-- **Quick actions:** raised circles with visible Deposit, Withdraw, Convert, and Transfer labels. Selected actions use the solid fill and an inset line. Their circles are (44px), becoming (45px) on mobile; these are not unlabeled icon-only navigation.
+- **Default / primary:** navy/on-navy, a small shadow, control-radius corners, minimum height (44px), padding (8px 16px), gap (8px). Hover uses primary at (90%) opacity, **not** `navy-hover`.
+- **Secondary:** inner glass, quiet divider border, subtle shadow; hover uses the accent alias of inner glass. **Outline:** opaque control surface and stronger control border; hover uses inner glass and ink.
+- **Ghost:** ink on transparent ground; hover adds inner glass. **Link:** navy text with an underline on hover. Neither gets an invented lift transform.
+- **Circle:** fully rounded secondary treatment; it does not make every icon Button circular. `icon` size alone is (44px) square with padding (10px).
+- **Destructive / danger:** danger-ground with danger text; hover uses the same ground at (80%) opacity. This available API does not mean a destructive wallet action is shipped.
+- **Small / large:** minimum heights (40px)/(48px), padding (8px 12px)/(12px 24px); small remains (14px) text.
+- **Focus / disabled:** shared Button uses a (3px) navy ring at (30%) opacity; disabled opacity is (0.5), cursor not-allowed. This is not the old global (3px) outline with (4px) offset; that outline remains on ordinary focusable content such as account IDs and the brand link.
+- **Wallet quick actions:** labelled Deposit, Withdraw, Convert, Send money Buttons; minimum height (48px), padding (10px 8px), gap (7px), edge border and raised shadow. Hover/open uses solid fill and the control border. Disabled quick actions remove their raised shadow. Mobile uses two rows of two, not circular icon-only actions.
 
 ### Cards / containers
 
-Outer cards use glass, an edge border, panel radius, ambient shadow, and blur. They retain `overflow-wrap: anywhere` for long IDs and values. Mini-summary cards inherit the same material at a denser inset. Currency rows use quiet bottom dividers, circular currency markers, and a right-aligned amount with an explicit currency label.
+The registry Card supplies composable Header/Title/Description/Content/Footer regions. Wallet panels override the base spacing, radius, border, shadow, and blur with the frosted treatment; their header/content padding is zero so the outer panel supplies the inset once. Keep long values wrapping.
 
-The inset account sheet deliberately stays navy with white copy in both themes, including a white focus outline on its copy control. It depicts a simulated account, not a real payment card. Do not generalize its fixed colors into all buttons or panels.
+Currency rows pair a circular currency marker with code/name and a right-aligned amount plus explicit currency. Desktop rows have minimum height (106px), padding (24px) vertically, and a quiet bottom divider; the final row removes its divider and tightens its trailing inset. On the wallet overview, count/default metadata is integrated in the panel header rather than a separate summary card. The former large navy account object is absent; account details live in a themed menu.
 
-### Inputs / fields
+### Inputs / fields and Select
 
-Money-form controls use the official shadcn/ui new-york-v4 Input and Radix Select patterns, adapted to the wallet's semantic Tailwind tokens. Shared fields have a control-surface fill, a visible control-border, control radius, height (44px), padding (8px 12px), and a subtle shadow. Input text is (16px) on narrow screens and (14px) from the medium breakpoint to avoid mobile focus zoom. Field labels are (13px), weight (500), in primary ink; hints remain secondary.
+Input and Radix Select use opaque control fill, visible control border, control-radius corners, height (44px), padding (8px 12px), and a subtle shadow. Focus changes the border to navy and adds a (3px) ring at (20%) opacity. Invalid fields use danger border/ring at (15%) opacity plus an associated error. Disabled opacity is (0.5).
 
-Focus changes the border to navy and adds a theme-aware ring (3px). Invalid fields use a danger border/ring and an associated error message; disabled controls use opacity (0.5). Select menus are portaled, collision-aware solid surfaces with highlighted options, a selected checkmark, scrolling controls, keyboard/typeahead support, and focus restoration on dismissal. They are not browser-native selects dressed as custom menus.
+`Field`, `FieldLabel`, `FieldDescription`, and `FieldError` keep labels, guidance, and alert copy together. The amount remains decimal **text**, enlarged to height (56px), with a separate inset symbol and source-currency Select. Privacy blanks/read-only masks the editor without destroying its draft; never replace the field with a password input or a bare decorative number.
 
-The amount editor uses the same shared Input, enlarged to height (56px), with an inset currency symbol (22px) and the amount typography role. Keep its border and fill; do not strip it back to a bare number. It remains decimal text, not a number spinner. Privacy blanks it and makes it read-only without destroying the draft. The source currency uses a separate labelled Select trigger. Native theme/account/history selects outside the money form retain their existing behavior.
+Select menus are portaled, collision-aware solid surfaces with (4px) menu inset, (44px) minimum option height, checkmarked selection, scrolling controls, keyboard/typeahead support, and focus restoration. History uses the same Select foundation as forms, not a native select. Local history trigger width is (176px), becoming full width on compact phones.
 
-### Navigation and theme
+### Navigation, tooltips, and utility menus
 
-Desktop navigation pairs raised circles with Overview, Wallets, History, and Account labels. At mobile width it becomes a fixed bottom bar and also exposes **Actions**. Actions links to the current operation workspace; it does not rename the workspace Transfer or reset a selected Deposit, Withdraw, or Convert form. Current location uses navy text, a distinct surface/inset edge, and heavier icon strokes.
+Desktop rail controls are named (48px) circles: resting icons are quiet on transparent ground; hover introduces glass/edge; current or open actions use navy, solid fill, and raised depth. Overview, Wallets, History are section links; Deposit, Withdraw, Convert, Send money open dialogs. Real Radix tooltips appear on hover/focus with a (200ms) provider delay, not browser `title` text as the sole explanation.
 
-Lucide icons support visible task labels rather than replacing them. The theme control is an accessible native select with System, Light, and Dark choices. Its narrow-screen presentation is an icon-sized select with the accessible label “Color theme,” not an unlabeled custom icon menu. Focus outlines remain visible; storage failure produces a status note without blocking the preference for that visit.
+Mobile keeps visible Overview, Wallets, History, **Actions** labels. Actions opens a named menu of all four money operations; selecting one opens its dialog and returns focus to the stable Actions trigger when closed. Do not link it to a removed inline workspace or relabel all operations as Transfer. Task labels on quick actions remain visible at every size.
+
+Theme and account utilities use themed DropdownMenu radio groups; history uses Select. System/Light/Dark follows the system when requested and persists only the theme preference. If storage fails, an in-memory preference still applies for the visit and a status note explains it. Account inspection is not authentication; destination accounts disable money actions. The account ID wraps and can be selected manually. Copy feedback stays inside the open account menu as a status; failure gives a manual-copy fallback. Copy status, account selection, filters, privacy, and drafts are page-memory state, not durable financial state.
 
 ### Badges and notices
 
-The Simulation badge is a frosted glass pill with an information icon and explicit text. The smaller Default badge uses navy text, inner glass, and a line border. Neither is a new semantic success state. Supporting notices explain disconnected services and unavailable rates without implying an operation completed.
+Badge supports `default`, `secondary`, and `outline` pill variants. Wallet count uses secondary; inspect-only uses outline. They convey metadata, not money-success status. One preview notice states the disconnected boundary; local dialog guidance explains the relevant unavailable operation without fabricating rates, activity, or outcomes.
 
-### Loading
+### Money dialogs and review
 
-Skeletons mirror the panel, field, action-circle, and text geometry of the shell. Individual shapes are decorative (`aria-hidden="true"`); the enclosing main region is busy and supplies one “Loading wallet overview” status. Do not announce each rectangle. Honor reduced motion rather than replacing breathing with another animation.
+All four money forms use the shared Radix Dialog. Content uses solid surface, ambient depth, a labelled title/description, accessible close Button, and the bounded width in frontmatter. Desktop maximum height is `calc(100dvh - 48px)` with internal vertical overflow; the mobile exception is in Layout. Escape dismisses, focus is trapped while open, and closing restores the invoking control. Initial focus goes to recipient for Send money, otherwise amount, or to the preserved review heading when reopening a review.
 
-### Inline review and dialog foundation
+The always-mounted workspace preserves separate drafts/errors/reviews across close/reopen; reload clears them. Validation focuses the first invalid control, valid review focuses its heading, and editing returns to amount. Changing source currency clears dependent errors and an identical receiving currency; same-currency target options are disabled. Review facts wrap. Every final submission is disabled with a connection explanation; reviewing a draft is not a success receipt and does not create an account, move money, or record history.
 
-The current wallet form and review are **inline** in the operation panel. Error focus moves to the first invalid field; valid review focus moves to its heading. Review facts use wrapping values and retain a plainly explained disabled final action while services are disconnected. No funds are submitted by this shell.
+### Loading and error states
 
-A reusable Radix dialog foundation exists separately: solid panel, ambient shadow, panel radius, scrollable bounded height, labeled title/description, overlay, and accessible close button. Its width is recorded in the tokens; maximum height is `calc(100dvh - 48px)`. Do not describe this foundation as the shipped wallet operation flow.
+The real dashboard skeleton reserves the current two-column/stacked geometry, top utilities, rail/bottom labels, notice, actions, history, and currency rows. Shapes are decorative; the busy main region supplies one “Loading wallet overview” status. No minimum loading delay or fake progress is introduced. Standalone errors retain the frosted world, offer retry/navigation, and do not expose exceptions or claim a known financial outcome. These source behaviors and existing captures do not certify full accessibility or connected feature acceptance; see [the scoped review](artifact/DESIGN_REVIEW.md).
 
 ## Do's and Don'ts
 
 ### Do:
 
 - **Do** use semantic theme roles for glass, ink, navy actions, and their dark counterparts.
-- **Do** preserve soft offset depth, rounded panels, and raised circular controls.
+- **Do** preserve soft offset depth, rounded panels, and selectively raised controls.
 - **Do** use the native UI sans stack, tabular figures, explicit currencies, and wrapping long values.
-- **Do** retain visible task labels, keyboard focus, associated errors, and one loading announcement per busy region.
+- **Do** give desktop icon navigation accessible names and real tooltips; retain visible mobile and quick-action labels.
+- **Do** reuse the shared shadcn/Radix controls, visible focus, associated errors, and one loading announcement per busy region.
+- **Do** preserve dialog drafts, focus return, viewport overflow, and fixed-navigation clearance.
 - **Do** honor reduced motion, reduced transparency, and forced-colors treatments.
 - **Do** keep simulation, preview, inspect-only, and unavailable states plain and visible.
 
@@ -357,8 +403,8 @@ A reusable Radix dialog foundation exists separately: solid panel, ambient shado
 
 - **Don't** freeze light-theme colors into theme-aware controls or use white text on the dark theme's pale primary fill.
 - **Don't** replace the icy glass world with warm cream, an unapproved display font, or a different visual identity.
-- **Don't** add hard stacked shadows, ornamental lift animations, or icon-only replacements for visible task labels.
+- **Don't** add hard stacked shadows, ornamental lift animations, or hover-only labels on mobile.
 - **Don't** truncate monetary values or account IDs to preserve panel geometry.
-- **Don't** label mobile operation navigation Transfer or reset the selected form when Actions is used.
-- **Don't** depict disconnected services as completed money movement, real payment cards, or live exchange rates.
+- **Don't** restore stale native utility-select or inline-workspace examples that misrepresent the current shared controls.
+- **Don't** depict disconnected services as completed money movement, stored preview balances, real payment cards, or live exchange rates.
 - **Don't** turn the wallet's surface-specific column arrangement into a global layout prohibition.

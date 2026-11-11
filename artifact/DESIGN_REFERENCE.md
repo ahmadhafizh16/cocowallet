@@ -1,6 +1,10 @@
 # Reference-led wallet sketch
 
 **Status:** Historical approval record for [T11-01](tasks/TASKS-11.md#t11-01).
+The later user-approved [two-column/dialog brief](WALLET_REDESIGN.md) and
+[D-025](DECISIONS.md#d-025) supersede the original composition and always-visible
+desktop labels below. This sketch remains fixed material/identity evidence, not
+the current layout specification.
 After reviewing the adapted sketch, the user confirmed: “yes, this is good”.
 That approval established the reference-led direction, not application implementation
 or production readiness. The previous Atlas proposal was not locked. The user

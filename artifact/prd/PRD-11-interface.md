@@ -1,9 +1,11 @@
 # PRD-11 — Interface, design system, and accessibility
 
-**Status:** The approved frosted shell is implemented as an explicit interface preview, with themes, skeleton/empty/error states, local validation/review, and account-scoped presentation. See [UI_FOUNDATION.md](../UI_FOUNDATION.md), [DESIGN_REVIEW.md](../DESIGN_REVIEW.md), and the extracted [design system](../../DESIGN.md). Connected flows and complete cross-feature accessibility acceptance remain future work.
+**Status:** The frosted two-column redesign and money dialogs are implemented as an explicit interface preview. T11-04's production verification, scoped independent review, and user-selected design-document refresh are complete. See [the redesign brief](../WALLET_REDESIGN.md), [UI_FOUNDATION.md](../UI_FOUNDATION.md), and [DESIGN_REVIEW.md](../DESIGN_REVIEW.md). Connected flows and complete cross-feature accessibility acceptance remain future work.
 
-**Decisions:** [D-003](../DECISIONS.md#d-003), [D-011](../DECISIONS.md#d-011), [D-013](../DECISIONS.md#d-013), [D-014](../DECISIONS.md#d-014), [D-016](../DECISIONS.md#d-016).  
-**Tasks:** [T11-01–T11-03](../tasks/TASKS-11.md).  
+**Decisions:** [D-003](../DECISIONS.md#d-003), [D-011](../DECISIONS.md#d-011), [D-013](../DECISIONS.md#d-013), [D-014](../DECISIONS.md#d-014), [D-016](../DECISIONS.md#d-016), [D-025](../DECISIONS.md#d-025).
+
+**Tasks:** [T11-01–T11-04](../tasks/TASKS-11.md).
+
 **Diagram:** [Business operations and history](../DIAGRAMS.md#business-operations-and-history).
 
 ## Outcome and user story
@@ -13,7 +15,7 @@ As the user, I can understand my balances and perform the simulated wallet workf
 ## Requirements
 
 1. Initialize Impeccable with product context and review the resulting `PRODUCT.md` before designing a new interface. Follow the skill's applicable workflow; do not invent a design system or claim design work has been done.
-2. Use shadcn/ui and visibly labelled Lucide React icons, with light/dark themes respecting system preference by default. Follow the approved frosted reference: pale-blue glass, navy accents, soft shadows, rounded panels, and its adapted three-column desktop hierarchy. Final tokens and type details are implementation/review decisions, not permission to replace the approved composition.
+2. Use registry-derived shadcn/ui foundations and Lucide React, with light/dark themes respecting system preference. Preserve pale-blue glass, navy accents, soft shadows, and rounded panels. Per D-025, use a two-column overview, accessible desktop icon tooltips, labelled mobile navigation, and draft-preserving dialogs for Send money, Deposit, Withdraw, and Convert. Theme/account menus and history filters must be themed shadcn/Radix controls, not native-looking utility selects.
 3. Provide clear entry points for account switching, balances, funding, conversion, transfers, history, and transaction details. Destination account views are visibly inspect-only.
 4. Support semantic labels, keyboard navigation, visible focus, readable contrast, mobile layouts, and loading/empty/error/confirmation states. Use purposeful smooth transitions and honor reduced-motion preferences.
 5. Label simulated providers and transfers clearly. FX previews show the reference date, cached status if relevant, and quote validity; never call reference rates streaming/live market rates.
@@ -31,7 +33,8 @@ As the user, I can understand my balances and perform the simulated wallet workf
 
 Coordinate with each feature PRD for actual form behavior. Test accessible names and focus, theme switching, reduced motion, narrow layouts, and error states. [O-004](../DECISIONS.md#o-004) covers destination USD-total display; [O-005](../DECISIONS.md#o-005) covers operational ambiguities.
 
-Current shell evidence: 557 Jest tests and 24 production Chromium checks pass,
-including the registry-derived shadcn money-form controls.
+Current redesign evidence: **562 Jest tests and 33 production Chromium checks**
+pass, including dialog focus/drafts, keyboard menus, utility controls, privacy,
+validation and 320–1769px layouts. This is not comprehensive WCAG certification.
 No final financial submission, populated history, server quote, quote expiry, or
 server-confirmed success is claimed by this interface-first checkpoint.

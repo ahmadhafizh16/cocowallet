@@ -1,6 +1,6 @@
 # Handover
 
-**Status:** Ten of 32 tasks are closed: platform/money/journal core, product/direction confirmation, and T11-02's reviewed frosted interface-preview foundation with design documentation. The board has 22 To do and no In progress tasks. Money-moving APIs, full idempotency, FX integration, Swagger, and account seeding remain unimplemented.
+**Status:** Eleven of 33 tasks are closed, including T11-04's user-approved two-column redesign, production checks, scoped independent verdict and refreshed design documentation. The board has 22 To do, 0 In progress, and 11 Done. Money-moving APIs, full idempotency, FX integration, Swagger, and account seeding remain unimplemented.
 
 ## Implemented modules and commands
 
@@ -19,10 +19,10 @@
 | `src/features/journal/balances.ts` | Stream exact per-wallet bigint balances; account reads share one snapshot and validate final bounds. |
 | `src/features/journal/write.ts` | Top-level synchronous immediate-write boundary; main-only accounting, exact credits, funds checks, atomic creation/entries, and a technical-success integration seam. [Contract](JOURNAL.md). |
 | `components.json`, `postcss.config.mjs`, `src/lib/utils.ts` | shadcn/Lucide/Tailwind configuration and tested class helper used by the local UI components. |
-| `src/components/ui/` | Registry-derived shadcn Input/Select, local button/skeleton components, and Radix dialog; visible fields, keyboard/focus handling, and retained upstream MIT notice. |
+| `src/components/ui/` | Registry-derived shadcn Button/Card/Dialog/DropdownMenu/Tooltip/Field/Label/Badge/Separator/Input/Select/Skeleton with frosted semantic tokens, keyboard/focus handling, and retained upstream MIT notice. |
 | `src/features/theme/`, `src/app/globals.css` | Approved frosted tokens, light/dark/system preference, pre-paint theme bootstrap, storage fallback, and reduced-motion styles. |
 | `src/app/page.tsx`, `layout.tsx`, `loading.tsx`, `error.tsx`, `not-found.tsx` | HTML wallet preview, styles/metadata, skip link, loading/error boundaries, and branded 404; replaces the former root JSON route. |
-| `src/features/wallet/` | Responsive dashboard, account-scoped preview data, exact formatting, draft validation/review, inspect-only presentation, and matching skeleton; no DB/API mutation. |
+| `src/features/wallet/` | Two-column overview, tooltip icon rail, labelled mobile Actions, account-scoped preview data, always-mounted draft-preserving money dialogs, exact validation/review, inspect-only presentation, and matching skeleton; no DB/API mutation. |
 | `DESIGN.md`, `.impeccable/design.json` | Extracted light/dark visual tokens, canonical design guidance, and version-2 component-preview extensions; actual application styles remain in source CSS. |
 | `scripts/check-artifacts.mjs` | Checks Markdown links, decision/task references, board status alignment, and task dependency cycles. |
 
@@ -41,15 +41,20 @@ Stop the dev compiler before `docker compose run --rm app npm run check`, then u
 
 Application DB: `/app/data/wallet.sqlite` in Compose's `wallet-data` volume. Tests use isolated temporary SQLite files. Normal shutdown is `docker compose down` without deleting volumes. Before applying journal migrations, the stopped app's database was backed up with SQLite's backup API to `/app/data/wallet.sqlite.pre-journal-1794390597589.bak`. Backup creation is verified; a full restore drill is not claimed.
 
-Latest implementation verification: the full Docker check passes artifact validation, formatting, lint, types, **557 Jest tests**, and production build; **24 Chromium tests** pass against that build, including the form-component correction. See [UI_FOUNDATION.md](UI_FOUNDATION.md) for coverage and production-browser commands. No dependencies or schema changed in this UI checkpoint. Earlier journal checks applied/repeated all three migrations, checked integrity/foreign keys, and confirmed zero stored accounts/transactions. UI checks do not seed or move money. Earlier foundation checks covered clean `npm ci` and recreation persistence. The last production npm audit was clean; 23 low/moderate development-tool findings remain in [DEPENDENCIES.md](DEPENDENCIES.md).
+Latest redesign verification: the full Docker check passes artifact validation, formatting, lint, types, **562 Jest tests**, and production build; **33 Chromium tests** pass against that build (2 foundation, 17 interaction, 12 shell, 2 visual). See [UI_FOUNDATION.md](UI_FOUNDATION.md) for coverage and commands. No packages, accounting code, schema, or DB data changed. Earlier journal checks applied/repeated all three migrations, checked integrity/foreign keys, and confirmed zero stored accounts/transactions. UI checks do not seed or move money. Earlier foundation checks covered clean `npm ci` and recreation persistence. The last production npm audit was clean; 23 low/moderate development-tool findings remain in [DEPENDENCIES.md](DEPENDENCIES.md).
 
-Documentation closure additionally verifies 45 artifact documents and all 32 task
-records, formatting, design YAML/JSON, eight canonical design sections, 38
-source-matched light/dark colors, resolved token references, and ten standalone
-component examples. The sidecar's 304 synthesized ramp colors are ordered,
-in-gamut preview metadata, not an application palette. Application code is
-unchanged since the successful production build/browser review; the development
-service is healthy at `http://localhost:3000`.
+Artifact validation verifies **46 documents / 33 tasks**. The previous
+T11-02 design-extraction counts and verdict are historical, not certification of
+T11-04. Current production captures include desktop light/dark, 1688/1769px,
+tablet, mobile, dialogs/menus, validation/review, loading and errors. Independent
+review found no demonstrated material visual gap, then scored its provenance and
+documentation fixes resolved with `ship` at fix-list scope. The user-selected
+Refresh records 38 source-matched theme colors, 20 component-token entries and
+10 standalone previews; YAML/JSON, references, syntax and source checks pass.
+The manual detector returned 22 advisory inventory mismatches against the old
+document, with no non-advisory findings; it was not rerun to manufacture a clean
+count. This is not WCAG certification. App source is unchanged since the verified
+production build; development-cache recovery is recorded below.
 
 The exact money/precision checkpoint passes 437 feature-local Jest tests, targeted lint, formatting, and strict TypeScript checks. It adds no runtime package dependency; the precision extract retains its source MIT notice and checksums.
 
@@ -63,8 +68,16 @@ The atomic-write checkpoint passes 16 feature-local integration tests, including
 - The available host `node` command reports v24.22.1; the application will run on Node.js 26 in Docker, avoiding a requirement to install Node 26 on the host.
 - The `sqlite3` CLI was not found. It is optional if the selected application driver manages the SQLite file.
 - Docker and Compose run the application at `http://localhost:3000`; `/` now renders the frosted interface preview. Health/readiness remain separate JSON endpoints. Financial services are explicitly disconnected and final money submissions are disabled.
+- After returning from the production preview, a stale Turbopack development
+  cache produced continuous Fast Refresh reloads despite HTTP 200 and a healthy
+  health endpoint. Recovery stopped only `app`, renamed `.next/dev` to
+  `.next/dev.pre-reload-loop-1794403311952` inside the generated-output volume,
+  and restarted development. No DB or source was removed. A real browser then
+  hydrated, remained stable for 300 animation frames with no further navigation
+  or page errors, and opened/edited Send money. Existing tabs may require one
+  hard refresh after generated chunks change. Health alone is not UI readiness.
 - Git is initialized on `main`; baseline commits separate ignore rules, feature requirements, architecture decisions, and vendored design tooling. Automatic Angular-style commits by intention are authorized; no remote or push is automatic.
-- Impeccable is installed locally without automatic hooks; its engine reports 4.8.2. Product context and code-first are in [PRODUCT.md](../PRODUCT.md) and `.impeccable/config.json`. The approved reference is in [DESIGN_REFERENCE.md](DESIGN_REFERENCE.md); the implementation contract is [WALLET_SURFACE.md](WALLET_SURFACE.md) and its `.impeccable/surfaces/` counterpart. The [review record](DESIGN_REVIEW.md) covers production captures, one corrected mobile navigation finding, and the reviewer's `ship` verdict at fix-list scope. [DESIGN.md](../DESIGN.md) and the version-2 sidecar capture the built system. Live-picker configuration has not been enabled automatically.
+- Impeccable is installed locally without automatic hooks; its engine reports 4.8.2. Product context and code-first are in [PRODUCT.md](../PRODUCT.md) and `.impeccable/config.json`. The original [reference approval](DESIGN_REFERENCE.md) retains material authority; [D-025](DECISIONS.md#d-025) and [WALLET_REDESIGN.md](WALLET_REDESIGN.md) own the new topology/interactions. [WALLET_SURFACE.md](WALLET_SURFACE.md) and its `.impeccable/surfaces/` counterpart carry the current contract and corrected user-pinned provenance. [DESIGN_REVIEW.md](DESIGN_REVIEW.md) distinguishes historical/current verdicts. DESIGN.md and the version-2 sidecar are refreshed to the built system. Live-picker configuration has not been enabled automatically.
 - The approximately 22 MB Impeccable Linux engine is excluded from Git and retained locally. `sh scripts/setup-impeccable.sh` restores the pinned, checksum-verified engine; online restoration and corrupt-source rejection were tested in isolation. See [TOOLING.md](TOOLING.md).
 - Host npm/network requests timed out during installation; a direct IPv4-first Node fetch succeeded, but the npm installer still stalled. The skill was installed with the verified cached official CLI and an official locally downloaded bundle. Diagnose Node 26/npm networking inside Docker before relying on dependency installs.
 - Icons8 MCP remains removed. Lucide supplies rendered icons and the favicon uses its wallet outline; no paid or fabricated payment branding is included.

@@ -1,7 +1,7 @@
 # Two-column wallet redesign
 
-**Status:** User-approved shape; implementation in progress under
-[T11-04](tasks/TASKS-11.md#t11-04). The user selected two columns, popup Send money
+**Status:** Implemented and verified under [T11-04](tasks/TASKS-11.md#t11-04).
+The user selected two columns, popup Send money
 from the left menu, icon navigation with tooltips, actual shadcn form foundations,
   and consistent styled theme/history controls, then said “Proceed with the redesign”.
 
@@ -45,3 +45,14 @@ production-browser tests, one manual detector pass, batched visual inspection,
 independent finish review, and design-document reconciliation. Critique findings
 are archived under `.impeccable/critique/`; the previous implementation remains a
 historical baseline, not this redesign's acceptance verdict.
+
+## Verified outcome
+
+Full Docker check and optimized build pass with **562 Jest tests**; **33 production
+Chromium checks** pass. All 24 captures were independently inspected. The initial
+`fix` disposition concerned provenance and stale design documentation, not a
+demonstrated visual defect. Both were scored resolved in the same reviewer's
+`ship` verdict at fix-list scope. The user chose Refresh for DESIGN.md and its
+version-2 component-preview sidecar. See [DESIGN_REVIEW.md](DESIGN_REVIEW.md) for
+scope and limitations, and [HANDOVER.md](HANDOVER.md) for the development-cache
+recovery. No financial submission or future connected feature was enabled.
