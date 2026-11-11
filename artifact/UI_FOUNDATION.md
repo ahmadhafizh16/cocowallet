@@ -4,7 +4,9 @@
 following the [two-column redesign brief](WALLET_REDESIGN.md), the retained
 [frosted identity](DESIGN_REFERENCE.md), [surface brief](WALLET_SURFACE.md), and
 [PRD-11](prd/PRD-11-interface.md). This is an interface-first implementation,
-not completion of funding, FX, accounts, history, or idempotency APIs.
+not completion of funding, FX, history, or idempotency APIs. The subsequent
+[backend read slice](BACKEND_READS.md) connects persistent account data without
+changing the visual system; further UI feedback is deferred.
 The later [T11-06](tasks/TASKS-11.md#t11-06) applies CocoWallet branding and
 bounded motion without changing these integration limits.
 
@@ -36,11 +38,13 @@ bounded motion without changing these integration limits.
 
 ## Honest data and operations
 
-`createPreviewOverview()` supplies **presentation-only** zero values for
-USD/EUR/GBP, empty history, and a main-account placeholder. It does not seed or
-query the database. The interface labels this boundary, including the total's
-“not a stored balance” note. Invalid values become unavailable, not zero. Nonzero
-cross-currency totals are unavailable without rates.
+`createPreviewOverview()` remains a **test-only** presentation fixture. The live
+dynamic page reads persistent accounts and journal balances, labels them
+“Balances connected,” and exposes the actual stored account ID. GET never seeds;
+explicit migration/seed commands initialize startup metadata with no funds. Main
+USD-only/zero totals require no FX; nonzero foreign balances make the total
+unavailable while individual balances remain visible. Invalid data is not zero,
+and unknown transaction history is explicitly disconnected, not empty activity.
 
 An always-mounted `OperationWorkspace` owns Deposit, Withdraw, Convert and Send
 money dialogs. Closing/reopening preserves separate drafts and reviews; reloading
@@ -61,7 +65,7 @@ durable idempotency are integrated. Client validation is not server security.
 - `src/app/loading.tsx` uses the real dashboard skeleton with matching panel
   geometry, one announcement, and noninteractive decorative placeholders.
 - There is **no fake/minimum-duration loader**. Next renders loading when needed;
-  the static preview is fast. Capture tests render the real loading component
+  no minimum loading delay is added. Capture tests render the real loading component
   independently to inspect its appearance.
 - `src/app/error.tsx` offers retry without exposing exceptions or claiming a known
   outcome. The branded 404 links to the overview. Error captures verify rendering,
@@ -98,8 +102,8 @@ and retained validation/review/privacy behavior.
 
 ### Current verification and scope
 
-The interface passes the full Docker check, including **648 Jest tests** and
-production build, plus **41 Chromium checks** against that build. Coverage includes
+The application passes the full Docker check, including **723 Jest tests** and
+production build, plus **43 Chromium checks** against that build. Coverage includes
 theme/storage, keyboard entry, draft/error focus, no financial submission, privacy,
 zero-balance/self-transfer errors, clipboard fallback, history reset, 404 navigation,
 reduced motion, loading/error rendering, and widths from 320 to 1769px. Destination

@@ -6,7 +6,9 @@ feature, root layout/loading/error boundaries, and shared UI/theme components.
 The user approved a two-column refinement after critiquing the initial frosted
 shell: icon rail with tooltips, popup money workflows, and consistent actual
 shadcn foundations. See `artifact/WALLET_REDESIGN.md`. The job remains inspecting
-preview balances and exploring simulated forms, not connecting money services.
+journal-backed balance snapshots and exploring local money drafts. The user has
+paused visual feedback while backend reads are integrated; money submission stays
+disconnected. See `artifact/BACKEND_READS.md`.
 
 ## Direction contract
 
@@ -28,7 +30,7 @@ dialog, enter/review a preserved draft, then return to the overview without fake
 success or repeated global disclaimers.
 
 **FIRST VIEWPORT:** Compact icon rail; restrained topbar with themed account and
-theme menus; one preview notice. Wide left column holds total/actions and compact
+theme menus; one truthful connection notice. Wide left column holds total/actions and compact
 empty history; right holds currency wallets with count/default integrated. No
 third column, large account sheet, or disconnected conversion teaser. Dialogs
 appear only on action. Mobile stacks the content and keeps labelled navigation.
@@ -56,8 +58,10 @@ incorrect and is withdrawn; this machine's seed support was not unavailable.
   explained before confirmation and cannot mutate data or claim success.
 - Preserve drafts on validation and dialog close/reopen; money stays decimal text.
   Registry-derived shadcn/Radix controls own menus, tooltips, fields and overlays.
-- Preview data is presentation-only. Account creation, actual destination lists,
-  real balances, rates/quotes, and operation outcomes remain future integration.
+- The live page reads persistent accounts, destination lists and journal balances
+  from one server snapshot. Test-only preview data is not a runtime fallback.
+  Financial HTTP writes, rates/quotes, history and operation outcomes remain
+  future integration; unknown values stay unavailable, not fabricated zero.
 - The scene is a local evaluation at a desk or on a phone under normal ambient
   light; light follows the supplied reference, dark follows system/user preference.
 
@@ -65,6 +69,7 @@ incorrect and is withdrawn; this machine's seed support was not unavailable.
 
 T11-04 implements this contract; T11-06 applies branding and bounded motion.
 T11-07 adds the requested flags, gradient/history presentation and clearer headings.
+T03-01 connects stored account/balance reads without changing that visual system.
 `artifact/UI_FOUNDATION.md` records current
 behavior and integration limits; `artifact/DESIGN_REVIEW.md` distinguishes current
 review from the historical three-column baseline. Financial services remain

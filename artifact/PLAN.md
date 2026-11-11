@@ -1,6 +1,6 @@
 # Proposed implementation plan
 
-**Status:** Platform, money/journal core, and the interface-first shell are verified. The two-column/dialog refinement, CocoWallet branding/motion and T11-07's flags, gradient/history card and clearer headings are complete, with production checks, bounded review and current design records. Account data and API integration remain next. Individual task statuses are in [KANBAN.md](KANBAN.md); [PRD.md](PRD.md) links task groups to feature PRDs and decisions. Follow the Angular-style, one-intention-per-commit rule in [D-021](DECISIONS.md#d-021) and Git setup in [D-022](DECISIONS.md#d-022). See [READINESS.md](READINESS.md) for feature-stage checks.
+**Status:** The platform, exact journal core, interface and first backend integration slice are verified. T03-01 initializes persistent accounts/startup wallets and connects read APIs plus the dynamic overview. UI refinements are deferred. Next are durable idempotency/write contracts and connected financial workflows; catalog/FX/full valuation/history remain separate tasks. Individual statuses are in [KANBAN.md](KANBAN.md); [PRD.md](PRD.md) links tasks to PRDs and decisions. Follow Angular-style local commits in [D-021](DECISIONS.md#d-021)/[D-022](DECISIONS.md#d-022) and feature-stage checks in [READINESS.md](READINESS.md).
 
 ## Tasks
 

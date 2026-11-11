@@ -1,6 +1,6 @@
 # PRD-03 — Accounts, wallets, and balances
 
-**Status:** Draft; no account or wallet implementation exists.  
+**Status:** Persistent main-account setup and account/wallet read integration are implemented under [D-029](../DECISIONS.md#d-029), with verification recorded in [BACKEND_READS.md](../BACKEND_READS.md). Wallet/default management and reference-rate valuation remain future work.
 **Decisions:** [D-003](../DECISIONS.md#d-003), [D-004](../DECISIONS.md#d-004), [D-011](../DECISIONS.md#d-011), [D-018](../DECISIONS.md#d-018).  
 **Tasks:** [T03-01–T03-03](../tasks/TASKS-03.md).  
 **Diagram:** [Logical data relationships](../DIAGRAMS.md#logical-data-relationships).
@@ -30,3 +30,15 @@
 - [O-004](../DECISIONS.md#o-004): whether destination inspection includes a USD total, and what happens when a new main default currency does not have a wallet.
 - [O-005](../DECISIONS.md#o-005): behavior when Frankfurter's currency catalog is unavailable. Unsupported conversion pairs must be handled even when both fiat codes exist in the catalog.
 - Test duplicate-wallet races, account-switching state, missing accounts, zero-balance totals, persistence, and direct API attempts against read-only destinations.
+
+## Implemented read slice
+
+Explicit `db:seed` creates only missing startup metadata/accounts/wallets in one
+immediate transaction, never funds. Stored defaults/IDs/balances survive repeated
+and concurrent initialization. GET account/wallet services expose inspect-only
+roles and snapshot-consistent exact journal amounts. The dynamic overview uses
+these records rather than preview identities. USD-only/zero main totals need no
+FX; nonzero foreign balances make the combined total unavailable, not partial.
+Destination valuation stays unresolved, and the current overview supports only
+USD/EUR/GBP even though generic read APIs retain pinned accounting precision.
+No add-wallet/default-edit/money HTTP endpoint is completed by this milestone.

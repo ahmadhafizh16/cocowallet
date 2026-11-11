@@ -142,6 +142,16 @@ card headings and recognizable visual cues; increase title size/weight and add
 purpose-specific Lucide icons without altering factual labels or layout topology.
 See [BALANCE_CARD.md](BALANCE_CARD.md).
 
+### D-029
+
+**Start backend integration; defer visual feedback:** The user paused further UI
+refinements and authorized backend implementation/integration. Start with the
+planned persistent main-account setup, read-only account/wallet APIs and a dynamic
+journal-backed overview. Finalize the two read routes documented in
+[BACKEND_READS.md](BACKEND_READS.md); O-003's write/quote/history contracts and
+O-006's durable-result details remain open. Do not enable financial submission,
+invent rates/history or change the visual design while those stages are pending.
+
 ## Questions and resolutions
 
 ### O-001
@@ -154,7 +164,7 @@ See [BALANCE_CARD.md](BALANCE_CARD.md).
 
 ### O-003
 
-**API details:** Finalize route names, request/response shapes, quote creation/confirmation contract, OpenAPI generator, filtering/pagination, and error types. Candidate routes are proposals in [API_DESIGN.md](API_DESIGN.md), not implemented endpoints.
+**API details:** D-029 finalizes the implemented account/wallet GET contracts and hand-maintained read-only OpenAPI document. Remaining write/history route shapes, quote creation/confirmation, write-schema generator, filtering/pagination and errors stay open in [API_DESIGN.md](API_DESIGN.md). Swagger UI is not implemented.
 
 ### O-004
 

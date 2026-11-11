@@ -1,6 +1,6 @@
 # Architecture and flow diagrams
 
-**Status:** The platform, money/journal core, and interface-preview shell are implemented and tested. Financial HTTP operations, quotes, production idempotency, and their connected UI flows remain future features. The [decision register](DECISIONS.md) is authoritative when a diagram and an open question conflict.
+**Status:** The platform, money/journal core, persistent account/read services and connected read-only overview are implemented. Financial HTTP operations, quotes, durable idempotency and their connected UI flows remain future features. The [decision register](DECISIONS.md) is authoritative when a diagram and an open question conflict.
 
 ## Implemented foundation flow
 
@@ -9,17 +9,25 @@ flowchart LR
     Local[Local browser or API client] -->|127.0.0.1:3000| Next[Next.js on Node 26 in Docker]
     Next --> Health[GET /api/health: liveness]
     Next --> Ready[GET /api/ready: schema readiness]
+    Next --> Reads[GET accounts and account wallets]
+    Next --> Spec[GET /api/openapi: read contract]
+    Reads --> Services[Account metadata and snapshot journal reads]
+    Services --> Runtime
     Ready --> Runtime[src/server/db/runtime.ts]
     Runtime --> Connection[connection.ts: Drizzle and better-sqlite3]
     CLI[npm run db:migrate] --> Migrations[Committed Drizzle SQL and metadata]
     Migrations --> Connection
+    Seed[npm run db:seed: explicit atomic initialization] --> Connection
     Connection --> SQLite[(SQLite metadata and journal schema)]
     SQLite --- Volume[Persistent wallet-data volume]
     Jest[Jest: isolated temporary databases] --> Connection
     Browser[Playwright: pinned Chromium container] -->|wallet.test:3000| Next
 ```
 
-The application database contains operational metadata, migration tracking, and the accounting schema; account/wallet/transaction tables are empty because seeding and HTTP flows remain future work. Ordinary unit/integration tests create their own temporary files and cannot use the configured runtime connection. The following sections distinguish implemented core behavior from future feature integration.
+The application database contains one explicitly initialized main account and
+three startup wallets; no transactions or journal entries were seeded. Ordinary
+unit/integration tests use isolated databases and cannot use the runtime connection.
+The following sections distinguish implemented reads from future financial writes.
 
 ## Implemented interface-first boundary
 
@@ -28,8 +36,8 @@ Tasks: [T11-02](tasks/TASKS-11.md#t11-02), [T11-04](tasks/TASKS-11.md#t11-04), [
 
 ```mermaid
 flowchart LR
-    Browser[Local browser] --> Page[GET /: wallet preview]
-    Page --> Model[Explicit presentation-only zero state]
+    Browser[Local browser] --> Page[GET /: dynamic stored-balance overview]
+    Page --> Model[Server read snapshot: persistent accounts and exact balances]
     Model --> Shell[Two-column frosted overview]
     Shell --> Brand[CocoWallet SVG, matching favicon and metadata]
     Shell --> Card[Navy-gradient total and currency flags; larger icon-led headings]
@@ -44,12 +52,12 @@ flowchart LR
     Page --> Error[Error boundary: retry without outcome claims]
     Shell --> Theme[System/light/dark display preference]
     Theme --> Storage[Browser preference storage, with fallback]
-    Core[Existing journal core] -. future service/API integration .-> Shell
+    Core[Existing journal core] --> Model
 ```
 
-The preview does not query/seed wallet data, invent a rate or completed history,
-or send financial requests. Destination fixtures test account isolation and
-inspect-only presentation without creating actual application destinations.
+GET reads never seed wallet data, invent a rate/history or send financial writes.
+Destination fixtures verify service-level account isolation/inspect-only behavior;
+creating destinations through HTTP transfers remains future work.
 
 ## System and Docker boundary
 

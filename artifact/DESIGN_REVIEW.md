@@ -1,6 +1,25 @@
 # Wallet shell design review
 
-## T11-07 — gradient card, flags and clearer headings (current)
+## T03-01 — backend read integration (current functional checkpoint)
+
+The user paused visual feedback. This stage changes the data source and factual
+connection labels, not CSS, tokens, layout, branding or motion. The existing
+visual reference matrix is refreshed by **43 production Chromium checks**;
+the full Docker check/build passes **723 Jest tests** after correction. The live
+page shows stored account identity/journal balances and explicitly disconnected
+money/history services, not fabricated empty transaction data. Preview factories
+and populated-history fixtures remain test-only.
+
+A bounded independent backend review found two P2s: unusual IDs could mutate the
+prototype of the account-total dictionary; fresh-install instructions omitted the
+now-required explicit seed. `Object.fromEntries` plus three special-key regressions
+preserve own properties/normal prototype/JSON transport. Setup and connection
+docs now require migrate → seed → start. The reviewer marked both resolved after
+source review. Full build/Jest/Chromium verification was repeated afterward.
+No fresh visual redesign verdict, detector clean count, global security/WCAG
+certification or completed-backend claim follows. See [BACKEND_READS.md](BACKEND_READS.md).
+
+## T11-07 — historical gradient-card/heading checkpoint
 
 **Scope:** The user requested US/EU/UK-style currency markers, a distinct navy
 gradient balance card with history, then larger card headings and recognizable

@@ -230,6 +230,8 @@ Workhorse system typography, purposeful Lucide icons, and restrained navy accent
 
 The user-requested [balance-card refinement](artifact/BALANCE_CARD.md) adds one opaque navy-gradient anchor, identical in light and dark themes, and locally authored currency flags. The surrounding frosted world remains unchanged. Balance history shows only supplied recorded values; when future data is absent, show no new figures or trend.
 
+The later [backend read integration](artifact/BACKEND_READS.md) preserves these visual rules while replacing runtime preview identities/balances with stored journal snapshots. Connection notices and balance labels now distinguish connected reads from unimplemented money/history services. Further visual feedback is deferred; component examples remain illustrative, not database seed data.
+
 **Key Characteristics:**
 
 - Icy-blue glass and a diffuse navy backdrop.

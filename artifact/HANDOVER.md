@@ -1,6 +1,6 @@
 # Handover
 
-**Status:** Fourteen of 36 tasks are closed, including T11-07's currency flags, gradient balance/history presentation and clearer icon-led headings. Production checks, bounded review, design records and warning-free development are verified. The board has 22 To do, 0 In progress, and 14 Done. Money-moving APIs, full idempotency, FX integration, Swagger, populated connected history, and account seeding remain unimplemented.
+**Status:** Fifteen of 36 tasks are closed. T03-01 connects persistent accounts/startup wallets, account/wallet read APIs and the journal-backed overview. The board has 21 To do, 0 In progress, and 15 Done. Visual feedback is deferred. Money-moving APIs, durable idempotency, FX/full valuation, Swagger UI and populated connected history remain unimplemented.
 
 ## Implemented modules and commands
 
@@ -18,12 +18,15 @@
 | `src/features/money/currency-precision.*` | Pinned, attributed accounting exponents; unknown/unspecified codes fail closed. [Provenance](CURRENCY_METADATA.md). |
 | `src/features/journal/balances.ts` | Stream exact per-wallet bigint balances; account reads share one snapshot and validate final bounds. |
 | `src/features/journal/write.ts` | Top-level synchronous immediate-write boundary; main-only accounting, exact credits, funds checks, atomic creation/entries, and a technical-success integration seam. [Contract](JOURNAL.md). |
+| `src/features/accounts/`, `scripts/seed.ts` | Explicit repeatable atomic account/startup-wallet initialization; account metadata and exact snapshot balance reads; no seeded journal entries. |
+| `src/app/api/accounts/`, `src/server/http/`, `src/app/api/openapi/` | Thin uncached account/wallet GETs, safe read Problem Details and hand-maintained OpenAPI read contract. No financial mutation route or Swagger UI. |
+| `src/server/wallet-overview.ts` | Dynamic-page adapter, prototype-safe account totals, exact rate-free main USD totals, unavailable FX/destination valuation, no dropped unsupported currencies. |
 | `components.json`, `postcss.config.mjs`, `src/lib/utils.ts` | shadcn/Lucide/Tailwind configuration and tested class helper used by the local UI components. |
 | `src/components/ui/` | Registry-derived shadcn Button/Card/Dialog/DropdownMenu/Tooltip/Field/Label/Badge/Separator/Input/Select/Skeleton with frosted semantic tokens, keyboard/focus handling, and retained upstream MIT notice. |
 | `src/components/brand/`, `public/brand/`, `src/app/icon.svg` | Approved CocoWallet inline vector logo, theme-aware wordmark, unchanged downloadable variants, and matching favicon. |
 | `src/features/theme/`, `src/app/globals.css` | Approved frosted tokens, light/dark/system preference, pre-paint theme bootstrap, storage fallback, and reduced-motion styles. |
-| `src/app/page.tsx`, `layout.tsx`, `loading.tsx`, `error.tsx`, `not-found.tsx` | HTML wallet preview, styles/metadata, skip link, loading/error boundaries, and branded 404; replaces the former root JSON route. |
-| `src/features/wallet/` | Two-column overview, tooltip icon rail, labelled mobile Actions, account-scoped preview data, always-mounted draft-preserving money dialogs, exact validation/review, inspect-only presentation, and matching skeleton; no DB/API mutation. |
+| `src/app/page.tsx`, `layout.tsx`, `loading.tsx`, `error.tsx`, `not-found.tsx` | Dynamic Node stored-balance overview, styles/metadata, skip link, loading/error boundaries and branded 404. No build-time DB read/seed. |
+| `src/features/wallet/` | Existing overview, navigation, account-scoped stored snapshots, always-mounted local money drafts, exact validation/review, privacy and matching skeleton; final submissions disabled. Preview factory is test-only. |
 | `src/features/wallet/balance-history.tsx`, `currency-flag.tsx` | Validated account-scoped recorded-USD chart and exact-value disclosure; honest disconnected/private states; deterministic local currency vectors. No history source or valuation service is connected. |
 | `DESIGN.md`, `.impeccable/design.json` | Extracted light/dark visual tokens, canonical design guidance, and version-2 component-preview extensions; actual application styles remain in source CSS. |
 | `scripts/check-artifacts.mjs` | Checks Markdown links, decision/task references, board status alignment, and task dependency cycles. |
@@ -34,6 +37,7 @@ Fresh local setup and checks:
 docker compose build app
 docker compose run --rm app npm ci
 docker compose run --rm app npm run db:migrate
+docker compose run --rm app npm run db:seed
 docker compose up -d app
 docker compose --profile test build browser-tests
 docker compose --profile test run --rm browser-tests
@@ -43,9 +47,9 @@ Stop the dev compiler before `docker compose run --rm app npm run check`, then u
 
 Application DB: `/app/data/wallet.sqlite` in Compose's `wallet-data` volume. Tests use isolated temporary SQLite files. Normal shutdown is `docker compose down` without deleting volumes. Before applying journal migrations, the stopped app's database was backed up with SQLite's backup API to `/app/data/wallet.sqlite.pre-journal-1794390597589.bak`. Backup creation is verified; a full restore drill is not claimed.
 
-Latest card/heading verification: the full Docker check passes artifact validation, formatting, lint, types, **648 Jest tests**, and production build; **41 Chromium tests** pass against that build (3 card/history, 5 branding/motion, 2 foundation, 17 interaction, 12 shell, 2 visual). See [UI_FOUNDATION.md](UI_FOUNDATION.md) and [BALANCE_CARD.md](BALANCE_CARD.md) for coverage and commands. No packages, accounting code, schema, or DB data changed. Earlier journal checks applied/repeated all three migrations, checked integrity/foreign keys, and confirmed zero stored accounts/transactions. UI checks do not seed or move money. Earlier foundation checks covered clean `npm ci` and recreation persistence. The last production npm audit was clean; 23 low/moderate development-tool findings remain in [DEPENDENCIES.md](DEPENDENCIES.md).
+Latest backend-read verification: the full Docker check passes artifact validation, formatting, lint, types, **723 Jest tests**, and production build; **43 Chromium tests** pass against that build (2 account/API, 3 card/history, 5 branding/motion, 2 foundation, 17 interaction, 12 shell, 2 visual). See [BACKEND_READS.md](BACKEND_READS.md) for scope and commands. No package dependency, accounting core/schema, CSS, branding or motion changed. Explicit backed-up initialization now stores one main account and three wallets, with zero transactions/journal entries. Unit/integration fixtures remain isolated; browser/API reads do not seed or move money. Earlier foundation checks covered clean `npm ci` and recreation persistence. The last production npm audit was clean; 23 low/moderate development-tool findings remain in [DEPENDENCIES.md](DEPENDENCIES.md).
 
-Artifact validation verifies **49 documents / 36 tasks**. The previous
+Artifact validation verifies **50 documents / 36 tasks**. The previous
 T11-02 design-extraction counts and verdict are historical, not certification of
 T11-04. Current production captures include desktop light/dark, 1688/1769px,
 tablet, mobile, dialogs/menus, validation/review, loading and errors. Independent
@@ -97,7 +101,14 @@ The atomic-write checkpoint passes 16 feature-local integration tests, including
 - The workspace was empty before the draft documents were added.
 - The available host `node` command reports v24.22.1; the application will run on Node.js 26 in Docker, avoiding a requirement to install Node 26 on the host.
 - The `sqlite3` CLI was not found. It is optional if the selected application driver manages the SQLite file.
-- Docker and Compose run the application at `http://localhost:3000`; `/` now renders the frosted interface preview. Health/readiness remain separate JSON endpoints. Financial services are explicitly disconnected and final money submissions are disabled.
+- Docker and Compose run the application at `http://localhost:3000`; `/` renders the stored-balance read-only overview. Health/readiness remain separate JSON endpoints. Financial submissions, FX and history remain disconnected.
+- T03-01 changes `/` to the dynamic journal-backed read-only overview. Startup
+  now requires explicit `db:migrate` then `db:seed`; GET and build never seed.
+  Before initialization, SQLite's backup API saved
+  `/app/data/wallet.sqlite.pre-account-integration-1794410597278.bak`. The source
+  was empty and integrity/FK checks passed. Two seed runs and fresh production
+  containers preserve one identity and 1 account / 3 wallets / 0 transactions /
+  0 journal entries. No restore drill is claimed.
 - After returning from the production preview, a stale Turbopack development
   cache produced continuous Fast Refresh reloads despite HTTP 200 and a healthy
   health endpoint. Recovery stopped only `app`, renamed `.next/dev` to
@@ -120,6 +131,9 @@ The atomic-write checkpoint passes 16 feature-local integration tests, including
   hydration, 300 stable frames, zero additional reloads/page/console errors,
   larger headings, all three flags, honest missing history and working theme/
   deposit controls. No database or source was removed.
+- T03-01 development recovery retained `.next/dev.pre-account-reads-1794411067932`
+  and verified stored API/menu identity, an interactive draft, 300 stable frames,
+  zero additional reloads, page errors or console errors. Persistent data stayed.
 - Git is initialized on `main`; baseline commits separate ignore rules, feature requirements, architecture decisions, and vendored design tooling. Automatic Angular-style commits by intention are authorized; no remote or push is automatic.
 - Impeccable is installed locally without automatic hooks; its engine reports 4.8.2. Product context and code-first are in [PRODUCT.md](../PRODUCT.md) and `.impeccable/config.json`. The original [reference approval](DESIGN_REFERENCE.md) retains material authority; [D-025](DECISIONS.md#d-025) and [WALLET_REDESIGN.md](WALLET_REDESIGN.md) own the new topology/interactions. [WALLET_SURFACE.md](WALLET_SURFACE.md) and its `.impeccable/surfaces/` counterpart carry the current contract and corrected user-pinned provenance. [DESIGN_REVIEW.md](DESIGN_REVIEW.md) distinguishes historical/current verdicts. DESIGN.md and the version-2 sidecar are refreshed to the built system. Live-picker configuration has not been enabled automatically.
 - The approximately 22 MB Impeccable Linux engine is excluded from Git and retained locally. `sh scripts/setup-impeccable.sh` restores the pinned, checksum-verified engine; online restoration and corrupt-source rejection were tested in isolation. See [TOOLING.md](TOOLING.md).
@@ -157,4 +171,9 @@ Tests open their own temporary database through `openDatabase`, apply committed 
 
 ## Next steps
 
-Next is actual account data and service/API integration, starting with main-account seeding and account-scoped balance reads under [Tasks 03](tasks/TASKS-03.md). Resolve the relevant API/idempotency questions before enabling money submission. Preserve the reviewed shell and replace explicit preview data only with verified server data; do not enable its final actions as a cosmetic change. Follow the [plan](PLAN.md), [readiness checklist](READINESS.md), and [kanban](KANBAN.md), and keep this handover grounded in implemented paths and verified commands.
+Next are durable idempotency/write contracts and deposits/withdrawals, followed by
+catalog/FX quotes, conversion/transfer and completed history in dependency order.
+T03-02/T03-03 and T10-01–03 retain partial/future work; read integration does not
+close them. Resolve O-003/O-006 before enabling submissions. Preserve the current
+UI while visual feedback is deferred; do not enable final actions cosmetically.
+Follow [PLAN.md](PLAN.md), [READINESS.md](READINESS.md), and [KANBAN.md](KANBAN.md).

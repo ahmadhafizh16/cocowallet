@@ -1,8 +1,8 @@
 # Project kanban
 
-**Last updated:** T11-07 is complete: currency flags, a shared-theme navy-gradient balance card, truthful history presentation and larger icon-led card headings. Production checks, bounded review and stable development verification pass. Account data, wallet APIs, and idempotency integration remain future work.
+**Last updated:** Visual feedback is deferred. T03-01 is complete: persistent main-account setup, account/wallet read APIs and journal-backed overview integration pass review and production checks. Financial submissions, FX, history and durable idempotency remain separate stages.
 
-**Scope:** 36 implementation tasks: **22 to do**, **0 in progress**, **0 blocked**, **14 done**. Planning activities completed below do not count as implemented features.
+**Scope:** 36 implementation tasks: **21 to do**, **0 in progress**, **0 blocked**, **15 done**. Planning activities completed below do not count as implemented features.
 
 Each task links to its detailed description, source PRD, decision IDs, dependencies, and acceptance tests. The Angular-style, one-intention-per-commit rule and local Git workflow in [D-021](DECISIONS.md#d-021) and [D-022](DECISIONS.md#d-022) apply to every task. A task moves to **Done** only when its acceptance criteria are verified and the PRD, decisions, diagrams, API documentation, and handover are updated as needed.
 
@@ -22,7 +22,6 @@ See Done for the verified money/journal core.
 
 ### Accounts and wallets — [PRD-03](prd/PRD-03-accounts.md)
 
-- [ ] [T03-01](tasks/TASKS-03.md#t03-01) — Main-account seed and account switcher data.
 - [ ] [T03-02](tasks/TASKS-03.md#t03-02) — Fiat wallets and default-currency management.
 - [ ] [T03-03](tasks/TASKS-03.md#t03-03) — Balance views and approximate USD total.
 
@@ -76,7 +75,7 @@ See Done for the approved direction and verified interface-preview foundation.
 
 ## In progress
 
-_No task is currently in progress at this interface-preview checkpoint._
+_No task is currently in progress at this connected-read checkpoint._
 
 ## Blocked
 
@@ -98,6 +97,7 @@ _No task is currently blocked by an explicit unresolved decision or external blo
 - [x] [T11-05](tasks/TASKS-11.md#t11-05) — CocoWallet full/inverse/icon SVG assets; self-contained vectors, XML/browser checks, and light/dark/small-size inspection. No automatic app integration.
 - [x] [T11-06](tasks/TASKS-11.md#t11-06) — Applied CocoWallet branding and continuous, reduced-motion-aware interaction transitions; 572 Jest / 38 production Chromium tests, scoped fix verdict, and current design notes.
 - [x] [T11-07](tasks/TASKS-11.md#t11-07) — Currency flags, gradient balance/history card and larger icon-led headings; 648 Jest / 41 production Chromium tests, scoped ship verdict and warning-free development.
+- [x] [T03-01](tasks/TASKS-03.md#t03-01) — Persistent main-account setup, account/wallet read APIs and journal-backed overview; 723 Jest / 43 production Chromium checks, review fixes verified, backup and repeatable seed confirmed.
 
 ## Done — planning only
 

@@ -2,7 +2,7 @@
 
 A local-only multi-currency wallet simulation built with Next.js and Node 26. Product requirements, decisions, diagrams, and progress are in [`artifact/`](artifact/README.md).
 
-**Current milestone:** The two-column interface includes CocoWallet branding, currency flags, a navy-gradient balance card, clearer icon-led headings, draft-preserving dialogs, themes, and reduced-motion-aware transitions. Balance history plots only supplied recorded totals; the preview honestly shows “History not connected.” Wallet services and account seeding remain disconnected; actions cannot submit money or change balances. See [`artifact/UI_FOUNDATION.md`](artifact/UI_FOUNDATION.md) and [`artifact/BALANCE_CARD.md`](artifact/BALANCE_CARD.md).
+**Current milestone:** Persistent accounts and exact journal-derived balances now power the existing overview. Explicit repeatable seeding creates one main account and zero-balance USD/EUR/GBP wallets without resetting stored data. Read APIs and their OpenAPI document are available; financial submissions, FX and history remain disconnected. UI refinements are deferred. See [`artifact/BACKEND_READS.md`](artifact/BACKEND_READS.md).
 
 ## Development environment
 
@@ -12,12 +12,15 @@ Requirements: Docker Engine and Docker Compose. Host Node 26 is not required.
 docker compose build app
 docker compose run --rm app npm ci
 docker compose run --rm app npm run db:migrate
+docker compose run --rm app npm run db:seed
 docker compose up -d app
 ```
 
 Open `http://localhost:3000/api/health` for the health endpoint. Use `APP_PORT=3100 docker compose up -d app` if port 3000 is already occupied.
 
-`/api/ready` verifies SQLite and its migrated metadata table; it is not a full application-schema version check. Three migrations now create operational metadata, account/wallet/completed-transaction/journal tables, and accounting invariants. Migration application is safe to repeat and runs explicitly rather than during a page request or production build. No accounts or funds are seeded yet.
+`/api/ready` verifies SQLite and its migrated metadata table; it is not a full application-schema version or seeded-account check. Three migrations create operational metadata, account/wallet/completed-transaction/journal tables, and accounting invariants. Migration and seed commands are safe to repeat and run explicitly, never during a GET request or production build. Seeding creates missing startup accounts/wallets, never funds or transaction history. On a fresh database, both commands are required before opening `/`.
+
+Read APIs: `GET /api/accounts`, `GET /api/accounts/{accountId}/wallets`, and the read-only specification at `GET /api/openapi`. Wallet amounts are exact minor-unit strings; responses are not cached. Swagger UI and financial endpoints are not implemented yet.
 
 The application service runs as the non-root `node` user. It uses separate named volumes for Linux dependencies, Next.js output, and SQLite data, so host dependencies cannot overwrite native modules in the container. The host port is bound to `127.0.0.1`; this no-auth simulation must not be exposed publicly.
 
@@ -44,7 +47,7 @@ The Playwright image runs Node 26 with its pinned Chromium and required Linux li
 so Next's private-network HMR handshake does not block client hydration. It does
 not allow arbitrary origins or change the localhost-only host-port binding.
 
-Jest covers exact accounting and interface presentation/validation. Chromium checks theme/storage, responsive and keyboard behavior, draft review, privacy, and honest loading/error/empty states—not connected payment journeys. See [`artifact/UI_FOUNDATION.md`](artifact/UI_FOUNDATION.md), [`artifact/HANDOVER.md`](artifact/HANDOVER.md), and [`artifact/DEPENDENCIES.md`](artifact/DEPENDENCIES.md) for evidence and limitations.
+Jest covers exact accounting, atomic/repeated/concurrent seeding, snapshot reads, safe API contracts and interface validation. Chromium checks stored account identity, read APIs, theme/storage, responsive/keyboard behavior, draft review and privacy—not connected payment journeys. See [`artifact/BACKEND_READS.md`](artifact/BACKEND_READS.md), [`artifact/HANDOVER.md`](artifact/HANDOVER.md), and [`artifact/DEPENDENCIES.md`](artifact/DEPENDENCIES.md) for evidence and limitations.
 
 For the complete local check (including a production build), stop the development compiler first:
 
@@ -56,7 +59,7 @@ docker compose up -d app
 
 Generate a migration after an intentional schema change with `docker compose run --rm app npm run db:generate -- --name=descriptive_name`, review/commit the generated SQL and metadata, then apply it with `npm run db:migrate` in the container. Never use schema-push or a volume reset as a substitute for a reviewed migration.
 
-The wallet uses local shadcn-style components, Radix primitives, Lucide icons, and the approved frosted direction. `globals.css` is attached through the root layout. The model is marked as preview and does not seed or read database balances; loading is not artificially delayed to show skeletons.
+The wallet retains its existing shadcn/Radix controls, Lucide icons, branding and frosted layout. The dynamic root page reads stored balances through server services; `createPreviewOverview()` is test-only. Money forms still review local drafts and cannot submit operations. Loading is not artificially delayed to show skeletons.
 
 Stop the development service before building against the same Next output volume to avoid two compilers writing there at once. Existing planning files and the design skill are preserved. Node 26 is enforced by npm; TypeScript 5.9 is pinned for the initial verified Next.js toolchain rather than adopting a new TypeScript major by default.
 

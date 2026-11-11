@@ -1,19 +1,23 @@
 # HTTP API design: draft
 
-**Status:** Wallet endpoint names/payloads remain proposals; OpenAPI/Swagger is not implemented. The operational routes below exist and are tested.
+**Status:** Account/wallet read routes and a read-only OpenAPI document are implemented under [D-029](DECISIONS.md#d-029). Financial routes, quote/history contracts, write-schema generation and Swagger UI remain proposals/future work. See [BACKEND_READS.md](BACKEND_READS.md).
 
 ## Implemented operational endpoints
 
 | Method | Route | Result |
 | --- | --- | --- |
-| GET | `/` | HTML frosted wallet preview; not a financial API or connected wallet-data response. |
+| GET | `/` | Dynamic Node server-rendered overview backed by persisted accounts and journal balances; money submissions/history remain disconnected. |
 | GET | `/api/health` | 200 JSON liveness response with `Cache-Control: no-store`. |
 | GET | `/api/ready` | 200 JSON when the migrated metadata table is readable; otherwise 503 Problem Details with `DATABASE_NOT_READY`. |
+| GET | `/api/accounts` | Persistent main account and destinations; role/default/creation time/inspect-only metadata. |
+| GET | `/api/accounts/{accountId}/wallets` | One account and its snapshot-consistent exact balances as decimal minor-unit strings. |
+| GET | `/api/openapi` | OpenAPI 3.1 document for implemented read/operational routes only; not Swagger UI. |
 
-Operational routes are in `src/app/`; Jest tests verify health and readiness, including an isolated unmigrated database failure. The wallet candidate routes below have not been implemented or finalized.
+Routes are in `src/app/`; Jest tests verify isolated database reads, safe errors and read-response/spec agreement. Wallet GETs never seed or mutate storage and return `Cache-Control: no-store`. Missing initialization/storage is 503, unknown account is 404, empty/null-character path ID is 400. Read codes are `ACCOUNT_NOT_INITIALIZED`, `WALLET_DATA_UNAVAILABLE`, `ACCOUNT_NOT_FOUND` and `INVALID_ACCOUNT_ID`; all use safe Problem Details. Unsupported methods retain Next.js's 405 with no mutation/body contract. See [the fixed read shapes](BACKEND_READS.md).
 
-The [interface-first shell](UI_FOUNDATION.md) validates/reviews local drafts but
-cannot submit money. Preview fields are not finalized HTTP contracts.
+The [interface](UI_FOUNDATION.md) now reads stored balances but validates/reviews
+money drafts locally and cannot submit money. Form fields are not finalized write
+contracts. Operational readiness does not imply accounts have been seeded.
 
 **Decision references:** [D-003](DECISIONS.md#d-003), [D-007](DECISIONS.md#d-007), [D-008](DECISIONS.md#d-008), [D-010](DECISIONS.md#d-010), [D-017](DECISIONS.md#d-017), [D-018](DECISIONS.md#d-018), and [D-019](DECISIONS.md#d-019). Detailed requirements and tasks: [PRD-10](prd/PRD-10-api.md) and [Tasks 10](tasks/TASKS-10.md).
 
@@ -29,8 +33,6 @@ cannot submit money. Preview fields are not finalized HTTP contracts.
 
 | Method | Example route | Purpose |
 | --- | --- | --- |
-| GET | `/api/accounts` | List the main account and simulated destinations for the switcher. |
-| GET | `/api/accounts/{accountId}/wallets` | Inspect an account's currency balances. |
 | POST | `/api/wallets` | Add a supported fiat wallet to the main account. |
 | PATCH | `/api/accounts/{accountId}/default-currency` | Change the main account's default currency; destinations are read-only. |
 | GET | `/api/currencies` | List available fiat currencies. |
@@ -42,7 +44,9 @@ cannot submit money. Preview fields are not finalized HTTP contracts.
 | GET | `/api/transactions` | List/filter an account's transactions. |
 | GET | `/api/transactions/{transactionId}` | Inspect an individual transaction. |
 
-These examples are not a finalized route contract. Decide account-default updates, exact quote shapes, pagination, and resource names before implementation.
+These remaining examples are not finalized write/history contracts. The two
+account GETs above are implemented; decide default updates, quote shapes,
+pagination and remaining resource names before implementing their routes.
 
 ## Proposed request/response contract
 

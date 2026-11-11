@@ -40,7 +40,7 @@ and larger icon-led card headings. See [BALANCE_CARD.md](../BALANCE_CARD.md).
 
 Coordinate with each feature PRD for actual form behavior. Test accessible names and focus, theme switching, reduced motion, narrow layouts, and error states. [O-004](../DECISIONS.md#o-004) covers destination USD-total display; [O-005](../DECISIONS.md#o-005) covers operational ambiguities.
 
-Current card/heading evidence: **648 Jest tests and 41 production Chromium checks**
+Current application evidence: **723 Jest tests and 43 production Chromium checks**
 pass, including dialog focus/drafts, keyboard menus, utility controls, privacy,
 validation, 320–1769px layouts, actual animation lifecycle, interruption, and
 reduced-motion paths. This is not comprehensive WCAG certification.

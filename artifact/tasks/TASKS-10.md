@@ -14,6 +14,11 @@ Status is mirrored in [KANBAN.md](../KANBAN.md).
 
 **Acceptance and tests:** Handler tests cover malformed requests, missing resources, domain conflicts, no eligible FX rate, safe unexpected-error handling, and inspect-only destination restrictions. API schemas are reusable by the OpenAPI workflow. Candidate paths and precise contract remain [O-003](../DECISIONS.md#o-003).
 
+**Partial groundwork:** D-029 implements thin account/wallet GET handlers, exact
+string responses, safe 400/404/503 read problems and response-contract tests.
+Write validation/conflicts and the shared financial schema workflow remain future
+work; this task is not closed by read-only integration.
+
 ### T10-02
 
 **Durable idempotency contract and implementation**  
@@ -33,3 +38,7 @@ Status is mirrored in [KANBAN.md](../KANBAN.md).
 **Implementation:** Select a compatible OpenAPI generator under [O-003](../DECISIONS.md#o-003); derive reusable schemas from the server validation definitions, explicitly register path/method/status metadata, and serve Swagger UI locally. Document the fact that interactive calls modify simulated data.
 
 **Acceptance and tests:** Every implemented endpoint, required idempotency header, quote/amount schema, and Problem Details response is represented accurately. Contract tests validate real responses against the document; Swagger works without paid services and is not publicly exposed by default.
+
+**Partial groundwork:** `/api/openapi` serves a tested hand-maintained document
+for implemented read/operational routes only. Financial generation, headers,
+quotes, history contracts and Swagger UI remain unimplemented; no closure implied.

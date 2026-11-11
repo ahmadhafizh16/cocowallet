@@ -1,6 +1,6 @@
 # PRD-10 — HTTP API and Swagger
 
-**Status:** Draft; candidate routes are not implemented or finalized.  
+**Status:** Account/wallet GET routes and a hand-maintained read-only OpenAPI document are implemented under D-029. Write/history contracts, financial schema generation, durable idempotency and Swagger UI remain unimplemented. See [BACKEND_READS.md](../BACKEND_READS.md).
 **Decisions:** [D-002](../DECISIONS.md#d-002), [D-003](../DECISIONS.md#d-003), [D-016](../DECISIONS.md#d-016), [D-017](../DECISIONS.md#d-017), [D-019](../DECISIONS.md#d-019).  
 **Tasks:** [T10-01–T10-03](../tasks/TASKS-10.md).  
 **Diagrams:** [API contract flow](../API_DESIGN.md#proposed-api-contract-flow) and [money-operation code flow](../DIAGRAMS.md#code-flow-for-a-completed-money-operation).
