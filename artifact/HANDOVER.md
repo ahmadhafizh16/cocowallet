@@ -1,6 +1,6 @@
 # Handover
 
-**Status:** Platform foundation, exact money handling, and journal snapshot reads implemented; seven of 32 tasks are closed. Atomic write review remains in progress. Money-moving APIs, FX integration, Swagger, and interface design are not implemented.
+**Status:** Platform foundation and money/journal core implemented; eight of 32 tasks are closed. Money-moving APIs, full idempotency, FX integration, Swagger, account seeding, and interface design are not implemented. Impeccable initialization and design direction are the next phase, before wallet screens and without waiting for every API.
 
 ## Implemented modules and commands
 
@@ -17,6 +17,7 @@
 | `src/features/money/money.ts` | Bounded exact bigint amount parsing/formatting and rational positive half-up FX; [contract](MONEY.md). |
 | `src/features/money/currency-precision.*` | Pinned, attributed accounting exponents; unknown/unspecified codes fail closed. [Provenance](CURRENCY_METADATA.md). |
 | `src/features/journal/balances.ts` | Stream exact per-wallet bigint balances; account reads share one snapshot and validate final bounds. |
+| `src/features/journal/write.ts` | Top-level synchronous immediate-write boundary; main-only accounting, exact credits, funds checks, atomic creation/entries, and a technical-success integration seam. [Contract](JOURNAL.md). |
 | `components.json`, `postcss.config.mjs`, `src/lib/utils.ts` | shadcn/Lucide/Tailwind configuration and tested class helper; not an implemented wallet design. |
 | `scripts/check-artifacts.mjs` | Checks Markdown links, decision/task references, board status alignment, and task dependency cycles. |
 
@@ -33,13 +34,15 @@ docker compose --profile test run --rm browser-tests
 
 Stop the dev compiler before `docker compose run --rm app npm run check`, then use `docker compose up -d app` to resume. The check command runs artifact validation, Prettier check, lint, type check, Jest, and production build. A clean install was repeated after adding Python/Make/G++ and using the supported node-gyp header setting; relying on an incremental native install initially concealed that requirement.
 
-Application DB: `/app/data/wallet.sqlite` in Compose's `wallet-data` volume. Tests use isolated temporary SQLite files. Normal shutdown is `docker compose down` without deleting volumes. No full backup/restore procedure is claimed verified yet.
+Application DB: `/app/data/wallet.sqlite` in Compose's `wallet-data` volume. Tests use isolated temporary SQLite files. Normal shutdown is `docker compose down` without deleting volumes. Before applying journal migrations, the stopped app's database was backed up with SQLite's backup API to `/app/data/wallet.sqlite.pre-journal-1794390597589.bak`. Backup creation is verified; a full restore drill is not claimed.
 
-Verification evidence: foundation checks passed 10 Jest tests and 2 real-Chromium Playwright smoke tests, clean `npm ci`, repeat migration, lint/format/type checks, and production build. The journal-schema checkpoint additionally passes 19 targeted connection/schema tests, formatting, lint, and type checks. New journal migrations have only been exercised in isolated fixtures so far, not the persistent application DB. A test-only operational marker survived app container recreation and was then removed; no user transaction data was deleted. The production npm audit is clean; the full development audit has 23 low/moderate findings documented in [DEPENDENCIES.md](DEPENDENCIES.md).
+Latest verification: `docker compose run --rm app npm run check` passes artifact validation, formatting, lint, type checks, **486 Jest tests**, and production build. Both Chromium foundation smoke tests pass after restarting the app. All three migrations are applied to the persistent DB and a repeated migration is a no-op; integrity is `ok`, foreign-key violations are empty, and account/transaction counts remain zero. No wallet data is seeded or moved by verification. Earlier foundation verification covered a clean `npm ci` and service-recreation persistence. The last production npm audit was clean; no dependencies changed in this checkpoint, and 23 low/moderate development-tool findings remain documented in [DEPENDENCIES.md](DEPENDENCIES.md).
 
 The exact money/precision checkpoint passes 437 feature-local Jest tests, targeted lint, formatting, and strict TypeScript checks. It adds no runtime package dependency; the precision extract retains its source MIT notice and checksums.
 
 The balance checkpoint passes 28 combined schema/connection/balance tests, including a 2,049-entry journal with overflowing intermediate subtotals. A test commits through a second WAL connection during an account read and verifies both wallet balances retain the original snapshot; a subsequent read observes the commit. Aggregation permits arbitrary-precision intermediate subtotals but rejects negative/overflowing final balances.
+
+The atomic-write checkpoint passes 16 feature-local integration tests, including independent worker-thread connections for actual lock contention and competing withdrawals. Injected failures after every insert stage, swallowed scope errors, asynchronous misuse, technical success recording/reopen replay, and failure to store success are covered. A read-only review found no concrete correctness issues; full HTTP idempotency and server-owned quote checks remain future integration, not implied guarantees.
 
 ## Current environment
 
@@ -51,7 +54,7 @@ The balance checkpoint passes 28 combined schema/connection/balance tests, inclu
 - Impeccable is installed and loadable project-locally in `.opencode/skills/impeccable`, with the `/impeccable` command in `.opencode/commands/impeccable.md`; its bundled Linux engine reports version 4.8.2. It was installed without optional automatic hooks. Initialization has not run and `PRODUCT.md` does not yet exist. Before design, follow the [getting-started guide](https://impeccable.style/tutorials/getting-started/), run `/impeccable init`, and review the resulting product context. After UI edits, follow the skill's manual detector instruction because no automatic hook is active.
 - The approximately 22 MB Impeccable Linux engine is excluded from Git and retained locally. `sh scripts/setup-impeccable.sh` restores the pinned, checksum-verified engine; online restoration and corrupt-source rejection were tested in isolation. See [TOOLING.md](TOOLING.md).
 - Host npm/network requests timed out during installation; a direct IPv4-first Node fetch succeeded, but the npm installer still stalled. The skill was installed with the verified cached official CLI and an official locally downloaded bundle. Diagnose Node 26/npm networking inside Docker before relying on dependency installs.
-- The project-local Icons8 MCP configuration has been removed at the user's request. Lucide React is the selected icon library; no icon package is installed yet.
+- The project-local Icons8 MCP configuration has been removed at the user's request. Lucide React is installed as the selected icon library; no rendered wallet icon components exist yet.
 
 ## Important implemented safeguard
 

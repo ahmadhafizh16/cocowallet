@@ -1,6 +1,6 @@
 # Product requirements: simulated multi-currency wallet
 
-**Status:** Feature planning overview. The Git/Docker/Next.js/SQLite foundation is implemented and tested; the wallet features remain to do. See the linked feature PRDs for requirements and the kanban for actual completion.
+**Status:** Feature planning overview. The platform and exact money/journal core are implemented and tested; wallet HTTP flows, seeding, rates/quotes, full idempotency, and the interface remain to do. Impeccable initialization/design is next, before building wallet screens. See the linked feature PRDs and kanban for actual completion.
 
 ## Goal
 
@@ -58,4 +58,4 @@ After discussing the distinction, the user confirmed Frankfurter alone is suffic
 ## Questions to resolve
 
 - Are limits or additional simulated failure scenarios required beyond immediate, no-fee operations and validation errors?
-- When should the installed Impeccable skill be initialized with the product and design context?
+- Design scheduling is settled: initialize Impeccable after the money/journal checkpoint, establish product/design context, then build wallet screens without waiting for every API.

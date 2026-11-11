@@ -1,6 +1,6 @@
 # Digital wallet planning
 
-These documents distinguish agreed decisions, proposals, and implemented work. The **Git/platform foundation is implemented**: Docker/Node 26, Next.js health/readiness routes, SQLite metadata migrations, and foundation tests. Wallet operations, journal/account tables, Swagger, and the wallet interface are not implemented yet; consult the kanban rather than assuming a draft PRD describes completed features.
+These documents distinguish agreed decisions, proposals, and implemented work. The **platform and money/journal core are implemented**: Docker/Node 26, health/readiness, versioned accounting tables, exact arithmetic, snapshot balances, and atomic serialized writes. Wallet HTTP flows, full idempotency, account seeding, rates/quotes, Swagger, and the interface remain future work. Impeccable initialization/design is next; consult the kanban rather than assuming a draft PRD describes completed features.
 
 - [Main PRD](PRD.md): product scope and links to the smaller feature PRDs.
 - [Decision register](DECISIONS.md): stable `D-###` decisions and `O-###` open questions.
@@ -9,6 +9,9 @@ These documents distinguish agreed decisions, proposals, and implemented work. T
 - [Readiness checklist](READINESS.md): what to settle or verify before each implementation stage.
 - [Shared tooling](TOOLING.md): restore and verify the excluded design engine.
 - [Dependency notes](DEPENDENCIES.md): verified versions, compatibility decisions, and development-tool advisories.
+- [Exact money](MONEY.md): bounds, parsing, rational FX rounding, and serialization.
+- [Currency metadata](CURRENCY_METADATA.md): pinned accounting precision, source/license, and update rules.
+- [Journal implementation](JOURNAL.md): storage, snapshot reads, serialized writes, tests, and integration boundaries.
 - [Diagrams](DIAGRAMS.md): proposed architecture, data relationships, business flows, and code flow.
 - [API design](API_DESIGN.md): proposed HTTP contract, sequence diagram, and OpenAPI/Swagger approach.
 - [Idempotency discussion](IDEMPOTENCY.md): the selected failed-retry policy, alternatives, and examples.

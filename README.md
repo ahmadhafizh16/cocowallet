@@ -2,7 +2,7 @@
 
 A local-only Next.js/Node 26 wallet simulation. Product requirements, decisions, diagrams, and progress are in [`artifact/`](artifact/README.md).
 
-**Current milestone:** Docker/Next.js technical foundation. Wallet features and the wallet interface are not implemented yet; `/` returns a factual JSON milestone response.
+**Current milestone:** Docker/Next.js foundation plus the tested money/journal core: exact bigint arithmetic, pinned currency precision, journal-derived balances, and serialized atomic writes. Wallet HTTP flows, account seeding, and the interface are not implemented yet; `/` remains a technical scaffold. Impeccable design initialization is next.
 
 ## Development environment
 
@@ -17,7 +17,7 @@ docker compose up -d app
 
 Open `http://localhost:3000/api/health` for the health endpoint. Use `APP_PORT=3100 docker compose up -d app` if port 3000 is already occupied.
 
-`/api/ready` also verifies that SQLite and its migrated metadata table are accessible. The initial migration creates only operational metadata; account, wallet, and journal tables are future tasks. Migration application is safe to repeat and runs explicitly rather than during a page request or production build.
+`/api/ready` verifies SQLite and its migrated metadata table; it is not a full application-schema version check. Three migrations now create operational metadata, account/wallet/completed-transaction/journal tables, and accounting invariants. Migration application is safe to repeat and runs explicitly rather than during a page request or production build. No accounts or funds are seeded yet.
 
 The application service runs as the non-root `node` user. It uses separate named volumes for Linux dependencies, Next.js output, and SQLite data, so host dependencies cannot overwrite native modules in the container. The host port is bound to `127.0.0.1`; this no-auth simulation must not be exposed publicly.
 
@@ -40,7 +40,7 @@ docker compose --profile test run --rm browser-tests
 
 The Playwright image runs Node 26 with its pinned Chromium and required Linux libraries. It addresses the app as `wallet.test` on the private Compose network; the bare `app` hostname can trigger Chromium's HTTPS upgrade for the `.app` namespace. No HTTPS validation is disabled to work around that.
 
-These are foundation smoke tests, not completed wallet journey tests. See [`artifact/DEPENDENCIES.md`](artifact/DEPENDENCIES.md) for test-tool audit findings and dependency compatibility notes.
+The browser tests are foundation smoke tests, not wallet journeys. The 486 Jest tests additionally verify exact money, metadata, schema, snapshots, rollback, and independent-connection concurrency. See [`artifact/MONEY.md`](artifact/MONEY.md), [`artifact/JOURNAL.md`](artifact/JOURNAL.md), and [`artifact/DEPENDENCIES.md`](artifact/DEPENDENCIES.md).
 
 For the complete local check (including a production build), stop the development compiler first:
 

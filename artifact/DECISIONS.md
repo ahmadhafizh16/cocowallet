@@ -96,6 +96,10 @@
 
 **Exact accounting precision and bounds (O-002):** Pin the attributed MIT-package accounting metadata extract from `@financica/iso4217@0.2.0`, not CLDR display digits; reject unknown or unspecified precision. Wallet eligibility remains separately restricted to eligible Frankfurter fiat codes. Freeze precision once used. Use native bigint minor units and exact integer-rational FX with positive half-up rounding; no decimal dependency is required. With `M = 9223372036854775807`, allow operation amounts `1..M`, balances `0..M`, deltas `-M..M`, and arbitrary-precision intermediate arithmetic. Stream journal entries in a consistent snapshot and validate only the final aggregate, without SQLite `SUM()`/`TOTAL()`. Reject overly precise user input rather than rounding it; serialize money/rates as decimal strings. Bounds, rate-text limits, provenance, and licensing limitations are documented in [MONEY.md](MONEY.md) and [CURRENCY_METADATA.md](CURRENCY_METADATA.md).
 
+### D-024
+
+**SQLite write serialization:** Use a top-level synchronous `BEGIN IMMEDIATE` boundary before checking journal-derived funds. Create required account/wallet rows, the completed transaction, all entries, and eventual technical success metadata in that one transaction. Reject nested/deferred outer transactions and promise callbacks; close scoped writers immediately and roll back even caught scope-method failures. Fetch rates before acquiring the reservation and later validate server-owned quotes inside it. Propagate lock/storage failures without automatic retries; full durable-result policy remains D-019/T10-02. See [JOURNAL.md](JOURNAL.md).
+
 ## Questions and resolutions
 
 ### O-001

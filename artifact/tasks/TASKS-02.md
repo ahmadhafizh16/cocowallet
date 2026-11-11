@@ -29,9 +29,11 @@ Status is mirrored in [KANBAN.md](../KANBAN.md).
 ### T02-03
 
 **Atomic write boundary and concurrent spending**  
-**Status:** In progress. Implementing and reviewing the synchronous immediate-write boundary and rollback/concurrency integration tests.
-**Decisions:** [D-006](../DECISIONS.md#d-006), [D-018](../DECISIONS.md#d-018), [D-019](../DECISIONS.md#d-019).  
+**Status:** Done. Synchronous immediate-write orchestration, rollback injection, independent-connection contention/race tests, and a test-only atomic success-record/reopen seam are verified. Full durable HTTP key/fingerprint/error replay remains T10-02, not a completed feature here. See [JOURNAL.md](../JOURNAL.md).
+**Decisions:** [D-006](../DECISIONS.md#d-006), [D-018](../DECISIONS.md#d-018), [D-019](../DECISIONS.md#d-019), [D-024](../DECISIONS.md#d-024).
 **Depends on:** [T02-02](#t02-02).  
 **Implementation:** Provide reusable server-side write orchestration that serializes competing SQLite writers before reading journal-derived funds; insert completed transaction, debit/credit entries, and any new account/wallet atomically. Keep remote rate requests outside the write lock. Integrate successful idempotency recording with T10-02 without deciding failed-request policy.
 
 **Acceptance and tests:** Two independent connections cannot overspend one balance; an injected failure after any intermediate insert rolls back every change; no partially created account/wallet survives a failed operation. Verify safe restart and duplicate-success behavior with isolated file-backed databases.
+
+**Verification:** `docker compose run --rm app npm test -- --runTestsByPath src/features/journal/write.test.ts` (16 tests); lint/type checks pass. A bounded independent read-only review found no concrete correctness issues. The success-result seam uses an explicitly test-only table and makes no claim that the HTTP idempotency protocol is implemented.

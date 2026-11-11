@@ -1,6 +1,6 @@
 # Architecture and flow diagrams
 
-**Status:** The platform foundation, journal schema, exact money, and snapshot balance reads are implemented and tested. Write orchestration is in progress; HTTP operations, quotes, idempotency storage, and interface diagrams still describe future features. The [decision register](DECISIONS.md) is authoritative when a diagram and an open question conflict.
+**Status:** The platform foundation, journal schema, exact money, snapshot balances, and immediate-write orchestration are implemented and tested. HTTP operations, quotes, production idempotency storage, and interface diagrams still describe future features. The [decision register](DECISIONS.md) is authoritative when a diagram and an open question conflict.
 
 ## Implemented foundation flow
 
@@ -13,13 +13,13 @@ flowchart LR
     Runtime --> Connection[connection.ts: Drizzle and better-sqlite3]
     CLI[npm run db:migrate] --> Migrations[Committed Drizzle SQL and metadata]
     Migrations --> Connection
-    Connection --> SQLite[(SQLite operational metadata)]
+    Connection --> SQLite[(SQLite metadata and journal schema)]
     SQLite --- Volume[Persistent wallet-data volume]
     Jest[Jest: isolated temporary databases] --> Connection
     Browser[Playwright: pinned Chromium container] -->|wallet.test:3000| Next
 ```
 
-The application database currently contains operational metadata and migration tracking, not accounts or wallet balances. Ordinary unit/integration tests create their own temporary files and cannot use the configured runtime connection. The following sections remain the future feature design.
+The application database contains operational metadata, migration tracking, and the accounting schema; account/wallet/transaction tables are empty because seeding and HTTP flows remain future work. Ordinary unit/integration tests create their own temporary files and cannot use the configured runtime connection. The following sections distinguish implemented core behavior from future feature integration.
 
 ## System and Docker boundary
 
@@ -62,7 +62,7 @@ erDiagram
     IDEMPOTENCY_KEY o|--o| TRANSACTION : protects
 ```
 
-Account, wallet, transaction, and journal tables now exist; FX quote and idempotency relationships remain conceptual. A wallet is unique by account and currency. A deposit or withdrawal affects one wallet; a conversion or transfer affects two wallets and stores one related debit and one related credit. Amounts use each wallet currency's minor units, so entries in different currencies must **not** be summed together. A wallet balance is derived from its own journal entries. Triggers protect recorded history, wallet/account identity, journal direction, and used currency precision. Full journal cardinality and balance checks belong to the upcoming application write boundary, not a claim that arbitrary direct SQL is safe. A quote is needed only when FX applies. Definitive failed-result metadata is separate from completed transactions; retention and recovery details are [O-006](DECISIONS.md#o-006).
+Account, wallet, transaction, and journal tables now exist; FX quote and idempotency relationships remain conceptual. A wallet is unique by account and currency. A deposit or withdrawal affects one wallet; a conversion or transfer affects two wallets and stores one related debit and one related credit. Amounts use each wallet currency's minor units, so entries in different currencies must **not** be summed together. A wallet balance is derived from its own journal entries. Triggers protect recorded history, wallet/account identity, journal direction, and used currency precision. Full journal cardinality and balance checks are supplied by the application write boundary, not a claim that arbitrary direct SQL is safe. A quote is needed only when FX applies. Definitive failed-result metadata is separate from completed transactions; retention and recovery details are [O-006](DECISIONS.md#o-006).
 
 Implemented balance reads:
 
@@ -179,7 +179,7 @@ sequenceDiagram
     API-->>UI: JSON result or Problem Details
 ```
 
-The SQLite write-locking strategy is a proposed implementation detail; it must serialize competing balance checks and writes, and must not hold a write lock while making a network request. Check for an already recorded result before a fresh FX call or quote-expiry check, then recheck under the write lock to handle races. Validation or transaction failures cannot leave partial journal entries or a partially created destination. The exact handling of in-progress keys, pre-key validation, retention, and unavailable idempotency storage remains [O-006](DECISIONS.md#o-006).
+The implemented internal boundary now acquires `BEGIN IMMEDIATE` before its synchronous callback, then commits/rolls back required account/wallet creation, transaction, and entries together. Escaped scopes and promise callbacks are rejected. A test-only technical-success table verifies the eventual atomic result-recording seam. The HTTP/key/quote interactions in this sequence are still future integration: check for an already recorded result before a fresh FX call or quote-expiry check, then recheck under the reservation to handle races. Do not hold the reservation during network work. The exact handling of in-progress keys, pre-key validation, retention, and unavailable idempotency storage remains [O-006](DECISIONS.md#o-006). See [JOURNAL.md](JOURNAL.md).
 
 ## Cross-currency transfer sequence
 

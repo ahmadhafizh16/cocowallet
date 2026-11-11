@@ -1,6 +1,6 @@
 # PRD-02 — Journal, money, and atomicity
 
-**Status:** In progress. Account, wallet, completed-transaction, and journal schema constraints and exact money helpers are tested. Balance reads and the serialized write boundary are being implemented; no money-moving HTTP API exists yet.
+**Status:** Core implemented and tested: exact money, immutable journal schema, snapshot balances, and serialized atomic writes. Requirement 5 and end-to-end replay acceptance still require the future T10-02 idempotency layer; its technical success seam is tested, not a complete HTTP protocol. No money-moving HTTP API exists yet.
 
 **Decisions:** [D-006](../DECISIONS.md#d-006), [D-018](../DECISIONS.md#d-018), [D-019](../DECISIONS.md#d-019).  
 **Tasks:** [T02-01–T02-03](../tasks/TASKS-02.md).  
@@ -31,3 +31,4 @@ As the user, I can trust every simulated balance to reflect its recorded debit a
 - Unit-test exact parsing and rounding, zero-decimal/three-decimal currency examples, limits, large values, and a long journal whose intermediate aggregation might overflow.
 - Integration-test rollback, independent SQLite connections, concurrency, idempotent success, and schema constraints on temporary databases.
 - [O-002](../DECISIONS.md#o-002) is resolved by [D-023](../DECISIONS.md#d-023); see the exact [money contract](../MONEY.md) and [currency metadata provenance](../CURRENCY_METADATA.md).
+- [D-024](../DECISIONS.md#d-024) fixes write serialization; see the implemented boundary, integration limits, and test evidence in [JOURNAL.md](../JOURNAL.md).
