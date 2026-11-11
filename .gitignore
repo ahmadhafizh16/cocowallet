@@ -1,0 +1,35 @@
+# Dependencies and application output
+node_modules/
+.next/
+out/
+coverage/
+playwright-report/
+test-results/
+*.tsbuildinfo
+next-env.d.ts
+npm-debug.log*
+
+# Local configuration and secrets
+.env
+.env.*
+!.env.example
+*.pem
+
+# SQLite data and active journals, never application migrations
+/data/
+*.db
+*.db-*
+*.sqlite
+*.sqlite-*
+*.sqlite3
+*.sqlite3-*
+
+# Keep the design skill and shared context; exclude platform engines/runtime state
+/.opencode/skills/impeccable/scripts/bin/
+/.impeccable/config.local.json
+/.impeccable/questions/
+/.impeccable/mocks/
+/.impeccable/review/
+
+# Local OS/editor output
+.DS_Store
