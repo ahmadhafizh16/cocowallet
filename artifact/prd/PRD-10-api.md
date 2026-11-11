@@ -1,6 +1,6 @@
 # PRD-10 — HTTP API and Swagger
 
-**Status:** Account/wallet/history reads, funding/conversion POSTs, durable replay, fresh-first reference metadata and immutable quotes have maintained OpenAPI contracts. T09-01 adds the read-only history slice under D-033 using T10-01's shared definitions. The transfer service is internal only. Transfer submission, full-history UI, full generation and Swagger UI remain future work. See [HISTORY.md](../HISTORY.md) and [HTTP.md](../HTTP.md).
+**Status:** Account/wallet/history reads, funding/conversion/transfer POSTs, durable replay, fresh-first reference metadata and immutable quotes have maintained OpenAPI contracts. T08-02 connects transfers through shared HTTP safeguards, reviewed terms and original-key recovery. Full-history browsing, full generation and Swagger UI remain future work. See [TRANSFERS.md](../TRANSFERS.md), [HISTORY.md](../HISTORY.md) and [HTTP.md](../HTTP.md).
 **Decisions:** [D-002](../DECISIONS.md#d-002), [D-003](../DECISIONS.md#d-003), [D-016](../DECISIONS.md#d-016), [D-017](../DECISIONS.md#d-017), [D-019](../DECISIONS.md#d-019).  
 **Tasks:** [T10-01–T10-03](../tasks/TASKS-10.md).  
 **Diagrams:** [API contract flow](../API_DESIGN.md#proposed-api-contract-flow) and [money-operation code flow](../DIAGRAMS.md#code-flow-for-a-completed-money-operation).
@@ -15,7 +15,7 @@ As a developer or local operator, I can inspect and exercise documented HTTP end
 2. Provide an OpenAPI specification and Swagger UI. Reuse server validation schemas for generated schema definitions where possible; explicitly document each route, method, response, and error. Test for contract drift.
 3. Return HTTP Problem Details with a stable machine-readable code. Use the agreed baseline: 400 invalid request, 404 missing resource, 409 balance/quote/idempotency conflict, and 503 no eligible rate.
 4. Require `Idempotency-Key` for deposit, withdrawal, conversion confirmation, and transfer. An accepted key with the same input replays its original definitive success or error; a key reused with different input is rejected. Store definite failure metadata separately from completed transaction history.
-5. Treat amount precision and server-owned quotes safely at the JSON boundary. Implemented endpoints use fixed exact decimal strings, canonical ISO timestamps, strict payloads and UUID quote/key contracts. Shared structural definitions do not replace domain precision/bounds, quote binding or durable original-result checks. Future history/transfer HTTP shapes retain their tasks.
+5. Treat amount precision and server-owned quotes safely at the JSON boundary. Implemented endpoints use exact decimal strings, canonical ISO timestamps, strict payloads and UUID quote/key contracts. Shared structural definitions do not replace domain precision/bounds, quote binding or durable original-result checks. History and transfer shapes are now documented in their feature contracts.
 6. Swagger's interactive requests target real **simulated** local data. The no-auth API is not a security boundary; bind it locally and enforce the main/destination account rules on the server.
 
 ## Acceptance criteria
@@ -28,4 +28,4 @@ As a developer or local operator, I can inspect and exercise documented HTTP end
 
 ## Tests and open items
 
-See [API_DESIGN.md](../API_DESIGN.md) for implemented versus proposed routes and [HTTP.md](../HTTP.md) for shared conventions. [O-003](../DECISIONS.md#o-003) retains future history/transfer HTTP contracts, generator and pagination questions. [O-006](../DECISIONS.md#o-006) records the implemented funding/conversion/internal-transfer retention/recovery policy. Test malformed JSON/headers, account restrictions, quote expiry, idempotency races, stable failure replay, and spec drift.
+See [API_DESIGN.md](../API_DESIGN.md) for implemented versus proposed routes and [HTTP.md](../HTTP.md) for shared conventions. [O-003](../DECISIONS.md#o-003) retains full generation/Swagger and remaining wallet/default routes; D-033 and the history/transfer feature contracts fix those slices. [O-006](../DECISIONS.md#o-006) records the implemented funding/conversion/transfer retention/recovery policy. Test malformed JSON/headers, account restrictions, quote expiry, idempotency races, stable failure replay, and spec drift.

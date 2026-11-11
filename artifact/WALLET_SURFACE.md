@@ -8,8 +8,9 @@ shell: icon rail with tooltips, popup money workflows, and consistent actual
 shadcn foundations. See `artifact/WALLET_REDESIGN.md`. The job remains inspecting
 journal-backed balance snapshots and exploring local money drafts. The user has
 paused visual feedback while backend workflows are integrated. Reviewed simulated
-deposits/withdrawals now connect through durable retry/recovery; conversion and
-transfer submission stay disconnected. See `artifact/FUNDING.md`.
+deposits/withdrawals, conversions and transfers connect through shared durable
+retry/recovery. Destinations remain inspect-only with scoped incoming recent facts;
+full-history browsing/valuation remain separate. See `artifact/TRANSFERS.md`.
 
 ## Direction contract
 
@@ -63,8 +64,11 @@ incorrect and is withdrawn; this machine's seed support was not unavailable.
   from one server snapshot. Test-only preview data is not a runtime fallback.
   Funding POSTs have explicit reviewed confirmation, immutable unresolved intent,
   same-key recovery and server-confirmed receipts. Only unresolved context may
-  temporarily use per-tab session storage. Other financial writes, rates/quotes,
-  full history and valuation remain future work; unknown values stay unavailable.
+  temporarily use per-tab session storage. Conversion/FX-transfer reviews use
+  validated expiring server terms; same-currency transfers require no rate/quote.
+  The selected account's latest 50 matching completed facts include incoming
+  destination transfers. Full-history browsing and valuation remain separate;
+  unknown values stay unavailable and destinations cannot initiate money actions.
 - The scene is a local evaluation at a desk or on a phone under normal ambient
   light; light follows the supplied reference, dark follows system/user preference.
 

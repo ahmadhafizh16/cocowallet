@@ -20,6 +20,7 @@ import { GET as ready } from "../ready/route";
 import { assertContract, type Schema } from "@/test/json-contract";
 import { GET as historyList } from "../transactions/route";
 import { GET as historyDetail } from "../transactions/[transactionId]/route";
+import { POST as transfer } from "../transfers/route";
 
 jest.mock("server-only", () => ({}));
 
@@ -45,6 +46,7 @@ describe("read-only OpenAPI contract", () => {
     const spec = await response.json();
     expect(spec.openapi).toBe("3.1.0");
     expect(Object.keys(spec.paths)).toEqual([
+      "/api/transfers",
       "/api/transactions",
       "/api/transactions/{transactionId}",
       "/api/conversions",
@@ -63,6 +65,7 @@ describe("read-only OpenAPI contract", () => {
     for (const [route, path] of Object.entries(spec.paths))
       expect(Object.keys(path as object)).toEqual([
         route === "/api/deposits" ||
+        route === "/api/transfers" ||
         route === "/api/conversions" ||
         route === "/api/withdrawals" ||
         route === "/api/quotes"
@@ -116,6 +119,18 @@ describe("read-only OpenAPI contract", () => {
         body: JSON.stringify(body),
       });
     const cases: [() => Response | Promise<Response>, string][] = [
+      [
+        () =>
+          transfer(
+            send({
+              sourceWalletId: "source",
+              recipientAccountId: "recipient",
+              amount: "1.00",
+              recipientDefaultCurrency: "USD",
+            }),
+          ),
+        "TransferProblem",
+      ],
       [accounts, "Problem"],
       [
         () =>

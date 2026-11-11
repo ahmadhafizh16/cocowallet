@@ -3,8 +3,9 @@
 **Status:** T09-01's read-only backend is implemented and verified with the full
 Docker check/build and production regressions.
 The existing interface still shows its latest 50 funding/conversion receipts;
-T09-02's full history UI and T08-02's transfer submission/inspection flow are not
-enabled here. No visual, dependency, migration or real-money integration changes.
+T09-02's full history UI is not enabled here. T08-02 now connects transfers and
+inspect-only incoming recent activity through these GETs; see [TRANSFERS.md](TRANSFERS.md).
+Historical backend-only checkpoint notes below predate that integration.
 
 ## Approved contract — D-033
 
@@ -155,7 +156,7 @@ normal wallet for history tests; production commands are in [QUOTES.md](QUOTES.m
   certification, large-scale performance, new UI-detector or render-review claim
   is made. No live-provider test, restore drill or remote push was introduced.
 
-Next is T08-02's reviewed transfer endpoint/UI/recovery and destination inspection,
-which can now depend on these history GETs. T09-02 still owns full history list/
-detail UI. Preserve the existing visual identity, exact accounting, account
-isolation, privacy and original-key recovery; this backend alone enables neither.
+T08-02 subsequently connects reviewed transfers/recovery and scoped incoming
+recent activity through these GETs. T09-02 still owns full history list/detail
+browsing. The original backend checkpoint alone did not enable either interface;
+see [TRANSFERS.md](TRANSFERS.md) for the connected boundary and its verification.

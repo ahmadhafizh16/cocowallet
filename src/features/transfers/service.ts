@@ -274,7 +274,7 @@ function execute(
   };
 }
 
-/** Internal service only: no transfer HTTP endpoint or UI submission. Rates must
+/** Atomic transfer service, shared by the HTTP adapter and isolated tests. Rates must
  * already be reviewed via a server quote; same-currency transfers never fetch one.
  * Only a genuinely missing recipient-default currency may need catalog metadata. */
 export async function submitTransfer(

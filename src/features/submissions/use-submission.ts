@@ -111,11 +111,13 @@ export function useSubmission(enabled: boolean, onKnown: () => void) {
     const timeout = window.setTimeout(() => abort.abort(), 15000);
     try {
       const response = await fetch(
-        intent.kind === "conversion"
-          ? "/api/conversions"
-          : intent.kind === "deposit"
-            ? "/api/deposits"
-            : "/api/withdrawals",
+        intent.kind === "transfer"
+          ? "/api/transfers"
+          : intent.kind === "conversion"
+            ? "/api/conversions"
+            : intent.kind === "deposit"
+              ? "/api/deposits"
+              : "/api/withdrawals",
         {
           method: "POST",
           headers: {

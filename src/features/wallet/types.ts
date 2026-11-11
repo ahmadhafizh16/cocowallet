@@ -40,6 +40,7 @@ export type WalletOverview = {
   wallets: WalletView[];
   transactions: (FundingReceipt | ConversionReceipt)[];
   conversionEnabled?: boolean;
+  transferEnabled?: boolean;
   /** Absent means disconnected; an explicitly supplied empty series has no records. */
   balanceHistory?: BalanceHistorySeries[];
   /** Server-supplied totals; unavailable never means a zero balance. */

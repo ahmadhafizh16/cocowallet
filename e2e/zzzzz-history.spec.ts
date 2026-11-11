@@ -163,7 +163,7 @@ test("numbered history pages, errors and documented GET-only contracts never mut
   expect(Object.keys(spec.paths["/api/transactions/{transactionId}"])).toEqual([
     "get",
   ]);
-  expect(spec.paths["/api/transfers"]).toBeUndefined();
+  expect(Object.keys(spec.paths["/api/transfers"])).toEqual(["post"]);
   expect(
     await (await request.get(`/api/accounts/${accountId}/wallets`)).json(),
   ).toEqual(balances);

@@ -3,7 +3,9 @@
 **Status:** T07-01's atomic service and T07-02's documented endpoint, reviewed
 quote/confirmation/recovery UI and bounded receipt visibility are implemented.
 The existing layout, branding, flags, typography and motion are preserved.
-Transfers remain disabled; full history/valuation and Swagger retain their tasks.
+T08-02 now connects transfers through the same recovery slot; see [TRANSFERS.md](TRANSFERS.md).
+Full-history browsing/valuation and Swagger retain their tasks. Historical
+conversion-only checkpoints below do not describe the later transfer milestone.
 
 ## Internal contract
 

@@ -2,7 +2,7 @@
 version: 1
 slug: "src-app-page-tsx"
 primary_target: "src/app/page.tsx"
-related_targets: ["src/features/wallet/dashboard.tsx","src/features/wallet/wallet.css","src/features/wallet/operation-workspace.tsx","src/features/submissions/submission-panel.tsx","src/features/conversions/quote-review.tsx","src/features/funding/recent-funding.tsx","src/app/loading.tsx","src/app/error.tsx"]
+related_targets: ["src/features/wallet/dashboard.tsx","src/features/wallet/wallet.css","src/features/wallet/operation-workspace.tsx","src/features/submissions/submission-panel.tsx","src/features/conversions/quote-review.tsx","src/features/transfers/transfer-review.tsx","src/features/history/recent-transactions.tsx","src/features/funding/recent-funding.tsx","src/app/loading.tsx","src/app/error.tsx"]
 ---
 
 # Wallet overview surface
@@ -15,9 +15,9 @@ shell: icon rail with tooltips, popup money workflows, and consistent actual
 shadcn foundations. See `artifact/WALLET_REDESIGN.md`. The job remains inspecting
 journal-backed balance snapshots and exploring local money drafts. The user has
 paused visual feedback while backend workflows are integrated. Reviewed simulated
-deposits/withdrawals and conversions connect through durable retry/recovery;
-transfer submission stays disconnected. See `artifact/FUNDING.md` and
-`artifact/CONVERSIONS.md`.
+deposits/withdrawals, conversions and transfers connect through shared durable
+retry/recovery. Destination inspection uses scoped incoming recent history, while
+full-history browsing and valuation remain separate. See `artifact/TRANSFERS.md`.
 
 ## Direction contract
 
@@ -73,9 +73,11 @@ incorrect and is withdrawn; this machine's seed support was not unavailable.
   same-key recovery and server-confirmed receipts. Only unresolved context may
   temporarily use per-tab session storage. Conversion review uses validated
   server-owned terms, with explicit expiry/reconfirmation and shared recovery.
-  Transfers, full history and valuation remain future work; unknown values stay
-  unavailable. Recent activity is bounded funding/conversion receipt visibility,
-  not a complete history/valuation service.
+   Transfers now use exact recipient/default/target context, no-FX same-currency
+   review or expiring server terms, explicit confirmation and that same recovery
+   slot. Recent activity is the selected account's latest 50 matching completed
+   facts, including incoming destination transfers, not a full history/valuation
+   service. Unknown totals stay unavailable; destinations stay inspect-only.
 - The scene is a local evaluation at a desk or on a phone under normal ambient
   light; light follows the supplied reference, dark follows system/user preference.
 

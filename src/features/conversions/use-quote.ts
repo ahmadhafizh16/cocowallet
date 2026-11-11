@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
-import { confirmedConversionPreview } from "../quotes/preview";
+import { confirmedFxPreview } from "../quotes/preview";
 import type { QuoteRequest, StoredQuote } from "../quotes/contracts";
 
 type State = {
@@ -74,7 +74,7 @@ export function useConversionQuote() {
       const value = await response.json();
       if (ticket !== generation.current) return;
       if (!response.ok) throw new Error("Quote unavailable");
-      const quote = confirmedConversionPreview(value, original, accountId);
+      const quote = confirmedFxPreview(value, original, accountId);
       change({ pending: false, request: original, quote });
       setNow(Date.now());
     } catch {

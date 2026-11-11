@@ -1,4 +1,5 @@
 import { normalizeRequestKey } from "../funding/contracts";
+import { identifierContract } from "../../lib/contracts";
 import { convertMinorUnits, formatAmount, parseAmount } from "../money/money";
 import {
   cacheEligible,
@@ -15,7 +16,7 @@ import {
 /** Validate an untrusted preview against the reviewed account and exact original
  * input before exposing a confirm action. No database or current funds are trusted
  * here; the server revalidates both at confirmation. */
-export function confirmedConversionPreview(
+export function confirmedFxPreview(
   value: unknown,
   request: QuoteRequest,
   accountId: string,
@@ -28,11 +29,9 @@ export function confirmedConversionPreview(
     !q ||
     q.version !== 1 ||
     normalizeRequestKey(q.quoteId) !== q.quoteId ||
-    q.operation !== "conversion" ||
-    request.operation !== "conversion" ||
-    q.recipient ||
+    q.operation !== request.operation ||
+    !identifierContract.is(accountId) ||
     q.source.accountId !== accountId ||
-    q.target.accountId !== accountId ||
     q.source.walletId !== request.sourceWalletId ||
     q.target.currency !== request.targetCurrency ||
     q.source.currency === q.target.currency ||
@@ -40,6 +39,29 @@ export function confirmedConversionPreview(
     !["fresh", "cached"].includes(q.rate.source)
   )
     throw new Error("Mismatched preview.");
+  if (request.operation === "conversion") {
+    if (q.recipient || q.target.accountId !== accountId)
+      throw new Error("Mismatched conversion.");
+  } else {
+    const r = q.recipient;
+    if (
+      !r ||
+      !identifierContract.is(request.recipientAccountId) ||
+      q.target.accountId !== request.recipientAccountId ||
+      r.accountId !== request.recipientAccountId ||
+      r.accountId === accountId ||
+      typeof r.existed !== "boolean" ||
+      (!r.existed && !request.recipientDefaultCurrency) ||
+      (request.recipientDefaultCurrency &&
+        request.recipientDefaultCurrency !== r.defaultCurrency) ||
+      fiatExponent(r.defaultCurrency) !== r.defaultExponent ||
+      typeof r.defaultName !== "string" ||
+      !r.defaultName.trim() ||
+      r.defaultName.length > 256 ||
+      r.defaultName.includes("\0")
+    )
+      throw new Error("Mismatched recipient.");
+  }
   for (const a of [q.source, q.target]) {
     if (
       fiatExponent(a.currency) !== a.exponent ||
@@ -80,4 +102,13 @@ export function confirmedConversionPreview(
     throw new Error("Invalid preview times.");
   sourceDate(q.rate.date, q.rate.fetchedAt);
   return q;
+}
+
+export function confirmedConversionPreview(
+  value: unknown,
+  request: QuoteRequest,
+  accountId: string,
+): StoredQuote {
+  if (request.operation !== "conversion") throw new Error("Not a conversion.");
+  return confirmedFxPreview(value, request, accountId);
 }

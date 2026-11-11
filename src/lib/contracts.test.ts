@@ -98,7 +98,7 @@ describe("shared contract definitions", () => {
     expect(schemas.TransferQuoteRequest).toBe(
       transferQuoteRequestContract.schema,
     );
-    expect(Object.hasOwn(schemas, "TransferRequest")).toBe(false);
+    expect(schemas.TransferRequest).toBe(transferRequestContract.schema);
   });
   it("keeps service guards aligned with structural schemas without normalization", () => {
     const funding = {

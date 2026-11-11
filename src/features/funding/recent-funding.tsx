@@ -1,12 +1,13 @@
 import { displayAmount } from "../wallet/presentation";
 import { PROVIDERS } from "../wallet/operation-model";
-import type { SubmissionReceipt } from "../submissions/contracts";
+import type { FundingReceipt } from "./contracts";
+import type { ConversionReceipt } from "../conversions/contracts";
 
 export function RecentFunding({
   receipts,
   hidden,
 }: {
-  receipts: SubmissionReceipt[];
+  receipts: (FundingReceipt | ConversionReceipt)[];
   hidden: boolean;
 }) {
   if (hidden)

@@ -3,6 +3,7 @@ import { referencePaths, referenceSchemas } from "./rates-openapi";
 import { quotePaths, quoteSchemas } from "./quotes-openapi";
 import { conversionPaths, conversionSchemas } from "./conversions-openapi";
 import { historyPaths, historySchemas } from "./history-openapi";
+import { transferPaths, transferSchemas } from "./transfers-openapi";
 import {
   currencyContract,
   dateTimeSchema,
@@ -21,17 +22,18 @@ const problem = {
   headers: noStore,
   content: { "application/problem+json": { schema: reference("Problem") } },
 };
-/** Explicit registration of implemented endpoints; no speculative transfer submission. */
+/** Explicit registration of implemented endpoints. */
 export const readApiDocument = {
   openapi: "3.1.0",
   info: {
     title: "CocoWallet simulated wallet API",
     version: "0.1.0",
     description:
-      "Local-only simulated wallet with exact account/history reads, durable simulated funding/conversion, fresh-first reference metadata and immutable one-minute server quotes. Transfer submission and full history UI remain unimplemented. No authentication: do not expose the Docker port publicly.",
+      "Local-only simulated wallet with exact account/history reads, durable simulated funding/conversion/transfers, fresh-first reference metadata and immutable one-minute server quotes. Full history UI and Swagger remain separate work. No authentication: do not expose the Docker port publicly.",
   },
   servers: [{ url: "/" }],
   paths: {
+    ...transferPaths,
     ...historyPaths,
     ...conversionPaths,
     ...quotePaths,
@@ -167,6 +169,7 @@ export const readApiDocument = {
   },
   components: {
     schemas: {
+      ...transferSchemas,
       ...historySchemas,
       ...conversionSchemas,
       ...quoteSchemas,

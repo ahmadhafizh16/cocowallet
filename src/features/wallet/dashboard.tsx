@@ -55,6 +55,8 @@ import {
 import { ThemeMenu } from "@/features/theme/theme-menu";
 import { useHydrated } from "@/lib/use-hydrated";
 import { RecentFunding } from "../funding/recent-funding";
+import { RecentTransactions } from "../history/recent-transactions";
+import type { TransactionType } from "../history/contracts";
 import { BalanceHistory } from "./balance-history";
 import { CurrencyFlag } from "./currency-flag";
 import { OperationWorkspace } from "./operation-workspace";
@@ -404,9 +406,11 @@ export function WalletDashboard({ model }: { model: WalletOverview }) {
                 </strong>{" "}
                 —{" "}
                 {fundingEnabled
-                  ? model.conversionEnabled
-                    ? "deposits, withdrawals and reviewed conversions are simulated. Transfers are not connected."
-                    : "deposits and withdrawals are simulated. Conversion and transfers are not connected."
+                  ? model.transferEnabled
+                    ? "deposits, withdrawals, reviewed conversions and transfers are simulated. Destinations are inspect-only."
+                    : model.conversionEnabled
+                      ? "deposits, withdrawals and reviewed conversions are simulated. Transfers are not connected."
+                      : "deposits and withdrawals are simulated. Conversion and transfers are not connected."
                   : balancesConnected
                     ? "money operations and history are not connected."
                     : "operations are not connected."}{" "}
@@ -421,6 +425,8 @@ export function WalletDashboard({ model }: { model: WalletOverview }) {
               balancesConnected={balancesConnected}
               fundingEnabled={fundingEnabled}
               conversionEnabled={model.conversionEnabled}
+              transferEnabled={model.transferEnabled}
+              accounts={model.accounts}
               open={operationOpen}
               onOpenChange={setOperationOpen}
               returnFocusRef={operationTriggerRef}
@@ -558,12 +564,30 @@ export function WalletDashboard({ model }: { model: WalletOverview }) {
                   </CardHeader>
                   {fundingEnabled && (
                     <p className="mb-4 text-sm text-muted-foreground">
-                      Latest 50 completed deposits, withdrawals and conversions.
-                      Other transaction history and balance-history valuations
-                      are not connected.
+                      {model.transferEnabled
+                        ? "Latest 50 matching completed operations for this account. Full history browsing and balance-history valuations remain separate."
+                        : "Latest 50 completed deposits, withdrawals and conversions. Other transaction history and balance-history valuations are not connected."}
                     </p>
                   )}
-                  {fundingEnabled && recentFunding.length > 0 ? (
+                  {model.transferEnabled && account ? (
+                    <CardContent className="wallet-card-content">
+                      <RecentTransactions
+                        accountId={account.id}
+                        type={
+                          historyFilter === "all"
+                            ? undefined
+                            : historyFilter === "withdraw"
+                              ? "withdrawal"
+                              : historyFilter === "convert"
+                                ? "conversion"
+                                : (historyFilter as TransactionType)
+                        }
+                        hidden={hidden}
+                        revision={model}
+                        onClear={() => setHistoryFilter("all")}
+                      />
+                    </CardContent>
+                  ) : fundingEnabled && recentFunding.length > 0 ? (
                     <CardContent className="wallet-card-content">
                       <RecentFunding receipts={recentFunding} hidden={hidden} />
                     </CardContent>

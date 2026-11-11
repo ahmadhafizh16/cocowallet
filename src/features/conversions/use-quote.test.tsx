@@ -156,4 +156,64 @@ describe("reviewed server quote client lifecycle", () => {
       jest.useRealTimers();
     }
   });
+  const transferRequest = {
+    ...request,
+    operation: "transfer" as const,
+    recipientAccountId: " وجهة-💰 ",
+    recipientDefaultCurrency: "GBP",
+  };
+  const transferQuote = {
+    ...quote,
+    operation: "transfer",
+    target: { ...quote.target, accountId: transferRequest.recipientAccountId },
+    recipient: {
+      accountId: transferRequest.recipientAccountId,
+      defaultCurrency: "GBP",
+      defaultName: "Pound",
+      defaultExponent: 2,
+      existed: false,
+    },
+  };
+  it("validates transfer-specific recipient context without creating or submitting anything", async () => {
+    network.mockResolvedValue(
+      response({ quote: transferQuote, state: "active" }),
+    );
+    await act(() => hook.load(transferRequest, "main"));
+    expect(hook.quote).toEqual(transferQuote);
+    expect(network).toHaveBeenCalledTimes(1);
+    expect(network.mock.calls[0][0]).toBe("/api/quotes");
+  });
+  it.each([
+    "recipient",
+    "targetAccount",
+    "self",
+    "default",
+    "existed",
+    "precision",
+    "missingDefault",
+    "sameCurrency",
+    "operation",
+  ])("rejects altered transfer preview %s", async (field) => {
+    const altered = JSON.parse(JSON.stringify(transferQuote)),
+      input = { ...transferRequest };
+    if (field === "recipient") altered.recipient.accountId = "other";
+    if (field === "targetAccount") altered.target.accountId = "other";
+    if (field === "self") {
+      altered.target.accountId = "main";
+      altered.recipient.accountId = "main";
+      input.recipientAccountId = "main";
+    }
+    if (field === "default") altered.recipient.defaultCurrency = "USD";
+    if (field === "existed") altered.recipient.existed = "yes";
+    if (field === "precision") altered.recipient.defaultExponent = 0;
+    if (field === "missingDefault")
+      delete (input as { recipientDefaultCurrency?: string })
+        .recipientDefaultCurrency;
+    if (field === "sameCurrency") altered.target.currency = "USD";
+    if (field === "operation") altered.operation = "conversion";
+    network.mockResolvedValue(response({ quote: altered, state: "active" }));
+    await act(() => hook.load(input, "main"));
+    expect(hook.quote).toBeUndefined();
+    expect(hook.message).toContain("unavailable");
+  });
 });

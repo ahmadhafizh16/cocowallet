@@ -4,7 +4,11 @@ import { createRoot, type Root } from "react-dom/client";
 import { useSubmission as useFunding } from "../submissions/use-submission";
 import { FUNDING_RECOVERY_KEY } from "./recovery";
 import type { FundingIntent } from "./contracts";
-import type { ConversionIntent } from "../submissions/contracts";
+import type {
+  ConversionIntent,
+  TransferIntent,
+} from "../submissions/contracts";
+import { transferFailures, transferProblem } from "../transfers/contracts";
 import {
   conversionFailures,
   conversionProblem,
@@ -77,6 +81,34 @@ const conversionReceipt = {
   issuedAt: "2026-11-11T00:00:00.000Z",
   expiresAt: "2026-11-11T00:01:00.000Z",
   createdAt: "2026-11-11T00:00:01.000Z",
+};
+const transferIntent: TransferIntent = {
+  version: 1,
+  key: intent.key,
+  kind: "transfer",
+  request: {
+    sourceWalletId: "wallet",
+    recipientAccountId: " وجهة-💰 ",
+    recipientDefaultCurrency: "GBP",
+    targetCurrency: "GBP",
+    amount: "10.00",
+    quoteId: conversionIntent.request.quoteId,
+  },
+};
+const transferReceipt = {
+  ...conversionReceipt,
+  type: "transfer",
+  target: {
+    ...conversionReceipt.target,
+    accountId: transferIntent.request.recipientAccountId,
+  },
+  recipient: {
+    accountId: transferIntent.request.recipientAccountId,
+    defaultCurrency: "GBP",
+    defaultName: "Pound",
+    defaultExponent: 2,
+    created: true,
+  },
 };
 
 describe("per-tab submission recovery", () => {
@@ -395,5 +427,129 @@ describe("per-tab submission recovery", () => {
     expect(JSON.parse(sessionStorage.getItem(FUNDING_RECOVERY_KEY)!)).toEqual(
       conversionIntent,
     );
+  });
+  it("extends the historical slot to transfers; reload and cross-feature candidates only recover original terms", async () => {
+    await mount();
+    fetchMock.mockRejectedValue(new Error("lost transfer response"));
+    await act(() => hook.send(transferIntent));
+    expect(JSON.parse(sessionStorage.getItem(FUNDING_RECOVERY_KEY)!)).toEqual(
+      transferIntent,
+    );
+    await act(() => root.unmount());
+    root = createRoot(host);
+    await mount();
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+    expect(hook.intent).toEqual(transferIntent);
+    fetchMock.mockResolvedValue({
+      status: 200,
+      json: async () => transferReceipt,
+    });
+    await act(() => hook.send(conversionIntent));
+    expect(fetchMock.mock.calls[1]).toEqual([
+      "/api/transfers",
+      expect.objectContaining({
+        body: JSON.stringify(transferIntent.request),
+        headers: expect.objectContaining({
+          "Idempotency-Key": transferIntent.key,
+        }),
+      }),
+    ]);
+    expect(hook.result).toEqual(transferReceipt);
+    expect(sessionStorage.getItem(FUNDING_RECOVERY_KEY)).toBeNull();
+  });
+  it.each([
+    "recipient",
+    "default",
+    "rate",
+    "amount",
+    "quote",
+    "balance",
+    "key",
+  ])(
+    "retains transfer uncertainty for mismatched receipt %s",
+    async (field) => {
+      await mount();
+      const altered = JSON.parse(JSON.stringify(transferReceipt));
+      if (field === "recipient") altered.target.accountId = "other";
+      if (field === "default") altered.recipient.defaultCurrency = "USD";
+      if (field === "rate") altered.rate.value = "9";
+      if (field === "amount") altered.target.amountMinor = "1";
+      if (field === "quote")
+        altered.quoteId = "bbbbbbbb-1234-4123-8123-123456789012";
+      if (field === "balance") altered.source.balanceMinor = "-1";
+      if (field === "key") altered.requestKey = "other";
+      fetchMock.mockResolvedValue({ status: 200, json: async () => altered });
+      await act(() => hook.send(transferIntent));
+      expect(hook.result).toBeUndefined();
+      expect(hook.intent).toEqual(transferIntent);
+      expect(sessionStorage.getItem(FUNDING_RECOVERY_KEY)).not.toBeNull();
+    },
+  );
+  it("validates same-currency receipts with explicit null terms", async () => {
+    await mount();
+    const same = {
+      ...transferIntent,
+      request: {
+        ...transferIntent.request,
+        recipientDefaultCurrency: "USD",
+        targetCurrency: "USD",
+        quoteId: undefined,
+      },
+    };
+    delete same.request.quoteId;
+    const body = {
+      ...transferReceipt,
+      target: {
+        ...transferReceipt.target,
+        currency: "USD",
+        name: "Dollar",
+        amount: "10.00",
+        amountMinor: "1000",
+        balanceMinor: "1000",
+      },
+      recipient: {
+        ...transferReceipt.recipient,
+        defaultCurrency: "USD",
+        defaultName: "Dollar",
+      },
+      quoteId: null,
+      rate: null,
+      issuedAt: null,
+      expiresAt: null,
+    };
+    fetchMock.mockResolvedValue({ status: 200, json: async () => body });
+    await act(() => hook.send(same));
+    expect(hook.result).toEqual(body);
+  });
+  it("blocks transfers before network when recovery storage fails", async () => {
+    await mount();
+    jest.spyOn(Storage.prototype, "setItem").mockImplementation(() => {
+      throw new Error("blocked");
+    });
+    await act(() => hook.send(transferIntent));
+    expect(hook.storageBlocked).toBe(true);
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+  it("retains original transfer input through a definitive expiry until explicit editing", async () => {
+    await mount();
+    fetchMock.mockResolvedValue({
+      status: 409,
+      json: async () =>
+        transferProblem(
+          409,
+          "QUOTE_EXPIRED",
+          transferFailures.QUOTE_EXPIRED.detail,
+          true,
+          transferIntent.key,
+        ),
+    });
+    await act(() => hook.send(transferIntent));
+    expect(hook.result).toMatchObject({ code: "QUOTE_EXPIRED" });
+    expect(hook.intent).toEqual(transferIntent);
+    expect(sessionStorage.getItem(FUNDING_RECOVERY_KEY)).toBeNull();
+    await act(() => hook.send(intent));
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+    await act(() => hook.startAnother());
+    expect(hook.intent).toBeUndefined();
   });
 });

@@ -1,6 +1,6 @@
 # HTTP API design: draft
 
-**Status:** Account/wallet/history reads, simulated funding/conversion POSTs, fresh-first reference metadata and immutable quotes are implemented with maintained OpenAPI contracts. T09-01 adds account-scoped completed history/detail, inclusive UTC days and user-selected numbered pages. Transfer HTTP/UI, full-history UI, full generation and Swagger UI remain future work. See [HISTORY.md](HISTORY.md), [HTTP.md](HTTP.md) and [TRANSFERS.md](TRANSFERS.md).
+**Status:** Account/wallet/history reads, simulated funding/conversion/transfer POSTs, fresh-first reference metadata and immutable quotes are implemented with maintained OpenAPI contracts. T08-02 connects reviewed transfers, shared recovery and inspect-only incoming recent history. Full-history browsing, full generation and Swagger UI remain future work. See [TRANSFERS.md](TRANSFERS.md), [HISTORY.md](HISTORY.md) and [HTTP.md](HTTP.md).
 
 T07-01's atomic service now backs `POST /api/conversions` under T07-02.
 Funding/conversion retry keys share ownership, including recorded failures;
@@ -12,8 +12,8 @@ The [internal transfer contract](TRANSFERS.md) now shares global key ownership
 with funding/conversion. Transfer confirmation accepts an optional target resolved
 to recipient default and a required default for unknown recipients; FX requires
 an existing reviewed quote, while same-currency sends never request a rate.
-`/api/transfers` remains a candidate route, absent from the implemented OpenAPI
-document. No transfer browser recovery is implied by this backend service.
+`POST /api/transfers` is now implemented/documented under T08-02, with reviewed
+same/FX confirmation, shared browser recovery and inspect-only incoming recent facts.
 
 [T10-01's shared HTTP boundary](HTTP.md) reuses request validation/schema objects,
 exact JSON helpers, safe Problem Details and the existing no-store/replay headers.
@@ -27,7 +27,7 @@ no general generator or Swagger UI is selected/implemented by this stage.
 
 | Method | Route | Result |
 | --- | --- | --- |
-| GET | `/` | Stored-account/journal overview with reviewed funding/conversion and bounded completed-receipt visibility. |
+| GET | `/` | Stored-account/journal overview with reviewed funding/conversion/transfers and bounded selected-account recent history. |
 | GET | `/api/health` | 200 JSON liveness response with `Cache-Control: no-store`. |
 | GET | `/api/ready` | 200 JSON when the migrated metadata table is readable; otherwise 503 Problem Details with `DATABASE_NOT_READY`. |
 | GET | `/api/accounts` | Persistent main account and destinations; role/default/creation time/inspect-only metadata. |
@@ -36,6 +36,7 @@ no general generator or Swagger UI is selected/implemented by this stage.
 | POST | `/api/deposits` | Explicit simulated deposit; required UUID key and durable original-result replay. |
 | POST | `/api/withdrawals` | Explicit simulated withdrawal; protected debit and durable error/success replay. |
 | POST | `/api/conversions` | Confirm exact quoted conversion; UUID key, original result replay and atomic target creation/journal/quote use. |
+| POST | `/api/transfers` | Confirm same-currency or reviewed FX transfer; exact recipient/default/target, global UUID key, atomic creation/accounting and retained original result. |
 | GET | `/api/currencies` | Fresh-first eligible fiat list with pinned precision, original fetch time and eligible cached fallback. |
 | GET | `/api/rates?base=USD&quote=EUR` | Exact direct reference observation with source/fetch dates and fresh/cached provenance; not a binding quote. |
 | POST | `/api/quotes` | Persist immutable conversion/cross-currency transfer preview terms; no funds reservation or money idempotency key. |
@@ -57,13 +58,16 @@ context, records exact source/target amounts and provenance, and starts a full
 60-second hold after final validation. Cache eligibility is checked at issuance;
 crossing its 24-hour boundary later does not shorten the issued hold. No preview
 creates a recipient/wallet or moves money. Internal confirmation/consumption seams
-support the connected conversion flow and internal transfer service. Transfer HTTP/UI submission still does not exist.
+support the connected conversion and transfer flows. T08-02 now registers
+`POST /api/transfers`; see [TRANSFERS.md](TRANSFERS.md) for its exact request/receipt,
+retained outcome and reviewed same/FX recovery contract. It is no longer a proposed route.
 
 The [interface](UI_FOUNDATION.md) now reads stored balances but validates/reviews
-money drafts locally. Funding/conversion use explicit server confirmation and
+money drafts locally. Funding/conversion/transfers use explicit server confirmation and
 the fixed recovery rules in [IDEMPOTENCY.md](IDEMPOTENCY.md). Conversion first
-requests fixed terms and requires renewed review after expiry; transfers remain
-disabled. Operational readiness does not imply accounts have been seeded.
+requests fixed terms and requires renewed review after expiry; FX transfers share
+that lifecycle while same-currency transfers have no rate/quote. Operational
+readiness does not imply accounts have been seeded.
 
 **Decision references:** [D-003](DECISIONS.md#d-003), [D-007](DECISIONS.md#d-007), [D-008](DECISIONS.md#d-008), [D-010](DECISIONS.md#d-010), [D-017](DECISIONS.md#d-017), [D-018](DECISIONS.md#d-018), and [D-019](DECISIONS.md#d-019). Detailed requirements and tasks: [PRD-10](prd/PRD-10-api.md) and [Tasks 10](tasks/TASKS-10.md).
 
@@ -81,9 +85,8 @@ disabled. Operational readiness does not imply accounts have been seeded.
 | --- | --- | --- |
 | POST | `/api/wallets` | Add a supported fiat wallet to the main account. |
 | PATCH | `/api/accounts/{accountId}/default-currency` | Change the main account's default currency; destinations are read-only. |
-| POST | `/api/transfers` | Transfer to an existing or newly created simulated account. |
 
-These remaining wallet/default/transfer examples are not finalized write
+These remaining wallet/default examples are not finalized write
 contracts. History GETs are now fixed under D-033 in [HISTORY.md](HISTORY.md):
 required accountId, inclusive UTC days and numbered pages, default 50/maximum 100.
 Each count/page shares one snapshot; new activity between requests can shift page

@@ -5,7 +5,8 @@
 T07-01 also implements the internal atomic conversion service: global
 funding/conversion key ownership, retained original results and atomic target
 creation/journal/quote use. T07-02 connects the conversion endpoint and confirmation
-UI; transfer submission stays disabled. See [CONVERSIONS.md](CONVERSIONS.md).
+UI. T08-02 now connects reviewed transfers/recovery and scoped incoming recent
+activity; see [TRANSFERS.md](TRANSFERS.md). Full-history browsing remains separate.
 
 ## Implemented foundation flow
 
@@ -166,8 +167,9 @@ No action moves real money. Destination accounts can be inspected but cannot ini
 [HISTORY.md](HISTORY.md) now implements completed journal-backed list/detail GETs,
 required account context, either-side currency filters and inclusive UTC days.
 Numbered pages/counts share one read snapshot, but activity between requests may
-shift page boundaries (D-033). The full history UI and incoming-transfer browser
-inspection above remain T09-02/T08-02; history reads do not enable transfer writes.
+shift page boundaries (D-033). Full-history browsing remains T09-02. T08-02 now supplies inspect-only
+incoming recent activity and explicit reviewed transfer writes; GETs themselves
+never authorize a write.
 
 ## Rate, cache, and quote sequence
 
@@ -202,7 +204,7 @@ sequenceDiagram
     API->>DB: Persist immutable rounded terms with a full 60-second hold
     DB-->>API: Commit preview, no funds reserved or moved
     API-->>UI: Preview amount, rate, source date, cache status and expiry
-    Note over UI,API: Conversion review/confirmation is connected; transfer submission remains T08
+    Note over UI,API: Conversion/FX-transfer review and explicit confirmation are connected; previews reserve no funds
 ```
 
 The API may return a prior reference **source date** even when a rate was fetched
@@ -268,7 +270,7 @@ already implements durable original outcomes under D-030. Quote use joins the
 journal failure latch even if its error is caught inside the after-record hook.
 Conversion now implements these rules through the endpoint and shared recovery UI;
 the internal transfer service also implements atomic creation/accounting/results,
-but transfer HTTP/UI integration is future work. Replay an existing
+and T08-02 connects its documented endpoint/shared recovery. Replay an existing
 result before quote expiry/use checks, then recheck the key under the reservation.
 Do not hold it during network work. See [JOURNAL.md](JOURNAL.md) and
 [QUOTES.md](QUOTES.md).
@@ -278,12 +280,13 @@ Do not hold it during network work. See [JOURNAL.md](JOURNAL.md) and
 Decisions: [D-003](DECISIONS.md#d-003), [D-008](DECISIONS.md#d-008), [D-010](DECISIONS.md#d-010), [D-018](DECISIONS.md#d-018), [D-019](DECISIONS.md#d-019). Tasks: [T08-01](tasks/TASKS-08.md#t08-01), [T08-02](tasks/TASKS-08.md#t08-02).
 
 The service-side atomic steps are implemented in [TRANSFERS.md](TRANSFERS.md).
-This end-to-end UI/API journey remains proposed: no transfer route or confirmed
-browser send exists. Actual service replay occurs before quote/funds checks,
+T08-02 now connects this reviewed UI/API journey and inspect-only destination
+incoming recent activity. Actual service replay occurs before quote/funds checks,
 then again under `BEGIN IMMEDIATE`; successful quote use and the original retained
 receipt commit with recipient/wallet creation and both entries. Same-currency
 service sends never request a rate; only missing default metadata may fetch the
-catalog outside the writer. T09-01 history is required before T08-02 inspection.
+catalog outside the writer. Inspection uses T09-01's required-account history GETs;
+full-history navigation/filters remain T09-02.
 
 ```mermaid
 sequenceDiagram

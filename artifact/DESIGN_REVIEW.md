@@ -1,6 +1,38 @@
 # Wallet shell design review
 
-## T07-02 — current connected-conversion checkpoint
+## T08-02 — connected-transfer review
+
+**Bounded in-thread verdict: `ship` at connected-transfer scope.** Transfer entry,
+same/FX review, shared recovery/receipts and inspect-only incoming recent facts
+reuse the incumbent Dialog/Select/Input/Button/fact-list patterns. No visual token,
+CSS, brand, flag, gradient, typography or motion values changed. A source review
+also keeps same-currency targets enabled only for transfers, preserves the old
+self-ID error, uses semantic definition-list facts and shows the receiving currency
+in recovery even when it differs from the destination default.
+
+Before edits, actual Send money captures were taken at 320/1440 in both themes
+(`.impeccable/review/transfers-before/`). Representative current form, review,
+receipt and incoming overview captures in `.impeccable/review/transfer-flow/`
+were inspected against that world for hierarchy, control access, contrast,
+wrapping and overflow. Long mixed RTL/CJK IDs wrap in facts rather than truncating;
+the narrow dialog scrolls internally. These are non-shipping captures from the
+guarded disposable production server with deterministic provider fixtures, never
+runtime funds, user data or live rates. A separate 820px reduced-motion browser
+check verifies required-default error focus, Escape/focus return and no page errors.
+
+The one mechanical scan covered six changed JSX files and reported no findings,
+but explicitly used **regex matching only**: parsed-element contrast/tiny-text
+rules did not run. Later semantic-fact cleanup did not trigger another scan. This
+is not a detector-based clean bill, independent-agent audit, physical-device test,
+screen-reader/WCAG certification, performance benchmark or completion of T11-03.
+Deferred visual feedback remains deferred. The latest full Docker check/build
+passes **1,416 Jest tests in 57 suites** and all **78 production Chromium checks**
+pass, including 13 transfer journeys. Representative final captures were rechecked
+after semantic/receiving-currency facts were completed. The existing visual world
+is preserved; no broader redesign/a11y acceptance is implied.
+See [TRANSFERS.md](TRANSFERS.md) for monetary, recovery and operational boundaries.
+
+## T07-02 — historical connected-conversion checkpoint
 
 **Bounded in-thread verdict: `ship` at connected-conversion scope.** The existing
 frosted world, two-column layout, flags, gradient, typography and motion are

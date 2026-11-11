@@ -34,6 +34,7 @@ import { SubmissionPanel } from "../submissions/submission-panel";
 import { useConversionQuote } from "../conversions/use-quote";
 import { useConversionCurrencies } from "../conversions/use-currencies";
 import { ConversionQuoteReview } from "../conversions/quote-review";
+import { TransferReview } from "../transfers/transfer-review";
 import { createFundingKey } from "../funding/request-key";
 import { formatAmount } from "../money/money";
 import {
@@ -79,6 +80,8 @@ export function OperationWorkspace({
   balancesConnected = false,
   fundingEnabled = false,
   conversionEnabled = false,
+  transferEnabled = false,
+  accounts = [],
   open,
   onOpenChange,
   returnFocusRef,
@@ -90,6 +93,8 @@ export function OperationWorkspace({
   balancesConnected?: boolean;
   fundingEnabled?: boolean;
   conversionEnabled?: boolean;
+  transferEnabled?: boolean;
+  accounts?: AccountView[];
   open: boolean;
   onOpenChange: (open: boolean) => void;
   returnFocusRef?: RefObject<HTMLElement | null>;
@@ -98,16 +103,26 @@ export function OperationWorkspace({
   const router = useRouter();
   const funding = useSubmission(fundingEnabled, () => router.refresh());
   const quote = useConversionQuote();
+  const transferQuote = useConversionQuote();
   const canConvert = conversionEnabled && operation === "convert";
+  const canTransfer = transferEnabled && operation === "transfer";
   const catalog = useConversionCurrencies(
-    canConvert &&
+    (canConvert || canTransfer) &&
       open &&
       account?.role === "main" &&
       !funding.intent &&
       !funding.storageBlocked,
   );
-  const targetCurrencies =
-    catalog.codes ?? suppliedWallets.map((wallet) => wallet.currency);
+  const targetCurrencies = [
+    ...new Set([
+      ...(catalog.codes ?? suppliedWallets.map((wallet) => wallet.currency)),
+      ...(canTransfer
+        ? accounts
+            .filter((value) => value.role === "destination")
+            .map((value) => value.defaultCurrency)
+        : []),
+    ]),
+  ];
   const canFund =
     fundingEnabled && (operation === "deposit" || operation === "withdraw");
   const fundingPanel =
@@ -123,7 +138,11 @@ export function OperationWorkspace({
         deposit: { ...draft },
         withdraw: { ...draft },
         convert: { ...draft },
-        transfer: { ...draft },
+        transfer: {
+          ...draft,
+          targetCurrency: "",
+          recipientDefaultCurrency: "",
+        },
       };
     },
   );
@@ -135,6 +154,9 @@ export function OperationWorkspace({
   >({});
   const [returningToEdit, setReturningToEdit] = useState(false);
   const draft = drafts[operation];
+  const recipient = accounts.find(
+    (value) => value.id === draft.recipient && value.role === "destination",
+  );
   const errors = errorsByOperation[operation] ?? {};
   const savedReview = reviews[operation];
   const review =
@@ -156,21 +178,34 @@ export function OperationWorkspace({
 
   function updateDraft(field: keyof OperationDraft, value: string) {
     if (operation === "convert") quote.invalidate();
+    if (operation === "transfer") transferQuote.invalidate();
     setDrafts((current) => {
       const next = { ...current[operation], [field]: value };
-      if (field === "currency" && next.targetCurrency === value)
+      if (
+        operation === "convert" &&
+        field === "currency" &&
+        next.targetCurrency === value
+      )
         next.targetCurrency = "";
+      if (operation === "transfer" && field === "recipient") {
+        next.recipientDefaultCurrency = "";
+        next.targetCurrency = "";
+      }
       return { ...current, [operation]: next };
     });
     setReviews((current) => ({ ...current, [operation]: undefined }));
     setErrors((current) => {
       const next = { ...current[operation] };
       const affected: Array<keyof OperationErrors> =
-        field === "currency"
-          ? ["currency", "amount", "targetCurrency", "form"]
-          : field === "targetCurrency"
-            ? ["targetCurrency", "form"]
-            : [field, "form"];
+        field === "recipient"
+          ? ["recipient", "recipientDefaultCurrency", "targetCurrency", "form"]
+          : field === "recipientDefaultCurrency"
+            ? ["recipientDefaultCurrency", "targetCurrency", "form"]
+            : field === "currency"
+              ? ["currency", "amount", "targetCurrency", "form"]
+              : field === "targetCurrency"
+                ? ["targetCurrency", "form"]
+                : [field, "form"];
       for (const key of affected) delete next[key];
       return { ...current, [operation]: next };
     });
@@ -197,7 +232,8 @@ export function OperationWorkspace({
       account,
       wallets,
       balancesConnected,
-      ...(canConvert ? { targetCurrencies } : {}),
+      ...(canConvert || canTransfer ? { targetCurrencies } : {}),
+      ...(canTransfer ? { transferAccounts: accounts } : {}),
     });
     setErrors((current) => ({ ...current, [operation]: result.errors }));
     if (result.review) {
@@ -213,6 +249,21 @@ export function OperationWorkspace({
           },
           nextReview.accountId,
         );
+      if (
+        canTransfer &&
+        nextReview.wallet.currency !== nextReview.targetCurrency
+      )
+        void transferQuote.load(
+          {
+            operation: "transfer",
+            sourceWalletId: nextReview.wallet.id,
+            amount: draft.amount,
+            targetCurrency: nextReview.targetCurrency,
+            recipientAccountId: nextReview.recipient,
+            recipientDefaultCurrency: nextReview.recipientDefaultCurrency,
+          },
+          nextReview.accountId,
+        );
       requestAnimationFrame(() => reviewRef.current?.focus());
     } else
       requestAnimationFrame(() =>
@@ -224,6 +275,7 @@ export function OperationWorkspace({
 
   function editReview() {
     if (operation === "convert") quote.invalidate();
+    if (operation === "transfer") transferQuote.invalidate();
     setReturningToEdit(true);
     setReviews((current) => ({ ...current, [operation]: undefined }));
     requestAnimationFrame(() =>
@@ -294,6 +346,49 @@ export function OperationWorkspace({
     onOpenChange(false);
   }
 
+  function confirmTransfer() {
+    if (!canTransfer || !review || hidden || review.accountId !== account?.id)
+      return;
+    const fx = review.wallet.currency !== review.targetCurrency;
+    const active = transferQuote.activeQuote();
+    if (
+      fx &&
+      (!active ||
+        active.operation !== "transfer" ||
+        active.source.accountId !== review.accountId ||
+        active.source.walletId !== review.wallet.id ||
+        active.source.currency !== review.wallet.currency ||
+        active.target.currency !== review.targetCurrency ||
+        active.recipient?.accountId !== review.recipient ||
+        active.recipient.defaultCurrency !== review.recipientDefaultCurrency)
+    )
+      return;
+    try {
+      void funding.send({
+        version: 1,
+        kind: "transfer",
+        key: createFundingKey(),
+        request: {
+          sourceWalletId: review.wallet.id,
+          recipientAccountId: review.recipient,
+          amount: fx
+            ? transferQuote.request!.amount
+            : formatAmount(review.minor, review.wallet.exponent),
+          targetCurrency: review.targetCurrency,
+          recipientDefaultCurrency: review.recipientDefaultCurrency,
+          ...(fx ? { quoteId: active!.quoteId } : {}),
+        },
+      });
+    } catch {
+      setErrors((current) => ({
+        ...current,
+        transfer: {
+          form: "A secure retry key could not be created. Nothing was submitted.",
+        },
+      }));
+    }
+  }
+
   return (
     <>
       {fundingPanel && account?.role === "main" && !open && (
@@ -341,11 +436,13 @@ export function OperationWorkspace({
             <DialogDescription>
               {fundingPanel
                 ? "Inspect or recover the original simulated submission. Keep its retry key and quote unchanged while the outcome is unresolved."
-                : canConvert
-                  ? "Review an exact one-minute reference-rate quote, then explicitly confirm a simulated conversion. No real funds move."
-                  : canFund
-                    ? "Review and confirm a simulated wallet operation. Providers are fictional; no real funds move."
-                    : DESCRIPTIONS[operation]}
+                : canTransfer
+                  ? "Review a simulated destination and exact receiving amount, then explicitly confirm. No real funds move; destinations remain inspect-only."
+                  : canConvert
+                    ? "Review an exact one-minute reference-rate quote, then explicitly confirm a simulated conversion. No real funds move."
+                    : canFund
+                      ? "Review and confirm a simulated wallet operation. Providers are fictional; no real funds move."
+                      : DESCRIPTIONS[operation]}
             </DialogDescription>
           </DialogHeader>
           {fundingPanel ? (
@@ -356,10 +453,25 @@ export function OperationWorkspace({
               onAnother={() => {
                 funding.startAnother();
                 quote.invalidate();
+                transferQuote.invalidate();
                 setReviews({});
                 editReview();
               }}
             />
+          ) : review && canTransfer ? (
+            <>
+              <TransferReview
+                review={review}
+                preview={transferQuote}
+                hidden={hidden}
+                ready={funding.ready}
+                heading={reviewRef}
+                onConfirm={confirmTransfer}
+                onEdit={editReview}
+                onClose={closeWorkspace}
+              />
+              {errors.form && <FieldError>{errors.form}</FieldError>}
+            </>
           ) : review && canConvert ? (
             <>
               <ConversionQuoteReview
@@ -513,16 +625,62 @@ export function OperationWorkspace({
                         autoComplete="off"
                         autoCapitalize="none"
                         spellCheck={false}
-                        maxLength={128}
+                        maxLength={8192}
                         aria-invalid={!!errors.recipient}
                         aria-describedby={`${fieldId("recipient-hint")}${errors.recipient ? ` ${fieldId("recipient-error")}` : ""}`}
                       />
                       <FieldDescription id={fieldId("recipient-hint")}>
-                        IDs are not verified or saved in this preview.
+                        {canTransfer
+                          ? recipient
+                            ? `Stored simulated destination · default ${recipient.defaultCurrency}. IDs are exact, including spaces and case; no real identity is verified.`
+                            : "Enter any exact nonblank ID. A new inspect-only destination is created only after successful confirmation."
+                          : "IDs are not verified or saved in this preview."}
                       </FieldDescription>
                       {errors.recipient && (
                         <FieldError id={fieldId("recipient-error")}>
                           {errors.recipient}
+                        </FieldError>
+                      )}
+                    </Field>
+                  )}
+                  {canTransfer && !recipient && (
+                    <Field data-invalid={!!errors.recipientDefaultCurrency}>
+                      <FieldLabel htmlFor={fieldId("recipient-default")}>
+                        New destination default currency
+                      </FieldLabel>
+                      <Select
+                        value={draft.recipientDefaultCurrency ?? ""}
+                        onValueChange={(value) =>
+                          updateDraft("recipientDefaultCurrency", value)
+                        }
+                        disabled={!hydrated}
+                      >
+                        <SelectTrigger
+                          id={fieldId("recipient-default")}
+                          aria-invalid={!!errors.recipientDefaultCurrency}
+                          aria-describedby={
+                            errors.recipientDefaultCurrency
+                              ? fieldId("recipient-default-error")
+                              : fieldId("recipient-default-hint")
+                          }
+                        >
+                          <SelectValue placeholder="Choose a default currency" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {targetCurrencies.map((code) => (
+                            <SelectItem key={code} value={code}>
+                              {code}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <FieldDescription id={fieldId("recipient-default-hint")}>
+                        Only for a new destination; an existing default is never
+                        overwritten.
+                      </FieldDescription>
+                      {errors.recipientDefaultCurrency && (
+                        <FieldError id={fieldId("recipient-default-error")}>
+                          {errors.recipientDefaultCurrency}
                         </FieldError>
                       )}
                     </Field>
@@ -646,22 +804,33 @@ export function OperationWorkspace({
                       </FieldError>
                     )}
                   </Field>
-                  {operation === "convert" && (
+                  {(operation === "convert" || canTransfer) && (
                     <Field data-invalid={!!errors.targetCurrency}>
                       <FieldLabel htmlFor={fieldId("target")}>
                         Receive currency
                       </FieldLabel>
                       <Select
                         name="targetCurrency"
-                        value={draft.targetCurrency}
+                        value={
+                          canTransfer
+                            ? draft.targetCurrency || "recipient-default"
+                            : draft.targetCurrency
+                        }
                         onValueChange={(value) =>
-                          updateDraft("targetCurrency", value as WalletCurrency)
+                          updateDraft(
+                            "targetCurrency",
+                            value === "recipient-default"
+                              ? ""
+                              : (value as WalletCurrency),
+                          )
                         }
                         disabled={
                           !hydrated ||
-                          (canConvert
-                            ? targetCurrencies.length < 2
-                            : wallets.length < 2)
+                          (canTransfer
+                            ? targetCurrencies.length === 0
+                            : canConvert
+                              ? targetCurrencies.length < 2
+                              : wallets.length < 2)
                         }
                       >
                         <SelectTrigger
@@ -676,21 +845,33 @@ export function OperationWorkspace({
                           <SelectValue placeholder="Choose a receiving currency" />
                         </SelectTrigger>
                         <SelectContent>
-                          {(canConvert
+                          {canTransfer && (
+                            <SelectItem value="recipient-default">
+                              Destination default
+                              {(recipient?.defaultCurrency ??
+                              draft.recipientDefaultCurrency)
+                                ? ` · ${recipient?.defaultCurrency ?? draft.recipientDefaultCurrency}`
+                                : ""}
+                            </SelectItem>
+                          )}
+                          {(canConvert || canTransfer
                             ? targetCurrencies
                             : wallets.map((wallet) => wallet.currency)
                           ).map((currency) => (
                             <SelectItem
                               key={currency}
                               value={currency}
-                              disabled={currency === draft.currency}
+                              disabled={
+                                operation === "convert" &&
+                                currency === draft.currency
+                              }
                             >
                               {currency}
                             </SelectItem>
                           ))}
                         </SelectContent>
                       </Select>
-                      {canConvert && catalog.message && (
+                      {(canConvert || canTransfer) && catalog.message && (
                         <FieldDescription>{catalog.message}</FieldDescription>
                       )}
                       {errors.targetCurrency && (

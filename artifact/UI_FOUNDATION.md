@@ -63,7 +63,11 @@ simulated confirmation and verified per-tab recovery storage before sending.
 Conversion review first requests validated server-owned terms, shows provenance
 and expiry, and requires renewed review after expiry. Validated server outcomes
 show receipts and refresh balances/bounded completed activity; unknown outcomes
-retain immutable input/key/quote for explicit recovery. Transfers remain disabled.
+retain immutable input/key/quote for explicit recovery. T08-02 now connects
+transfers through that same slot: exact arbitrary IDs/defaults, no-FX same-currency
+or expiring FX review and inspect-only incoming recent facts. The existing visual
+system is retained; full-history browsing and valuation remain separate. See
+[TRANSFERS.md](TRANSFERS.md).
 Client validation never replaces server role, precision, funds or idempotency
 enforcement. See [FUNDING.md](FUNDING.md) and [CONVERSIONS.md](CONVERSIONS.md).
 

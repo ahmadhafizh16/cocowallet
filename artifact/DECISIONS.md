@@ -225,7 +225,8 @@ conventions in [HTTP.md](HTTP.md), without selecting a generator or changing
 implemented endpoint shapes.
 D-033 and T09-01 fix the history query/detail slice in [HISTORY.md](HISTORY.md):
 explicit account context, inclusive UTC days, either-side currency filtering and
-numbered pages. Transfer submission, generation and other remaining shapes stay
+numbered pages. T08-02 fixes transfer submission/review/recovery in
+[TRANSFERS.md](TRANSFERS.md). Generation and other remaining wallet/default shapes stay
 open in [API_DESIGN.md](API_DESIGN.md). Swagger UI is not implemented.
 
 ### O-004
@@ -264,7 +265,8 @@ checks; target creation, journal, quote use and success commit together. See
 explicit quote/confirmation UI and shared per-tab original-key recovery.
 T08-01 now extends global ownership/retention to the internal transfer service,
 including atomic simulated-recipient/wallet creation, quote-bound FX and rate-free
-same-currency sends. See [TRANSFERS.md](TRANSFERS.md). Transfer HTTP/UI, full history
+same-currency sends. See [TRANSFERS.md](TRANSFERS.md). T08-02 now connects transfer
+HTTP/UI and shared original-key recovery; full history
 and Swagger remain separate work; the backend alone never implied those features.
 
 ### O-007

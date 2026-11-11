@@ -20,8 +20,9 @@
 Funding requests/receipts/problems are fixed in [IDEMPOTENCY.md](IDEMPOTENCY.md)
 and described by the implemented OpenAPI document. D-032 also fixes the immutable
 preview/readback and internal confirmation/consumption rules in [QUOTES.md](QUOTES.md).
-Transfer submission, full history contracts, generator and Swagger UI remain
-open; this checkbox is not global approval for those unrelated endpoints.
+Transfer submission/history contracts are now fixed in [TRANSFERS.md](TRANSFERS.md)
+and [HISTORY.md](HISTORY.md). Full generation/Swagger and wallet/default routes
+remain open; this checkbox is not global approval for unrelated endpoints.
 
 T07-01's internal service is defined in [CONVERSIONS.md](CONVERSIONS.md), with
 global funding/conversion key ownership and atomic creation/accounting/quote use.

@@ -1,6 +1,6 @@
 # Proposed implementation plan
 
-**Status:** Persistent reads, funding, fresh-first metadata and quote-bound conversion are implemented. T07-02 connects reviewed terms, expiry/reconfirmation, the documented endpoint, shared recovery and receipt/balance refresh. Next is T08-01's atomic transfer service, followed by reviewed transfer UI, wallet management, full history/valuation and API/Swagger acceptance. The existing visual identity is preserved and visual feedback deferred. See [CONVERSIONS.md](CONVERSIONS.md), [KANBAN.md](KANBAN.md) and [READINESS.md](READINESS.md); local commit rules remain D-021/D-022.
+**Status:** Persistent account/history reads, funding, fresh-first metadata and reviewed conversion/transfer flows are verified. T08-02 connects atomic transfers to reviewed same/FX terms, shared recovery and inspect-only incoming recent activity. Next is T09-02's full-history list/detail interface; wallet management, valuation and API/Swagger acceptance remain separate milestones. Existing visual identity is preserved and visual feedback deferred. See [TRANSFERS.md](TRANSFERS.md), [KANBAN.md](KANBAN.md) and [READINESS.md](READINESS.md); local commit rules remain D-021/D-022.
 
 ## Tasks
 

@@ -80,7 +80,8 @@ transfer endpoint is implied. See [TRANSFERS.md](../TRANSFERS.md).
 **Partial groundwork:** `/api/openapi` serves a tested hand-maintained document
 for implemented read/operational, funding/conversion, reference and quote routes, including
 required money keys, exact amounts, discriminated quote terms/lifecycle and safe
-problems. Full generation, transfer submission and Swagger UI remain unimplemented;
+problems. Full generation and Swagger UI remain unimplemented; T08-02 now adds
+transfer submission through the same HTTP safeguards in [TRANSFERS.md](../TRANSFERS.md);
 T09-01 now supplies the history query/detail contract in [HISTORY.md](../HISTORY.md).
 No closure of this generation/Swagger task is implied.
 

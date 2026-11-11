@@ -119,4 +119,5 @@ Known pre-write failures are retained outside completed history; storage/lock/
 post-creation failures are nondefinitive and require the same input/key/quote.
 Same-currency transfers have no quote. Mutual service checks/insert triggers now
 cover funding, conversion and transfers without rewriting old outcomes. Transfer
-HTTP submission and browser recovery remain T08-02, not implemented here.
+T08-02 now connects HTTP submission/browser recovery using that unchanged policy
+and historical per-tab recovery slot; see [TRANSFERS.md](TRANSFERS.md).

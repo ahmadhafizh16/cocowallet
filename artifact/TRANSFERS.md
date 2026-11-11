@@ -1,9 +1,11 @@
 # Atomic simulated-transfer backend
 
-**Status:** T08-01's internal service is implemented and verified. Transfer
-HTTP submission, browser confirmation/recovery and incoming history remain
-disabled/unimplemented. T08-02 depends on T09-01's history queries/API. No visual,
-dependency, real-money, banking or payment-provider integration is introduced.
+**Status:** T08-01's atomic service is verified. T08-02 now connects a documented
+transfer endpoint, reviewed same/FX confirmation, shared original-key recovery and
+inspect-only destination balances/incoming recent history, verified under T08-02.
+The existing visual system is preserved. Full-history browsing,
+valuation, wallet management and Swagger remain separate work. No dependency,
+migration, real-money, banking or payment-provider integration is introduced.
 
 ## Internal contract
 
@@ -76,8 +78,9 @@ keep their full minute across the rate-cache boundary. See [QUOTES.md](QUOTES.md
    `TRANSFER_OUTCOME_UNKNOWN`; retain the identical original key/input/quote.
    Never infer that a timeout means nothing committed or generate a replacement.
 
-The service returns `{ status, body, replayed }`; these are internal status values,
-not an advertised transfer endpoint. Success contains request/transaction IDs,
+The service returns `{ status, body, replayed }`; the HTTP adapter sends `body` at
+`status` and maps `replayed` to the response header, not a nested envelope.
+Success contains request/transaction IDs,
 type/status, exact source/target account/wallet/currency/name/exponent, canonical
 decimal/minor-unit amounts, original post-operation balances, recipient default
 metadata/creation flag and transaction creation time. Same-currency quote/rate/
@@ -148,3 +151,119 @@ not claim an enabled transfer journey.
 - T08-02 remains To do and depends on T09-01 history/API (with T10-01 shared HTTP
   prerequisite, now verified in [HTTP.md](HTTP.md)). No transfer HTTP endpoint, browser recovery or history UI is
   implied by this service. Checked work is committed locally; no push is authorized.
+
+## Connected T08-02 contract and flow
+
+The checkpoint above records T08-01 only. **`POST /api/transfers`** now uses a thin
+adapter over the same service, reusing [HTTP.md](HTTP.md)'s same-origin JSON,
+UUID header, 16 KiB bounded body and lossless response safeguards. Structural
+rejection is 400 `INVALID_TRANSFER_REQUEST`, before database acquisition. Accepted
+business failures/successes use the service's durable retention/replay; unexpected
+failure is safe 503 `TRANSFER_OUTCOME_UNKNOWN`, `definitive: false`. Responses are
+`no-store` and carry `Idempotency-Replayed`. OpenAPI registers POST with the shared
+strict request schema, same-currency-null/FX receipt alternatives and Problem
+Details. No new accounting implementation or retry-key ownership policy is added.
+
+The existing always-mounted Send money dialog and shadcn controls are retained:
+
+- IDs use the backend's arbitrary exact nonblank/NUL-free contract (8,192 UTF-16
+  code units), not the old ASCII/128-character restriction. No trimming, case
+  folding, UUID-only rule or real-identity verification. The 16 KiB UTF-8 body
+  bound still applies, even for an ID within its individual character bound.
+- The server overview supplies known destinations/defaults. New IDs require a
+  validated eligible default; known defaults are shown, never editable. The target
+  initially resolves to the destination default and may be explicitly overridden,
+  including to the source currency. Changing recipient clears dependent choices;
+  changing a transfer source does not inherit conversion's same-currency ban.
+- Snapshot context is not a write lock or real recipient verification. The service
+  rechecks it and rejects mismatches without overwriting existing defaults. Reload
+  and review current context after a definitive rejection. Entry/review never
+  creates a recipient/wallet or reserves funds.
+- Same-currency review displays identical exact amounts and explicitly no rate or
+  quote. It requests neither; a currency catalog request is not an FX rate request.
+  A genuinely missing default's metadata can still require a catalog at confirmation.
+  FX review validates operation/source/recipient/default/target, pinned precision,
+  exact arithmetic, provenance and full-minute lifecycle. Expiry/clock rollback
+  disables confirmation; fresh terms need an explicit request and a separate
+  confirmation. Editing invalidates previews and discards late replies. No automatic
+  money retry, quote replacement, fee or invented reciprocal is added.
+- Funding/conversions/transfers share **the unchanged historical recovery key**
+  `cocowallet.pending-funding.v1`; older unresolved records remain parseable. Only
+  unresolved original key/input/quote uses verified per-tab storage. The bounded
+  recovery envelope is separate from the HTTP body. Read/write/read-back failure
+  blocks network submission. Reload never submits automatically; any feature action
+  opens original recovery instead of a replacement. Mismatched/malformed receipts,
+  unknown outcomes and key conflicts preserve uncertainty. Cleanup failure blocks
+  new attempts. Rapid confirmation is single-flight.
+- Validated receipts show exact source/target amounts, original post-operation
+  balances, creation/default context and applied FX when present. Known results
+  refresh the overview without relabeling a presentation-refresh failure as monetary
+  uncertainty. Ordinary drafts persist in memory through close/edit; reload clears
+  ordinary drafts/quotes.
+- New destinations appear in the existing account switcher after refresh with
+  inspect-only badges. Every destination money action stays disabled and the server
+  still rejects destination-owned sources. Destination USD valuation stays
+  unavailable; no combined value or rate is invented.
+- The existing recent panel now GETs the selected account's **first 50 matching
+  completed operations** using T09-01's history API, rather than global retained
+  receipts. Account/filter/revision changes cancel stale work and cannot flash a
+  prior account's records. Untrusted pages validate context, direction, precision,
+  amounts and recorded-rate arithmetic. Failure offers a read-only retry, never
+  another account's fallback. Incoming facts retain original source→target rate
+  direction. This bounded panel/inline facts is not T09-02's full-history paging,
+  date filters or detail navigation.
+- Privacy removes amount inputs, review facts, receipt amounts/rates, history
+  records and time elements, and blocks hidden confirmation. Keyboard focus return,
+  responsive dialog scrolling, themes and reduced motion use existing controls;
+  transfer IDs wrap with bidi isolation in facts. No visual identity/token change.
+
+### Verified T08-02 checkpoint
+
+Isolated tests cover strict HTTP guards/schema alignment, arbitrary IDs, same/FX
+receipts, original replay after expiry/later spending, retained rejection without
+debit/destination creation, source ownership and safe uncertainty. Shared quote/
+recovery tests cover recipient tampering, same-currency null terms, legacy-slot
+compatibility, reload/original-key routing across features and blocked storage.
+Recent-history tests cover foreign/malformed data, late aborted responses, refresh,
+empty, retry and privacy. Existing atomic service tests remain authoritative for
+concurrency/rollback.
+
+- The final full Docker check/build passes **1,416 Jest tests in 57 suites**,
+  formatting, lint, TypeScript and artifact checks (**57 documents / 36 tasks**).
+- All **78 production Chromium checks** pass on a fresh guarded disposable server,
+  including **13 transfer checks**: reviewed USD→GBP/new destination/incoming
+  inspection, exact same-currency IDs without quotes/rates, stored defaults and
+  target overrides/missing wallets, server read-only enforcement, lost committed
+  response/reload/original-key-and-quote recovery across feature actions, blocked
+  storage, expiry/reconfirmation, self-ID/unavailable quote/draft retention, stale
+  funds rejection, hidden review/receipt and four 320/1440 light/dark keyboard/
+  focus/privacy capture paths. Two historical copy assertions were updated or their
+  old message preserved; the complete suite was rerun, not just failed cases.
+- Before/after captures and the bounded **ship** verdict are recorded in
+  [DESIGN_REVIEW.md](DESIGN_REVIEW.md). A separate 820px reduced-motion check covers
+  missing-default validation focus, Escape/focus return and zero page errors.
+  The one six-file JSX detector scan was regex-only with no findings; parsed
+  contrast/tiny-text rules did not run. No second scan, independent-agent audit,
+  physical-device/screen-reader test, WCAG certification or performance claim.
+- Verified backup `/app/data/wallet.sqlite.pre-transfer-ui-1794431364277.bak`
+  preceded full checks. All **14 runtime tables including migration metadata**
+  remain bigint-safely row-identical after tests and restored development. Runtime
+  remains **1 account / 3 wallets / 0 transactions / 0 journal entries / 0 funding
+  attempts / 0 conversion attempts / 0 transfer attempts**, with empty reference
+  caches and quote/use tables. Integrity `ok`; foreign-key violations zero. No new
+  migration, dependency, runtime recipient/funds/quote seed, live-provider test or
+  restore drill was introduced.
+- Development resumed with `.next/dev.pre-transfer-ui-1794432201317` retained.
+  A browser verifies enabled funding review, documented transfer POST, actual empty
+  scoped recent history and **300 stable frames**: zero extra navigations/page/
+  console errors or financial/reference requests. Checked work is committed locally;
+  no remote push is authorized.
+- Bounded in-thread Verify review uses current graph/path coverage, material call
+  directions and exact source for HTTP, preview/recovery, confirmation and scoped
+  recent facts. No recorded coverage gap is not completeness proof; no exhaustive
+  ledger/security audit is claimed. The previously verified atomic service/migration
+  remains unchanged apart from its obsolete internal-only comment.
+
+Next is T09-02's full-history list/detail interface. It must retain D-033's inclusive
+UTC calendar days/numbered pages and explicit account isolation. Destination USD
+valuation/default-wallet policy, wallet management and Swagger remain separate.

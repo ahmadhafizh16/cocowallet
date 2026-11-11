@@ -113,11 +113,9 @@ describe("preview operation validation", () => {
   it("requires a distinct bounded recipient ID without claiming to verify it", () => {
     for (const recipient of [
       "",
-      "a",
-      "a b",
-      "a".repeat(129),
-      "recipient\n",
-      "recipient\r\n",
+      " ",
+      "a".repeat(8193),
+      "recipient\0",
       account.id,
     ]) {
       expect(
@@ -127,6 +125,81 @@ describe("preview operation validation", () => {
           account,
           wallets: model.wallets,
         }).errors.recipient,
+      ).toBeTruthy();
+    }
+  });
+  it.each([
+    "a",
+    "a b",
+    "__proto__",
+    "constructor",
+    " وجهة-💰 ",
+    "a".repeat(8192),
+  ])(
+    "accepts exact arbitrary recipient %s with an explicit new default",
+    (recipient) => {
+      const result = validateOperation({
+        operation: "transfer",
+        draft: {
+          ...draft,
+          recipient,
+          targetCurrency: "",
+          recipientDefaultCurrency: "USD",
+        },
+        account,
+        wallets: [{ ...usd, balanceMinor: "5000" }],
+        targetCurrencies: ["USD", "GBP"],
+        transferAccounts: model.accounts,
+      });
+      expect(result.errors).toEqual({});
+      expect(result.review).toMatchObject({
+        recipient,
+        targetCurrency: "USD",
+        recipientDefaultCurrency: "USD",
+        recipientExisted: false,
+      });
+    },
+  );
+  it("resolves stored defaults without overwriting them and permits same-currency overrides", () => {
+    const target = {
+      id: "recipient",
+      role: "destination" as const,
+      label: "Destination",
+      defaultCurrency: "GBP",
+    };
+    for (const override of ["", "USD"]) {
+      const result = validateOperation({
+        operation: "transfer",
+        draft: {
+          ...draft,
+          recipient: target.id,
+          targetCurrency: override,
+          recipientDefaultCurrency: "JPY",
+        },
+        account,
+        wallets: [{ ...usd, balanceMinor: "5000" }],
+        targetCurrencies: ["USD", "GBP"],
+        transferAccounts: [account, target],
+      });
+      expect(result.errors).toEqual({});
+      expect(result.review).toMatchObject({
+        targetCurrency: override || "GBP",
+        recipientDefaultCurrency: "GBP",
+        recipientExisted: true,
+      });
+    }
+  });
+  it("requires eligible new-recipient defaults and valid targets before review", () => {
+    for (const recipientDefaultCurrency of ["", "ZZZ"]) {
+      expect(
+        validateOperation({
+          operation: "transfer",
+          draft: { ...draft, targetCurrency: "USD", recipientDefaultCurrency },
+          account,
+          wallets: [{ ...usd, balanceMinor: "5000" }],
+          targetCurrencies: ["USD"],
+          transferAccounts: [account],
+        }).errors.recipientDefaultCurrency,
       ).toBeTruthy();
     }
   });

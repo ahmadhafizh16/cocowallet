@@ -69,7 +69,7 @@ test("browser-created server quotes bind exact terms without moving or reserving
   const document = await (await request.get("/api/openapi")).json();
   expect(document.paths["/api/quotes"].post).toBeDefined();
   expect(document.paths["/api/conversions"].post).toBeDefined();
-  expect(document.paths["/api/transfers"]).toBeUndefined();
+  expect(document.paths["/api/transfers"].post).toBeDefined();
   await page
     .locator(".wallet-quick-actions")
     .getByRole("button", { name: "Convert", exact: true })

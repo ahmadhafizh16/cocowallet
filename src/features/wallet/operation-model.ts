@@ -1,6 +1,7 @@
 import { MAX_MINOR, MoneyError, parseAmount } from "../money/money";
 import { walletBalance } from "./presentation";
 import type { AccountView, WalletCurrency, WalletView } from "./types";
+import { identifierContract } from "../../lib/contracts";
 
 export type Operation = "deposit" | "withdraw" | "convert" | "transfer";
 export type OperationDraft = {
@@ -8,6 +9,7 @@ export type OperationDraft = {
   currency: WalletCurrency;
   targetCurrency: WalletCurrency | "";
   recipient: string;
+  recipientDefaultCurrency?: string;
   provider: string;
 };
 export type OperationErrors = Partial<
@@ -16,6 +18,7 @@ export type OperationErrors = Partial<
     | "currency"
     | "targetCurrency"
     | "recipient"
+    | "recipientDefaultCurrency"
     | "provider"
     | "form",
     string
@@ -29,6 +32,8 @@ export type OperationReview = {
   targetCurrency: WalletCurrency;
   recipient: string;
   provider: string;
+  recipientDefaultCurrency?: string;
+  recipientExisted?: boolean;
 };
 
 export const PROVIDERS = [
@@ -76,6 +81,7 @@ export function validateOperation({
   wallets,
   targetCurrencies,
   balancesConnected = false,
+  transferAccounts,
 }: {
   operation: Operation;
   draft: OperationDraft;
@@ -83,6 +89,7 @@ export function validateOperation({
   wallets: WalletView[];
   targetCurrencies?: string[];
   balancesConnected?: boolean;
+  transferAccounts?: AccountView[];
 }): { errors: OperationErrors; review: OperationReview | null } {
   const errors: OperationErrors = {};
   if (account?.role !== "main") {
@@ -125,7 +132,7 @@ export function validateOperation({
       errors.amount =
         balance === 0n
           ? balancesConnected
-            ? "Insufficient funds. Add simulated funds before converting or withdrawing."
+            ? "Insufficient funds. Add simulated funds before sending, converting or withdrawing."
             : "Insufficient preview balance. This wallet has no funds, and deposit submission is not connected."
           : balancesConnected
             ? "This amount exceeds the available balance. Enter a smaller amount."
@@ -147,13 +154,39 @@ export function validateOperation({
     errors.provider = "Choose one of the fictional providers.";
   }
   if (operation === "transfer") {
-    if (!/^[a-zA-Z0-9][a-zA-Z0-9_-]{1,127}(?![\s\S])/u.test(draft.recipient)) {
+    if (!identifierContract.is(draft.recipient)) {
       errors.recipient =
-        "Enter an account ID of 2–128 letters, digits, hyphens, or underscores.";
+        "Enter a nonblank simulated account ID, up to 8,192 characters, without NUL characters. IDs are kept exactly as entered.";
     } else if (draft.recipient === account.id) {
       errors.recipient =
         "Enter a different simulated account ID, not this account’s own ID.";
     }
+  }
+  const recipient = transferAccounts?.find(
+    (value) => value.id === draft.recipient,
+  );
+  const recipientDefault =
+    recipient?.defaultCurrency ?? draft.recipientDefaultCurrency;
+  const transferTarget = draft.targetCurrency || recipientDefault;
+  if (operation === "transfer" && transferAccounts) {
+    if (recipient && recipient.role !== "destination" && !errors.recipient)
+      errors.recipient =
+        "Choose a simulated destination, not the main account.";
+    if (
+      !recipientDefault ||
+      (!recipient && !targetCurrencies?.includes(recipientDefault))
+    )
+      errors.recipientDefaultCurrency =
+        "Choose a default currency for this new simulated destination.";
+    if (
+      !transferTarget ||
+      !(
+        targetCurrencies?.includes(transferTarget) ||
+        recipient?.defaultCurrency === transferTarget
+      )
+    )
+      errors.targetCurrency =
+        "Choose an available receiving currency, or use the destination default.";
   }
   if (
     operation === "convert" &&
@@ -181,9 +214,18 @@ export function validateOperation({
       accountId: account.id,
       minor,
       wallet,
-      targetCurrency: draft.targetCurrency || wallet.currency,
+      targetCurrency:
+        (operation === "transfer" && transferAccounts
+          ? transferTarget
+          : draft.targetCurrency) || wallet.currency,
       recipient: draft.recipient,
       provider: draft.provider,
+      ...(operation === "transfer" && transferAccounts
+        ? {
+            recipientDefaultCurrency: recipientDefault,
+            recipientExisted: !!recipient,
+          }
+        : {}),
     },
   };
 }

@@ -33,7 +33,7 @@ test("the overview has two columns and no permanent form or conflicting conversi
   ).toBe(2);
   await expect(
     page.getByText(
-      "deposits, withdrawals and reviewed conversions are simulated.",
+      "deposits, withdrawals, reviewed conversions and transfers are simulated.",
       {
         exact: false,
       },

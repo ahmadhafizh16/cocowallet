@@ -140,5 +140,6 @@ recipients, quotes or live-provider check is needed for this stage.
 
 The checkpoint above records T10-01's boundary. T09-01 now implements the read-only
 history GETs in [HISTORY.md](HISTORY.md), with user-selected UTC days and numbered
-pages under D-033. It reuses these helpers; this does not enable transfer submission
-or complete generation/Swagger work.
+pages under D-033. T08-02 subsequently adds the transfer POST in
+[TRANSFERS.md](TRANSFERS.md) through the same guards and exact responses. These
+milestones do not complete generation/Swagger work.

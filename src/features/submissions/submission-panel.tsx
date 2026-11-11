@@ -32,8 +32,12 @@ export function SubmissionPanel({
       : undefined;
   const intent = funding.intent;
   const conversion = receipt?.type === "conversion" ? receipt : undefined;
+  const transfer = receipt?.type === "transfer" ? receipt : undefined;
+  const movement = conversion ?? transfer;
   const fundingReceipt =
-    receipt && receipt.type !== "conversion" ? receipt : undefined;
+    receipt && (receipt.type === "deposit" || receipt.type === "withdrawal")
+      ? receipt
+      : undefined;
   return (
     <div className="wallet-dialog-review space-y-5" aria-busy={funding.pending}>
       <h3 ref={heading} tabIndex={-1} className="text-lg font-semibold">
@@ -62,7 +66,7 @@ export function SubmissionPanel({
           <div className="flex justify-between gap-4">
             <dt>Wallet</dt>
             <dd className="min-w-0 text-right wrap-anywhere">
-              {intent.kind === "conversion"
+              {intent.kind === "conversion" || intent.kind === "transfer"
                 ? intent.request.sourceWalletId
                 : intent.request.walletId}
             </dd>
@@ -72,14 +76,14 @@ export function SubmissionPanel({
             <dd className="min-w-0 text-right wrap-anywhere">
               {hidden
                 ? "Amount hidden"
-                : conversion
-                  ? `${conversion.source.amount} ${conversion.source.currency} → ${conversion.target.amount} ${conversion.target.currency}`
+                : movement
+                  ? `${movement.source.amount} ${movement.source.currency} → ${movement.target.amount} ${movement.target.currency}`
                   : fundingReceipt
                     ? `${displayAmount(BigInt(fundingReceipt.amountMinor), fundingReceipt.exponent)} ${fundingReceipt.currency}`
                     : intent.request.amount}
             </dd>
           </div>
-          {intent.kind !== "conversion" && (
+          {(intent.kind === "deposit" || intent.kind === "withdrawal") && (
             <div className="flex justify-between gap-4">
               <dt>Fictional provider</dt>
               <dd>
@@ -90,13 +94,52 @@ export function SubmissionPanel({
               </dd>
             </div>
           )}
-          {intent.kind === "conversion" && (
+          {(intent.kind === "conversion" ||
+            (intent.kind === "transfer" && intent.request.quoteId)) && (
             <div className="flex justify-between gap-4">
               <dt>Quote ID</dt>
               <dd className="min-w-0 text-right wrap-anywhere">
                 {intent.request.quoteId}
               </dd>
             </div>
+          )}
+          {intent.kind === "transfer" && (
+            <>
+              <div className="flex justify-between gap-4">
+                <dt>Simulated recipient</dt>
+                <dd className="min-w-0 text-right wrap-anywhere">
+                  <bdi>{intent.request.recipientAccountId}</bdi>
+                </dd>
+              </div>
+              <div className="flex justify-between gap-4">
+                <dt>Destination default</dt>
+                <dd>
+                  {transfer?.recipient.defaultCurrency ??
+                    intent.request.recipientDefaultCurrency ??
+                    "Stored default"}
+                </dd>
+              </div>
+              {transfer && (
+                <div className="flex justify-between gap-4">
+                  <dt>Destination context</dt>
+                  <dd className="min-w-0 text-right wrap-anywhere">
+                    {transfer.recipient.created
+                      ? "New destination created · inspect only"
+                      : "Stored destination · inspect only"}
+                    {!transfer.rate && " · Same currency, no FX rate"}
+                  </dd>
+                </div>
+              )}
+              <div className="flex justify-between gap-4">
+                <dt>Receive currency</dt>
+                <dd>
+                  {transfer?.target.currency ??
+                    intent.request.targetCurrency ??
+                    intent.request.recipientDefaultCurrency ??
+                    "Stored default"}
+                </dd>
+              </div>
+            </>
           )}
           <div className="flex justify-between gap-4">
             <dt>Retry key</dt>
@@ -112,26 +155,26 @@ export function SubmissionPanel({
               </div>
               <div className="flex justify-between gap-4">
                 <dt>
-                  {conversion
+                  {movement
                     ? "Balances after this operation"
                     : "Balance after this operation"}
                 </dt>
                 <dd className="min-w-0 text-right wrap-anywhere">
                   {hidden ? (
                     "Amount hidden"
-                  ) : conversion ? (
+                  ) : movement ? (
                     <>
                       {displayAmount(
-                        BigInt(conversion.source.balanceMinor),
-                        conversion.source.exponent,
+                        BigInt(movement.source.balanceMinor),
+                        movement.source.exponent,
                       )}{" "}
-                      {conversion.source.currency}
+                      {movement.source.currency}
                       <br />
                       {displayAmount(
-                        BigInt(conversion.target.balanceMinor),
-                        conversion.target.exponent,
+                        BigInt(movement.target.balanceMinor),
+                        movement.target.exponent,
                       )}{" "}
-                      {conversion.target.currency}
+                      {movement.target.currency}
                     </>
                   ) : fundingReceipt ? (
                     `${displayAmount(BigInt(fundingReceipt.balanceMinor), fundingReceipt.exponent)} ${fundingReceipt.currency}`
@@ -140,20 +183,20 @@ export function SubmissionPanel({
                   )}
                 </dd>
               </div>
-              {conversion && !hidden && (
+              {movement?.rate && !hidden && (
                 <>
                   <div className="flex justify-between gap-4">
                     <dt>Reference rate</dt>
                     <dd className="min-w-0 text-right wrap-anywhere">
-                      1 {conversion.source.currency} = {conversion.rate.value}{" "}
-                      {conversion.target.currency}
+                      1 {movement.source.currency} = {movement.rate.value}{" "}
+                      {movement.target.currency}
                     </dd>
                   </div>
                   <div className="flex justify-between gap-4">
                     <dt>Rate source date</dt>
                     <dd>
-                      {conversion.rate.date} ·{" "}
-                      {conversion.rate.source === "cached" ? "Cached" : "Fresh"}
+                      {movement.rate.date} ·{" "}
+                      {movement.rate.source === "cached" ? "Cached" : "Fresh"}
                     </dd>
                   </div>
                 </>

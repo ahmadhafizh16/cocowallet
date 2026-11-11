@@ -94,6 +94,7 @@ export function getStoredWalletOverview(
     ...toWalletOverview(readOverviewSnapshot(database)),
     mode: "connected-funding" as const,
     conversionEnabled: true,
+    transferEnabled: true,
     transactions: [
       ...readRecentFunding(database),
       ...readRecentConversions(database),

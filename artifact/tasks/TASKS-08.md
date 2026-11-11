@@ -25,9 +25,21 @@ endpoint/UI is added; T09-01 history/API prerequisites remain before T08-02.
 ### T08-02
 
 **Transfer interface and destination inspection**  
-**Status:** To do.  
+**Status:** Done.
 **Decisions:** [D-003](../DECISIONS.md#d-003), [D-008](../DECISIONS.md#d-008), [D-010](../DECISIONS.md#d-010), [D-012](../DECISIONS.md#d-012), [D-013](../DECISIONS.md#d-013), [D-017](../DECISIONS.md#d-017).  
 **Depends on:** [T08-01](#t08-01), [T09-01](TASKS-09.md#t09-01), [T11-02](TASKS-11.md#t11-02).  
 **Implementation:** Add a documented transfer endpoint and accessible flow for entering an arbitrary ID, choosing a new recipient's default, accepting/overriding the target currency, previewing FX if needed, and confirming. Make simulation and inspect-only destination status obvious in the account switcher.
 
 **Acceptance and tests:** Browser tests transfer from a funded USD wallet to a new GBP destination, switch accounts, and inspect the credited balance/incoming transaction. Cover existing destinations, same-currency flow, expired quote, insufficient funds, self-ID rejection, keyboard use, and destination read-only enforcement.
+
+**Implementation evidence:** [TRANSFERS.md](../TRANSFERS.md) defines the implemented
+POST, exact recipient/default/target review, no-FX same-currency path, validated FX
+expiry/reconfirmation and shared historical-slot recovery. Scoped recent GETs now
+include incoming destination facts without enabling destination money actions or
+inventing valuation. Full Docker check/build passes **1,416 Jest tests in 57 suites**;
+all **78 production Chromium checks** pass, including 13 transfer journeys. Current
+render captures and the bounded ship verdict are in [DESIGN_REVIEW.md](../DESIGN_REVIEW.md).
+All 14 runtime tables remain row-identical to the verified backup; restored
+development is stable for 300 frames without errors, extra navigations or financial/
+reference requests. No migration, dependency, runtime test funds or push. Full-history
+browsing, wallet management, valuation and Swagger remain separate tasks.

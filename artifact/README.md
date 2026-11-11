@@ -1,6 +1,6 @@
 # Digital wallet planning
 
-These documents distinguish decisions, proposals, and implemented work. The platform, exact journal core, persistent account/history reads, durable funding, fresh-first metadata, shared HTTP boundaries and reviewed quote-bound conversion flow exist. History uses inclusive UTC days and user-selected numbered pages. The internal atomic transfer service is verified, but transfer HTTP/UI, full-history UI/valuation and Swagger remain future work. Quote previews move/reserve no funds. Consult the kanban rather than assuming a draft PRD describes completed features.
+These documents distinguish decisions, proposals, and implemented work. The platform, exact journal core, persistent account/history reads, durable funding, fresh-first metadata, shared HTTP boundaries and reviewed conversion/transfer flows exist. Transfers share original-key recovery; destinations remain inspect-only with incoming recent facts. History uses inclusive UTC days and user-selected numbered pages. Full-history browsing/valuation and Swagger remain future work. Quote previews move/reserve no funds. Consult the kanban rather than assuming a draft PRD describes completed features.
 
 - [Main PRD](PRD.md): product scope and links to the smaller feature PRDs.
 - [Decision register](DECISIONS.md): stable `D-###` decisions and `O-###` open questions.
@@ -24,7 +24,7 @@ These documents distinguish decisions, proposals, and implemented work. The plat
 - [Reference metadata](RATES.md): fresh-first Frankfurter fiat catalog and exact decimal rates with bounded persistent fallback.
 - [Server-owned quotes](QUOTES.md): immutable full-minute previews/readback, exact binding, no reservation and internal single-success safeguards.
 - [Reviewed conversions](CONVERSIONS.md): exact quote-bound accounting, target creation, documented endpoint, expiry/reconfirmation and original-key recovery.
-- [Atomic simulated transfers](TRANSFERS.md): internal same/FX transfer service, recipient/wallet creation and globally retained original results; no transfer HTTP/UI submission.
+- [Simulated transfers](TRANSFERS.md): atomic same/FX service, reviewed endpoint/UI, exact recipient/default context, globally retained outcomes, shared recovery and inspect-only incoming recent activity.
 - [Shared HTTP contracts](HTTP.md): reusable request guards/schema definitions, exact JSON, safe Problem Details and common write boundaries; no new endpoint or Swagger UI.
 - [History queries/API](HISTORY.md): account-scoped completed facts, inclusive UTC-day filters and user-selected numbered pages; no full-history UI or transfer submission.
 - [Diagrams](DIAGRAMS.md): proposed architecture, data relationships, business flows, and code flow.

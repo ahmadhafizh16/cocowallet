@@ -440,7 +440,7 @@ Badge supports `default`, `secondary`, and `outline` pill variants. Wallet count
 
 All four money forms use the shared Radix Dialog. Content uses solid surface, ambient depth, a labelled title/description, accessible close Button, and the bounded width in frontmatter. Desktop maximum height is `calc(100dvh - 48px)` with internal vertical overflow; the mobile exception is in Layout. Escape dismisses, focus is trapped while open, and closing restores the invoking control. Initial focus goes to recipient for Send money, otherwise amount, or to the preserved review heading when reopening a review.
 
-The always-mounted workspace preserves separate drafts/errors/reviews across close/reopen; reload clears ordinary drafts. Validation focuses the first invalid control, valid review focuses its heading, and editing returns to amount. Changing source currency clears dependent errors and an identical receiving currency; same-currency target options are disabled. Review facts wrap. Reviewing never moves funds. Deposit/withdrawal/conversion final actions explicitly confirm a simulation and require visible amounts plus verified recovery storage. Transfers remain disabled. Conversion review first requests server-owned terms; missing or expired quotes disable confirmation and require an explicit new quote plus renewed review.
+The always-mounted workspace preserves separate drafts/errors/reviews across close/reopen; reload clears ordinary drafts. Validation focuses the first invalid control, valid review focuses its heading, and editing returns to amount. Conversion source changes clear an identical receiving currency; conversion disables same-currency targets, while transfers permit them. Review facts wrap. Reviewing never moves funds. Every connected money action explicitly confirms a simulation and requires visible amounts plus verified shared recovery storage. Transfer entry accepts exact arbitrary IDs, requires a new destination default and allows target overrides without changing stored defaults. Same-currency review uses identical minor units without a rate/quote. Conversion and FX-transfer reviews request server-owned terms; missing or expired quotes disable confirmation and require explicit fresh terms plus renewed review. See [the connected transfer contract](artifact/TRANSFERS.md).
 
 Funding's pending/recovery/receipt/error views reuse the existing dialog/fact-list
 composition. Step headings take focus; closing restores the invoking control and
@@ -450,8 +450,12 @@ recovery explicitly retries the same key. A known outcome permits an explicit
 new-operation/edit action only after recovery context is cleared. Privacy removes
 receipt/recovery amounts and receipt timestamps, and removes completed-activity
 records from the DOM. A known receipt's balance is its original post-operation
-snapshot, not a fresh total. The latest 50 funding/conversion receipts are partial transaction
-visibility; the balance-history graph stays disconnected.
+snapshot, not a fresh total. Transfers share the same historical recovery slot and
+cannot bypass unresolved funding/conversions. The recent panel reads the selected
+account's latest 50 matching completed operations, including incoming destination
+transfers; stale account/filter responses cannot replace current context. This is
+bounded recent visibility, not full-history browsing. Destinations stay inspect-only
+and their USD valuation remains unavailable; the balance-history graph stays disconnected.
 
 ### Loading and error states
 
