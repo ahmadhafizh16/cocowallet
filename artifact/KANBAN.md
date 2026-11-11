@@ -1,8 +1,8 @@
 # Project kanban
 
-**Last updated:** T07-01 is complete: internal atomic conversion, missing target creation, exact quote use and retained original outcomes with global funding/conversion key ownership. Full check/build and 968 Jest / 53 production Chromium checks pass; backed-up repeated migration preserves existing data. The UI is unchanged and conversion/transfer submission disabled. Next is T07-02's reviewed conversion HTTP/confirmation/recovery flow; transfers, history/valuation and Swagger remain separate work.
+**Last updated:** T07-02 is complete: documented conversion submission, reviewed fixed quotes, expiry/reconfirmation, shared original-key recovery and exact receipt/balance refresh. Full check/build passes 995 Jest / 63 production Chromium checks. Existing visual design and runtime rows are preserved; transfers stay disabled. Next is T08-01's atomic transfer service; transfer UI, wallet management, full history/valuation and Swagger remain separate work.
 
-**Scope:** 36 implementation tasks: **13 to do**, **2 in progress**, **0 blocked**, **21 done**. Planning activities completed below do not count as implemented features.
+**Scope:** 36 implementation tasks: **12 to do**, **2 in progress**, **0 blocked**, **22 done**. Planning activities completed below do not count as implemented features.
 
 Each task links to its detailed description, source PRD, decision IDs, dependencies, and acceptance tests. The Angular-style, one-intention-per-commit rule and local Git workflow in [D-021](DECISIONS.md#d-021) and [D-022](DECISIONS.md#d-022) apply to every task. A task moves to **Done** only when its acceptance criteria are verified and the PRD, decisions, diagrams, API documentation, and handover are updated as needed.
 
@@ -39,7 +39,6 @@ See Done for reference metadata and the verified server-owned quote backend.
 
 ### Conversion — [PRD-07](prd/PRD-07-conversion.md)
 
-- [ ] [T07-02](tasks/TASKS-07.md#t07-02) — Preview, confirmation, and HTTP flow.
 
 ### Transfers — [PRD-08](prd/PRD-08-transfers.md)
 
@@ -100,6 +99,7 @@ _No task is currently blocked by an explicit unresolved decision or external blo
 - [x] [T06-01](tasks/TASKS-06.md#t06-01) — Fresh-first eligible fiat catalog, exact CSV rates and persistent bounded fallback; 867 Jest / 51 production Chromium checks, isolated live smoke and unchanged runtime records verified.
 - [x] [T06-02](tasks/TASKS-06.md#t06-02) — Immutable full-minute quote previews/readback, exact binding and internal atomic single-success use; 926 Jest / 53 production Chromium checks, repeated backed-up migration and stable development verified. Submission/UI remain T07/T08.
 - [x] [T07-01](tasks/TASKS-07.md#t07-01) — Internal atomic conversion, target creation, exact quote use and retained original-result replay/global money-key ownership; 968 Jest / 53 production Chromium checks, repeated backed-up migration and stable development verified. Submission/UI remain T07-02.
+- [x] [T07-02](tasks/TASKS-07.md#t07-02) — Documented conversion endpoint, reviewed quote/expiry/reconfirmation, shared original-key recovery, exact receipts and refreshed balances/bounded history; 995 Jest / 63 production Chromium checks. Visual design/runtime data preserved; transfers remain disabled.
 
 ## Done — planning only
 

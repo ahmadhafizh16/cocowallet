@@ -1,11 +1,11 @@
 # Handover
 
-**Status:** Twenty-one of 36 tasks are closed. T07-01 adds internal atomic
-conversion, missing target creation, exact quote use and retained original results.
-The board has 13 To do, 2 In progress (remaining Swagger acceptance), and 21 Done.
-The UI remains unchanged and visual feedback deferred. Next is T07-02's reviewed
-conversion HTTP/confirmation/recovery flow. Conversion/transfer submission remains
-disabled; transfers, history/valuation and Swagger retain their tasks.
+**Status:** Twenty-two of 36 tasks are closed. T07-02 connects reviewed quotes,
+expiry/reconfirmation, documented conversion submission, shared original-key
+recovery and receipt/balance refresh. The board has 12 To do, 2 In progress
+(remaining Swagger acceptance), and 22 Done. Existing visual design is preserved
+and visual feedback deferred. Next is T08-01's atomic transfer service. Transfers
+remain disabled; full history/valuation, wallet management and Swagger retain their tasks.
 See [CONVERSIONS.md](CONVERSIONS.md).
 
 ## Implemented modules and commands
@@ -32,7 +32,9 @@ See [CONVERSIONS.md](CONVERSIONS.md).
 | `drizzle/0004_reference_rate_cache.sql`, `scripts/smoke-rates.ts` | Mutable technical caches separate from financial records; optional guarded live check uses only an isolated disposable database. |
 | `src/features/quotes/`, `src/app/api/quotes/`, `drizzle/0005_immutable_fx_quotes.sql` | Immutable exact-input/recipient-bound full-minute previews/readback; no reservation, internal confirmation checks and scoped atomic single-success consumption. No monetary submission endpoint. |
 | `scripts/e2e-reference-provider.mjs`, `e2e/zzz-quotes.spec.ts` | Guarded deterministic provider preload only for the disposable production server; no-money preview and disabled-submission browser checks. |
-| `src/features/conversions/`, `drizzle/0006_conversion_results.sql` | Server-only quote-bound conversion, atomic target currency/wallet creation, exact debit/credit/use and retained original outcomes. Mutual triggers/services enforce global money-key ownership with funding. No HTTP submission/UI wiring. |
+| `src/features/conversions/`, `src/app/api/conversions/`, `drizzle/0006_conversion_results.sql` | Atomic target creation/debit/credit/use/results, strict documented POST, quote review/expiry/reconfirmation, eligible target selection and completed-conversion reads. Mutual triggers/services enforce global money-key ownership. |
+| `src/features/submissions/` | Shared funding/conversion recovery hook and result panel; original-key/input/quote retries in one backward-compatible per-tab slot, verified before sending and cleared only on known results. |
+| `e2e/zzzz-conversions.spec.ts` | Guarded isolated conversion review/confirmation, missing wallet, expiry, unavailable terms, lost-response recovery, storage, theme/viewport/focus/privacy journeys. |
 | `scripts/start-funding-e2e.ts`, `e2e/zz-funding.spec.ts` | Refuse ordinary runtime target; successful monetary browser writes use only the disposable isolated server/database. |
 | `src/server/wallet-overview.ts` | Dynamic-page adapter, prototype-safe account totals, exact rate-free main USD totals, unavailable FX/destination valuation, no dropped unsupported currencies. |
 | `components.json`, `postcss.config.mjs`, `src/lib/utils.ts` | shadcn/Lucide/Tailwind configuration and tested class helper used by the local UI components. |
@@ -40,7 +42,7 @@ See [CONVERSIONS.md](CONVERSIONS.md).
 | `src/components/brand/`, `public/brand/`, `src/app/icon.svg` | Approved CocoWallet inline vector logo, theme-aware wordmark, unchanged downloadable variants, and matching favicon. |
 | `src/features/theme/`, `src/app/globals.css` | Approved frosted tokens, light/dark/system preference, pre-paint theme bootstrap, storage fallback, and reduced-motion styles. |
 | `src/app/page.tsx`, `layout.tsx`, `loading.tsx`, `error.tsx`, `not-found.tsx` | Dynamic Node stored-balance overview, styles/metadata, skip link, loading/error boundaries and branded 404. No build-time DB read/seed. |
-| `src/features/wallet/` | Existing overview, account snapshots, always-mounted local drafts, reviewed simulated funding, privacy and matching skeleton. Conversion/transfer final actions remain disabled. Preview factory is test-only. |
+| `src/features/wallet/` | Existing overview, snapshots, local drafts, reviewed simulated funding/conversion, privacy and matching skeleton. Latest 50 completed funding/conversion receipts only; transfer final actions remain disabled. Preview factory is test-only. |
 | `src/features/wallet/balance-history.tsx`, `currency-flag.tsx` | Validated account-scoped recorded-USD chart and exact-value disclosure; honest disconnected/private states; deterministic local currency vectors. No history source or valuation service is connected. |
 | `DESIGN.md`, `.impeccable/design.json` | Extracted light/dark visual tokens, canonical design guidance, and version-2 component-preview extensions; actual application styles remain in source CSS. |
 | `scripts/check-artifacts.mjs` | Checks Markdown links, decision/task references, board status alignment, and task dependency cycles. |
@@ -61,7 +63,26 @@ Stop the dev compiler before `docker compose run --rm app npm run check`, then u
 
 Application DB: `/app/data/wallet.sqlite` in Compose's `wallet-data` volume. Tests use isolated temporary SQLite files. Normal shutdown is `docker compose down` without deleting volumes. Before applying journal migrations, the stopped app's database was backed up with SQLite's backup API to `/app/data/wallet.sqlite.pre-journal-1794390597589.bak`. Backup creation is verified; a full restore drill is not claimed.
 
-Current conversion-backend verification: full Docker check/build passes **968 Jest
+Current connected-conversion verification: final full Docker check/build passes
+**995 Jest tests in 45 suites** and all **63 production Chromium checks** pass on
+the disposable server. Ten new conversion checks include exact balances/bounded
+history, no-money review, missing target creation, expiry/reconfirmation,
+unavailable terms, lost committed response/original-key recovery, blocked storage
+and both themes at 320px/1440px with keyboard/focus/privacy verification. The one
+changed-UI detector returns `[]`; bounded in-thread render/source review is `ship`
+at this feature scope, not global accessibility/security certification.
+
+Verified backup `/app/data/wallet.sqlite.pre-conversion-flow-1794423439298.bak`
+remains row-identical across every runtime table, including migration metadata.
+Counts are 1 account / 3 wallets / 0 transactions / 0 journal entries / 0 funding
+attempts / 0 conversion attempts; reference/quote tables are empty. Integrity is
+`ok`, FK violations zero. No migration/dependency, runtime test money/quote seed,
+live-provider check or restore drill was introduced. Development resumed with
+`.next/dev.pre-conversion-flow-1794424055123` retained; a browser verified 300 stable
+frames, zero extra navigations/errors and zero financial/reference/quote requests.
+See [CONVERSIONS.md](CONVERSIONS.md) for contracts, reproduction and limitations.
+
+Historical conversion-backend verification: full Docker check/build passes **968 Jest
 tests in 43 suites** and all **53 production Chromium regressions** pass on the
 disposable database. Exact ties/zero decimals/int64 limits, restart replay without
 quote/clock reads, full-minute cache hold, insert-stage rollback and independent
@@ -188,7 +209,7 @@ The atomic-write checkpoint passes 16 feature-local integration tests, including
 - The workspace was empty before the draft documents were added.
 - The available host `node` command reports v24.22.1; the application will run on Node.js 26 in Docker, avoiding a requirement to install Node 26 on the host.
 - The `sqlite3` CLI was not found. It is optional if the selected application driver manages the SQLite file.
-- Docker and Compose run the application at `http://localhost:3000`; `/` renders the stored-balance overview with reviewed simulated funding. Health/readiness are separate JSON endpoints. Reference/quote APIs exist, but FX forms and full history/valuation remain disconnected; conversion/transfer submissions are disabled.
+- Docker and Compose run the application at `http://localhost:3000`; `/` renders stored balances with reviewed simulated funding/conversion, explicit quote expiry/reconfirmation and shared recovery. Health/readiness are separate endpoints. Transfers, full history and valuation remain disconnected; transfer submission is disabled.
 - T03-01 changes `/` to the dynamic journal-backed read-only overview. Startup
   now requires explicit `db:migrate` then `db:seed`; GET and build never seed.
   Before initialization, SQLite's backup API saved
@@ -258,7 +279,7 @@ Tests open their own temporary database through `openDatabase`, apply committed 
 
 ## Next steps
 
-Next are T07-02's reviewed conversion HTTP/confirmation/recovery flow, transfers, full history/valuation and the
+Next are T08-01's atomic transfer service and reviewed transfer flow, full history/valuation and the
 remaining API/Swagger acceptance in dependency order. T03-02/T03-03 and
 T10-01/T10-03 retain partial/future work; T04-02/T05-02 remain in progress solely
 for their Swagger acceptance. O-006 is resolved for funding by D-030. Preserve the

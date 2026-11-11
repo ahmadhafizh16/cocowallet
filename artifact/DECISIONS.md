@@ -207,7 +207,8 @@ HTTP submission. Exact contracts are in [QUOTES.md](QUOTES.md).
 POSTs, reference metadata GETs and immutable quote preview/readback, including
 their exact receipt/problem, idempotency/provenance/lifecycle contracts and
 maintained OpenAPI document. See [QUOTES.md](QUOTES.md) for the quote slice.
-Conversion/transfer submission/history shapes, generation and full
+T07-02 fixes conversion HTTP/recovery shapes in [CONVERSIONS.md](CONVERSIONS.md).
+Transfer submission/history shapes, generation and full
 filtering/pagination stay open in [API_DESIGN.md](API_DESIGN.md). Swagger UI is not implemented.
 
 ### O-004
@@ -238,8 +239,10 @@ T07-01 now extends this policy to the internal conversion service: immutable
 separate conversion outcomes, exact quote/original-input binding and global key
 ownership across funding/conversion. Replay precedes quote/current-funds/clock
 checks; target creation, journal, quote use and success commit together. See
-[CONVERSIONS.md](CONVERSIONS.md). Conversion HTTP/recovery UI and transfer services
-are still separate implementation work, not implied by that internal boundary.
+[CONVERSIONS.md](CONVERSIONS.md). T07-02 now adds the documented conversion endpoint,
+explicit quote/confirmation UI and shared per-tab original-key recovery. Transfer
+services, full history and Swagger remain separate work; the backend alone never
+implied those features.
 
 ### O-007
 

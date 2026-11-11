@@ -2,7 +2,7 @@
 version: 1
 slug: "src-app-page-tsx"
 primary_target: "src/app/page.tsx"
-related_targets: ["src/features/wallet/dashboard.tsx","src/features/wallet/wallet.css","src/features/wallet/operation-workspace.tsx","src/features/funding/funding-panel.tsx","src/features/funding/recent-funding.tsx","src/app/loading.tsx","src/app/error.tsx"]
+related_targets: ["src/features/wallet/dashboard.tsx","src/features/wallet/wallet.css","src/features/wallet/operation-workspace.tsx","src/features/submissions/submission-panel.tsx","src/features/conversions/quote-review.tsx","src/features/funding/recent-funding.tsx","src/app/loading.tsx","src/app/error.tsx"]
 ---
 
 # Wallet overview surface
@@ -15,8 +15,9 @@ shell: icon rail with tooltips, popup money workflows, and consistent actual
 shadcn foundations. See `artifact/WALLET_REDESIGN.md`. The job remains inspecting
 journal-backed balance snapshots and exploring local money drafts. The user has
 paused visual feedback while backend workflows are integrated. Reviewed simulated
-deposits/withdrawals now connect through durable retry/recovery; conversion and
-transfer submission stay disconnected. See `artifact/FUNDING.md`.
+deposits/withdrawals and conversions connect through durable retry/recovery;
+transfer submission stays disconnected. See `artifact/FUNDING.md` and
+`artifact/CONVERSIONS.md`.
 
 ## Direction contract
 
@@ -70,8 +71,11 @@ incorrect and is withdrawn; this machine's seed support was not unavailable.
   from one server snapshot. Test-only preview data is not a runtime fallback.
   Funding POSTs have explicit reviewed confirmation, immutable unresolved intent,
   same-key recovery and server-confirmed receipts. Only unresolved context may
-  temporarily use per-tab session storage. Other financial writes, rates/quotes,
-  full history and valuation remain future work; unknown values stay unavailable.
+  temporarily use per-tab session storage. Conversion review uses validated
+  server-owned terms, with explicit expiry/reconfirmation and shared recovery.
+  Transfers, full history and valuation remain future work; unknown values stay
+  unavailable. Recent activity is bounded funding/conversion receipt visibility,
+  not a complete history/valuation service.
 - The scene is a local evaluation at a desk or on a phone under normal ambient
   light; light follows the supplied reference, dark follows system/user preference.
 

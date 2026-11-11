@@ -32,9 +32,12 @@ test("the overview has two columns and no permanent form or conflicting conversi
       ),
   ).toBe(2);
   await expect(
-    page.getByText("deposits and withdrawals are simulated.", {
-      exact: false,
-    }),
+    page.getByText(
+      "deposits, withdrawals and reviewed conversions are simulated.",
+      {
+        exact: false,
+      },
+    ),
   ).toBeVisible();
   await expect(
     page.getByRole("heading", { name: "Currency wallets", exact: true }),
@@ -229,12 +232,12 @@ test("zero balances cannot be withdrawn or converted and service guidance preced
     await openMoneyForm(page, action);
     await expect(
       page.getByRole("dialog").locator('[data-slot="dialog-description"]'),
-    ).toContainText(/not connected|simulated wallet operation/);
+    ).toContainText(
+      /not connected|simulated wallet operation|simulated conversion/,
+    );
     await page.getByLabel(label, { exact: true }).fill("1.00");
     await page.getByRole("button", { name: review, exact: true }).click();
-    await expect(page.getByRole("alert")).toContainText(
-      "Insufficient preview balance",
-    );
+    await expect(page.getByRole("alert")).toContainText("Insufficient funds");
     await expect(
       page.getByRole("heading", { name: review, exact: true }),
     ).toHaveCount(0);
@@ -309,7 +312,7 @@ test("history filters use shadcn Select and have a useful reset", async ({
   await chooseOption(page, "Filter transactions", "Deposits");
   await expect(
     page.getByRole("heading", {
-      name: "No matching completed funding",
+      name: "No matching completed activity",
       exact: true,
     }),
   ).toBeVisible();
@@ -317,7 +320,7 @@ test("history filters use shadcn Select and have a useful reset", async ({
   await expect(filter).toContainText("All activity");
   await expect(
     page.getByRole("heading", {
-      name: "No matching completed funding",
+      name: "No matching completed activity",
       exact: true,
     }),
   ).toBeVisible();

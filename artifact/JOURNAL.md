@@ -74,7 +74,7 @@ the final key schema, fingerprinting, stable error replay, or recovery policy.
 Funding supplies those guarantees through [FUNDING.md](FUNDING.md). T07-01 also
 implements internal atomic conversion, including missing currency/wallet creation,
 quote use and retained original outcomes; see [CONVERSIONS.md](CONVERSIONS.md).
-Conversion submission/recovery UI remains T07-02 and transfers remain T08.
+T07-02 now connects conversion submission/recovery UI; transfers remain T08.
 
 ## Verification
 

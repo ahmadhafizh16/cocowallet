@@ -1,29 +1,26 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import type {
-  FundingIntent,
-  FundingProblem,
-  FundingReceipt,
-} from "./contracts";
 import {
-  confirmedResult,
-  FUNDING_RECOVERY_KEY,
-  parseRecovery,
-} from "./recovery";
+  confirmedSubmissionResult,
+  SUBMISSION_RECOVERY_KEY,
+  parseSubmissionRecovery,
+  type SubmissionIntent,
+  type SubmissionResult,
+} from "./contracts";
 
 type State = {
   ready: boolean;
   pending: boolean;
-  intent?: FundingIntent;
-  result?: FundingReceipt | FundingProblem;
+  intent?: SubmissionIntent;
+  result?: SubmissionResult;
   storageBlocked: boolean;
   message?: string;
 };
 const UNKNOWN =
   "Outcome not confirmed. Retry this exact submission with its original key; do not start another attempt.";
 
-export function useFunding(enabled: boolean, onKnown: () => void) {
+export function useSubmission(enabled: boolean, onKnown: () => void) {
   const [state, setState] = useState<State>({
     ready: false,
     pending: false,
@@ -45,14 +42,14 @@ export function useFunding(enabled: boolean, onKnown: () => void) {
     if (!enabled) return;
     let next: State;
     try {
-      const raw = sessionStorage.getItem(FUNDING_RECOVERY_KEY);
+      const raw = sessionStorage.getItem(SUBMISSION_RECOVERY_KEY);
       next = {
         ready: true,
         pending: false,
         storageBlocked: false,
         ...(raw === null
           ? {}
-          : { intent: parseRecovery(raw), message: UNKNOWN }),
+          : { intent: parseSubmissionRecovery(raw), message: UNKNOWN }),
       };
     } catch {
       next = {
@@ -68,7 +65,7 @@ export function useFunding(enabled: boolean, onKnown: () => void) {
     return () => controller.current?.abort();
   }, [enabled]);
 
-  async function send(candidate?: FundingIntent) {
+  async function send(candidate?: SubmissionIntent) {
     const previous = current.current;
     if (
       !enabled ||
@@ -78,18 +75,25 @@ export function useFunding(enabled: boolean, onKnown: () => void) {
       busy.current
     )
       return;
-    const intent = previous.intent ?? candidate;
-    if (!intent) return;
+    const original = previous.intent ?? candidate;
+    if (!original) return;
+    let intent: SubmissionIntent;
     busy.current = true;
     try {
       // Never overwrite another unresolved request, including data changed by a
       // same-tab script. Read back the exact saved bytes before network activity.
-      const raw = sessionStorage.getItem(FUNDING_RECOVERY_KEY);
+      const raw = sessionStorage.getItem(SUBMISSION_RECOVERY_KEY);
+      intent = parseSubmissionRecovery(JSON.stringify(original));
+      Object.freeze(intent.request);
+      Object.freeze(intent);
       const encoded = JSON.stringify(intent);
-      if (raw !== null && JSON.stringify(parseRecovery(raw)) !== encoded)
+      if (
+        raw !== null &&
+        JSON.stringify(parseSubmissionRecovery(raw)) !== encoded
+      )
         throw new Error("Conflicting recovery context.");
-      sessionStorage.setItem(FUNDING_RECOVERY_KEY, encoded);
-      if (sessionStorage.getItem(FUNDING_RECOVERY_KEY) !== encoded)
+      sessionStorage.setItem(SUBMISSION_RECOVERY_KEY, encoded);
+      if (sessionStorage.getItem(SUBMISSION_RECOVERY_KEY) !== encoded)
         throw new Error("Recovery write was not retained.");
     } catch {
       busy.current = false;
@@ -107,7 +111,11 @@ export function useFunding(enabled: boolean, onKnown: () => void) {
     const timeout = window.setTimeout(() => abort.abort(), 15000);
     try {
       const response = await fetch(
-        intent.kind === "deposit" ? "/api/deposits" : "/api/withdrawals",
+        intent.kind === "conversion"
+          ? "/api/conversions"
+          : intent.kind === "deposit"
+            ? "/api/deposits"
+            : "/api/withdrawals",
         {
           method: "POST",
           headers: {
@@ -119,7 +127,7 @@ export function useFunding(enabled: boolean, onKnown: () => void) {
           signal: abort.signal,
         },
       );
-      const result = confirmedResult(
+      const result = confirmedSubmissionResult(
         await response.json(),
         response.status,
         intent,
@@ -127,8 +135,16 @@ export function useFunding(enabled: boolean, onKnown: () => void) {
       if (!result) throw new Error("Unknown response.");
       let cleared = false;
       try {
-        sessionStorage.removeItem(FUNDING_RECOVERY_KEY);
-        cleared = sessionStorage.getItem(FUNDING_RECOVERY_KEY) === null;
+        // Never erase a different record installed while the request was in flight.
+        const raw = sessionStorage.getItem(SUBMISSION_RECOVERY_KEY);
+        if (
+          raw !== null &&
+          JSON.stringify(parseSubmissionRecovery(raw)) !==
+            JSON.stringify(intent)
+        )
+          throw new Error("Recovery context changed.");
+        sessionStorage.removeItem(SUBMISSION_RECOVERY_KEY);
+        cleared = sessionStorage.getItem(SUBMISSION_RECOVERY_KEY) === null;
       } catch {
         /* Known result remains visible; block new attempts until cleanup succeeds. */
       }

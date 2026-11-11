@@ -1,18 +1,18 @@
 # HTTP API design: draft
 
-**Status:** Account/wallet reads, simulated funding POSTs, fresh-first reference metadata and immutable one-minute quotes are implemented under D-029–D-032, with maintained OpenAPI contracts. Conversion/transfer submission, history contracts, generation and Swagger UI remain future work. See [FUNDING.md](FUNDING.md), [RATES.md](RATES.md) and [QUOTES.md](QUOTES.md).
+**Status:** Account/wallet reads, simulated funding/conversion POSTs, fresh-first reference metadata and immutable quotes are implemented with maintained OpenAPI contracts. T07-02's connected conversion flow is verified. Transfers, full history contracts, generation and Swagger UI remain future work. See [FUNDING.md](FUNDING.md), [RATES.md](RATES.md), [QUOTES.md](QUOTES.md) and [CONVERSIONS.md](CONVERSIONS.md).
 
-T07-01 additionally implements the internal atomic conversion service and durable
-original-result storage in [CONVERSIONS.md](CONVERSIONS.md). It is not an HTTP
-handler or OpenAPI path. Funding/conversion retry keys share ownership, including
-recorded failures; existing funding receipt/status shapes are unchanged. T07-02
-must finish the submission/recovery/confirmation HTTP and UI acceptance separately.
+T07-01's atomic service now backs `POST /api/conversions` under T07-02.
+Funding/conversion retry keys share ownership, including recorded failures;
+existing funding receipt/status shapes are unchanged. One recovery slot blocks
+cross-feature submissions while an outcome is unknown. See the exact contract and
+scope in [CONVERSIONS.md](CONVERSIONS.md).
 
 ## Implemented operational endpoints
 
 | Method | Route | Result |
 | --- | --- | --- |
-| GET | `/` | Dynamic stored-account/journal overview with reviewed simulated funding and partial completed-funding visibility. |
+| GET | `/` | Stored-account/journal overview with reviewed funding/conversion and bounded completed-receipt visibility. |
 | GET | `/api/health` | 200 JSON liveness response with `Cache-Control: no-store`. |
 | GET | `/api/ready` | 200 JSON when the migrated metadata table is readable; otherwise 503 Problem Details with `DATABASE_NOT_READY`. |
 | GET | `/api/accounts` | Persistent main account and destinations; role/default/creation time/inspect-only metadata. |
@@ -20,6 +20,7 @@ must finish the submission/recovery/confirmation HTTP and UI acceptance separate
 | GET | `/api/openapi` | OpenAPI 3.1 document for implemented routes, including reference metadata and quotes; not Swagger UI. |
 | POST | `/api/deposits` | Explicit simulated deposit; required UUID key and durable original-result replay. |
 | POST | `/api/withdrawals` | Explicit simulated withdrawal; protected debit and durable error/success replay. |
+| POST | `/api/conversions` | Confirm exact quoted conversion; UUID key, original result replay and atomic target creation/journal/quote use. |
 | GET | `/api/currencies` | Fresh-first eligible fiat list with pinned precision, original fetch time and eligible cached fallback. |
 | GET | `/api/rates?base=USD&quote=EUR` | Exact direct reference observation with source/fetch dates and fresh/cached provenance; not a binding quote. |
 | POST | `/api/quotes` | Persist immutable conversion/cross-currency transfer preview terms; no funds reservation or money idempotency key. |
@@ -39,12 +40,13 @@ context, records exact source/target amounts and provenance, and starts a full
 60-second hold after final validation. Cache eligibility is checked at issuance;
 crossing its 24-hour boundary later does not shorten the issued hold. No preview
 creates a recipient/wallet or moves money. Internal confirmation/consumption seams
-are ready for later services, but no conversion/transfer HTTP submission exists.
+support the connected conversion flow. Transfer submission still does not exist.
 
 The [interface](UI_FOUNDATION.md) now reads stored balances but validates/reviews
-money drafts locally. Deposit/withdrawal confirmations now use the fixed funding
-contract in [IDEMPOTENCY.md](IDEMPOTENCY.md); conversion/transfer final actions
-remain disabled. Operational readiness does not imply accounts have been seeded.
+money drafts locally. Funding/conversion use explicit server confirmation and
+the fixed recovery rules in [IDEMPOTENCY.md](IDEMPOTENCY.md). Conversion first
+requests fixed terms and requires renewed review after expiry; transfers remain
+disabled. Operational readiness does not imply accounts have been seeded.
 
 **Decision references:** [D-003](DECISIONS.md#d-003), [D-007](DECISIONS.md#d-007), [D-008](DECISIONS.md#d-008), [D-010](DECISIONS.md#d-010), [D-017](DECISIONS.md#d-017), [D-018](DECISIONS.md#d-018), and [D-019](DECISIONS.md#d-019). Detailed requirements and tasks: [PRD-10](prd/PRD-10-api.md) and [Tasks 10](tasks/TASKS-10.md).
 
@@ -62,7 +64,6 @@ remain disabled. Operational readiness does not imply accounts have been seeded.
 | --- | --- | --- |
 | POST | `/api/wallets` | Add a supported fiat wallet to the main account. |
 | PATCH | `/api/accounts/{accountId}/default-currency` | Change the main account's default currency; destinations are read-only. |
-| POST | `/api/conversions` | Confirm a conversion, creating the target wallet if required. |
 | POST | `/api/transfers` | Transfer to an existing or newly created simulated account. |
 | GET | `/api/transactions` | List/filter an account's transactions. |
 | GET | `/api/transactions/{transactionId}` | Inspect an individual transaction. |
@@ -94,7 +95,7 @@ The names, fields, example IDs, successful response statuses, and payloads in th
 | List currencies | Implemented GET; no body | Exact contract superseded by [RATES.md](RATES.md), including D-031 fresh-first fallback | [D-004](DECISIONS.md#d-004), [D-031](DECISIONS.md#d-031) |
 | Deposit / withdrawal | Main wallet ID, decimal-string amount, fictional provider, `Idempotency-Key` | Completed transaction and affected balance | [D-005](DECISIONS.md#d-005), [D-006](DECISIONS.md#d-006), [D-019](DECISIONS.md#d-019) |
 | FX quote | Implemented POST/GET; exact fields in [QUOTES.md](QUOTES.md) supersede this proposal | Immutable terms and lifecycle state; no funds reservation | [D-032](DECISIONS.md#d-032) |
-| Convert | Server quote reference and `Idempotency-Key` | One completed conversion, debit/credit amounts, and retained rate metadata | [D-009](DECISIONS.md#d-009), [D-018](DECISIONS.md#d-018), [D-019](DECISIONS.md#d-019) |
+| Convert | Implemented exact contract in [CONVERSIONS.md](CONVERSIONS.md), superseding this proposal | Original retained conversion receipt with exact debit/credit, balance snapshots and rate provenance | [D-009](DECISIONS.md#d-009), [D-018](DECISIONS.md#d-018), [D-019](DECISIONS.md#d-019), [D-032](DECISIONS.md#d-032) |
 | Transfer | Source wallet, destination account ID, amount, target/default-currency information, quote reference when FX is needed, and `Idempotency-Key` | One completed transfer and destination identity; the credited wallet/account is created when needed | [D-010](DECISIONS.md#d-010), [D-018](DECISIONS.md#d-018), [D-019](DECISIONS.md#d-019) |
 | Transaction list | Account ID and optional type, currency, date filters | Completed records, newest first; pagination is open | [D-012](DECISIONS.md#d-012), [O-003](DECISIONS.md#o-003) |
 | Transaction detail | Transaction ID and, if needed, inspected account context | Stored operation details, including provider/destination and historical rate as applicable | [D-012](DECISIONS.md#d-012), [O-003](DECISIONS.md#o-003) |

@@ -1,9 +1,14 @@
 /** @jest-environment jsdom */
 import { act } from "react";
 import { createRoot, type Root } from "react-dom/client";
-import { useFunding } from "./use-funding";
+import { useSubmission as useFunding } from "../submissions/use-submission";
 import { FUNDING_RECOVERY_KEY } from "./recovery";
 import type { FundingIntent } from "./contracts";
+import type { ConversionIntent } from "../submissions/contracts";
+import {
+  conversionFailures,
+  conversionProblem,
+} from "../conversions/contracts";
 
 const intent: FundingIntent = {
   version: 1,
@@ -24,6 +29,54 @@ const receipt = {
   balanceMinor: "1000",
   provider: "demo_bank",
   createdAt: "2026-11-11T00:00:00.000Z",
+};
+const conversionIntent: ConversionIntent = {
+  version: 1,
+  key: intent.key,
+  kind: "conversion",
+  request: {
+    quoteId: "aaaaaaaa-1234-4123-8123-123456789012",
+    sourceWalletId: "wallet",
+    amount: "10.00",
+    targetCurrency: "GBP",
+  },
+};
+const conversionReceipt = {
+  requestKey: intent.key,
+  transactionId: receipt.transactionId,
+  type: "conversion",
+  status: "completed",
+  quoteId: conversionIntent.request.quoteId,
+  source: {
+    walletId: "wallet",
+    accountId: "main",
+    currency: "USD",
+    name: "Dollar",
+    exponent: 2,
+    amount: "10.00",
+    amountMinor: "1000",
+    balanceMinor: "9000",
+  },
+  target: {
+    walletId: "target",
+    accountId: "main",
+    currency: "GBP",
+    name: "Pound",
+    exponent: 2,
+    amount: "8.00",
+    amountMinor: "800",
+    balanceMinor: "800",
+  },
+  rate: {
+    provider: "frankfurter",
+    value: "0.8",
+    date: "2026-11-10",
+    fetchedAt: "2026-11-11T00:00:00.000Z",
+    source: "fresh",
+  },
+  issuedAt: "2026-11-11T00:00:00.000Z",
+  expiresAt: "2026-11-11T00:01:00.000Z",
+  createdAt: "2026-11-11T00:00:01.000Z",
 };
 
 describe("per-tab submission recovery", () => {
@@ -252,5 +305,95 @@ describe("per-tab submission recovery", () => {
     expect(fetchMock).toHaveBeenCalledTimes(1);
     await act(() => hook.startAnother());
     expect(hook.result).toBeUndefined();
+  });
+
+  it("shares one immutable recovery slot for conversion and funding; remount never fetches a replacement quote", async () => {
+    await mount();
+    fetchMock.mockRejectedValue(new Error("lost response"));
+    await act(() => hook.send(conversionIntent));
+    expect(JSON.parse(sessionStorage.getItem(FUNDING_RECOVERY_KEY)!)).toEqual(
+      conversionIntent,
+    );
+    await act(() => root.unmount());
+    root = createRoot(host);
+    await mount();
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+    fetchMock.mockResolvedValue({
+      status: 200,
+      json: async () => conversionReceipt,
+    });
+    await act(() => hook.send(intent));
+    expect(fetchMock.mock.calls[1]).toEqual([
+      "/api/conversions",
+      expect.objectContaining({
+        body: JSON.stringify(conversionIntent.request),
+        headers: expect.objectContaining({
+          "Idempotency-Key": conversionIntent.key,
+        }),
+      }),
+    ]);
+    expect(hook.result).toEqual(conversionReceipt);
+    expect(sessionStorage.getItem(FUNDING_RECOVERY_KEY)).toBeNull();
+  });
+
+  it.each(["quoteId", "amountMinor", "rate"])(
+    "preserves conversion uncertainty for a mismatched receipt %s",
+    async (field) => {
+      await mount();
+      const altered = JSON.parse(JSON.stringify(conversionReceipt));
+      if (field === "quoteId")
+        altered.quoteId = "bbbbbbbb-1234-4123-8123-123456789012";
+      if (field === "amountMinor") altered.target.amountMinor = "1";
+      if (field === "rate") altered.rate.value = "4";
+      fetchMock.mockResolvedValue({ status: 200, json: async () => altered });
+      await act(() => hook.send(conversionIntent));
+      expect(hook.result).toBeUndefined();
+      expect(hook.intent).toEqual(conversionIntent);
+      expect(sessionStorage.getItem(FUNDING_RECOVERY_KEY)).not.toBeNull();
+    },
+  );
+
+  it("retains original conversion input after a definite expiry until an explicit new-attempt boundary", async () => {
+    await mount();
+    fetchMock.mockResolvedValue({
+      status: 409,
+      json: async () =>
+        conversionProblem(
+          409,
+          "QUOTE_EXPIRED",
+          conversionFailures.QUOTE_EXPIRED.detail,
+          true,
+          conversionIntent.key,
+        ),
+    });
+    await act(() => hook.send(conversionIntent));
+    expect(hook.result).toMatchObject({ code: "QUOTE_EXPIRED" });
+    expect(sessionStorage.getItem(FUNDING_RECOVERY_KEY)).toBeNull();
+    await act(() =>
+      hook.send({
+        ...conversionIntent,
+        key: "bbbbbbbb-1234-4123-8123-123456789012",
+      }),
+    );
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+    await act(() => hook.startAnother());
+    expect(hook.result).toBeUndefined();
+  });
+
+  it("does not erase recovery data replaced during an in-flight confirmed request", async () => {
+    await mount();
+    fetchMock.mockImplementation(async () => {
+      sessionStorage.setItem(
+        FUNDING_RECOVERY_KEY,
+        JSON.stringify(conversionIntent),
+      );
+      return { status: 200, json: async () => receipt };
+    });
+    await act(() => hook.send(intent));
+    expect(hook.result).toEqual(receipt);
+    expect(hook.storageBlocked).toBe(true);
+    expect(JSON.parse(sessionStorage.getItem(FUNDING_RECOVERY_KEY)!)).toEqual(
+      conversionIntent,
+    );
   });
 });

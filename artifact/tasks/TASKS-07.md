@@ -28,9 +28,22 @@ browser recovery, full history or transfer operation was enabled by this task.
 ### T07-02
 
 **Conversion preview, confirmation, and HTTP flow**  
-**Status:** To do.  
-**Decisions:** [D-007](../DECISIONS.md#d-007), [D-008](../DECISIONS.md#d-008), [D-009](../DECISIONS.md#d-009), [D-013](../DECISIONS.md#d-013), [D-017](../DECISIONS.md#d-017).  
+**Status:** Done.
+**Decisions:** [D-007](../DECISIONS.md#d-007), [D-008](../DECISIONS.md#d-008), [D-009](../DECISIONS.md#d-009), [D-013](../DECISIONS.md#d-013), [D-017](../DECISIONS.md#d-017), [D-032](../DECISIONS.md#d-032).
 **Depends on:** [T07-01](#t07-01), [T11-02](TASKS-11.md#t11-02).  
 **Implementation:** Provide documented quote/confirmation endpoints and an accessible conversion form. Show source and target amounts, reference rate/date, cache indication, and quote expiry; on expiry obtain a new preview and require reconfirmation.
 
-**Acceptance and tests:** A browser test deposits funds, previews and confirms a mocked conversion, and verifies both balances and history. Simulate expired quotes and unavailable rates; no source balance changes until a valid confirmation. API request/response shapes remain [O-003](../DECISIONS.md#o-003).
+**Acceptance and tests:** A browser test deposits funds, previews and confirms a mocked conversion, and verifies both balances and history. Simulate expired quotes and unavailable rates; no source balance changes until a valid confirmation. The implemented API/recovery contract is fixed in [CONVERSIONS.md](../CONVERSIONS.md); unrelated contracts remain O-003.
+
+**Verified slice:** Documented strict POST, validated fixed quote terms, eligible
+target selection/missing-wallet creation, explicit expiry/reconfirmation,
+shared original-key recovery, immutable receipts and snapshot refresh. The latest
+50 completed funding/conversion receipts provide bounded history visibility,
+not full T09 history/valuation. Final full Docker check/build passes **995 Jest
+tests in 45 suites** and **63 production Chromium checks**, including ten new
+conversion checks. Both themes and 320px/1440px review/receipt/focus/privacy paths,
+lost committed responses, blocked storage, unavailable/expired quotes and no-money
+review are verified. The existing visual world is preserved; bounded in-thread
+review and one detector scan are recorded in [DESIGN_REVIEW.md](../DESIGN_REVIEW.md).
+The backed-up runtime rows are unchanged; development is stable. Transfers and
+Swagger UI remain separate tasks and no real funds/provider integration is added.

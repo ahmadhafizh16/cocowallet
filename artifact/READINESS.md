@@ -20,12 +20,14 @@
 Funding requests/receipts/problems are fixed in [IDEMPOTENCY.md](IDEMPOTENCY.md)
 and described by the implemented OpenAPI document. D-032 also fixes the immutable
 preview/readback and internal confirmation/consumption rules in [QUOTES.md](QUOTES.md).
-Conversion/transfer submission, history contracts, generator and Swagger UI remain
+Transfer submission, full history contracts, generator and Swagger UI remain
 open; this checkbox is not global approval for those unrelated endpoints.
 
 T07-01's internal service is defined in [CONVERSIONS.md](CONVERSIONS.md), with
 global funding/conversion key ownership and atomic creation/accounting/quote use.
-Its HTTP/recovery UI remains T07-02; no final submission is enabled by backend tests.
+T07-02 adds the documented endpoint, reviewed quote/expiry/reconfirmation UI and
+shared original-key recovery. This does not approve transfers or full history,
+and backend tests alone are not treated as browser acceptance.
 
 ## Before visual design and feature completion
 

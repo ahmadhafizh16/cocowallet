@@ -13,6 +13,7 @@ import { GET as referenceRate } from "../rates/route";
 import { POST as createServerQuote } from "../quotes/route";
 import { GET as readServerQuote } from "../quotes/[quoteId]/route";
 import { withJournalWrite } from "@/features/journal/write";
+import { POST as conversion } from "../conversions/route";
 
 jest.mock("server-only", () => ({}));
 
@@ -112,6 +113,7 @@ describe("read-only OpenAPI contract", () => {
     const spec = await response.json();
     expect(spec.openapi).toBe("3.1.0");
     expect(Object.keys(spec.paths)).toEqual([
+      "/api/conversions",
       "/api/quotes",
       "/api/quotes/{quoteId}",
       "/api/currencies",
@@ -127,6 +129,7 @@ describe("read-only OpenAPI contract", () => {
     for (const [route, path] of Object.entries(spec.paths))
       expect(Object.keys(path as object)).toEqual([
         route === "/api/deposits" ||
+        route === "/api/conversions" ||
         route === "/api/withdrawals" ||
         route === "/api/quotes"
           ? "post"
@@ -292,5 +295,40 @@ describe("read-only OpenAPI contract", () => {
       ).json(),
       schemas.QuoteProblem!,
     );
+    const terms = input;
+    const conversionInput = {
+      quoteId: view.quote.quoteId,
+      sourceWalletId: terms.sourceWalletId,
+      amount: terms.amount,
+      targetCurrency: terms.targetCurrency,
+    };
+    expectContract(conversionInput, schemas.ConversionRequest!);
+    const responseForConversion = await conversion(
+      new Request("http://localhost/api/conversions", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Idempotency-Key": randomUUID(),
+        },
+        body: JSON.stringify(conversionInput),
+      }),
+    );
+    expect(responseForConversion.status).toBe(200);
+    expectContract(
+      await responseForConversion.json(),
+      schemas.ConversionReceipt!,
+    );
+    const conflict = await conversion(
+      new Request("http://localhost/api/conversions", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Idempotency-Key": randomUUID(),
+        },
+        body: JSON.stringify(conversionInput),
+      }),
+    );
+    expect(conflict.status).toBe(409);
+    expectContract(await conflict.json(), schemas.ConversionProblem!);
   });
 });

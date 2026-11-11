@@ -127,6 +127,6 @@ here resolve only this slice of O-003, not those unrelated pending contracts.
 
 T07-01 now implements the atomic conversion service, including durable replay
 before quote checks and atomic missing-wallet creation; see
-[CONVERSIONS.md](CONVERSIONS.md). Next is **T07-02**: it
-must finish reviewed confirmation/expiry UI before enabling conversion submission;
+[CONVERSIONS.md](CONVERSIONS.md). T07-02 now supplies the reviewed confirmation,
+expiry/reconfirmation and recovery UI plus the documented conversion endpoint;
 T08 retains the corresponding simulated-transfer work. No push is authorized.

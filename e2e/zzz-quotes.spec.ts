@@ -68,19 +68,24 @@ test("browser-created server quotes bind exact terms without moving or reserving
   ).toEqual(before);
   const document = await (await request.get("/api/openapi")).json();
   expect(document.paths["/api/quotes"].post).toBeDefined();
-  expect(document.paths["/api/conversions"]).toBeUndefined();
+  expect(document.paths["/api/conversions"].post).toBeDefined();
   expect(document.paths["/api/transfers"]).toBeUndefined();
   await page
     .locator(".wallet-quick-actions")
     .getByRole("button", { name: "Convert", exact: true })
     .click();
   await page.getByLabel("You convert", { exact: true }).fill("1.00");
+  await page.getByLabel("Receive currency", { exact: true }).click();
+  await page.getByRole("option", { name: "GBP", exact: true }).click();
   await page
     .getByRole("button", { name: "Review conversion", exact: true })
     .click();
   await expect(
-    page.getByRole("button", { name: "Convert unavailable", exact: true }),
-  ).toBeDisabled();
+    page.getByRole("button", {
+      name: "Confirm simulated conversion",
+      exact: true,
+    }),
+  ).toBeEnabled();
 });
 
 test("transfer previews do not create recipients and cannot accept client rate or expiry overrides", async ({

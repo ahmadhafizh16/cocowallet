@@ -27,12 +27,17 @@ globalThis.fetch = async (input, init) => {
   if (
     url.pathname === "/v2/rates.csv" &&
     url.searchParams.get("base") === "USD" &&
-    url.searchParams.get("quotes") === "GBP"
+    ["GBP", "EUR", "JPY"].includes(url.searchParams.get("quotes"))
   ) {
     const date = new Date().toISOString().slice(0, 10);
-    return new Response(`date,base,quote,rate\n${date},USD,GBP,0.8\n`, {
-      headers: { "Content-Type": "text/csv" },
-    });
+    const quote = url.searchParams.get("quotes");
+    const rate = quote === "JPY" ? "150" : quote === "EUR" ? "0.9" : "0.8";
+    return new Response(
+      `date,base,quote,rate\n${date},USD,${quote},${rate}\n`,
+      {
+        headers: { "Content-Type": "text/csv" },
+      },
+    );
   }
   return Response.json(
     { status: 404, message: "No fixture for this pair" },

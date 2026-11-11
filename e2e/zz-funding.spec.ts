@@ -89,10 +89,10 @@ test("explicit deposit/withdrawal confirmations update balances and show persist
     .click();
   await page.reload();
   await expect(
-    page.getByRole("list", { name: "Completed simulated funding" }),
+    page.getByRole("list", { name: "Completed simulated activity" }),
   ).toContainText("25.50 USD");
   await expect(
-    page.getByRole("list", { name: "Completed simulated funding" }),
+    page.getByRole("list", { name: "Completed simulated activity" }),
   ).toContainText("100.00 USD");
   expect((await wallet(request)).balanceMinor).toBe(
     (BigInt(before.balanceMinor) + 7450n).toString(),
@@ -165,7 +165,7 @@ test("lost committed response survives reload; explicit recovery reuses original
   await expect(page.getByRole("dialog")).not.toContainText("7.25");
   await expect(page.getByRole("dialog").locator("time")).toHaveCount(0);
   await expect(
-    page.getByRole("list", { name: "Completed simulated funding" }),
+    page.getByRole("list", { name: "Completed simulated activity" }),
   ).toHaveCount(0);
 });
 

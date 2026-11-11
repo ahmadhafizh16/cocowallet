@@ -1,6 +1,6 @@
 # PRD-07 — Main-account currency conversion
 
-**Status:** T07-01's internal atomic conversion service is implemented and verified; see [CONVERSIONS.md](../CONVERSIONS.md). Submission endpoints, reviewed confirmation/recovery UI and connected conversion history remain T07-02 and later history work.
+**Status:** T07-01's atomic service and T07-02's documented endpoint, reviewed quote/confirmation/recovery UI and bounded completed-conversion visibility are implemented; see [CONVERSIONS.md](../CONVERSIONS.md). Full history/pagination/valuation remain T09 and related tasks.
 **Decisions:** [D-004](../DECISIONS.md#d-004), [D-007](../DECISIONS.md#d-007), [D-008](../DECISIONS.md#d-008), [D-009](../DECISIONS.md#d-009), [D-018](../DECISIONS.md#d-018), [D-019](../DECISIONS.md#d-019).  
 **Tasks:** [T07-01–T07-02](../tasks/TASKS-07.md).  
 **Diagrams:** [Rate and quote sequence](../DIAGRAMS.md#rate-cache-and-quote-sequence) and [money-operation code flow](../DIAGRAMS.md#code-flow-for-a-completed-money-operation).
@@ -27,4 +27,4 @@ As the user, I can convert funds between fiat currencies in my main account, see
 
 ## Tests and open items
 
-Depends on [PRD-02](PRD-02-journal.md), [PRD-03](PRD-03-accounts.md), and [PRD-06](PRD-06-rates.md). Test exact and tie rounding, target-wallet creation, quote expiry, FX cache fallback, rollback, parallel spending, stable success/error replay, and the confirmation flow. [CONVERSIONS.md](../CONVERSIONS.md) fixes internal service/result storage for this slice. Final HTTP and browser recovery/confirmation retain [O-003](../DECISIONS.md#o-003) and T07-02; full history retains T09.
+Depends on [PRD-02](PRD-02-journal.md), [PRD-03](PRD-03-accounts.md), and [PRD-06](PRD-06-rates.md). Tests cover exact/tie rounding, target creation, expiry, cache fallback, rollback, parallel spending, stable success/error replay and reviewed confirmation/recovery. [CONVERSIONS.md](../CONVERSIONS.md) fixes this service/HTTP/UI slice of O-003. Full history/pagination, valuation and Swagger retain their tasks and unresolved decisions.

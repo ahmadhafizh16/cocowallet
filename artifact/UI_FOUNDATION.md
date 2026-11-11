@@ -58,12 +58,14 @@ options. One conversion has one visible context. Valid drafts can be reviewed. P
 rates/quotes are not invented; recipients are not verified or saved. The bounded
 recipient input guard is preview validation, **not** a final HTTP ID contract.
 
-**Review alone never submits.** Deposit/withdrawal now require an explicit
+**Review alone never moves funds.** Funding/conversion require an explicit
 simulated confirmation and verified per-tab recovery storage before sending.
-Validated server outcomes show receipts and refresh balances/partial funding
-records; unknown outcomes retain immutable input/key for explicit recovery.
-Conversion/transfer final actions remain disabled. Client validation never
-replaces server role, precision, funds or idempotency enforcement. See [FUNDING.md](FUNDING.md).
+Conversion review first requests validated server-owned terms, shows provenance
+and expiry, and requires renewed review after expiry. Validated server outcomes
+show receipts and refresh balances/bounded completed activity; unknown outcomes
+retain immutable input/key/quote for explicit recovery. Transfers remain disabled.
+Client validation never replaces server role, precision, funds or idempotency
+enforcement. See [FUNDING.md](FUNDING.md) and [CONVERSIONS.md](CONVERSIONS.md).
 
 ## Loading, errors, and motion
 

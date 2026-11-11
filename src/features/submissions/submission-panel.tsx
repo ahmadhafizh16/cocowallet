@@ -5,15 +5,15 @@ import { Button } from "@/components/ui/button";
 import { DialogFooter } from "@/components/ui/dialog";
 import { displayAmount } from "../wallet/presentation";
 import { PROVIDERS } from "../wallet/operation-model";
-import type { useFunding } from "./use-funding";
+import type { useSubmission } from "./use-submission";
 
-export function FundingPanel({
+export function SubmissionPanel({
   funding,
   hidden,
   onClose,
   onAnother,
 }: {
-  funding: ReturnType<typeof useFunding>;
+  funding: ReturnType<typeof useSubmission>;
   hidden: boolean;
   onClose: () => void;
   onAnother: () => void;
@@ -31,6 +31,9 @@ export function FundingPanel({
       ? funding.result
       : undefined;
   const intent = funding.intent;
+  const conversion = receipt?.type === "conversion" ? receipt : undefined;
+  const fundingReceipt =
+    receipt && receipt.type !== "conversion" ? receipt : undefined;
   return (
     <div className="wallet-dialog-review space-y-5" aria-busy={funding.pending}>
       <h3 ref={heading} tabIndex={-1} className="text-lg font-semibold">
@@ -59,7 +62,9 @@ export function FundingPanel({
           <div className="flex justify-between gap-4">
             <dt>Wallet</dt>
             <dd className="min-w-0 text-right wrap-anywhere">
-              {intent.request.walletId}
+              {intent.kind === "conversion"
+                ? intent.request.sourceWalletId
+                : intent.request.walletId}
             </dd>
           </div>
           <div className="flex justify-between gap-4">
@@ -67,17 +72,32 @@ export function FundingPanel({
             <dd className="min-w-0 text-right wrap-anywhere">
               {hidden
                 ? "Amount hidden"
-                : receipt
-                  ? `${displayAmount(BigInt(receipt.amountMinor), receipt.exponent)} ${receipt.currency}`
-                  : intent.request.amount}
+                : conversion
+                  ? `${conversion.source.amount} ${conversion.source.currency} → ${conversion.target.amount} ${conversion.target.currency}`
+                  : fundingReceipt
+                    ? `${displayAmount(BigInt(fundingReceipt.amountMinor), fundingReceipt.exponent)} ${fundingReceipt.currency}`
+                    : intent.request.amount}
             </dd>
           </div>
-          <div className="flex justify-between gap-4">
-            <dt>Fictional provider</dt>
-            <dd>
-              {PROVIDERS.find((p) => p.code === intent.request.provider)?.label}
-            </dd>
-          </div>
+          {intent.kind !== "conversion" && (
+            <div className="flex justify-between gap-4">
+              <dt>Fictional provider</dt>
+              <dd>
+                {
+                  PROVIDERS.find((p) => p.code === intent.request.provider)
+                    ?.label
+                }
+              </dd>
+            </div>
+          )}
+          {intent.kind === "conversion" && (
+            <div className="flex justify-between gap-4">
+              <dt>Quote ID</dt>
+              <dd className="min-w-0 text-right wrap-anywhere">
+                {intent.request.quoteId}
+              </dd>
+            </div>
+          )}
           <div className="flex justify-between gap-4">
             <dt>Retry key</dt>
             <dd className="min-w-0 text-right wrap-anywhere">{intent.key}</dd>
@@ -91,13 +111,53 @@ export function FundingPanel({
                 </dd>
               </div>
               <div className="flex justify-between gap-4">
-                <dt>Balance after this operation</dt>
+                <dt>
+                  {conversion
+                    ? "Balances after this operation"
+                    : "Balance after this operation"}
+                </dt>
                 <dd className="min-w-0 text-right wrap-anywhere">
-                  {hidden
-                    ? "Amount hidden"
-                    : `${displayAmount(BigInt(receipt.balanceMinor), receipt.exponent)} ${receipt.currency}`}
+                  {hidden ? (
+                    "Amount hidden"
+                  ) : conversion ? (
+                    <>
+                      {displayAmount(
+                        BigInt(conversion.source.balanceMinor),
+                        conversion.source.exponent,
+                      )}{" "}
+                      {conversion.source.currency}
+                      <br />
+                      {displayAmount(
+                        BigInt(conversion.target.balanceMinor),
+                        conversion.target.exponent,
+                      )}{" "}
+                      {conversion.target.currency}
+                    </>
+                  ) : fundingReceipt ? (
+                    `${displayAmount(BigInt(fundingReceipt.balanceMinor), fundingReceipt.exponent)} ${fundingReceipt.currency}`
+                  ) : (
+                    "Unavailable"
+                  )}
                 </dd>
               </div>
+              {conversion && !hidden && (
+                <>
+                  <div className="flex justify-between gap-4">
+                    <dt>Reference rate</dt>
+                    <dd className="min-w-0 text-right wrap-anywhere">
+                      1 {conversion.source.currency} = {conversion.rate.value}{" "}
+                      {conversion.target.currency}
+                    </dd>
+                  </div>
+                  <div className="flex justify-between gap-4">
+                    <dt>Rate source date</dt>
+                    <dd>
+                      {conversion.rate.date} ·{" "}
+                      {conversion.rate.source === "cached" ? "Cached" : "Fresh"}
+                    </dd>
+                  </div>
+                </>
+              )}
               {!hidden && (
                 <div className="flex justify-between gap-4">
                   <dt>Recorded at (UTC)</dt>

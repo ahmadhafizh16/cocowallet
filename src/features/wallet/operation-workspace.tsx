@@ -29,8 +29,11 @@ import {
 } from "@/components/ui/select";
 import { useHydrated } from "@/lib/use-hydrated";
 import { useRouter } from "next/navigation";
-import { useFunding } from "../funding/use-funding";
-import { FundingPanel } from "../funding/funding-panel";
+import { useSubmission } from "../submissions/use-submission";
+import { SubmissionPanel } from "../submissions/submission-panel";
+import { useConversionQuote } from "../conversions/use-quote";
+import { useConversionCurrencies } from "../conversions/use-currencies";
+import { ConversionQuoteReview } from "../conversions/quote-review";
 import { createFundingKey } from "../funding/request-key";
 import { formatAmount } from "../money/money";
 import {
@@ -75,6 +78,7 @@ export function OperationWorkspace({
   hidden,
   balancesConnected = false,
   fundingEnabled = false,
+  conversionEnabled = false,
   open,
   onOpenChange,
   returnFocusRef,
@@ -85,13 +89,25 @@ export function OperationWorkspace({
   hidden: boolean;
   balancesConnected?: boolean;
   fundingEnabled?: boolean;
+  conversionEnabled?: boolean;
   open: boolean;
   onOpenChange: (open: boolean) => void;
   returnFocusRef?: RefObject<HTMLElement | null>;
 }) {
   const hydrated = useHydrated();
   const router = useRouter();
-  const funding = useFunding(fundingEnabled, () => router.refresh());
+  const funding = useSubmission(fundingEnabled, () => router.refresh());
+  const quote = useConversionQuote();
+  const canConvert = conversionEnabled && operation === "convert";
+  const catalog = useConversionCurrencies(
+    canConvert &&
+      open &&
+      account?.role === "main" &&
+      !funding.intent &&
+      !funding.storageBlocked,
+  );
+  const targetCurrencies =
+    catalog.codes ?? suppliedWallets.map((wallet) => wallet.currency);
   const canFund =
     fundingEnabled && (operation === "deposit" || operation === "withdraw");
   const fundingPanel =
@@ -139,6 +155,7 @@ export function OperationWorkspace({
       : `${OPERATION_LABELS[operation]} money`;
 
   function updateDraft(field: keyof OperationDraft, value: string) {
+    if (operation === "convert") quote.invalidate();
     setDrafts((current) => {
       const next = { ...current[operation], [field]: value };
       if (field === "currency" && next.targetCurrency === value)
@@ -174,11 +191,28 @@ export function OperationWorkspace({
   function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setReturningToEdit(false);
-    const result = validateOperation({ operation, draft, account, wallets });
+    const result = validateOperation({
+      operation,
+      draft,
+      account,
+      wallets,
+      balancesConnected,
+      ...(canConvert ? { targetCurrencies } : {}),
+    });
     setErrors((current) => ({ ...current, [operation]: result.errors }));
     if (result.review) {
       const nextReview = result.review;
       setReviews((current) => ({ ...current, [operation]: nextReview }));
+      if (canConvert)
+        void quote.load(
+          {
+            operation: "conversion",
+            sourceWalletId: nextReview.wallet.id,
+            amount: draft.amount,
+            targetCurrency: nextReview.targetCurrency,
+          },
+          nextReview.accountId,
+        );
       requestAnimationFrame(() => reviewRef.current?.focus());
     } else
       requestAnimationFrame(() =>
@@ -189,6 +223,7 @@ export function OperationWorkspace({
   }
 
   function editReview() {
+    if (operation === "convert") quote.invalidate();
     setReturningToEdit(true);
     setReviews((current) => ({ ...current, [operation]: undefined }));
     requestAnimationFrame(() =>
@@ -221,6 +256,39 @@ export function OperationWorkspace({
     }
   }
 
+  function confirmConversion() {
+    const active = quote.activeQuote();
+    if (
+      !canConvert ||
+      !review ||
+      hidden ||
+      !active ||
+      !quote.request ||
+      active.source.accountId !== account?.id
+    )
+      return;
+    try {
+      void funding.send({
+        version: 1,
+        key: createFundingKey(),
+        kind: "conversion",
+        request: {
+          quoteId: active.quoteId,
+          sourceWalletId: quote.request.sourceWalletId,
+          amount: quote.request.amount,
+          targetCurrency: quote.request.targetCurrency,
+        },
+      });
+    } catch {
+      setErrors((current) => ({
+        ...current,
+        convert: {
+          form: "A secure retry key could not be created. Nothing was submitted.",
+        },
+      }));
+    }
+  }
+
   function closeWorkspace() {
     captureMotionFrame(DIALOG_MOTION_SELECTOR, false);
     onOpenChange(false);
@@ -232,10 +300,10 @@ export function OperationWorkspace({
         <div className="wallet-preview-notice" role="status">
           <p>
             {funding.result
-              ? "A funding result is ready to review."
+              ? "A submission result is ready to review."
               : funding.storageBlocked
-                ? "Funding is blocked until recovery storage is available."
-                : "An unresolved submission needs confirmation. New funding is paused."}
+                ? "Money submissions are blocked until recovery storage is available."
+                : "An unresolved submission needs confirmation. New money submissions are paused."}
           </p>
           <Button
             variant="outline"
@@ -268,26 +336,44 @@ export function OperationWorkspace({
         >
           <DialogHeader>
             <DialogTitle>
-              {fundingPanel ? "Funding submission" : title}
+              {fundingPanel ? "Money submission" : title}
             </DialogTitle>
             <DialogDescription>
               {fundingPanel
-                ? "Inspect or recover the original simulated funding submission. Keep its retry key unchanged while the outcome is unresolved."
-                : canFund
-                  ? "Review and confirm a simulated wallet operation. Providers are fictional; no real funds move."
-                  : DESCRIPTIONS[operation]}
+                ? "Inspect or recover the original simulated submission. Keep its retry key and quote unchanged while the outcome is unresolved."
+                : canConvert
+                  ? "Review an exact one-minute reference-rate quote, then explicitly confirm a simulated conversion. No real funds move."
+                  : canFund
+                    ? "Review and confirm a simulated wallet operation. Providers are fictional; no real funds move."
+                    : DESCRIPTIONS[operation]}
             </DialogDescription>
           </DialogHeader>
           {fundingPanel ? (
-            <FundingPanel
+            <SubmissionPanel
               funding={funding}
               hidden={hidden}
               onClose={closeWorkspace}
               onAnother={() => {
                 funding.startAnother();
+                quote.invalidate();
+                setReviews({});
                 editReview();
               }}
             />
+          ) : review && canConvert ? (
+            <>
+              <ConversionQuoteReview
+                preview={quote}
+                hidden={hidden}
+                ready={funding.ready}
+                heading={reviewRef}
+                accountId={review.accountId}
+                onConfirm={confirmConversion}
+                onEdit={editReview}
+                onClose={closeWorkspace}
+              />
+              {errors.form && <FieldError>{errors.form}</FieldError>}
+            </>
           ) : review ? (
             <div className="wallet-dialog-review space-y-5">
               <h3
@@ -527,7 +613,7 @@ export function OperationWorkspace({
                         aria-hidden="true"
                         className="pointer-events-none absolute top-1/2 left-3.5 -translate-y-1/2 text-xl text-muted-foreground"
                       >
-                        {CURRENCY_SYMBOLS[draft.currency]}
+                        {CURRENCY_SYMBOLS[draft.currency] ?? "¤"}
                       </span>
                       <Input
                         className="h-14 pl-10 text-2xl font-medium tracking-tight md:text-2xl"
@@ -571,7 +657,12 @@ export function OperationWorkspace({
                         onValueChange={(value) =>
                           updateDraft("targetCurrency", value as WalletCurrency)
                         }
-                        disabled={!hydrated || wallets.length < 2}
+                        disabled={
+                          !hydrated ||
+                          (canConvert
+                            ? targetCurrencies.length < 2
+                            : wallets.length < 2)
+                        }
                       >
                         <SelectTrigger
                           id={fieldId("target")}
@@ -585,17 +676,23 @@ export function OperationWorkspace({
                           <SelectValue placeholder="Choose a receiving currency" />
                         </SelectTrigger>
                         <SelectContent>
-                          {wallets.map((wallet) => (
+                          {(canConvert
+                            ? targetCurrencies
+                            : wallets.map((wallet) => wallet.currency)
+                          ).map((currency) => (
                             <SelectItem
-                              key={wallet.id}
-                              value={wallet.currency}
-                              disabled={wallet.currency === draft.currency}
+                              key={currency}
+                              value={currency}
+                              disabled={currency === draft.currency}
                             >
-                              {wallet.currency}
+                              {currency}
                             </SelectItem>
                           ))}
                         </SelectContent>
                       </Select>
+                      {canConvert && catalog.message && (
+                        <FieldDescription>{catalog.message}</FieldDescription>
+                      )}
                       {errors.targetCurrency && (
                         <FieldError id={fieldId("target-error")}>
                           {errors.targetCurrency}

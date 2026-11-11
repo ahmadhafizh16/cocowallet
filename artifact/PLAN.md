@@ -1,6 +1,6 @@
 # Proposed implementation plan
 
-**Status:** Persistent reads, funding, fresh-first metadata, immutable quotes and T07-01's internal atomic conversion service are verified. Conversion includes target creation, exact accounting/quote use and durable replay, but no new HTTP/UI submission is enabled. Next is T07-02's reviewed conversion confirmation/recovery flow, then transfers and remaining wallet management, valuation/history and API/Swagger acceptance. UI feedback remains deferred. See [CONVERSIONS.md](CONVERSIONS.md), [KANBAN.md](KANBAN.md) and [READINESS.md](READINESS.md); local commit rules remain D-021/D-022.
+**Status:** Persistent reads, funding, fresh-first metadata and quote-bound conversion are implemented. T07-02 connects reviewed terms, expiry/reconfirmation, the documented endpoint, shared recovery and receipt/balance refresh. Next is T08-01's atomic transfer service, followed by reviewed transfer UI, wallet management, full history/valuation and API/Swagger acceptance. The existing visual identity is preserved and visual feedback deferred. See [CONVERSIONS.md](CONVERSIONS.md), [KANBAN.md](KANBAN.md) and [READINESS.md](READINESS.md); local commit rules remain D-021/D-022.
 
 ## Tasks
 

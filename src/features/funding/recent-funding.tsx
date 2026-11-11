@@ -1,12 +1,12 @@
 import { displayAmount } from "../wallet/presentation";
 import { PROVIDERS } from "../wallet/operation-model";
-import type { FundingReceipt } from "./contracts";
+import type { SubmissionReceipt } from "../submissions/contracts";
 
 export function RecentFunding({
   receipts,
   hidden,
 }: {
-  receipts: FundingReceipt[];
+  receipts: SubmissionReceipt[];
   hidden: boolean;
 }) {
   if (hidden)
@@ -16,7 +16,7 @@ export function RecentFunding({
       </p>
     );
   return (
-    <ul className="space-y-4" aria-label="Completed simulated funding">
+    <ul className="space-y-4" aria-label="Completed simulated activity">
       {receipts.map((receipt) => (
         <li
           key={receipt.transactionId}
@@ -24,9 +24,15 @@ export function RecentFunding({
         >
           <details>
             <summary className="cursor-pointer min-h-11 py-2 text-sm wrap-anywhere">
-              {receipt.type === "deposit" ? "Deposit" : "Withdrawal"} ·{" "}
-              {displayAmount(BigInt(receipt.amountMinor), receipt.exponent)}{" "}
-              {receipt.currency}
+              {receipt.type === "conversion" ? (
+                `Conversion · ${receipt.source.amount} ${receipt.source.currency} → ${receipt.target.amount} ${receipt.target.currency}`
+              ) : (
+                <>
+                  {receipt.type === "deposit" ? "Deposit" : "Withdrawal"} ·{" "}
+                  {displayAmount(BigInt(receipt.amountMinor), receipt.exponent)}{" "}
+                  {receipt.currency}
+                </>
+              )}
             </summary>
             <dl className="space-y-2 text-sm wrap-anywhere">
               <div>
@@ -43,12 +49,41 @@ export function RecentFunding({
                 <dt className="text-muted-foreground">Status</dt>
                 <dd>Completed simulation</dd>
               </div>
-              <div>
-                <dt className="text-muted-foreground">Fictional provider</dt>
-                <dd>
-                  {PROVIDERS.find((p) => p.code === receipt.provider)?.label}
-                </dd>
-              </div>
+              {receipt.type !== "conversion" ? (
+                <div>
+                  <dt className="text-muted-foreground">Fictional provider</dt>
+                  <dd>
+                    {PROVIDERS.find((p) => p.code === receipt.provider)?.label}
+                  </dd>
+                </div>
+              ) : (
+                <>
+                  <div>
+                    <dt className="text-muted-foreground">Reference rate</dt>
+                    <dd>
+                      1 {receipt.source.currency} = {receipt.rate.value}{" "}
+                      {receipt.target.currency}
+                    </dd>
+                  </div>
+                  <div>
+                    <dt className="text-muted-foreground">Rate source date</dt>
+                    <dd>
+                      {receipt.rate.date} ·{" "}
+                      {receipt.rate.source === "cached" ? "Cached" : "Fresh"}
+                    </dd>
+                  </div>
+                  <div>
+                    <dt className="text-muted-foreground">
+                      Rate fetched at (UTC)
+                    </dt>
+                    <dd>{receipt.rate.fetchedAt}</dd>
+                  </div>
+                  <div>
+                    <dt className="text-muted-foreground">Quote ID</dt>
+                    <dd>{receipt.quoteId}</dd>
+                  </div>
+                </>
+              )}
             </dl>
           </details>
         </li>

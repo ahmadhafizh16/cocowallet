@@ -1,11 +1,11 @@
 # Architecture and flow diagrams
 
-**Status:** Persistent reads/funding, fresh-first reference metadata and immutable one-minute quote preview/readback are implemented. Funding retains atomic original outcomes; quotes have separate immutable terms/use metadata and internal confirmation safeguards. Conversion/transfer submission, reviewed quote UI and full history/valuation remain future features. The [decision register](DECISIONS.md) is authoritative when a diagram and an open question conflict.
+**Status:** Persistent reads/funding/conversion, fresh-first reference metadata and immutable quotes are implemented. Conversion has reviewed fixed terms, expiry/reconfirmation, documented submission and shared original-key recovery. Transfers, full history/valuation and Swagger remain future features. The [decision register](DECISIONS.md) is authoritative when a diagram and an open question conflict.
 
 T07-01 also implements the internal atomic conversion service: global
 funding/conversion key ownership, retained original results and atomic target
-creation/journal/quote use. Submission endpoints and confirmation UI stay disabled;
-see [CONVERSIONS.md](CONVERSIONS.md).
+creation/journal/quote use. T07-02 connects the conversion endpoint and confirmation
+UI; transfer submission stays disabled. See [CONVERSIONS.md](CONVERSIONS.md).
 
 ## Implemented foundation flow
 
@@ -196,7 +196,7 @@ sequenceDiagram
     API->>DB: Persist immutable rounded terms with a full 60-second hold
     DB-->>API: Commit preview, no funds reserved or moved
     API-->>UI: Preview amount, rate, source date, cache status and expiry
-    Note over UI,API: Reviewed confirmation UI and monetary submission remain T07/T08
+    Note over UI,API: Conversion review/confirmation is connected; transfer submission remains T08
 ```
 
 The API may return a prior reference **source date** even when a rate was fetched
@@ -204,8 +204,9 @@ just now. Cache eligibility is checked at issuance; an issued quote retains its
 full minute if the cache later crosses 24 hours. Readback never fetches or extends
 terms. Internal confirmation rechecks exact input/context/funds, and a scoped
 after-record step atomically registers at most one successful use. Failed attempts
-do not consume it. See [QUOTES.md](QUOTES.md); the browser does not yet request or
-confirm quotes through its operation forms.
+do not consume it. See [QUOTES.md](QUOTES.md). Convert explicitly requests terms,
+then confirms them through `POST /api/conversions`; expiry requires a new preview
+and renewed confirmation. Unresolved recovery never refreshes its original quote.
 
 ## Code flow for a completed money operation
 
@@ -253,8 +254,8 @@ callback and commits/rolls back creation, transactions, entries and technical
 success together. Escaped scopes and promise callbacks are rejected. Funding
 already implements durable original outcomes under D-030. Quote use joins the
 journal failure latch even if its error is caught inside the after-record hook.
-The conversion service now implements these key/quote rules internally;
-conversion HTTP/recovery UI and transfer integration are still future work. Replay an existing
+Conversion now implements these rules through the endpoint and shared recovery UI;
+transfer integration is still future work. Replay an existing
 result before quote expiry/use checks, then recheck the key under the reservation.
 Do not hold it during network work. See [JOURNAL.md](JOURNAL.md) and
 [QUOTES.md](QUOTES.md).

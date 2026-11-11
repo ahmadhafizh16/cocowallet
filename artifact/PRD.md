@@ -4,14 +4,16 @@
 now connect the existing interface to exact journal accounting. Reviewed
 confirmation, original-key recovery and partial completed-funding visibility work.
 Reference catalog/rates, bounded persistent fallback and T06-02's immutable
-one-minute quote previews/readback now exist. Quotes reserve no funds; actual
-conversion/transfer submission, quote UI, full history/valuation and Swagger remain
-future work. Visual feedback is deferred. See [QUOTES.md](QUOTES.md), linked feature
+one-minute quote previews/readback now exist. Quotes reserve no funds. Reviewed
+conversion quote/confirmation/recovery and bounded completed-receipt visibility
+are connected; transfers, full history/valuation and Swagger remain future work.
+Visual feedback is deferred. See [CONVERSIONS.md](CONVERSIONS.md), linked feature
 PRDs and [KANBAN.md](KANBAN.md) for actual acceptance boundaries.
 
 T07-01 now adds the internal atomic conversion service, including missing target
-creation, exact quote use and durable original-result replay. This does not enable
-conversion submission or UI confirmation; see [CONVERSIONS.md](CONVERSIONS.md).
+creation, exact quote use and durable original-result replay. T07-02 connects that
+service through the documented endpoint and existing dialog, without changing
+the approved visual identity; see [CONVERSIONS.md](CONVERSIONS.md).
 
 ## Goal
 

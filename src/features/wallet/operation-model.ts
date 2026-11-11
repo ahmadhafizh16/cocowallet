@@ -74,11 +74,15 @@ export function validateOperation({
   draft,
   account,
   wallets,
+  targetCurrencies,
+  balancesConnected = false,
 }: {
   operation: Operation;
   draft: OperationDraft;
   account: AccountView | undefined;
   wallets: WalletView[];
+  targetCurrencies?: string[];
+  balancesConnected?: boolean;
 }): { errors: OperationErrors; review: OperationReview | null } {
   const errors: OperationErrors = {};
   if (account?.role !== "main") {
@@ -120,8 +124,12 @@ export function validateOperation({
     } else if (minor !== null && operation !== "deposit" && minor > balance) {
       errors.amount =
         balance === 0n
-          ? "Insufficient preview balance. This wallet has no funds, and deposit submission is not connected."
-          : "This amount exceeds the available preview balance. Enter a smaller amount.";
+          ? balancesConnected
+            ? "Insufficient funds. Add simulated funds before converting or withdrawing."
+            : "Insufficient preview balance. This wallet has no funds, and deposit submission is not connected."
+          : balancesConnected
+            ? "This amount exceeds the available balance. Enter a smaller amount."
+            : "This amount exceeds the available preview balance. Enter a smaller amount.";
     } else if (
       minor !== null &&
       operation === "deposit" &&
@@ -149,10 +157,13 @@ export function validateOperation({
   }
   if (
     operation === "convert" &&
-    (!wallets.some(
-      (item) =>
-        item.accountId === account.id && item.currency === draft.targetCurrency,
-    ) ||
+    (!(targetCurrencies
+      ? targetCurrencies.includes(draft.targetCurrency)
+      : wallets.some(
+          (item) =>
+            item.accountId === account.id &&
+            item.currency === draft.targetCurrency,
+        )) ||
       draft.targetCurrency === draft.currency)
   ) {
     errors.targetCurrency =

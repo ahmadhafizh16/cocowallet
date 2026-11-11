@@ -25,6 +25,9 @@ including safe 400/503 metadata failures. T06-02 adds strict quote preview/readb
 safe quote problems, internal confirmation/consumption safeguards and shared
 bounded JSON input. It does not implement conversion/transfer submission.
 
+T07-02 adds the strict conversion endpoint, no-store/replay headers and actual
+response/schema checks. Transfers and full history remain outside this slice.
+
 ### T10-02
 
 **Durable idempotency contract and implementation**  
@@ -45,7 +48,7 @@ implemented by this funding-specific boundary.
 T07-01 now adds a separate retained conversion-result boundary with global key
 ownership across funding/conversion, original-result replay before quote checks,
 and atomic creation/journal/quote use. See [CONVERSIONS.md](../CONVERSIONS.md).
-Conversion HTTP/recovery UI and transfers remain their feature tasks.
+T07-02 adds the documented conversion HTTP/recovery UI; transfers remain T08.
 
 ### T10-03
 
@@ -58,7 +61,7 @@ Conversion HTTP/recovery UI and transfers remain their feature tasks.
 **Acceptance and tests:** Every implemented endpoint, required idempotency header, quote/amount schema, and Problem Details response is represented accurately. Contract tests validate real responses against the document; Swagger works without paid services and is not publicly exposed by default.
 
 **Partial groundwork:** `/api/openapi` serves a tested hand-maintained document
-for implemented read/operational, funding, reference and quote routes, including
+for implemented read/operational, funding/conversion, reference and quote routes, including
 required money keys, exact amounts, discriminated quote terms/lifecycle and safe
-problems. Schema generation, conversion/transfer submission/history contracts and
+problems. Schema generation, transfer submission/full-history contracts and
 Swagger UI remain unimplemented; no closure implied.

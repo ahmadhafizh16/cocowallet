@@ -113,10 +113,16 @@ export function WalletDashboard({ model }: { model: WalletOverview }) {
   const fundingEnabled = model.mode === "connected-funding";
   const recentFunding = model.transactions.filter(
     (receipt) =>
-      receipt.accountId === account?.id &&
+      (receipt.type === "conversion"
+        ? receipt.source.accountId
+        : receipt.accountId) === account?.id &&
       (historyFilter === "all" ||
         receipt.type ===
-          (historyFilter === "withdraw" ? "withdrawal" : historyFilter)),
+          (historyFilter === "withdraw"
+            ? "withdrawal"
+            : historyFilter === "convert"
+              ? "conversion"
+              : historyFilter)),
   );
   const suppliedTotal = account ? model.usdTotals?.[account.id] : undefined;
   const totalLabel =
@@ -138,7 +144,7 @@ export function WalletDashboard({ model }: { model: WalletOverview }) {
   const copyFeedback =
     copyResult?.accountId === account?.id ? (copyResult?.message ?? "") : "";
   const emptyHistoryHeading = fundingEnabled
-    ? "No matching completed funding"
+    ? "No matching completed activity"
     : balancesConnected
       ? "Transaction history not connected"
       : (HISTORY_FILTERS.find((filter) => filter.value === historyFilter)
@@ -398,7 +404,9 @@ export function WalletDashboard({ model }: { model: WalletOverview }) {
                 </strong>{" "}
                 —{" "}
                 {fundingEnabled
-                  ? "deposits and withdrawals are simulated. Conversion and transfers are not connected."
+                  ? model.conversionEnabled
+                    ? "deposits, withdrawals and reviewed conversions are simulated. Transfers are not connected."
+                    : "deposits and withdrawals are simulated. Conversion and transfers are not connected."
                   : balancesConnected
                     ? "money operations and history are not connected."
                     : "operations are not connected."}{" "}
@@ -412,6 +420,7 @@ export function WalletDashboard({ model }: { model: WalletOverview }) {
               hidden={hidden}
               balancesConnected={balancesConnected}
               fundingEnabled={fundingEnabled}
+              conversionEnabled={model.conversionEnabled}
               open={operationOpen}
               onOpenChange={setOperationOpen}
               returnFocusRef={operationTriggerRef}
@@ -549,9 +558,9 @@ export function WalletDashboard({ model }: { model: WalletOverview }) {
                   </CardHeader>
                   {fundingEnabled && (
                     <p className="mb-4 text-sm text-muted-foreground">
-                      Latest 50 completed deposits and withdrawals. Other
-                      transaction history and balance-history valuations are not
-                      connected.
+                      Latest 50 completed deposits, withdrawals and conversions.
+                      Other transaction history and balance-history valuations
+                      are not connected.
                     </p>
                   )}
                   {fundingEnabled && recentFunding.length > 0 ? (
@@ -568,7 +577,7 @@ export function WalletDashboard({ model }: { model: WalletOverview }) {
                         <p>
                           {isMain
                             ? fundingEnabled
-                              ? "Completed simulated deposits and withdrawals will appear here; rejected attempts are not transactions."
+                              ? "Completed simulated deposits, withdrawals and conversions will appear here; rejected attempts are not transactions."
                               : balancesConnected
                                 ? "Completed transactions will appear when the history service is connected."
                                 : "Transactions will appear here when wallet services are connected."

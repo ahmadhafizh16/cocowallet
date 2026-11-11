@@ -1,9 +1,9 @@
 # Atomic conversion backend
 
-**Status:** T07-01 implemented and verified. This is an internal server-only
-service, not an enabled conversion HTTP endpoint or connected confirmation UI.
-T07-02 owns those later steps. The current layout, branding, drafts, privacy and
-disabled conversion/transfer actions are unchanged.
+**Status:** T07-01's atomic service and T07-02's documented endpoint, reviewed
+quote/confirmation/recovery UI and bounded receipt visibility are implemented.
+The existing layout, branding, flags, typography and motion are preserved.
+Transfers remain disabled; full history/valuation and Swagger retain their tasks.
 
 ## Internal contract
 
@@ -30,9 +30,9 @@ minor-unit strings, original post-operation balance strings, rate provenance,
 quote issuedAt/expiresAt and transaction createdAt. No floating-point monetary
 value, fee or real provider integration is introduced.
 
-These are internal service shapes; T07-02 must document and verify the eventual
-HTTP contract, recovery and confirmation/expiry UI before enabling submission.
-There is no `POST /api/conversions` handler or OpenAPI path in this stage.
+T07-02 exposes these same fields through `POST /api/conversions` and maintained
+OpenAPI schemas, with reviewed confirmation and original-key recovery. The
+connected-flow contract below supersedes the earlier backend-only boundary.
 
 ## Single atomic boundary and retry rules
 
@@ -117,7 +117,98 @@ it does not claim a conversion confirmation journey before T07-02 exists.
   Artifact checks verify **54 documents / 36 tasks**. No dependency or UI source
   change, live provider test or remote push was introduced.
 
-Next dependency is **T07-02**: reviewed conversion preview, expiry/reconfirmation,
-submission endpoint, recovery and receipt/balance refresh. Transfer submissions
-remain disabled for T08. Preserve the existing visual design and draft/privacy
-behavior while connecting only the reviewed flow.
+The checkpoint above records the historical T07-01 backend boundary. T07-02 adds
+the connected flow below; T08 still owns transfer submission.
+
+## T07-02 connected flow
+
+`POST /api/conversions` now accepts the fixed internal request fields above with
+JSON, a UUID `Idempotency-Key`, same-origin browser guards and a 16 KiB body limit.
+It returns the original service status/body with `Cache-Control: no-store` and
+`Idempotency-Replayed: true|false`. Structural/foreign-body failures are 400 before
+database access. Safe 404/409 retained problems and nondefinitive 503 keep their
+existing meaning. The maintained OpenAPI document includes the actual endpoint,
+strict request/receipt/problems and response-contract tests. Swagger generation/UI
+remain T10-03, not implied by the published document.
+
+The existing Convert dialog now fetches eligible currency choices on opening.
+If that list is unavailable, existing wallet choices remain usable only if a
+server quote validates them. Review explicitly requests an immutable quote; the
+browser validates account/input binding, exponents, exact arithmetic and time
+provenance before exposing confirmation. It shows both amounts, the exact rate,
+source date, fetch time, fresh/cached status and expiry. No funds are reserved.
+Editing cancels/invalidates pending terms; late responses cannot restore an old
+quote. Closing/reopening retains the ordinary in-memory draft/quote, not a stored
+financial draft. Expiry, rolled-back/device clocks and focus/visibility changes
+fail closed; confirmation rechecks the actual time even between timer updates.
+Fresh terms require an explicit request and a separate confirmation, never an
+automatic new operation or quote refresh during recovery.
+
+Funding and conversion now share `src/features/submissions/` and one recovery slot.
+The historical key `cocowallet.pending-funding.v1` is deliberately retained so an
+unresolved funding request survives this upgrade. Its discriminated version-1
+record may now contain `kind: conversion`, the original UUID key and exact original
+quote/request. Nothing is saved before explicit confirmation. Save/read-back must
+succeed before sending; corrupt, blocked or conflicting storage blocks new money
+submissions. An unresolved conversion blocks new funding too. Reload never sends
+automatically. Recovery retries the original key/input/quote even after expiry,
+because an already committed success must replay first. Unknown/mismatched
+responses retain uncertainty; only validated definitive results clear context.
+A known result with failed cleanup is visible, but further attempts stay blocked.
+Cleanup cannot erase a different recovery record installed during the request.
+
+Receipt and balance refresh reuse the existing dialog/fact-list design. The
+overview combines the latest **50 completed funding/conversion receipts**, with
+existing type filtering, not the full paginated/history/valuation service. New
+supported fiat wallets remain visible with pinned precision and a neutral Lucide
+currency marker where no approved local flag exists; USD/EUR/GBP flags are
+unchanged. Nonzero foreign totals remain unavailable until valuation is connected.
+Privacy removes quoted/receipt/history monetary details and timestamps from the
+DOM; ordinary drafts still clear on reload. Transfers remain disabled.
+
+No migration or dependency change is required: schema 0006 already supplies the
+atomic service and retained outcomes. Runtime data is backed up before checks;
+successful browser money operations use only the guarded disposable server.
+
+### Verified connected-flow checkpoint
+
+- Final full Docker check/build passes **995 Jest tests in 45 suites** and all
+  **63 production Chromium checks** pass against a fresh disposable server.
+  Ordinary funding/recovery, account isolation, privacy, themes, layout and motion
+  regressions remain green. Ten new checks cover no-money review, exact confirmed
+  balances/history, missing JPY wallet creation, expiry/reconfirmation, unavailable
+  quotes, lost committed response/reload recovery, blocked storage and four
+  light/dark 320px/1440px keyboard/focus/privacy review/receipt cases.
+- The first browser run found two obsolete assertions for disconnected/preview
+  copy; both were updated to the truthful connected wording. The complete suite
+  was repeated on fresh disposable databases. A final hardening change replaces
+  recurring quote polling with one expiry deadline plus focus/visibility checks;
+  its no-recurring-timer test, full build and entire browser suite were repeated.
+- Representative production captures under
+  `.impeccable/review/conversion-flow/` were inspected in both themes at 320px and
+  1440px. These are non-shipping screenshots of the actual guarded disposable
+  app, with deterministic Frankfurter fixtures and isolated simulated funds,
+  generated by `e2e/zzzz-conversions.spec.ts`; they are not user-wallet or live-rate
+  evidence. Reproduction uses the production commands in [QUOTES.md](QUOTES.md).
+- The one changed-UI detector scan returned `[]`. The later deadline-only hook
+  correction did not alter those scanned JSX files; the detector was not rerun to
+  manufacture another result. Bounded in-thread source/graph/browser/render review
+  returns **`ship` at this connected-conversion scope**; no independent-agent
+  security review, WCAG certification, physical-device or performance claim is made.
+- SQLite backup `/app/data/wallet.sqlite.pre-conversion-flow-1794423439298.bak`
+  was verified before checks. Every runtime table, including migration metadata,
+  remains bigint-safely row-identical: **1 account / 3 wallets / 0 transactions /
+  0 journal entries / 0 funding attempts / 0 conversion attempts**, with empty
+  reference caches and quote/use tables. Integrity is `ok`, FK violations zero.
+  No migration/dependency change, runtime monetary/quote test seed, live-provider
+  check, restore drill or remote push was introduced.
+- Development resumed with `.next/dev.pre-conversion-flow-1794424055123` retained.
+  A browser verified enabled funding review, documented conversion API, absent
+  transfer API and 300 stable frames, with zero extra navigations/page/console
+  errors or financial/reference/quote requests. No runtime money was used to
+  demonstrate the feature. Artifact checks cover **54 documents / 36 tasks**.
+
+Next dependency is **T08-01's atomic simulated transfer service**, then T08-02's
+reviewed transfer UI. Do not enable transfer submission merely because its quote
+preview exists. Preserve exact accounting, inspect-only destinations, original-key
+recovery, privacy and the current visual identity.

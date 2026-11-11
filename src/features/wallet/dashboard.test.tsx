@@ -261,7 +261,7 @@ describe("wallet presentation interactions", () => {
     ];
     await render(model);
     expect(
-      host.querySelector('[aria-label="Completed simulated funding"]')
+      host.querySelector('[aria-label="Completed simulated activity"]')
         ?.textContent,
     ).toContain("25.50 USD");
     const hide = host.querySelector<HTMLButtonElement>(
@@ -269,7 +269,7 @@ describe("wallet presentation interactions", () => {
     )!;
     await act(() => hide.click());
     expect(
-      host.querySelector('[aria-label="Completed simulated funding"]'),
+      host.querySelector('[aria-label="Completed simulated activity"]'),
     ).toBeNull();
     expect(host.textContent).not.toContain("receipt-id");
     expect(host.textContent).not.toContain("2026-11-11T");

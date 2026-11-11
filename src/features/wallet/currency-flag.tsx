@@ -1,4 +1,5 @@
 import type { WalletCurrency } from "./types";
+import { CircleDollarSign } from "lucide-react";
 
 // Locally authored vector markers. Codes/names alongside them remain authoritative;
 // flags identify currencies, never the account holder's nationality.
@@ -21,6 +22,14 @@ const EURO_STARS = [
 ];
 
 export function CurrencyFlag({ currency }: { currency: WalletCurrency }) {
+  if (!["USD", "EUR", "GBP"].includes(currency))
+    return (
+      <CircleDollarSign
+        className="size-6"
+        aria-hidden="true"
+        data-currency={currency}
+      />
+    );
   return (
     <svg
       className="wallet-currency-flag"

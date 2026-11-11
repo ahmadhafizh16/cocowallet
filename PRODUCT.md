@@ -46,14 +46,14 @@ A local, persistent wallet simulation with exact journal-based accounting, ficti
 
 Implemented before interface work: the Docker/Next.js foundation, health/readiness endpoints, migrations and accounting tables, exact-money utilities, journal-derived snapshot balances, and serialized atomic journal writes. Evidence and verification are recorded in [the handover](artifact/HANDOVER.md).
 
-The approved interface reads persistent accounts and exact journal balances. Simulated funding has durable reviewed confirmation, same-key recovery, receipts and partial completed-funding visibility. T06-01 adds server-only Frankfurter fiat-catalog and exact-rate GETs, fresh-first validated cache fallback under 24 hours and separate source/fetch dates. These services do not yet supply binding quotes, portfolio valuations or new UI. One-minute quotes, conversion/transfer, full history/valuation and Swagger remain unimplemented. See [reference metadata](artifact/RATES.md), [funding](artifact/FUNDING.md) and [kanban](artifact/KANBAN.md).
+The approved interface reads persistent accounts and exact journal balances. Funding and conversion have explicit reviewed confirmation, same-key recovery and server-confirmed receipts. Fresh-first Frankfurter metadata supplies immutable one-minute quotes with separate source/fetch/expiry times. Conversion requires renewed review after expiry and may atomically create a missing target wallet. One shared per-tab recovery slot protects funding/conversion; ordinary drafts/quotes remain in memory. Recent activity is bounded to the latest 50 completed funding/conversion receipts, not full history or valuation. Transfers, wallet management/default editing, full history/valuation and Swagger retain their tasks. See [conversions](artifact/CONVERSIONS.md), [reference metadata](artifact/RATES.md), [funding](artifact/FUNDING.md) and [kanban](artifact/KANBAN.md).
 
 ### Deliberately open decisions
 
-- [O-003](artifact/DECISIONS.md#o-003): final HTTP routes and schemas, quote contract, OpenAPI generator, filtering/pagination, and error details.
+- [O-003](artifact/DECISIONS.md#o-003): transfer/full-history contracts, OpenAPI generator, filtering/pagination and remaining error details. Funding, immutable quote and conversion contracts are fixed in their feature documents.
 - [O-004](artifact/DECISIONS.md#o-004): whether inspected destinations also show a USD total, date-filter time-zone boundaries, and changing the main default to a currency without a wallet.
 - [O-005](artifact/DECISIONS.md#o-005): backup/restore, additional limits and simulated provider failures remain open. D-031 resolves catalog offline behavior: try fresh first on every request, cache valid success, and only fall back after failure using data less than 24 hours old. No extra business limits or provider states are approved.
-- O-006 is resolved for current funding by D-030; extending it to future quote/transfer request shapes remains their implementation work.
+- O-006 is resolved for funding/conversion through D-030/D-032 and their documented original-result/recovery contracts; transfer request shapes retain their implementation work.
 
 ## Brand Commitments
 

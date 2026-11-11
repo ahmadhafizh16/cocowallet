@@ -1,7 +1,8 @@
 import type { FundingReceipt } from "../funding/contracts";
+import type { ConversionReceipt } from "../conversions/contracts";
 
 /** Presentation contracts; never use browser state as an accounting authority. */
-export type WalletCurrency = "USD" | "EUR" | "GBP";
+export type WalletCurrency = string;
 
 export type WalletView = {
   id: string;
@@ -37,7 +38,8 @@ export type WalletOverview = {
   accounts: AccountView[];
   activeAccountId: string;
   wallets: WalletView[];
-  transactions: FundingReceipt[];
+  transactions: (FundingReceipt | ConversionReceipt)[];
+  conversionEnabled?: boolean;
   /** Absent means disconnected; an explicitly supplied empty series has no records. */
   balanceHistory?: BalanceHistorySeries[];
   /** Server-supplied totals; unavailable never means a zero balance. */

@@ -4,6 +4,9 @@ import { MAX_MINOR } from "@/features/money/money";
 import { openDatabase, type WalletDatabase } from "./db/connection";
 import { migrateDatabase } from "./db/migrate";
 import { getStoredWalletOverview } from "./wallet-overview";
+import { createQuote } from "@/features/quotes/service";
+import { submitConversion } from "@/features/conversions/service";
+import { randomUUID } from "node:crypto";
 
 jest.mock("server-only", () => ({}));
 
@@ -101,7 +104,7 @@ describe("database-backed wallet overview", () => {
     },
   );
 
-  it("fails closed instead of dropping currencies unsupported by the current UI", () => {
+  it("retains newly converted fiat currencies without a false flag or lost balance", () => {
     database.sqlite
       .prepare(
         "INSERT INTO currencies (code,name,minor_unit) VALUES ('JPY','Yen',0)",
@@ -114,6 +117,64 @@ describe("database-backed wallet overview", () => {
         currencyCode: "JPY",
       }),
     );
-    expect(() => getStoredWalletOverview(database)).toThrow("current overview");
+    expect(
+      getStoredWalletOverview(database).wallets.find(
+        (wallet) => wallet.currency === "JPY",
+      ),
+    ).toMatchObject({ id: "test-jpy", exponent: 0, balanceMinor: "0" });
+  });
+
+  it("refreshes newly created wallets and retained conversion history from one snapshot, without a provider call", async () => {
+    fund("USD", 1000n);
+    const source = getStoredWalletOverview(database).wallets.find(
+      (w) => w.currency === "USD",
+    )!;
+    const now = Date.now(),
+      client = {
+        catalog: jest.fn(async () => ({
+          currencies: [
+            { code: "USD", name: "Dollar", exponent: 2 },
+            { code: "JPY", name: "Yen", exponent: 0 },
+          ],
+          fetchedAt: new Date(now).toISOString(),
+        })),
+        rate: jest.fn(async () => ({
+          rate: "150",
+          date: new Date(now - 86400000).toISOString().slice(0, 10),
+          fetchedAt: new Date(now).toISOString(),
+        })),
+      };
+    const input = {
+      operation: "conversion" as const,
+      sourceWalletId: source.id,
+      amount: "1.00",
+      targetCurrency: "JPY",
+    };
+    const { quote } = await createQuote(database, input, {
+      client,
+      now: () => now,
+    });
+    const result = submitConversion(
+      database,
+      randomUUID(),
+      {
+        quoteId: quote.quoteId,
+        sourceWalletId: source.id,
+        amount: "1.00",
+        targetCurrency: "JPY",
+      },
+      { now: () => now },
+    );
+    expect(result.status).toBe(200);
+    const model = getStoredWalletOverview(database);
+    expect(model.conversionEnabled).toBe(true);
+    expect(model.wallets.find((w) => w.currency === "JPY")).toMatchObject({
+      accountId: id,
+      exponent: 0,
+      balanceMinor: "150",
+    });
+    expect(model.transactions).toEqual([result.body]);
+    expect(model.usdTotals?.[id]).toEqual({ status: "unavailable" });
+    expect(client.rate).toHaveBeenCalledTimes(1);
   });
 });
