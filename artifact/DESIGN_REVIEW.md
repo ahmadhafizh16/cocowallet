@@ -1,6 +1,30 @@
 # Wallet shell design review
 
-## T03-01 — backend read integration (current functional checkpoint)
+## Funding — current functional checkpoint
+
+The user's visual feedback remains deferred. Funding adds reviewed simulated
+confirmation, immutable unknown-outcome recovery, receipts and partial completed
+funding visibility using the existing shared controls/fact-list patterns. No CSS,
+brand, gradient, flag, typography or motion changes are introduced.
+
+The final Docker check/build passes **786 Jest tests**; **51 production Chromium
+checks** pass against a disposable database. Eight funding checks cover confirmed
+deposit/withdrawal, lost committed response plus same-key reload recovery, blocked
+storage, stale-review server rejection and four light/dark 320px/1440px receipt
+cases with keyboard/focus recovery. All four actual receipt captures were inspected
+for wrapping, contrast and control access. Privacy removes monetary records and
+timestamps rather than blurring them. The one changed-target detector returned
+`[]`; no certification follows from that scan.
+
+The browser run exposed absent secure-context `randomUUID` on the HTTP container
+hostname. A CSPRNG-only UUID fallback, direct-Host origin validation and regressions
+fix that boundary without weak randomness. Source review also keeps refresh
+failure separate from a known monetary result. The final suite was repeated.
+This is an in-thread bounded functional/visual review, not an independent-agent
+verdict, global WCAG/security certification or resolution of deferred UI feedback.
+See [FUNDING.md](FUNDING.md) for scope and operational evidence.
+
+## T03-01 — historical backend read checkpoint
 
 The user paused visual feedback. This stage changes the data source and factual
 connection labels, not CSS, tokens, layout, branding or motion. The existing

@@ -1,6 +1,11 @@
 # Handover
 
-**Status:** Fifteen of 36 tasks are closed. T03-01 connects persistent accounts/startup wallets, account/wallet read APIs and the journal-backed overview. The board has 21 To do, 0 In progress, and 15 Done. Visual feedback is deferred. Money-moving APIs, durable idempotency, FX/full valuation, Swagger UI and populated connected history remain unimplemented.
+**Status:** Eighteen of 36 tasks are closed: persistent reads, durable funding
+idempotency and protected deposit/withdrawal services are implemented. Reviewed
+simulated confirmations, receipts, recovery and refreshed balances are connected.
+The board has 16 To do, 2 In progress (their remaining Swagger acceptance), and
+18 Done. Visual feedback remains deferred. FX, conversion/transfer, full history/
+valuation and Swagger UI remain separate work. See [FUNDING.md](FUNDING.md).
 
 ## Implemented modules and commands
 
@@ -19,14 +24,17 @@
 | `src/features/journal/balances.ts` | Stream exact per-wallet bigint balances; account reads share one snapshot and validate final bounds. |
 | `src/features/journal/write.ts` | Top-level synchronous immediate-write boundary; main-only accounting, exact credits, funds checks, atomic creation/entries, and a technical-success integration seam. [Contract](JOURNAL.md). |
 | `src/features/accounts/`, `scripts/seed.ts` | Explicit repeatable atomic account/startup-wallet initialization; account metadata and exact snapshot balance reads; no seeded journal entries. |
-| `src/app/api/accounts/`, `src/server/http/`, `src/app/api/openapi/` | Thin uncached account/wallet GETs, safe read Problem Details and hand-maintained OpenAPI read contract. No financial mutation route or Swagger UI. |
+| `src/app/api/accounts/`, `src/server/http/`, `src/app/api/openapi/` | Uncached reads plus shared funding HTTP boundary, safe problems and maintained OpenAPI contracts. Swagger UI remains unimplemented. |
+| `src/features/funding/`, `src/app/api/deposits/`, `src/app/api/withdrawals/` | Exact simulated funding, immutable durable original results, same-key retries, per-tab recovery, receipts and bounded completed-funding visibility. |
+| `drizzle/0003_funding_results.sql` | Retained technical outcome table and immutable update/delete triggers; no seeded funds or transactions. |
+| `scripts/start-funding-e2e.ts`, `e2e/zz-funding.spec.ts` | Refuse ordinary runtime target; successful monetary browser writes use only the disposable isolated server/database. |
 | `src/server/wallet-overview.ts` | Dynamic-page adapter, prototype-safe account totals, exact rate-free main USD totals, unavailable FX/destination valuation, no dropped unsupported currencies. |
 | `components.json`, `postcss.config.mjs`, `src/lib/utils.ts` | shadcn/Lucide/Tailwind configuration and tested class helper used by the local UI components. |
 | `src/components/ui/` | Registry-derived shadcn Button/Card/Dialog/DropdownMenu/Tooltip/Field/Label/Badge/Separator/Input/Select/Skeleton with frosted semantic tokens, keyboard/focus handling, and retained upstream MIT notice. |
 | `src/components/brand/`, `public/brand/`, `src/app/icon.svg` | Approved CocoWallet inline vector logo, theme-aware wordmark, unchanged downloadable variants, and matching favicon. |
 | `src/features/theme/`, `src/app/globals.css` | Approved frosted tokens, light/dark/system preference, pre-paint theme bootstrap, storage fallback, and reduced-motion styles. |
 | `src/app/page.tsx`, `layout.tsx`, `loading.tsx`, `error.tsx`, `not-found.tsx` | Dynamic Node stored-balance overview, styles/metadata, skip link, loading/error boundaries and branded 404. No build-time DB read/seed. |
-| `src/features/wallet/` | Existing overview, navigation, account-scoped stored snapshots, always-mounted local money drafts, exact validation/review, privacy and matching skeleton; final submissions disabled. Preview factory is test-only. |
+| `src/features/wallet/` | Existing overview, account snapshots, always-mounted local drafts, reviewed simulated funding, privacy and matching skeleton. Conversion/transfer final actions remain disabled. Preview factory is test-only. |
 | `src/features/wallet/balance-history.tsx`, `currency-flag.tsx` | Validated account-scoped recorded-USD chart and exact-value disclosure; honest disconnected/private states; deterministic local currency vectors. No history source or valuation service is connected. |
 | `DESIGN.md`, `.impeccable/design.json` | Extracted light/dark visual tokens, canonical design guidance, and version-2 component-preview extensions; actual application styles remain in source CSS. |
 | `scripts/check-artifacts.mjs` | Checks Markdown links, decision/task references, board status alignment, and task dependency cycles. |
@@ -47,9 +55,30 @@ Stop the dev compiler before `docker compose run --rm app npm run check`, then u
 
 Application DB: `/app/data/wallet.sqlite` in Compose's `wallet-data` volume. Tests use isolated temporary SQLite files. Normal shutdown is `docker compose down` without deleting volumes. Before applying journal migrations, the stopped app's database was backed up with SQLite's backup API to `/app/data/wallet.sqlite.pre-journal-1794390597589.bak`. Backup creation is verified; a full restore drill is not claimed.
 
-Latest backend-read verification: the full Docker check passes artifact validation, formatting, lint, types, **723 Jest tests**, and production build; **43 Chromium tests** pass against that build (2 account/API, 3 card/history, 5 branding/motion, 2 foundation, 17 interaction, 12 shell, 2 visual). See [BACKEND_READS.md](BACKEND_READS.md) for scope and commands. No package dependency, accounting core/schema, CSS, branding or motion changed. Explicit backed-up initialization now stores one main account and three wallets, with zero transactions/journal entries. Unit/integration fixtures remain isolated; browser/API reads do not seed or move money. Earlier foundation checks covered clean `npm ci` and recreation persistence. The last production npm audit was clean; 23 low/moderate development-tool findings remain in [DEPENDENCIES.md](DEPENDENCIES.md).
+Current funding verification and commands are in [FUNDING.md](FUNDING.md). The
+full Docker check/build passes **786 Jest tests** and all **51 production
+Chromium checks** pass on the final build. Funding receipts fit 320px/1440px in
+both themes with keyboard confirmation, focus recovery and privacy checks. The
+production browser suite uses a disposable SQLite database, never the configured
+wallet. A SQLite backup at `/app/data/wallet.sqlite.pre-funding-1794415716427.bak`
+preceded two successful migration runs. Persistent counts remain 1 account /
+3 wallets / 0 transactions / 0 journal entries / 0 funding attempts; integrity
+is `ok`, FK violations are zero, both retention triggers exist. No restore drill
+or real provider call is claimed.
 
-Artifact validation verifies **50 documents / 36 tasks**. The previous
+Development was restored after retaining `.next/dev.pre-funding-1794415843825`.
+A real browser verified 300 stable frames, zero extra reloads/page errors/console
+errors, and an enabled funding review with **zero financial requests**. No user
+wallet funding was used to demonstrate success. T04-02/T05-02 stay in progress
+for the unimplemented Swagger UI, rather than silently dropping their criteria.
+
+Historical backend-read checkpoint: **723 Jest tests**, production build and
+**43 Chromium checks** passed. See [BACKEND_READS.md](BACKEND_READS.md). Subsequent
+funding verification supersedes its disconnected-write boundary, not its evidence.
+The last production npm audit was clean; 23 low/moderate development-tool findings
+remain in [DEPENDENCIES.md](DEPENDENCIES.md); no new dependency was installed.
+
+Artifact validation verifies **51 documents / 36 tasks**. The previous
 T11-02 design-extraction counts and verdict are historical, not certification of
 T11-04. Current production captures include desktop light/dark, 1688/1769px,
 tablet, mobile, dialogs/menus, validation/review, loading and errors. Independent
@@ -171,9 +200,9 @@ Tests open their own temporary database through `openDatabase`, apply committed 
 
 ## Next steps
 
-Next are durable idempotency/write contracts and deposits/withdrawals, followed by
-catalog/FX quotes, conversion/transfer and completed history in dependency order.
-T03-02/T03-03 and T10-01–03 retain partial/future work; read integration does not
-close them. Resolve O-003/O-006 before enabling submissions. Preserve the current
-UI while visual feedback is deferred; do not enable final actions cosmetically.
+Next are catalog/FX quotes, conversion/transfer, full history/valuation and the
+remaining API/Swagger acceptance in dependency order. T03-02/T03-03 and
+T10-01/T10-03 retain partial/future work; T04-02/T05-02 remain in progress solely
+for their Swagger acceptance. O-006 is resolved for funding by D-030. Preserve the
+current UI while visual feedback is deferred; no speculative final actions.
 Follow [PLAN.md](PLAN.md), [READINESS.md](READINESS.md), and [KANBAN.md](KANBAN.md).

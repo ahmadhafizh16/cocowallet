@@ -1,6 +1,6 @@
 # PRD-05 — Simulated withdrawals
 
-**Status:** Draft; no withdrawal code exists.  
+**Status:** Protected simulated debits, HTTP confirmation and durable retry/recovery are implemented under D-030; verification is recorded in [FUNDING.md](../FUNDING.md). Swagger UI remains a separate incomplete acceptance item.
 **Decisions:** [D-003](../DECISIONS.md#d-003), [D-005](../DECISIONS.md#d-005), [D-006](../DECISIONS.md#d-006), [D-018](../DECISIONS.md#d-018), [D-019](../DECISIONS.md#d-019).  
 **Tasks:** [T05-01–T05-02](../tasks/TASKS-05.md).  
 **Diagram:** [Money-operation code flow](../DIAGRAMS.md#code-flow-for-a-completed-money-operation).

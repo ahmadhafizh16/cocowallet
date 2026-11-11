@@ -1,6 +1,6 @@
 # Proposed implementation plan
 
-**Status:** The platform, exact journal core, interface and first backend integration slice are verified. T03-01 initializes persistent accounts/startup wallets and connects read APIs plus the dynamic overview. UI refinements are deferred. Next are durable idempotency/write contracts and connected financial workflows; catalog/FX/full valuation/history remain separate tasks. Individual statuses are in [KANBAN.md](KANBAN.md); [PRD.md](PRD.md) links tasks to PRDs and decisions. Follow Angular-style local commits in [D-021](DECISIONS.md#d-021)/[D-022](DECISIONS.md#d-022) and feature-stage checks in [READINESS.md](READINESS.md).
+**Status:** Persistent reads and durable simulated funding now connect the existing interface to exact journal writes. T10-02/T04-01/T05-01 implement retained retry results and protected services; reviewed deposit/withdrawal submission, recovery and receipts work. Their Swagger acceptance remains pending T10-03. UI refinements stay deferred. Next are catalog/FX, quotes, conversion/transfer, full valuation/history and the remaining API/Swagger work. See [FUNDING.md](FUNDING.md), [KANBAN.md](KANBAN.md) and [READINESS.md](READINESS.md); local commit rules remain D-021/D-022.
 
 ## Tasks
 

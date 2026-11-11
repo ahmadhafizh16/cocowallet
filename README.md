@@ -2,7 +2,7 @@
 
 A local-only multi-currency wallet simulation built with Next.js and Node 26. Product requirements, decisions, diagrams, and progress are in [`artifact/`](artifact/README.md).
 
-**Current milestone:** Persistent accounts and exact journal-derived balances now power the existing overview. Explicit repeatable seeding creates one main account and zero-balance USD/EUR/GBP wallets without resetting stored data. Read APIs and their OpenAPI document are available; financial submissions, FX and history remain disconnected. UI refinements are deferred. See [`artifact/BACKEND_READS.md`](artifact/BACKEND_READS.md).
+**Current milestone:** Persistent accounts and exact journal balances power the existing overview. Deposits/withdrawals now have explicit simulated confirmation, durable duplicate protection, receipts and per-tab recovery for unresolved submissions. Providers are fictional and no real funds move. Conversion, transfers, FX and full history/Swagger remain separate work; visual refinements stay deferred. See [`artifact/FUNDING.md`](artifact/FUNDING.md).
 
 ## Development environment
 
@@ -18,9 +18,9 @@ docker compose up -d app
 
 Open `http://localhost:3000/api/health` for the health endpoint. Use `APP_PORT=3100 docker compose up -d app` if port 3000 is already occupied.
 
-`/api/ready` verifies SQLite and its migrated metadata table; it is not a full application-schema version or seeded-account check. Three migrations create operational metadata, account/wallet/completed-transaction/journal tables, and accounting invariants. Migration and seed commands are safe to repeat and run explicitly, never during a GET request or production build. Seeding creates missing startup accounts/wallets, never funds or transaction history. On a fresh database, both commands are required before opening `/`.
+`/api/ready` verifies SQLite and its migrated metadata table; it is not a full application-schema version or seeded-account check. Four migrations create operational metadata, accounting tables/invariants and immutable funding outcomes. Migration and seed commands are safe to repeat and run explicitly, never during a GET request or production build. Seeding creates missing startup accounts/wallets, never funds or transaction history. On a fresh database, both commands are required before opening `/`. Existing installations must apply migration 0003 before using the updated page.
 
-Read APIs: `GET /api/accounts`, `GET /api/accounts/{accountId}/wallets`, and the read-only specification at `GET /api/openapi`. Wallet amounts are exact minor-unit strings; responses are not cached. Swagger UI and financial endpoints are not implemented yet.
+APIs: account/wallet GETs, `POST /api/deposits`, `POST /api/withdrawals` and the specification at `GET /api/openapi`. Funding requires a UUID `Idempotency-Key`; identical retries replay the original result indefinitely, while changed input is rejected. Amounts are exact strings and responses are not cached. Swagger UI, FX/conversion/transfer and full history endpoints remain unimplemented.
 
 The application service runs as the non-root `node` user. It uses separate named volumes for Linux dependencies, Next.js output, and SQLite data, so host dependencies cannot overwrite native modules in the container. The host port is bound to `127.0.0.1`; this no-auth simulation must not be exposed publicly.
 
@@ -47,7 +47,7 @@ The Playwright image runs Node 26 with its pinned Chromium and required Linux li
 so Next's private-network HMR handshake does not block client hydration. It does
 not allow arbitrary origins or change the localhost-only host-port binding.
 
-Jest covers exact accounting, atomic/repeated/concurrent seeding, snapshot reads, safe API contracts and interface validation. Chromium checks stored account identity, read APIs, theme/storage, responsive/keyboard behavior, draft review and privacy—not connected payment journeys. See [`artifact/BACKEND_READS.md`](artifact/BACKEND_READS.md), [`artifact/HANDOVER.md`](artifact/HANDOVER.md), and [`artifact/DEPENDENCIES.md`](artifact/DEPENDENCIES.md) for evidence and limitations.
+Jest covers exact accounting, atomic seeding, snapshot reads, funding concurrency/rollback/replay and client recovery. Read/visual Chromium checks can use the ordinary local server. **Monetary browser tests must use the disposable funding-e2e server** in [`artifact/FUNDING.md`](artifact/FUNDING.md); they refuse the ordinary runtime target. Never fund the persistent wallet as test setup. Retain the same key/input after a timeout/storage failure; do not start a replacement attempt while its outcome is unknown.
 
 For the complete local check (including a production build), stop the development compiler first:
 
@@ -59,7 +59,7 @@ docker compose up -d app
 
 Generate a migration after an intentional schema change with `docker compose run --rm app npm run db:generate -- --name=descriptive_name`, review/commit the generated SQL and metadata, then apply it with `npm run db:migrate` in the container. Never use schema-push or a volume reset as a substitute for a reviewed migration.
 
-The wallet retains its existing shadcn/Radix controls, Lucide icons, branding and frosted layout. The dynamic root page reads stored balances through server services; `createPreviewOverview()` is test-only. Money forms still review local drafts and cannot submit operations. Loading is not artificially delayed to show skeletons.
+The wallet retains its shadcn/Radix controls, flags, gradient, branding, typography and motion. The dynamic page reads stored snapshots; `createPreviewOverview()` is test-only. Review alone never submits. Deposit/withdrawal confirmation can change simulated balances; other final actions remain disabled. Ordinary drafts clear on reload. Only an unresolved intent temporarily uses per-tab session storage, verified before sending and cleared after confirmation. Closing the tab or manually deleting storage can lose that recovery context; it is not cross-device recovery. Recent transactions is labelled as the latest 50 completed funding receipts, not full history or historical USD valuation.
 
 Stop the development service before building against the same Next output volume to avoid two compilers writing there at once. Existing planning files and the design skill are preserved. Node 26 is enforced by npm; TypeScript 5.9 is pinned for the initial verified Next.js toolchain rather than adopting a new TypeScript major by default.
 

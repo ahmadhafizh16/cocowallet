@@ -232,6 +232,14 @@ The user-requested [balance-card refinement](artifact/BALANCE_CARD.md) adds one 
 
 The later [backend read integration](artifact/BACKEND_READS.md) preserves these visual rules while replacing runtime preview identities/balances with stored journal snapshots. Connection notices and balance labels now distinguish connected reads from unimplemented money/history services. Further visual feedback is deferred; component examples remain illustrative, not database seed data.
 
+The [funding integration](artifact/FUNDING.md) preserves the same visual system.
+Existing dialogs now support explicit simulated deposit/withdrawal confirmation,
+pending/unknown/result states and immutable original-request recovery. Shared
+Buttons, typography and fact-list patterns are reused; no CSS, flags, gradient,
+branding or motion changes are introduced. Conversion/transfer final actions
+remain disabled. Ordinary drafts stay in page memory; only unresolved funding
+intent may use the approved per-tab storage exception in D-030.
+
 **Key Characteristics:**
 
 - Icy-blue glass and a diffuse navy backdrop.
@@ -267,7 +275,7 @@ Icy neutrals support one muted navy accent; dark mode changes values, not jobs. 
 ### Semantic states
 
 - **Danger** (`danger`, `danger-ground`): invalid borders/rings, associated error copy, and the available destructive Button. Explain errors in text, not color alone.
-- **Positive** (`positive`, `positive-ground`): retained semantic foundations, not evidence of a completed operation. The disconnected wallet has no money-success receipt.
+- **Positive** (`positive`, `positive-ground`): retained semantic foundations, not evidence by themselves of completion. Funding receipts require a validated definitive server result; neither color nor local review can imply success.
 
 The dialog scrim is a local translucent treatment (`rgb(13 28 45 / 40%)`), not a new reusable palette primitive. Shadow colors likewise belong to elevation rather than extra color swatches.
 
@@ -423,7 +431,18 @@ Badge supports `default`, `secondary`, and `outline` pill variants. Wallet count
 
 All four money forms use the shared Radix Dialog. Content uses solid surface, ambient depth, a labelled title/description, accessible close Button, and the bounded width in frontmatter. Desktop maximum height is `calc(100dvh - 48px)` with internal vertical overflow; the mobile exception is in Layout. Escape dismisses, focus is trapped while open, and closing restores the invoking control. Initial focus goes to recipient for Send money, otherwise amount, or to the preserved review heading when reopening a review.
 
-The always-mounted workspace preserves separate drafts/errors/reviews across close/reopen; reload clears them. Validation focuses the first invalid control, valid review focuses its heading, and editing returns to amount. Changing source currency clears dependent errors and an identical receiving currency; same-currency target options are disabled. Review facts wrap. Every final submission is disabled with a connection explanation; reviewing a draft is not a success receipt and does not create an account, move money, or record history.
+The always-mounted workspace preserves separate drafts/errors/reviews across close/reopen; reload clears ordinary drafts. Validation focuses the first invalid control, valid review focuses its heading, and editing returns to amount. Changing source currency clears dependent errors and an identical receiving currency; same-currency target options are disabled. Review facts wrap. Reviewing never submits. Deposit/withdrawal final actions explicitly confirm a simulation and require visible amounts plus verified recovery storage. Conversion/transfer final actions remain disabled.
+
+Funding's pending/recovery/receipt/error views reuse the existing dialog/fact-list
+composition. Step headings take focus; closing restores the invoking control and
+never forgets uncertainty. A notice exposes unresolved or newly confirmed results
+after dialog dismissal. Original request fields cannot be edited while unresolved;
+recovery explicitly retries the same key. A known outcome permits an explicit
+new-operation/edit action only after recovery context is cleared. Privacy removes
+receipt/recovery amounts and receipt timestamps, and removes completed-funding
+records from the DOM. A known receipt's balance is its original post-operation
+snapshot, not a fresh total. The latest 50 funding receipts are partial transaction
+visibility; the balance-history graph stays disconnected.
 
 ### Loading and error states
 

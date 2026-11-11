@@ -1,6 +1,6 @@
 # Idempotency: failed-retry decision
 
-**Status:** The user selected **B: replay the original definitive result**. Implementation and retention details remain open.  
+**Status:** Policy B and D-030 funding defaults are implemented: immutable retained outcomes, atomic success, stable recorded failures and same-key recovery. See [FUNDING.md](FUNDING.md) for evidence and limits.
 **Decision:** [D-019](DECISIONS.md#d-019).  
 **Resolution:** [O-001](DECISIONS.md#o-001); implementation details: [O-006](DECISIONS.md#o-006).  
 **Affected feature and task:** [PRD-10](prd/PRD-10-api.md), [T10-02](tasks/TASKS-10.md#t10-02).
@@ -47,11 +47,46 @@ Neither A nor B changes the agreed rule for a **successful** commit: replaying t
 1. **Different input:** Both policies reject changing the amount, wallet, destination, or quote while reusing a registered key. Decide when the server first registers a key for malformed or invalid requests.
 2. **Expired quote:** A previously expired quote cannot be made valid by retrying it. The user must obtain and confirm a new quote; because the request changes, the new intended operation needs a new key.
 3. **Concurrent submissions:** Two identical requests using the same key must not both commit. The implementation needs an explicit in-progress/wait/conflict behavior and concurrency tests.
-4. **Retention:** If a completed key/result is deleted, later retries can no longer be guaranteed safe. A retention policy has not been chosen; retaining successful keys alongside transaction history is a proposal, not an agreed rule.
+4. **Retention:** Definitive results are retained indefinitely. Deleting/restoring an older database can destroy duplicate protection; never silently prune these records.
 5. **No history clutter:** Whether technical failed-request metadata is stored or not, failed attempts must not be shown as completed user transactions.
 6. **Unknown outcome:** A timeout, connection loss, or failure to durably record an outcome is not proof that nothing committed. Retry or reconcile with the **same** key; generating a new key at that point could duplicate a successful operation.
 7. **Error persistence:** For an accepted key with a definitive failure, persist enough separate technical metadata to replay it without adding a completed transaction to history. The server must not claim a durable result if it cannot store one; exact handling of unavailable storage, pre-key validation, and in-progress requests is [O-006](DECISIONS.md#o-006).
 
 ## Selected policy
 
-**B is selected:** one accepted key represents one attempt with one stable definitive result. Once the client has received a definite failure, the interface creates a new key for an explicitly new attempt. When the outcome is unknown, it must reuse the old key until the result is known. The key-retention and recovery mechanics remain [O-006](DECISIONS.md#o-006).
+**B is selected:** one accepted key represents one attempt with one stable definitive result. An explicitly new attempt after a definite error uses a new key. Unknown outcomes must reuse the original key until resolved.
+
+## Approved funding contract (D-030)
+
+- `POST /api/deposits` and `POST /api/withdrawals` require JSON
+  `{ walletId, amount, provider }` (exactly three string fields) and UUID
+  `Idempotency-Key` (versions 1–8, standard variant, case-normalized). Requests
+  are bounded to 16 KiB; no credentials/provider network calls exist.
+- Canonical JSON stores kind plus the exact three strings. Property ordering is
+  irrelevant; changing decimal spelling, provider, wallet or kind is different
+  input. Keys are global across both funding endpoints.
+- Invalid JSON/type/fields/key/provider, blank/NUL wallet or malformed decimal
+  syntax is rejected before accepting a key. Well-shaped requests reach one
+  top-level `BEGIN IMMEDIATE`: replay/conflict lookup happens before current
+  business validation. Missing wallet (404), inspect-only account (409), amount
+  precision/range (400), insufficient funds/overflow (409) become immutable
+  recorded problems. They create no completed transaction or journal entry.
+- Success is HTTP 200 with an exact string receipt: requestKey, transactionId,
+  type/status, accountId/walletId, currency/exponent, amountMinor/balanceMinor,
+  fictional provider and createdAt. Balance is the original post-operation
+  snapshot, not a fresh balance on replay. Success/key/journal commit together.
+- Problem Details uses stable `code`, `definitive`, and (when valid) requestKey.
+  Only stored outcomes or known pre-acceptance rejection are definitive. Key
+  mismatch is nondefinitive about the original request. Unexpected/storage/busy
+  errors are safe 503, never claimed recorded; retry the identical key/request.
+  `Idempotency-Replayed` distinguishes original/replayed results without changing
+  their body/status. All responses are `no-store`; browser cross-origin writes
+  are rejected, with no new CORS permission.
+- No durable pending row is needed: SQLite holds the writer reservation through
+  validation, journal and result recording. A crash before commit rolls all back;
+  a crash after commit replays. Lock timeout is unknown/retry, never a new intent.
+- The tab stores only unresolved intent before sending, verifies that write,
+  and never automatically submits on reload. A recovery action resends immutable
+  original input/key. Missing/blocked/corrupt recovery storage blocks new writes.
+  Clear known context; ordinary drafts/history are not persisted. Hiding balances
+  also hides recovery/receipt amounts. Closing a dialog never forgets uncertainty.

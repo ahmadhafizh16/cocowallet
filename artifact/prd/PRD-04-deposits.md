@@ -1,6 +1,6 @@
 # PRD-04 — Simulated deposits
 
-**Status:** Draft; no deposit code exists.  
+**Status:** Simulated service, HTTP confirmation and durable retry/recovery are implemented under D-030; verification is recorded in [FUNDING.md](../FUNDING.md). Swagger UI remains a separate incomplete acceptance item.
 **Decisions:** [D-005](../DECISIONS.md#d-005), [D-006](../DECISIONS.md#d-006), [D-018](../DECISIONS.md#d-018), [D-019](../DECISIONS.md#d-019).  
 **Tasks:** [T04-01–T04-02](../tasks/TASKS-04.md).  
 **Diagram:** [Business operations and history](../DIAGRAMS.md#business-operations-and-history).

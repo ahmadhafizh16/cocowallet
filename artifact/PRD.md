@@ -1,6 +1,11 @@
 # Product requirements: simulated multi-currency wallet
 
-**Status:** Platform, money/journal core, and the approved frosted interface-preview shell are implemented and tested. Wallet APIs, seeding, rates/quotes, and full idempotency remain future work; preview controls cannot submit money. Product context is in [PRODUCT.md](../PRODUCT.md); see the [interface record](UI_FOUNDATION.md), linked feature PRDs, and kanban for actual completion.
+**Status:** Persistent account reads and durable simulated deposits/withdrawals
+now connect the existing interface to exact journal accounting. Reviewed
+confirmation, original-key recovery and partial completed-funding visibility work.
+FX/quotes, conversion/transfer, full history/valuation and Swagger remain future
+work; visual feedback is deferred. See [FUNDING.md](FUNDING.md), linked feature
+PRDs and [KANBAN.md](KANBAN.md) for actual acceptance boundaries.
 
 ## Goal
 

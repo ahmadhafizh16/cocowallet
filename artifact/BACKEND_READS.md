@@ -1,5 +1,10 @@
 # Persistent accounts and read integration
 
+**Historical milestone boundary:** This record describes the completed read
+slice. [FUNDING.md](FUNDING.md) subsequently connects simulated deposit/withdrawal
+confirmation, durable retries and receipts; its evidence supersedes the disabled-
+funding statements below, not this checkpoint's verification.
+
 **Status:** Implemented and verified under [T03-01](tasks/TASKS-03.md#t03-01) and
 [D-029](DECISIONS.md#d-029). The user paused further UI refinement and asked to
 start backend implementation/integration. This is the first connected slice,

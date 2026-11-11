@@ -2,7 +2,7 @@
 version: 1
 slug: "src-app-page-tsx"
 primary_target: "src/app/page.tsx"
-related_targets: ["src/features/wallet/dashboard.tsx","src/features/wallet/wallet.css","src/features/wallet/operation-workspace.tsx","src/app/loading.tsx","src/app/error.tsx"]
+related_targets: ["src/features/wallet/dashboard.tsx","src/features/wallet/wallet.css","src/features/wallet/operation-workspace.tsx","src/features/funding/funding-panel.tsx","src/features/funding/recent-funding.tsx","src/app/loading.tsx","src/app/error.tsx"]
 ---
 
 # Wallet overview surface
@@ -14,8 +14,9 @@ The user approved a two-column refinement after critiquing the initial frosted
 shell: icon rail with tooltips, popup money workflows, and consistent actual
 shadcn foundations. See `artifact/WALLET_REDESIGN.md`. The job remains inspecting
 journal-backed balance snapshots and exploring local money drafts. The user has
-paused visual feedback while backend reads are integrated; money submission stays
-disconnected. See `artifact/BACKEND_READS.md`.
+paused visual feedback while backend workflows are integrated. Reviewed simulated
+deposits/withdrawals now connect through durable retry/recovery; conversion and
+transfer submission stay disconnected. See `artifact/FUNDING.md`.
 
 ## Direction contract
 
@@ -67,8 +68,10 @@ incorrect and is withdrawn; this machine's seed support was not unavailable.
   Registry-derived shadcn/Radix controls own menus, tooltips, fields and overlays.
 - The live page reads persistent accounts, destination lists and journal balances
   from one server snapshot. Test-only preview data is not a runtime fallback.
-  Financial HTTP writes, rates/quotes, history and operation outcomes remain
-  future integration; unknown values stay unavailable, not fabricated zero.
+  Funding POSTs have explicit reviewed confirmation, immutable unresolved intent,
+  same-key recovery and server-confirmed receipts. Only unresolved context may
+  temporarily use per-tab session storage. Other financial writes, rates/quotes,
+  full history and valuation remain future work; unknown values stay unavailable.
 - The scene is a local evaluation at a desk or on a phone under normal ambient
   light; light follows the supplied reference, dark follows system/user preference.
 
@@ -79,6 +82,6 @@ T11-07 adds the requested flags, gradient/history presentation and clearer headi
 T03-01 connects stored account/balance reads without changing that visual system.
 `artifact/UI_FOUNDATION.md` records current
 behavior and integration limits; `artifact/DESIGN_REVIEW.md` distinguishes current
-review from the historical three-column baseline. Financial services remain
-disconnected; connected tasks and cross-feature accessibility acceptance stay
-separate.
+review from the historical three-column baseline. Funding retains that visual
+system and shared controls; it does not resolve postponed visual feedback, full
+FX/history or cross-feature accessibility acceptance. See `artifact/FUNDING.md`.

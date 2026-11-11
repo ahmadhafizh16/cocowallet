@@ -152,6 +152,20 @@ journal-backed overview. Finalize the two read routes documented in
 O-006's durable-result details remain open. Do not enable financial submission,
 invent rates/history or change the visual design while those stages are pending.
 
+### D-030
+
+**Durable funding retries and narrow reload recovery:** The user approved UUID
+retry keys, indefinite retention of definitive results, replay of the original
+success/error for identical key/input, and rejection of changed input. Malformed
+requests are rejected before key acceptance. Concurrent retries cannot move funds
+twice; timeout/storage failures require the same key, not a new attempt.
+Only unresolved submission context (key, kind, wallet, amount and fictional
+provider) may temporarily persist in per-tab session storage. Save and verify it
+before sending; block submission if this cannot be done safely. Clear it when the
+result is known; ordinary drafts still clear on reload. Deposit/withdrawal HTTP
+contracts are fixed in [IDEMPOTENCY.md](IDEMPOTENCY.md). FX/history decisions are
+not resolved by this approval. No real payments or provider integrations.
+
 ## Questions and resolutions
 
 ### O-001
@@ -164,7 +178,10 @@ invent rates/history or change the visual design while those stages are pending.
 
 ### O-003
 
-**API details:** D-029 finalizes the implemented account/wallet GET contracts and hand-maintained read-only OpenAPI document. Remaining write/history route shapes, quote creation/confirmation, write-schema generator, filtering/pagination and errors stay open in [API_DESIGN.md](API_DESIGN.md). Swagger UI is not implemented.
+**API details:** D-029/D-030 finalize account/wallet GETs and simulated funding
+POSTs, including their exact receipt/problem/idempotency contracts and maintained
+OpenAPI document. Quote/conversion/transfer/history shapes, generation and full
+filtering/pagination stay open in [API_DESIGN.md](API_DESIGN.md). Swagger UI is not implemented.
 
 ### O-004
 
@@ -176,7 +193,14 @@ invent rates/history or change the visual design while those stages are pending.
 
 ### O-006
 
-**Idempotency implementation details:** Define key format/size and retention, canonical request fingerprinting, how malformed requests are handled before a key is accepted, behavior while the first request is in progress, and recovery when the database cannot durably store an outcome. These details must preserve the stable-result decision in D-019 without claiming guarantees when no durable result exists.
+**Resolved for funding by D-030:** UUID keys and definitive outcomes are retained
+indefinitely. Canonical JSON binds kind and exact wallet/amount/provider strings
+(object property order ignored; `1` and `1.00` are different input). Structural,
+provider and decimal-syntax failures are pre-acceptance; resource, precision,
+range and funds failures are recorded under the writer reservation. SQLite
+serializes concurrent attempts; busy/storage failures return a nondefinitive 503
+and require the same key. See [IDEMPOTENCY.md](IDEMPOTENCY.md). Extending these
+mechanics to future quote/transfer contracts remains their implementation work.
 
 ### O-007
 

@@ -1,8 +1,8 @@
 # Project kanban
 
-**Last updated:** Visual feedback is deferred. T03-01 is complete: persistent main-account setup, account/wallet read APIs and journal-backed overview integration pass review and production checks. Financial submissions, FX, history and durable idempotency remain separate stages.
+**Last updated:** Visual feedback remains deferred. Durable funding idempotency and protected deposit/withdrawal services are complete. Reviewed simulated submissions, receipts, recovery and partial completed-funding visibility work; T04-02/T05-02 retain their unimplemented Swagger acceptance. FX, conversions/transfers and full history remain separate stages.
 
-**Scope:** 36 implementation tasks: **21 to do**, **0 in progress**, **0 blocked**, **15 done**. Planning activities completed below do not count as implemented features.
+**Scope:** 36 implementation tasks: **16 to do**, **2 in progress**, **0 blocked**, **18 done**. Planning activities completed below do not count as implemented features.
 
 Each task links to its detailed description, source PRD, decision IDs, dependencies, and acceptance tests. The Angular-style, one-intention-per-commit rule and local Git workflow in [D-021](DECISIONS.md#d-021) and [D-022](DECISIONS.md#d-022) apply to every task. A task moves to **Done** only when its acceptance criteria are verified and the PRD, decisions, diagrams, API documentation, and handover are updated as needed.
 
@@ -27,13 +27,11 @@ See Done for the verified money/journal core.
 
 ### Deposits — [PRD-04](prd/PRD-04-deposits.md)
 
-- [ ] [T04-01](tasks/TASKS-04.md#t04-01) — Deposit service and journal write.
-- [ ] [T04-02](tasks/TASKS-04.md#t04-02) — Deposit HTTP flow and interface.
+See Done for the service and In progress for the connected flow's remaining Swagger acceptance.
 
 ### Withdrawals — [PRD-05](prd/PRD-05-withdrawals.md)
 
-- [ ] [T05-01](tasks/TASKS-05.md#t05-01) — Withdrawal service and protected debit.
-- [ ] [T05-02](tasks/TASKS-05.md#t05-02) — Withdrawal HTTP flow and interface.
+See Done for the protected service and In progress for remaining Swagger acceptance.
 
 ### FX rates and quotes — [PRD-06](prd/PRD-06-rates.md)
 
@@ -58,7 +56,6 @@ See Done for the verified money/journal core.
 ### HTTP API — [PRD-10](prd/PRD-10-api.md)
 
 - [ ] [T10-01](tasks/TASKS-10.md#t10-01) — Shared HTTP schemas, handlers, and Problem Details.
-- [ ] [T10-02](tasks/TASKS-10.md#t10-02) — Durable idempotency implementation; the stable-result policy is agreed.
 - [ ] [T10-03](tasks/TASKS-10.md#t10-03) — OpenAPI generation, Swagger UI, and contract tests.
 
 ### Interface — [PRD-11](prd/PRD-11-interface.md)
@@ -75,7 +72,8 @@ See Done for the approved direction and verified interface-preview foundation.
 
 ## In progress
 
-_No task is currently in progress at this connected-read checkpoint._
+- [ ] [T04-02](tasks/TASKS-04.md#t04-02) — Deposit confirmation/recovery journey implemented; Swagger UI acceptance remains pending T10-03.
+- [ ] [T05-02](tasks/TASKS-05.md#t05-02) — Withdrawal confirmation/recovery journey implemented; Swagger UI acceptance remains pending T10-03.
 
 ## Blocked
 
@@ -98,6 +96,9 @@ _No task is currently blocked by an explicit unresolved decision or external blo
 - [x] [T11-06](tasks/TASKS-11.md#t11-06) — Applied CocoWallet branding and continuous, reduced-motion-aware interaction transitions; 572 Jest / 38 production Chromium tests, scoped fix verdict, and current design notes.
 - [x] [T11-07](tasks/TASKS-11.md#t11-07) — Currency flags, gradient balance/history card and larger icon-led headings; 648 Jest / 41 production Chromium tests, scoped ship verdict and warning-free development.
 - [x] [T03-01](tasks/TASKS-03.md#t03-01) — Persistent main-account setup, account/wallet read APIs and journal-backed overview; 723 Jest / 43 production Chromium checks, review fixes verified, backup and repeatable seed confirmed.
+- [x] [T10-02](tasks/TASKS-10.md#t10-02) — Durable UUID retry outcomes, indefinite retention, atomic success, stable business errors, concurrency and same-key recovery for implemented funding contracts; see [FUNDING.md](FUNDING.md).
+- [x] [T04-01](tasks/TASKS-04.md#t04-01) — Exact simulated deposit service, main-only credit, atomic result/journal writes and rollback/duplicate tests.
+- [x] [T05-01](tasks/TASKS-05.md#t05-01) — Protected simulated debit, serialized funds check, no overspend and definitive error replay outside history.
 
 ## Done — planning only
 

@@ -1,6 +1,6 @@
 # HTTP API design: draft
 
-**Status:** Account/wallet read routes and a read-only OpenAPI document are implemented under [D-029](DECISIONS.md#d-029). Financial routes, quote/history contracts, write-schema generation and Swagger UI remain proposals/future work. See [BACKEND_READS.md](BACKEND_READS.md).
+**Status:** Account/wallet reads and simulated funding POSTs are implemented under D-029/D-030, with a hand-maintained OpenAPI document. Quote/conversion/transfer/history contracts, schema generation and Swagger UI remain future work. See [BACKEND_READS.md](BACKEND_READS.md) and [FUNDING.md](FUNDING.md).
 
 ## Implemented operational endpoints
 
@@ -11,13 +11,16 @@
 | GET | `/api/ready` | 200 JSON when the migrated metadata table is readable; otherwise 503 Problem Details with `DATABASE_NOT_READY`. |
 | GET | `/api/accounts` | Persistent main account and destinations; role/default/creation time/inspect-only metadata. |
 | GET | `/api/accounts/{accountId}/wallets` | One account and its snapshot-consistent exact balances as decimal minor-unit strings. |
-| GET | `/api/openapi` | OpenAPI 3.1 document for implemented read/operational routes only; not Swagger UI. |
+| GET | `/api/openapi` | OpenAPI 3.1 document for implemented reads/funding/operational routes; not Swagger UI. |
+| POST | `/api/deposits` | Explicit simulated deposit; required UUID key and durable original-result replay. |
+| POST | `/api/withdrawals` | Explicit simulated withdrawal; protected debit and durable error/success replay. |
 
 Routes are in `src/app/`; Jest tests verify isolated database reads, safe errors and read-response/spec agreement. Wallet GETs never seed or mutate storage and return `Cache-Control: no-store`. Missing initialization/storage is 503, unknown account is 404, empty/null-character path ID is 400. Read codes are `ACCOUNT_NOT_INITIALIZED`, `WALLET_DATA_UNAVAILABLE`, `ACCOUNT_NOT_FOUND` and `INVALID_ACCOUNT_ID`; all use safe Problem Details. Unsupported methods retain Next.js's 405 with no mutation/body contract. See [the fixed read shapes](BACKEND_READS.md).
 
 The [interface](UI_FOUNDATION.md) now reads stored balances but validates/reviews
-money drafts locally and cannot submit money. Form fields are not finalized write
-contracts. Operational readiness does not imply accounts have been seeded.
+money drafts locally. Deposit/withdrawal confirmations now use the fixed funding
+contract in [IDEMPOTENCY.md](IDEMPOTENCY.md); conversion/transfer final actions
+remain disabled. Operational readiness does not imply accounts have been seeded.
 
 **Decision references:** [D-003](DECISIONS.md#d-003), [D-007](DECISIONS.md#d-007), [D-008](DECISIONS.md#d-008), [D-010](DECISIONS.md#d-010), [D-017](DECISIONS.md#d-017), [D-018](DECISIONS.md#d-018), and [D-019](DECISIONS.md#d-019). Detailed requirements and tasks: [PRD-10](prd/PRD-10-api.md) and [Tasks 10](tasks/TASKS-10.md).
 
@@ -36,8 +39,6 @@ contracts. Operational readiness does not imply accounts have been seeded.
 | POST | `/api/wallets` | Add a supported fiat wallet to the main account. |
 | PATCH | `/api/accounts/{accountId}/default-currency` | Change the main account's default currency; destinations are read-only. |
 | GET | `/api/currencies` | List available fiat currencies. |
-| POST | `/api/deposits` | Simulate a deposit with a selected provider. |
-| POST | `/api/withdrawals` | Simulate a withdrawal with a selected provider. |
 | POST | `/api/quotes` | Preview an FX conversion or cross-currency transfer with a one-minute quote. |
 | POST | `/api/conversions` | Confirm a conversion, creating the target wallet if required. |
 | POST | `/api/transfers` | Transfer to an existing or newly created simulated account. |
@@ -48,7 +49,17 @@ These remaining examples are not finalized write/history contracts. The two
 account GETs above are implemented; decide default updates, quote shapes,
 pagination and remaining resource names before implementing their routes.
 
-## Proposed request/response contract
+## Funding request/response contract
+
+The implemented funding contract, exact pre-acceptance/recorded error distinction,
+immutable original receipt, UUID scope and recovery semantics are authoritative in
+[IDEMPOTENCY.md](IDEMPOTENCY.md) and [FUNDING.md](FUNDING.md). Both endpoints use
+HTTP 200 on completion, 400/404/409 Problem Details for known rejections, and
+nondefinitive 503 for unknown storage outcomes. JSON fields are `walletId`,
+`amount`, `provider`; all amounts remain strings. The earlier illustrative
+funding examples below are superseded by those fixed contracts and OpenAPI.
+
+## Remaining proposed request/response contract
 
 The names, fields, example IDs, successful response statuses, and payloads in this section are **illustrative proposals**, not an existing or finalized API. The error baseline and idempotency requirements are the agreed [D-017](DECISIONS.md#d-017)/[D-019](DECISIONS.md#d-019). Each route must be reflected in the generated OpenAPI document and tested against its actual implementation.
 

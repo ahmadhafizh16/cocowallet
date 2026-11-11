@@ -16,18 +16,26 @@ Status is mirrored in [KANBAN.md](../KANBAN.md).
 
 **Partial groundwork:** D-029 implements thin account/wallet GET handlers, exact
 string responses, safe 400/404/503 read problems and response-contract tests.
-Write validation/conflicts and the shared financial schema workflow remain future
-work; this task is not closed by read-only integration.
+Funding now adds structural/business validation, safe 409 conflicts, exact receipts,
+shared request helpers and actual response/schema tests. FX/quote validation and
+the broader generated-schema workflow remain; this task is not globally closed.
 
 ### T10-02
 
 **Durable idempotency contract and implementation**  
-**Status:** To do.  
+**Status:** Done.
 **Decisions:** [D-006](../DECISIONS.md#d-006), [D-017](../DECISIONS.md#d-017), [D-018](../DECISIONS.md#d-018), [D-019](../DECISIONS.md#d-019).  
 **Depends on:** [T02-03](TASKS-02.md#t02-03), [T10-01](#t10-01).  
 **Implementation:** Define header validation, request fingerprint scope and canonicalization, durable uniqueness, concurrent-key behavior, and result persistence. Replay the original definitive success or error for the same accepted key/input; reject different input. Atomically couple successful result registration with transaction/journal commit; store definite failure metadata separately and never treat it as completed history. Resolve retention, pre-key validation, in-progress behavior, and storage-failure recovery in [O-006](../DECISIONS.md#o-006).
 
 **Acceptance and tests:** A response lost after successful commit can be retried with the same key/input and returns the original result without duplicate entries. A definite failure is replayed for that key even if account conditions later change; a deliberate new attempt uses a new key. A key reused for different input returns the documented conflict. Independent concurrent requests cannot both commit; tests cover restart, failure replay, and unknown-outcome recovery.
+
+**Current implementation:** D-030 resolves O-006 for current funding requests.
+Migration 0003 retains immutable key/request/status/body indefinitely, with success
+and journal in the same top-level immediate transaction. Known failures are
+separate technical records; unknown/storage failures remain same-key retries.
+See [FUNDING.md](../FUNDING.md). Future quote/transfer request shapes are not
+implemented by this funding-specific boundary.
 
 ### T10-03
 
@@ -40,5 +48,6 @@ work; this task is not closed by read-only integration.
 **Acceptance and tests:** Every implemented endpoint, required idempotency header, quote/amount schema, and Problem Details response is represented accurately. Contract tests validate real responses against the document; Swagger works without paid services and is not publicly exposed by default.
 
 **Partial groundwork:** `/api/openapi` serves a tested hand-maintained document
-for implemented read/operational routes only. Financial generation, headers,
-quotes, history contracts and Swagger UI remain unimplemented; no closure implied.
+for implemented read/operational and funding routes, including required keys,
+receipts, exact amounts and safe problems. Schema generation, quote/history
+contracts and Swagger UI remain unimplemented; no closure implied.

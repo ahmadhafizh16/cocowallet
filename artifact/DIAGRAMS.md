@@ -1,6 +1,6 @@
 # Architecture and flow diagrams
 
-**Status:** The platform, money/journal core, persistent account/read services and connected read-only overview are implemented. Financial HTTP operations, quotes, durable idempotency and their connected UI flows remain future features. The [decision register](DECISIONS.md) is authoritative when a diagram and an open question conflict.
+**Status:** Persistent reads and simulated funding are connected to the exact journal. Funding POSTs retain original results atomically and support reviewed confirmation/recovery. Quotes, conversion/transfer and full history/valuation remain future features. The [decision register](DECISIONS.md) is authoritative when a diagram and an open question conflict.
 
 ## Implemented foundation flow
 
@@ -10,7 +10,10 @@ flowchart LR
     Next --> Health[GET /api/health: liveness]
     Next --> Ready[GET /api/ready: schema readiness]
     Next --> Reads[GET accounts and account wallets]
-    Next --> Spec[GET /api/openapi: read contract]
+    Next --> Spec[GET /api/openapi: implemented read and funding contracts]
+    Next --> Funding[POST deposit or withdrawal: reviewed simulation]
+    Funding --> Atomic[Immediate reservation: replay or validate and record]
+    Atomic --> Connection
     Reads --> Services[Account metadata and snapshot journal reads]
     Services --> Runtime
     Ready --> Runtime[src/server/db/runtime.ts]

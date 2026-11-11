@@ -4,7 +4,9 @@
 following the [two-column redesign brief](WALLET_REDESIGN.md), the retained
 [frosted identity](DESIGN_REFERENCE.md), [surface brief](WALLET_SURFACE.md), and
 [PRD-11](prd/PRD-11-interface.md). This is an interface-first implementation,
-not completion of funding, FX, history, or idempotency APIs. The subsequent
+not itself completion of financial APIs. Subsequent [funding integration](FUNDING.md)
+adds durable simulated deposit/withdrawal confirmation/recovery, while FX and full
+history remain future work. The earlier
 [backend read slice](BACKEND_READS.md) connects persistent account data without
 changing the visual system; further UI feedback is deferred.
 The later [T11-06](tasks/TASKS-11.md#t11-06) applies CocoWallet branding and
@@ -30,7 +32,8 @@ bounded motion without changing these integration limits.
   and explains the limitation.
 - Privacy masks displayed amounts and blanks read-only amount fields without
   destroying drafts or disguising money fields as password credentials. Form
-  details remain in page memory; theme is the only persisted preference.
+  ordinary drafts remain in page memory. Theme is persisted as a preference;
+  D-030 separately permits temporary unresolved intent in per-tab storage.
 - History filters/reset, ID copy/manual fallback, and section navigation work.
   Wallets are scoped by account ID; explicit destination test fixtures show
   inspect-only status and disabled money actions. The default model invents no
@@ -55,10 +58,12 @@ options. One conversion has one visible context. Valid drafts can be reviewed. P
 rates/quotes are not invented; recipients are not verified or saved. The bounded
 recipient input guard is preview validation, **not** a final HTTP ID contract.
 
-**Every final money submission is disabled with a connection explanation.**
-No preview action changes balances/history, creates accounts, sends a financial
-request, or claims success. Keep these safeguards until real server services and
-durable idempotency are integrated. Client validation is not server security.
+**Review alone never submits.** Deposit/withdrawal now require an explicit
+simulated confirmation and verified per-tab recovery storage before sending.
+Validated server outcomes show receipts and refresh balances/partial funding
+records; unknown outcomes retain immutable input/key for explicit recovery.
+Conversion/transfer final actions remain disabled. Client validation never
+replaces server role, precision, funds or idempotency enforcement. See [FUNDING.md](FUNDING.md).
 
 ## Loading, errors, and motion
 
@@ -102,8 +107,8 @@ and retained validation/review/privacy behavior.
 
 ### Current verification and scope
 
-The application passes the full Docker check, including **723 Jest tests** and
-production build, plus **43 Chromium checks** against that build. Coverage includes
+The application passes the full Docker check, including **786 Jest tests** and
+production build, plus **51 Chromium checks** against the isolated build. Coverage includes
 theme/storage, keyboard entry, draft/error focus, no financial submission, privacy,
 zero-balance/self-transfer errors, clipboard fallback, history reset, 404 navigation,
 reduced motion, loading/error rendering, and widths from 320 to 1769px. Destination

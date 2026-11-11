@@ -14,8 +14,13 @@
 ## Before implementing money movement
 
 - [x] Resolve [O-002](DECISIONS.md#o-002): pinned accounting metadata, exact bigint rational arithmetic, supported bounds, and snapshot-based streamed aggregation are implemented under [D-023](DECISIONS.md#d-023).
-- [ ] Resolve implementation details in [O-006](DECISIONS.md#o-006): idempotency key format and retention, request fingerprinting, in-progress concurrency, and recovery when a result cannot be durably stored. The **stable definitive success/error replay** policy itself is already agreed in [D-019](DECISIONS.md#d-019).
+- [x] D-030 resolves funding details in [O-006](DECISIONS.md#o-006): UUID keys, indefinite retention, exact-input fingerprinting, serialized concurrent writes and identical-key unknown-outcome recovery. Only unresolved intent may use per-tab session storage, verified before sending. See [FUNDING.md](FUNDING.md).
 - [ ] Finish the feature-specific requests, quote binding, and error schemas in [O-003](DECISIONS.md#o-003) and [API_DESIGN.md](API_DESIGN.md) before finalizing HTTP/Swagger endpoints.
+
+Funding requests/receipts/problems are fixed in [IDEMPOTENCY.md](IDEMPOTENCY.md)
+and described by the implemented OpenAPI document. Quote/transfer/history
+contracts, generator and Swagger UI remain open; this checkbox is not global
+approval for those unrelated endpoints.
 
 ## Before visual design and feature completion
 
