@@ -31,6 +31,7 @@ As the user, I can understand my balances and perform the simulated wallet workf
 
 Coordinate with each feature PRD for actual form behavior. Test accessible names and focus, theme switching, reduced motion, narrow layouts, and error states. [O-004](../DECISIONS.md#o-004) covers destination USD-total display; [O-005](../DECISIONS.md#o-005) covers operational ambiguities.
 
-Current shell evidence: 557 Jest tests and 22 production Chromium checks pass.
+Current shell evidence: 557 Jest tests and 24 production Chromium checks pass,
+including the registry-derived shadcn money-form controls.
 No final financial submission, populated history, server quote, quote expiry, or
 server-confirmed success is claimed by this interface-first checkpoint.

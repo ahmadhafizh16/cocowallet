@@ -93,7 +93,7 @@ _No task is currently blocked by an explicit unresolved decision or external blo
 - [x] [T02-02](tasks/TASKS-02.md#t02-02) — Immutable journal schema, exact streamed bigint balances, wallet isolation, and consistent account snapshots.
 - [x] [T02-03](tasks/TASKS-02.md#t02-03) — Immediate serialized writes, atomic account/wallet/accounting rollback, independent-connection spending tests, and technical-success integration seam.
 - [x] [T11-01](tasks/TASKS-11.md#t11-01) — User-confirmed product context, code-first workflow, and approved reference-led frosted wallet direction.
-- [x] [T11-02](tasks/TASKS-11.md#t11-02) — Frosted responsive preview shell, themes, skeleton/state coverage, reviewed navigation, and extracted design system; 557 Jest and 22 production Chromium tests pass.
+- [x] [T11-02](tasks/TASKS-11.md#t11-02) — Frosted responsive preview shell, registry-derived money-form inputs/selects, themes, skeleton/state coverage, and extracted design system; 557 Jest and 24 production Chromium tests pass.
 
 ## Done — planning only
 

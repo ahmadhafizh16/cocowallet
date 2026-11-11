@@ -34,6 +34,9 @@ describe("shared UI primitives", () => {
     expect(html).toContain('inputMode="decimal"');
     expect(html).toContain('aria-invalid="true"');
     expect(html).toContain('aria-describedby="amount-error"');
+    expect(html).toContain('data-slot="input"');
+    expect(html).toContain("focus-visible:ring-[3px]");
+    expect(html).toContain("aria-invalid:border-destructive");
   });
   it("keeps skeletons decorative so loading is announced only by the region", () => {
     const html = renderToStaticMarkup(

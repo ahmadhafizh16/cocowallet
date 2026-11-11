@@ -2,6 +2,23 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+@theme inline {
+  --color-foreground: var(--ink);
+  --color-input: var(--control-border);
+  --color-input-surface: var(--control-surface);
+  --color-ring: var(--navy);
+  --color-primary: var(--navy);
+  --color-primary-foreground: var(--on-navy);
+  --color-destructive: var(--danger);
+  --color-muted-foreground: var(--secondary);
+  --color-popover: var(--solid);
+  --color-popover-foreground: var(--ink);
+  --color-accent: var(--inner);
+  --color-accent-foreground: var(--ink);
+  --color-border: var(--line);
+  --radius-md: var(--radius-control);
+}
+
 :root {
   color-scheme: light;
   --ground: #eaf1f5;
@@ -10,6 +27,8 @@
   --solid: #f5f8fa;
   --edge: rgb(255 255 255 / 85%);
   --line: rgb(74 97 122 / 17%);
+  --control-border: #a6b6c7;
+  --control-surface: #f9fbfd;
   --ink: #223349;
   --secondary: #4f6175;
   --navy: #405e87;
@@ -38,6 +57,8 @@
   --solid: #263b50;
   --edge: rgb(188 207 226 / 16%);
   --line: rgb(188 207 226 / 20%);
+  --control-border: #63809b;
+  --control-surface: #203348;
   --ink: #edf3fb;
   --secondary: #b4c6d9;
   --navy: #a7c4e9;
@@ -111,12 +132,17 @@ h3,
 p {
   margin: 0;
 }
-button,
-input,
-select,
-textarea {
-  font: inherit;
-  color: inherit;
+@layer base {
+  button,
+  input,
+  select,
+  textarea {
+    font: inherit;
+    color: inherit;
+  }
+  button {
+    border: 0;
+  }
 }
 input,
 textarea {
@@ -132,9 +158,6 @@ select {
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
 }
-button {
-  border: 0;
-}
 button:disabled,
 input:disabled,
 select:disabled {
@@ -147,7 +170,9 @@ a {
 svg {
   flex-shrink: 0;
 }
-:focus-visible {
+:focus-visible:not([data-slot="input"]):not([data-slot="select-trigger"]):not(
+    [data-slot="select-item"]
+  ) {
   outline: 3px solid var(--navy);
   outline-offset: 4px;
 }
@@ -243,25 +268,6 @@ svg {
 .ui-button:disabled {
   opacity: 0.52;
   box-shadow: none;
-}
-.ui-input {
-  width: 100%;
-  min-width: 0;
-  min-height: 46px;
-  padding: 10px 13px;
-  background: var(--inner);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-control);
-}
-.ui-input::placeholder {
-  color: var(--secondary);
-  opacity: 1;
-}
-.ui-input[aria-invalid="true"] {
-  border-color: var(--danger);
-}
-.ui-input:disabled {
-  opacity: 0.6;
 }
 .ui-skeleton {
   border-radius: 8px;
@@ -427,7 +433,8 @@ svg {
     display: none;
   }
   .ui-button,
-  .ui-input,
+  [data-slot="input"],
+  [data-slot="select-trigger"],
   .theme-select {
     border: 1px solid ButtonText;
   }

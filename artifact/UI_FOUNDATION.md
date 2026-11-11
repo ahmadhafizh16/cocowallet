@@ -10,12 +10,12 @@ not completion of funding, FX, accounts, history, or idempotency APIs.
 - `/` is an HTML wallet interface, not the old JSON foundation response. Desktop
   follows the approved sketch; tablet uses two columns and mobile stacks panels
   with labelled bottom navigation. “Actions” represents all four workflows.
-- Native selects, visible labels, landmarks, a skip link, tabular exact money
+- Radix money-form selects, native utility selects, visible labels, landmarks, a skip link, tabular exact money
   text, focus rings, and field-associated errors support keyboard use. Invalid
   fields and review headings receive focus; editing returns to the amount.
-- Shared shadcn-style button/input/skeleton components and a Radix-backed dialog
-  foundation are local source. Lucide supplies icons. No UI package or font/network
-  dependency was added.
+- Shared controls include registry-derived shadcn Input/Select components, local
+  button/skeleton styling, and a Radix dialog foundation. Lucide supplies icons.
+  No UI package or font/network dependency was added.
 - System/light/dark applies before paint, follows later system changes, and
   persists as a browser preference. With blocked storage, it works for this visit
   and explains the limitation.
@@ -64,6 +64,29 @@ durable idempotency are integrated. Client validation is not server security.
   have scroll clearance for fixed bottom navigation.
 
 ## Verification and remaining scope
+
+### Form-component correction
+
+The user identified that the form controls looked too much like default HTML.
+The amount editor had bypassed the shared Input, and money-form dropdowns used
+native selects. These now use registry-derived shadcn/ui Input and Radix Select
+components with Tailwind semantic tokens, visible field borders/fills, consistent
+focus/error rings, 44px controls, and a 56px amount field. Skeleton dimensions
+follow the corrected fields. Theme/account/history utility selects remain native;
+this change does not claim every control is registry-generated.
+
+Sources: official [Input registry](https://ui.shadcn.com/r/styles/new-york-v4/input.json)
+and [Select registry](https://ui.shadcn.com/r/styles/new-york-v4/select.json).
+The [upstream MIT license](https://raw.githubusercontent.com/shadcn-ui/ui/main/LICENSE.md)
+is retained in `src/components/ui/LICENSE.shadcn`. Existing Radix and Lucide
+dependencies are reused; no package was added. shadcn/ui is copied component
+source, not a separate CSS framework or runtime component package.
+
+Browser regressions cover keyboard selection/typeahead, Escape focus restoration,
+provider menus at 320px/light, 390px/dark and desktop, computed field boundaries,
+and retained validation/review/privacy behavior.
+
+### Overall scope
 
 The implementation passes the full Docker check, including **557 Jest tests** and
 production build, plus Chromium checks against that build. Coverage includes

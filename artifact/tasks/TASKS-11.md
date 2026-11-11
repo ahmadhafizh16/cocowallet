@@ -34,16 +34,18 @@ Status is mirrored in [KANBAN.md](../KANBAN.md).
 
 **Verification:** `docker compose run --rm app npm run check` passed formatting,
 lint, types, **557 Jest tests**, artifact validation, and production build. Against
-that build, **22 Chromium tests** passed; coverage includes 320–1440px layouts,
+that build, **24 Chromium tests** passed; coverage includes 320–1440px layouts,
 themes/storage fallback, keyboard entry, field/review focus, preserved drafts,
 privacy, and no financial submission. React fixtures verify destination isolation
-and inspect-only presentation. The detector returned `[]`; rendered desktop,
+and inspect-only presentation. The baseline detector returned `[]`; rendered desktop,
 tablet, mobile, dark, loading, error, review, and validation states were inspected.
 The independent reviewer required one mobile navigation correction, then scored
 that finding resolved with disposition `ship` at fix-list scope. Design-document
 checks cover YAML/JSON structure, source values, token references, and the version-2
-sidecar. Commands and limitations are recorded in the linked implementation/review
-documents.
+sidecar. The form-control follow-up adds registry-derived Input/Select components
+and keyboard/typeahead/menu-fit checks. Its detector advisories and targeted visual
+review are recorded separately from the baseline verdict. Commands and limitations
+are recorded in the linked implementation/review documents.
 
 **Boundary:** The shipped model is explicitly presentation-only; it neither seeds
 nor queries wallet data. Final money submission is disabled until server services

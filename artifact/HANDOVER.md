@@ -19,7 +19,7 @@
 | `src/features/journal/balances.ts` | Stream exact per-wallet bigint balances; account reads share one snapshot and validate final bounds. |
 | `src/features/journal/write.ts` | Top-level synchronous immediate-write boundary; main-only accounting, exact credits, funds checks, atomic creation/entries, and a technical-success integration seam. [Contract](JOURNAL.md). |
 | `components.json`, `postcss.config.mjs`, `src/lib/utils.ts` | shadcn/Lucide/Tailwind configuration and tested class helper used by the local UI components. |
-| `src/components/ui/` | Local shadcn-style button/input/skeleton primitives and Radix-backed dialog; explicit button types, focus handling, and decorative skeleton semantics. |
+| `src/components/ui/` | Registry-derived shadcn Input/Select, local button/skeleton components, and Radix dialog; visible fields, keyboard/focus handling, and retained upstream MIT notice. |
 | `src/features/theme/`, `src/app/globals.css` | Approved frosted tokens, light/dark/system preference, pre-paint theme bootstrap, storage fallback, and reduced-motion styles. |
 | `src/app/page.tsx`, `layout.tsx`, `loading.tsx`, `error.tsx`, `not-found.tsx` | HTML wallet preview, styles/metadata, skip link, loading/error boundaries, and branded 404; replaces the former root JSON route. |
 | `src/features/wallet/` | Responsive dashboard, account-scoped preview data, exact formatting, draft validation/review, inspect-only presentation, and matching skeleton; no DB/API mutation. |
@@ -41,12 +41,12 @@ Stop the dev compiler before `docker compose run --rm app npm run check`, then u
 
 Application DB: `/app/data/wallet.sqlite` in Compose's `wallet-data` volume. Tests use isolated temporary SQLite files. Normal shutdown is `docker compose down` without deleting volumes. Before applying journal migrations, the stopped app's database was backed up with SQLite's backup API to `/app/data/wallet.sqlite.pre-journal-1794390597589.bak`. Backup creation is verified; a full restore drill is not claimed.
 
-Latest implementation verification: the full Docker check passes artifact validation, formatting, lint, types, **557 Jest tests**, and production build; **22 Chromium tests** pass against that build. See [UI_FOUNDATION.md](UI_FOUNDATION.md) for coverage and production-browser commands. No dependencies or schema changed in this UI checkpoint. Earlier journal checks applied/repeated all three migrations, checked integrity/foreign keys, and confirmed zero stored accounts/transactions. UI checks do not seed or move money. Earlier foundation checks covered clean `npm ci` and recreation persistence. The last production npm audit was clean; 23 low/moderate development-tool findings remain in [DEPENDENCIES.md](DEPENDENCIES.md).
+Latest implementation verification: the full Docker check passes artifact validation, formatting, lint, types, **557 Jest tests**, and production build; **24 Chromium tests** pass against that build, including the form-component correction. See [UI_FOUNDATION.md](UI_FOUNDATION.md) for coverage and production-browser commands. No dependencies or schema changed in this UI checkpoint. Earlier journal checks applied/repeated all three migrations, checked integrity/foreign keys, and confirmed zero stored accounts/transactions. UI checks do not seed or move money. Earlier foundation checks covered clean `npm ci` and recreation persistence. The last production npm audit was clean; 23 low/moderate development-tool findings remain in [DEPENDENCIES.md](DEPENDENCIES.md).
 
 Documentation closure additionally verifies 45 artifact documents and all 32 task
-records, formatting, design YAML/JSON, eight canonical design sections, 34
+records, formatting, design YAML/JSON, eight canonical design sections, 38
 source-matched light/dark colors, resolved token references, and ten standalone
-component examples. The sidecar's 272 synthesized ramp colors are ordered,
+component examples. The sidecar's 304 synthesized ramp colors are ordered,
 in-gamut preview metadata, not an application palette. Application code is
 unchanged since the successful production build/browser review; the development
 service is healthy at `http://localhost:3000`.

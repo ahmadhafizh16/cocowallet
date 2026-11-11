@@ -1,9 +1,65 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-11-11T11:39:02.766Z",
+  "generatedAt": "2026-11-11T12:00:00.512Z",
   "title": "Design System: Simulated multi-currency wallet",
   "extensions": {
     "colorMeta": {
+      "control-border": {
+        "role": "neutral",
+        "displayName": "Visible light control boundary",
+        "tonalRamp": [
+          "oklch(15% 0.013691 249.837)",
+          "oklch(26.429% 0.022259 249.837)",
+          "oklch(37.857% 0.027989 249.837)",
+          "oklch(49.286% 0.030149 249.837)",
+          "oklch(60.714% 0.028464 249.837)",
+          "oklch(72.143% 0.02315 249.837)",
+          "oklch(83.571% 0.014882 249.837)",
+          "oklch(95% 0.004718 249.837)"
+        ]
+      },
+      "control-surface": {
+        "role": "neutral",
+        "displayName": "Opaque light control surface",
+        "tonalRamp": [
+          "oklch(15% 0.001548 247.857)",
+          "oklch(26.429% 0.002517 247.857)",
+          "oklch(37.857% 0.003165 247.857)",
+          "oklch(49.286% 0.003409 247.857)",
+          "oklch(60.714% 0.003219 247.857)",
+          "oklch(72.143% 0.002618 247.857)",
+          "oklch(83.571% 0.001683 247.857)",
+          "oklch(95% 0.000533 247.857)"
+        ]
+      },
+      "dark-control-border": {
+        "role": "neutral",
+        "displayName": "Visible dark control boundary",
+        "tonalRamp": [
+          "oklch(15% 0.024198 246.912)",
+          "oklch(26.429% 0.039342 246.912)",
+          "oklch(37.857% 0.049469 246.912)",
+          "oklch(49.286% 0.053287 246.912)",
+          "oklch(60.714% 0.05031 246.912)",
+          "oklch(72.143% 0.040916 246.912)",
+          "oklch(83.571% 0.026304 246.912)",
+          "oklch(95% 0.008338 246.912)"
+        ]
+      },
+      "dark-control-surface": {
+        "role": "neutral",
+        "displayName": "Opaque dark control surface",
+        "tonalRamp": [
+          "oklch(15% 0.020559 251.751)",
+          "oklch(26.429% 0.033426 251.751)",
+          "oklch(37.857% 0.04203 251.751)",
+          "oklch(49.286% 0.045274 251.751)",
+          "oklch(60.714% 0.042744 251.751)",
+          "oklch(72.143% 0.034763 251.751)",
+          "oklch(83.571% 0.022349 251.751)",
+          "oklch(95% 0.007084 251.751)"
+        ]
+      },
       "ground": {
         "role": "neutral",
         "displayName": "Icy page ground",
@@ -512,7 +568,7 @@
       },
       "amount": {
         "displayName": "Editable amount",
-        "purpose": "Borderless amount entry with decimal input mode."
+        "purpose": "Shared bounded Input enlarged to 56px height, with decimal input mode and an inset currency symbol."
       },
       "currency-amount": {
         "displayName": "Wallet-row amount",
@@ -598,7 +654,8 @@
       { "name": "tablet-min-width", "value": "701px" },
       { "name": "tablet-max-width", "value": "990px" },
       { "name": "mobile-max-width", "value": "700px" },
-      { "name": "narrow-max-width", "value": "380px" }
+      { "name": "narrow-max-width", "value": "380px" },
+      { "name": "input-text-medium-min-width", "value": "48rem" }
     ]
   },
   "components": [
@@ -646,9 +703,9 @@
       "name": "Labeled input",
       "kind": "input",
       "refersTo": "input",
-      "description": "Inset recipient field with a visible label and associated hint; invalid styling uses aria-invalid with error copy supplied by the form.",
+      "description": "Registry-derived shadcn Input with a visible boundary, stronger label and associated hint; invalid styling uses aria-invalid with error copy supplied by the form.",
       "html": "<div class=\"ds-field\"><label for=\"ds-recipient\">Simulated recipient account ID</label><input class=\"ds-input\" id=\"ds-recipient\" type=\"text\" placeholder=\"Enter an account ID\" autocomplete=\"off\" autocapitalize=\"none\" spellcheck=\"false\" maxlength=\"128\" aria-describedby=\"ds-recipient-hint\"/><p class=\"ds-field-hint\" id=\"ds-recipient-hint\">IDs are not verified or saved in this preview.</p></div>",
-      "css": ".ds-field { display: grid; gap: 7px; min-width: 0; color: var(--ink); font-family: var(--font-ui); font-size: 14px; line-height: 1.5; } .ds-field label { color: var(--secondary); font-size: 12px; } .ds-input { width: 100%; min-width: 0; min-height: 46px; padding: 10px 13px; border: 1px solid var(--line); border-radius: var(--radius-control); background: var(--inner); color: var(--ink); font-family: var(--font-ui); font-size: 14px; line-height: 1.5; caret-color: var(--navy); } .ds-input::placeholder { color: var(--secondary); opacity: 1; } .ds-input:focus-visible { outline: 3px solid var(--navy); outline-offset: 4px; } .ds-input[aria-invalid=\"true\"] { border-color: var(--danger); } .ds-input:disabled { opacity: 0.6; cursor: not-allowed; } .ds-field-hint { margin: 2px 0 0; color: var(--secondary); font-size: 12px; line-height: 1.5; } .ds-field-error { margin: 5px 0 0; color: var(--danger); font-size: 12px; line-height: 1.5; } @media (prefers-reduced-transparency: reduce) { .ds-input { background: var(--solid); } } @media (forced-colors: active) { .ds-input { border-color: ButtonText; } }"
+      "css": ".ds-field { display: grid; gap: 7px; min-width: 0; color: var(--ink); font-family: var(--font-ui); font-size: 14px; line-height: 1.5; } .ds-field label { color: var(--ink); font-size: 13px; font-weight: 500; } .ds-input { box-sizing: border-box; width: 100%; min-width: 0; height: 44px; padding: 8px 12px; border: 1px solid var(--control-border); border-radius: var(--radius-control); background: var(--control-surface); color: var(--ink); font-family: var(--font-ui); font-size: 16px; line-height: 1.5; caret-color: var(--navy); box-shadow: 0 1px 2px 0 rgb(0 0 0 / 5%); transition: color 150ms, box-shadow 150ms; } .ds-input::placeholder { color: var(--secondary); opacity: 1; } .ds-input:focus-visible { outline: none; border-color: var(--navy); box-shadow: 0 0 0 3px color-mix(in oklab, var(--navy) 20%, transparent); } .ds-input[aria-invalid=\"true\"] { border-color: var(--danger); box-shadow: 0 0 0 3px color-mix(in oklab, var(--danger) 15%, transparent); } .ds-input:disabled { opacity: 0.5; cursor: not-allowed; } .ds-field-hint { margin: 2px 0 0; color: var(--secondary); font-size: 12px; line-height: 1.5; } .ds-field-error { margin: 5px 0 0; color: var(--danger); font-size: 12px; line-height: 1.5; } @media (min-width: 48rem) { .ds-input { font-size: 14px; } } @media (prefers-reduced-motion: reduce) { .ds-input { transition: none; } } @media (forced-colors: active) { .ds-input { border-color: ButtonText; } }"
     },
     {
       "name": "Labeled wallet navigation",
@@ -675,12 +732,12 @@
       "css": ".ds-panel { min-width: 0; padding: 24px; border: 1px solid var(--edge); border-radius: var(--radius-panel); background: var(--glass); color: var(--ink); font-family: var(--font-ui); font-size: 14px; line-height: 1.5; font-variant-numeric: tabular-nums; box-shadow: var(--shadow); backdrop-filter: blur(22px); -webkit-backdrop-filter: blur(22px); overflow-wrap: anywhere; } .ds-panel-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px 12px; } .ds-panel h2 { margin: 0; font-size: 15px; font-weight: 600; line-height: 1.4; letter-spacing: -0.012em; } .ds-panel-head > span { color: var(--secondary); font-size: 12px; } .ds-currency-list { list-style: none; margin: 9px 0 0; padding: 0; } .ds-currency-row { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); align-items: center; gap: 12px; min-height: 81px; padding: 17px 0; border-bottom: 1px solid var(--line); } .ds-currency-row:last-child { border-bottom: 0; } .ds-currency-identity { display: flex; align-items: center; gap: 11px; min-width: 0; } .ds-currency-identity > div { min-width: 0; } .ds-currency-token { display: grid; place-items: center; flex-shrink: 0; width: 34px; height: 34px; border: 1px solid var(--edge); border-radius: 50%; background: var(--inner); color: var(--navy); font-size: 15px; } .ds-currency-code { margin: 0; font-size: 14px; font-weight: 600; } .ds-currency-name { margin: 2px 0 0; color: var(--secondary); font-size: 12px; } .ds-currency-amount { min-width: 0; margin: 0; text-align: right; font-size: 18px; font-weight: 400; letter-spacing: -0.02em; overflow-wrap: anywhere; } .ds-currency-amount > span { display: block; margin-top: 2px; color: var(--secondary); font-size: 12px; letter-spacing: 0; } @media (min-width: 1530px) { .ds-panel { padding: 27px; } } @media (max-width: 1190px) { .ds-panel { padding: 20px; border-radius: 24px; } .ds-currency-identity { gap: 8px; } } @media (min-width: 701px) and (max-width: 990px) { .ds-panel { padding: 22px; } } @media (max-width: 700px) { .ds-panel { padding: 23px; border-radius: 25px; } } @media (max-width: 380px) { .ds-panel { padding: 20px; } .ds-currency-identity { gap: 7px; } .ds-currency-token { width: 30px; height: 30px; } } @media (prefers-reduced-transparency: reduce) { .ds-panel, .ds-currency-token { background: var(--solid); } }"
     },
     {
-      "name": "Decorative loading shapes",
+      "name": "Select trigger and menu",
       "kind": "custom",
-      "refersTo": "skeleton",
-      "description": "One busy region and one status announcement; each breathing rectangle is hidden from assistive technology.",
-      "html": "<section class=\"ds-loading\" aria-busy=\"true\" aria-label=\"Wallet overview\"><span class=\"ds-loading-status\" role=\"status\">Loading wallet overview</span><div class=\"ds-loading-lines\" aria-hidden=\"true\"><div class=\"ds-skeleton\" aria-hidden=\"true\"></div><div class=\"ds-skeleton\" aria-hidden=\"true\"></div><div class=\"ds-skeleton ds-skeleton-short\" aria-hidden=\"true\"></div></div></section>",
-      "css": ".ds-loading { color: var(--ink); font-family: var(--font-ui); } .ds-loading-status { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; } .ds-loading-lines { display: grid; gap: 9px; width: 100%; } .ds-skeleton { min-height: 16px; border-radius: 8px; background: var(--line); animation: ds-skeleton-breathe 1.8s ease-in-out infinite; } .ds-skeleton-short { width: 65%; } @keyframes ds-skeleton-breathe { 50% { opacity: 0.45; } } @media (prefers-reduced-motion: reduce) { .ds-skeleton { animation: none; } }"
+      "refersTo": "select",
+      "description": "Static visual excerpt of the Select trigger and open menu; the application uses Radix for keyboard navigation, portal placement, typeahead and focus restoration.",
+      "html": "<div class=\"ds-select-example\"><span class=\"ds-select-label\">Fictional provider</span><button class=\"ds-select-trigger\" type=\"button\">Demo Bank<svg aria-hidden=\"true\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"m6 9 6 6 6-6\"/></svg></button><div class=\"ds-select-menu\"><div class=\"ds-select-option ds-select-selected\">Demo Bank<svg aria-hidden=\"true\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"m20 6-11 11-5-5\"/></svg></div><div class=\"ds-select-option\">Community Bank</div><div class=\"ds-select-option\">Crypto Gateway</div></div></div>",
+      "css": ".ds-select-example { display: grid; gap: 7px; min-width: 0; color: var(--ink); font: 14px/1.5 var(--font-ui); } .ds-select-label { font-size: 13px; font-weight: 500; } .ds-select-trigger { display: flex; align-items: center; justify-content: space-between; gap: 8px; height: 44px; padding: 8px 12px; border: 1px solid var(--control-border); border-radius: var(--radius-control); background: var(--control-surface); color: var(--ink); font: inherit; box-shadow: 0 1px 2px 0 rgb(0 0 0 / 5%); cursor: pointer; } .ds-select-trigger svg, .ds-select-option svg { width: 16px; height: 16px; flex-shrink: 0; } .ds-select-trigger svg { color: var(--secondary); } .ds-select-trigger:focus-visible { outline: none; border-color: var(--navy); box-shadow: 0 0 0 3px color-mix(in oklab, var(--navy) 20%, transparent); } .ds-select-trigger:disabled { opacity: 0.5; cursor: not-allowed; } .ds-select-menu { padding: 4px; border: 1px solid var(--line); border-radius: var(--radius-control); background: var(--solid); box-shadow: 0 4px 6px -1px rgb(0 0 0 / 10%), 0 2px 4px -2px rgb(0 0 0 / 10%); } .ds-select-option { box-sizing: border-box; display: flex; align-items: center; justify-content: space-between; min-height: 44px; padding: 8px; border-radius: 4px; } .ds-select-selected, .ds-select-option:hover { background: var(--inner); } @media (forced-colors: active) { .ds-select-trigger { border-color: ButtonText; } }"
     }
   ],
   "narrative": {

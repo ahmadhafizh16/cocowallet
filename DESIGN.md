@@ -8,6 +8,8 @@ colors:
   solid: "#f5f8fa"
   edge: "rgb(255 255 255 / 85%)"
   line: "rgb(74 97 122 / 17%)"
+  control-border: "#a6b6c7"
+  control-surface: "#f9fbfd"
   ink: "#223349"
   secondary: "#4f6175"
   navy: "#405e87"
@@ -25,6 +27,8 @@ colors:
   dark-solid: "#263b50"
   dark-edge: "rgb(188 207 226 / 16%)"
   dark-line: "rgb(188 207 226 / 20%)"
+  dark-control-border: "#63809b"
+  dark-control-surface: "#203348"
   dark-ink: "#edf3fb"
   dark-secondary: "#b4c6d9"
   dark-navy: "#a7c4e9"
@@ -70,10 +74,10 @@ typography:
     fontWeight: 500
     lineHeight: 1.5
   amount:
-    fontSize: "38px"
-    fontWeight: 350
-    lineHeight: 1.4
-    letterSpacing: "-0.04em"
+    fontSize: "24px"
+    fontWeight: 500
+    lineHeight: "32px"
+    letterSpacing: "-0.025em"
   currency-amount:
     fontSize: "18px"
     fontWeight: 400
@@ -148,11 +152,20 @@ components:
     rounded: "{rounded.pill}"
     padding: "10px 19px"
   input:
-    backgroundColor: "{colors.inner}"
+    backgroundColor: "{colors.control-surface}"
     textColor: "{colors.ink}"
     typography: "{typography.body}"
     rounded: "{rounded.control}"
-    padding: "10px 13px"
+    padding: "8px 12px"
+    height: "44px"
+    width: "100%"
+  select:
+    backgroundColor: "{colors.control-surface}"
+    textColor: "{colors.ink}"
+    typography: "{typography.body}"
+    rounded: "{rounded.control}"
+    padding: "8px 12px"
+    height: "44px"
     width: "100%"
   wallet-panel:
     backgroundColor: "{colors.glass}"
@@ -220,7 +233,8 @@ The palette combines icy neutrals with a muted navy accent; dark mode changes th
 - **Inner glass** (`inner`): fields, raised secondary controls, currency tokens, and inset details.
 - **Solid surface** (`solid`): hover emphasis, the mobile navigation base, native select options, and dialog foundations. Reduced transparency replaces both glass roles with this surface.
 - **Light-catching edge** (`edge`): panel and raised-control outlines. In dark mode it becomes a restrained translucent edge rather than a white outline.
-- **Quiet divider** (`line`): field strokes, row dividers, and decorative skeleton shapes; separate it from the brighter panel edge.
+- **Quiet divider** (`line`): row dividers, menu outlines, and decorative skeleton shapes; separate it from the brighter panel edge and the control boundary.
+- **Control surface / border** (`control-surface`, `control-border`): opaque, theme-aware field fills and visible boundaries for the shadcn money-form controls. Do not substitute a row divider for a field border.
 - **Ink / secondary ink** (`ink`, `secondary`): primary content versus supporting text. Secondary ink is a text role, not a second accent palette.
 
 ### Semantic states
@@ -244,7 +258,7 @@ These are extracted visual values, not a claim of WCAG conformance.
 - **Body:** normal UI copy and form content. Empty-history supporting copy has an observed maximum width of (42ch); this is not a global text-width limit.
 - **Label:** field labels, hints, notices, navigation, and utility copy. Navigation increases the label weight to (500). The default-currency badge uses (10px), weight (500).
 - **Button:** default action labels; the small size uses (12px) rather than the default token size.
-- **Amount / currency amount:** large editable amounts versus right-aligned wallet-row figures. Mini-summary figures use (29px), weight (380), line height (1.3), and tracking (-0.035em); default-currency summaries use (26px).
+- **Amount / currency amount:** editable amounts use the recorded amount role inside a bounded field, distinct from right-aligned wallet-row figures. Mini-summary figures use (29px), weight (380), line height (1.3), and tracking (-0.035em); default-currency summaries use (26px).
 - **Dialog title:** an available foundation role, not the inline operation heading.
 
 **The Readable Figures Rule.** Keep tabular numerals, explicit currency labels, and wrapping long values. Format money through the existing minor-unit presentation helpers; do not visually truncate an amount or account ID to preserve a card silhouette.
@@ -302,9 +316,11 @@ The inset account sheet deliberately stays navy with white copy in both themes, 
 
 ### Inputs / fields
 
-Fields are softly inset: inner glass, a line border, control radius, minimum height (46px), and padding (10px 13px). Placeholder text uses secondary ink at full opacity. Shared inputs keep the global visible-focus outline; `aria-invalid="true"` changes the border to danger, accompanied by an associated error message. Disabled inputs use opacity (0.6).
+Money-form controls use the official shadcn/ui new-york-v4 Input and Radix Select patterns, adapted to the wallet's semantic Tailwind tokens. Shared fields have a control-surface fill, a visible control-border, control radius, height (44px), padding (8px 12px), and a subtle shadow. Input text is (16px) on narrow screens and (14px) from the medium breakpoint to avoid mobile focus zoom. Field labels are (13px), weight (500), in primary ink; hints remain secondary.
 
-The amount editor is a distinct borderless, large-figure treatment. Its invalid state adds a danger underline and its focus outline uses a smaller offset (2px). It is a text field with decimal input mode, not a number-spinner control. Hiding amounts makes this editor read-only; do not reveal the draft through its value while the privacy state is active.
+Focus changes the border to navy and adds a theme-aware ring (3px). Invalid fields use a danger border/ring and an associated error message; disabled controls use opacity (0.5). Select menus are portaled, collision-aware solid surfaces with highlighted options, a selected checkmark, scrolling controls, keyboard/typeahead support, and focus restoration on dismissal. They are not browser-native selects dressed as custom menus.
+
+The amount editor uses the same shared Input, enlarged to height (56px), with an inset currency symbol (22px) and the amount typography role. Keep its border and fill; do not strip it back to a bare number. It remains decimal text, not a number spinner. Privacy blanks it and makes it read-only without destroying the draft. The source currency uses a separate labelled Select trigger. Native theme/account/history selects outside the money form retain their existing behavior.
 
 ### Navigation and theme
 

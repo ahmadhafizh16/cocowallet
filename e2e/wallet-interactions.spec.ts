@@ -15,8 +15,11 @@ test("reviews a deposit without submitting money or losing draft input", async (
   });
   await page.getByRole("button", { name: "Deposit", exact: true }).click();
   await page
-    .getByLabel("Fictional provider", { exact: true })
-    .selectOption("community_bank");
+    .getByRole("combobox", { name: "Fictional provider", exact: true })
+    .click();
+  await page
+    .getByRole("option", { name: "Community Bank", exact: true })
+    .click();
   await page.getByLabel("You add", { exact: true }).fill("25.00");
   await page
     .getByRole("button", { name: "Review deposit", exact: true })
@@ -36,6 +39,82 @@ test("reviews a deposit without submitting money or losing draft input", async (
   await expect(page.getByLabel("You add", { exact: true })).toBeFocused();
   await expect(page.locator(".wallet-total-value")).toHaveText("$0.00");
   expect(mutations).toEqual([]);
+});
+
+test("money fields use shared shadcn inputs and keyboard-operable Select menus", async ({
+  page,
+}) => {
+  const amount = page.getByLabel("You send", { exact: true });
+  await expect(amount).toHaveAttribute("data-slot", "input");
+  const appearance = await amount.evaluate((element) => {
+    const style = getComputedStyle(element);
+    return {
+      border: style.borderTopStyle,
+      width: parseFloat(style.borderTopWidth),
+      height: element.getBoundingClientRect().height,
+      background: style.backgroundColor,
+    };
+  });
+  expect(appearance.border).toBe("solid");
+  expect(appearance.width).toBeGreaterThan(0);
+  expect(appearance.height).toBe(56);
+  expect(appearance.background).not.toBe("rgba(0, 0, 0, 0)");
+  const currency = page.getByRole("combobox", {
+    name: "Source currency",
+    exact: true,
+  });
+  await expect(currency).toHaveAttribute("data-slot", "select-trigger");
+  await currency.focus();
+  await page.keyboard.press("Space");
+  await expect(page.getByRole("listbox")).toBeVisible();
+  await page.keyboard.press("g");
+  await page.keyboard.press("Enter");
+  await expect(currency).toContainText("GBP");
+  await expect(currency).toBeFocused();
+  await expect(page.locator(".wallet-amount-entry > span")).toHaveText("£");
+  await page.getByRole("button", { name: "Convert", exact: true }).click();
+  const target = page.getByRole("combobox", {
+    name: "Receive currency",
+    exact: true,
+  });
+  await target.click();
+  await page.getByRole("option", { name: "GBP", exact: true }).click();
+  await expect(target).toContainText("GBP");
+});
+
+test("provider menus fit narrow and desktop viewports in both themes and return focus on Escape", async ({
+  page,
+}) => {
+  await page.getByRole("button", { name: "Deposit", exact: true }).click();
+  for (const [width, theme] of [
+    [320, "light"],
+    [390, "dark"],
+    [1440, "light"],
+  ] as const) {
+    await page.setViewportSize({ width, height: 900 });
+    await page.getByLabel("Color theme").selectOption(theme);
+    const provider = page.getByRole("combobox", {
+      name: "Fictional provider",
+      exact: true,
+    });
+    await provider.click();
+    const menu = page.getByRole("listbox");
+    await expect(menu).toBeVisible();
+    const box = await menu.boundingBox();
+    expect(box!.x).toBeGreaterThanOrEqual(0);
+    expect(box!.x + box!.width).toBeLessThanOrEqual(width);
+    await expect(
+      page.getByRole("option", { name: "Crypto Gateway", exact: true }),
+    ).toBeVisible();
+    await page.keyboard.press("Escape");
+    await expect(menu).toHaveCount(0);
+    await expect(provider).toBeFocused();
+    expect(
+      await page.evaluate(
+        () => document.documentElement.scrollWidth <= innerWidth,
+      ),
+    ).toBe(true);
+  }
 });
 
 test("precision errors are linked to the field, focused, and preserve text", async ({

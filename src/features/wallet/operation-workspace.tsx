@@ -4,6 +4,13 @@ import { useId, useRef, useState, type FormEvent } from "react";
 import { ArrowLeft, ArrowRight, Info, LockKeyhole, Wallet } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { useHydrated } from "@/lib/use-hydrated";
 import { MAX_AMOUNT_INPUT_LENGTH } from "../money/money";
 import {
@@ -278,24 +285,29 @@ export function OperationWorkspace({
             {(operation === "deposit" || operation === "withdraw") && (
               <div className="wallet-field">
                 <label htmlFor={fieldId("provider")}>Fictional provider</label>
-                <select
-                  className="wallet-select"
-                  id={fieldId("provider")}
+                <Select
+                  name="provider"
                   value={draft.provider}
-                  onChange={(event) =>
-                    updateDraft("provider", event.target.value)
-                  }
-                  aria-invalid={!!errors.provider}
-                  aria-describedby={
-                    errors.provider ? fieldId("provider-error") : undefined
-                  }
+                  onValueChange={(value) => updateDraft("provider", value)}
+                  disabled={!hydrated}
                 >
-                  {PROVIDERS.map((provider) => (
-                    <option key={provider.code} value={provider.code}>
-                      {provider.label}
-                    </option>
-                  ))}
-                </select>
+                  <SelectTrigger
+                    id={fieldId("provider")}
+                    aria-invalid={!!errors.provider}
+                    aria-describedby={
+                      errors.provider ? fieldId("provider-error") : undefined
+                    }
+                  >
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {PROVIDERS.map((provider) => (
+                      <SelectItem key={provider.code} value={provider.code}>
+                        {provider.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
                 {errors.provider && (
                   <p
                     className="wallet-field-error"
@@ -309,30 +321,36 @@ export function OperationWorkspace({
 
             <div className="wallet-amount-label">
               <label htmlFor={fieldId("amount")}>{amountLabel}</label>
-              <label className="wallet-currency-select">
-                <span className="wallet-sr-only">Source currency</span>
-                <Wallet aria-hidden="true" />
-                <select
-                  aria-label="Source currency"
+              <div className="wallet-currency-select">
+                <Select
+                  name="currency"
                   value={draft.currency}
-                  onChange={(event) =>
-                    updateDraft(
-                      "currency",
-                      event.target.value as WalletCurrency,
-                    )
+                  onValueChange={(value) =>
+                    updateDraft("currency", value as WalletCurrency)
                   }
-                  aria-invalid={!!errors.currency}
-                  aria-describedby={
-                    errors.currency ? fieldId("currency-error") : undefined
-                  }
+                  disabled={!hydrated || wallets.length === 0}
                 >
-                  {wallets.map((wallet) => (
-                    <option key={wallet.id} value={wallet.currency}>
-                      {wallet.currency}
-                    </option>
-                  ))}
-                </select>
-              </label>
+                  <SelectTrigger
+                    aria-label="Source currency"
+                    aria-invalid={!!errors.currency}
+                    aria-describedby={
+                      errors.currency ? fieldId("currency-error") : undefined
+                    }
+                  >
+                    <span className="wallet-source-value">
+                      <Wallet aria-hidden="true" />
+                      <SelectValue />
+                    </span>
+                  </SelectTrigger>
+                  <SelectContent>
+                    {wallets.map((wallet) => (
+                      <SelectItem key={wallet.id} value={wallet.currency}>
+                        {wallet.currency}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
             {errors.currency && (
               <p className="wallet-field-error" id={fieldId("currency-error")}>
@@ -341,7 +359,8 @@ export function OperationWorkspace({
             )}
             <div className="wallet-amount-entry">
               <span aria-hidden="true">{CURRENCY_SYMBOLS[draft.currency]}</span>
-              <input
+              <Input
+                className="h-14 pl-10 text-2xl font-medium tracking-tight md:text-2xl"
                 id={fieldId("amount")}
                 name="amount"
                 type="text"
@@ -372,27 +391,33 @@ export function OperationWorkspace({
             {operation === "convert" && (
               <div className="wallet-field wallet-target-field">
                 <label htmlFor={fieldId("target")}>Receive currency</label>
-                <select
-                  className="wallet-select"
-                  id={fieldId("target")}
+                <Select
+                  name="targetCurrency"
                   value={draft.targetCurrency}
-                  onChange={(event) =>
-                    updateDraft(
-                      "targetCurrency",
-                      event.target.value as WalletCurrency,
-                    )
+                  onValueChange={(value) =>
+                    updateDraft("targetCurrency", value as WalletCurrency)
                   }
-                  aria-invalid={!!errors.targetCurrency}
-                  aria-describedby={
-                    errors.targetCurrency ? fieldId("target-error") : undefined
-                  }
+                  disabled={!hydrated || wallets.length === 0}
                 >
-                  {wallets.map((wallet) => (
-                    <option key={wallet.id} value={wallet.currency}>
-                      {wallet.currency}
-                    </option>
-                  ))}
-                </select>
+                  <SelectTrigger
+                    id={fieldId("target")}
+                    aria-invalid={!!errors.targetCurrency}
+                    aria-describedby={
+                      errors.targetCurrency
+                        ? fieldId("target-error")
+                        : undefined
+                    }
+                  >
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {wallets.map((wallet) => (
+                      <SelectItem key={wallet.id} value={wallet.currency}>
+                        {wallet.currency}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
                 {errors.targetCurrency && (
                   <p
                     className="wallet-field-error"
