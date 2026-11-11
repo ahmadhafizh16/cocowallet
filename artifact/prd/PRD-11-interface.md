@@ -2,9 +2,9 @@
 
 **Status:** The frosted two-column redesign and money dialogs are implemented as an explicit interface preview. T11-04's production verification, scoped independent review, and user-selected design-document refresh are complete. See [the redesign brief](../WALLET_REDESIGN.md), [UI_FOUNDATION.md](../UI_FOUNDATION.md), and [DESIGN_REVIEW.md](../DESIGN_REVIEW.md). Connected flows and complete cross-feature accessibility acceptance remain future work.
 
-**Decisions:** [D-003](../DECISIONS.md#d-003), [D-011](../DECISIONS.md#d-011), [D-013](../DECISIONS.md#d-013), [D-014](../DECISIONS.md#d-014), [D-016](../DECISIONS.md#d-016), [D-025](../DECISIONS.md#d-025).
+**Decisions:** [D-003](../DECISIONS.md#d-003), [D-011](../DECISIONS.md#d-011), [D-013](../DECISIONS.md#d-013), [D-014](../DECISIONS.md#d-014), [D-016](../DECISIONS.md#d-016), [D-025](../DECISIONS.md#d-025), [D-027](../DECISIONS.md#d-027).
 
-**Tasks:** [T11-01–T11-05](../tasks/TASKS-11.md).
+**Tasks:** [T11-01–T11-06](../tasks/TASKS-11.md).
 
 **Diagram:** [Business operations and history](../DIAGRAMS.md#business-operations-and-history).
 
@@ -14,8 +14,9 @@ As the user, I can understand my balances and perform the simulated wallet workf
 
 ## Requirements
 
-The user-supplied app name is **CocoWallet**; standalone SVG logo delivery and
-its asset-only integration boundary are recorded in [BRANDING.md](../BRANDING.md).
+The user-supplied app name is **CocoWallet**. The user approved applying its SVG
+logo and smooth interaction transitions; current integration and motion budgets
+are recorded in [BRANDING.md](../BRANDING.md) and [MOTION.md](../MOTION.md).
 
 1. Initialize Impeccable with product context and review the resulting `PRODUCT.md` before designing a new interface. Follow the skill's applicable workflow; do not invent a design system or claim design work has been done.
 2. Use registry-derived shadcn/ui foundations and Lucide React, with light/dark themes respecting system preference. Preserve pale-blue glass, navy accents, soft shadows, and rounded panels. Per D-025, use a two-column overview, accessible desktop icon tooltips, labelled mobile navigation, and draft-preserving dialogs for Send money, Deposit, Withdraw, and Convert. Theme/account menus and history filters must be themed shadcn/Radix controls, not native-looking utility selects.
@@ -36,8 +37,9 @@ its asset-only integration boundary are recorded in [BRANDING.md](../BRANDING.md
 
 Coordinate with each feature PRD for actual form behavior. Test accessible names and focus, theme switching, reduced motion, narrow layouts, and error states. [O-004](../DECISIONS.md#o-004) covers destination USD-total display; [O-005](../DECISIONS.md#o-005) covers operational ambiguities.
 
-Current redesign evidence: **562 Jest tests and 33 production Chromium checks**
+Current branding/motion evidence: **572 Jest tests and 38 production Chromium checks**
 pass, including dialog focus/drafts, keyboard menus, utility controls, privacy,
-validation and 320–1769px layouts. This is not comprehensive WCAG certification.
+validation, 320–1769px layouts, actual animation lifecycle, interruption, and
+reduced-motion paths. This is not comprehensive WCAG certification.
 No final financial submission, populated history, server quote, quote expiry, or
 server-confirmed success is claimed by this interface-first checkpoint.

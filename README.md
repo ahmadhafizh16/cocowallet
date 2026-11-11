@@ -1,8 +1,8 @@
-# Simulated multi-currency wallet
+# CocoWallet
 
-A local-only Next.js/Node 26 wallet simulation. Product requirements, decisions, diagrams, and progress are in [`artifact/`](artifact/README.md).
+A local-only multi-currency wallet simulation built with Next.js and Node 26. Product requirements, decisions, diagrams, and progress are in [`artifact/`](artifact/README.md).
 
-**Current milestone:** The approved frosted wallet interface is implemented as an explicit interface preview, alongside the tested money/journal core. It includes responsive layouts, themes, skeleton/error/empty states, exact validation, and draft review. Wallet services and account seeding are not connected; preview actions cannot submit money or change balances. See [`artifact/UI_FOUNDATION.md`](artifact/UI_FOUNDATION.md).
+**Current milestone:** The frosted two-column interface includes CocoWallet SVG branding, responsive layouts, themes, draft-preserving dialogs, smooth interaction transitions, and reduced-motion support. It remains an explicit interface preview alongside the tested money/journal core. Wallet services and account seeding are not connected; preview actions cannot submit money or change balances. See [`artifact/UI_FOUNDATION.md`](artifact/UI_FOUNDATION.md) and [`artifact/MOTION.md`](artifact/MOTION.md).
 
 ## Development environment
 

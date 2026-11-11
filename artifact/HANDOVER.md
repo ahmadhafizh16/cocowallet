@@ -1,6 +1,6 @@
 # Handover
 
-**Status:** Twelve of 34 tasks are closed, including the reviewed two-column redesign and T11-05's standalone CocoWallet SVG logo assets. The board has 22 To do, 0 In progress, and 12 Done. Money-moving APIs, full idempotency, FX integration, Swagger, and account seeding remain unimplemented.
+**Status:** Thirteen of 35 tasks are closed, including applied CocoWallet branding and bounded, interruptible interaction motion under T11-06. Production checks, the scoped fix verdict and design/handover reconciliation are complete. The board has 22 To do, 0 In progress, and 13 Done. Money-moving APIs, full idempotency, FX integration, Swagger, and account seeding remain unimplemented.
 
 ## Implemented modules and commands
 
@@ -20,6 +20,7 @@
 | `src/features/journal/write.ts` | Top-level synchronous immediate-write boundary; main-only accounting, exact credits, funds checks, atomic creation/entries, and a technical-success integration seam. [Contract](JOURNAL.md). |
 | `components.json`, `postcss.config.mjs`, `src/lib/utils.ts` | shadcn/Lucide/Tailwind configuration and tested class helper used by the local UI components. |
 | `src/components/ui/` | Registry-derived shadcn Button/Card/Dialog/DropdownMenu/Tooltip/Field/Label/Badge/Separator/Input/Select/Skeleton with frosted semantic tokens, keyboard/focus handling, and retained upstream MIT notice. |
+| `src/components/brand/`, `public/brand/`, `src/app/icon.svg` | Approved CocoWallet inline vector logo, theme-aware wordmark, unchanged downloadable variants, and matching favicon. |
 | `src/features/theme/`, `src/app/globals.css` | Approved frosted tokens, light/dark/system preference, pre-paint theme bootstrap, storage fallback, and reduced-motion styles. |
 | `src/app/page.tsx`, `layout.tsx`, `loading.tsx`, `error.tsx`, `not-found.tsx` | HTML wallet preview, styles/metadata, skip link, loading/error boundaries, and branded 404; replaces the former root JSON route. |
 | `src/features/wallet/` | Two-column overview, tooltip icon rail, labelled mobile Actions, account-scoped preview data, always-mounted draft-preserving money dialogs, exact validation/review, inspect-only presentation, and matching skeleton; no DB/API mutation. |
@@ -41,9 +42,9 @@ Stop the dev compiler before `docker compose run --rm app npm run check`, then u
 
 Application DB: `/app/data/wallet.sqlite` in Compose's `wallet-data` volume. Tests use isolated temporary SQLite files. Normal shutdown is `docker compose down` without deleting volumes. Before applying journal migrations, the stopped app's database was backed up with SQLite's backup API to `/app/data/wallet.sqlite.pre-journal-1794390597589.bak`. Backup creation is verified; a full restore drill is not claimed.
 
-Latest redesign verification: the full Docker check passes artifact validation, formatting, lint, types, **562 Jest tests**, and production build; **33 Chromium tests** pass against that build (2 foundation, 17 interaction, 12 shell, 2 visual). See [UI_FOUNDATION.md](UI_FOUNDATION.md) for coverage and commands. No packages, accounting code, schema, or DB data changed. Earlier journal checks applied/repeated all three migrations, checked integrity/foreign keys, and confirmed zero stored accounts/transactions. UI checks do not seed or move money. Earlier foundation checks covered clean `npm ci` and recreation persistence. The last production npm audit was clean; 23 low/moderate development-tool findings remain in [DEPENDENCIES.md](DEPENDENCIES.md).
+Latest branding/motion verification: the full Docker check passes artifact validation, formatting, lint, types, **572 Jest tests**, and production build; **38 Chromium tests** pass against that build (5 branding/motion, 2 foundation, 17 interaction, 12 shell, 2 visual). See [UI_FOUNDATION.md](UI_FOUNDATION.md) and [MOTION.md](MOTION.md) for coverage and commands. No packages, accounting code, schema, or DB data changed. Earlier journal checks applied/repeated all three migrations, checked integrity/foreign keys, and confirmed zero stored accounts/transactions. UI checks do not seed or move money. Earlier foundation checks covered clean `npm ci` and recreation persistence. The last production npm audit was clean; 23 low/moderate development-tool findings remain in [DEPENDENCIES.md](DEPENDENCIES.md).
 
-Artifact validation verifies **47 documents / 34 tasks**. The previous
+Artifact validation verifies **48 documents / 35 tasks**. The previous
 T11-02 design-extraction counts and verdict are historical, not certification of
 T11-04. Current production captures include desktop light/dark, 1688/1769px,
 tablet, mobile, dialogs/menus, validation/review, loading and errors. Independent
@@ -53,14 +54,25 @@ Refresh records 38 source-matched theme colors, 20 component-token entries and
 10 standalone previews; YAML/JSON, references, syntax and source checks pass.
 The manual detector returned 22 advisory inventory mismatches against the old
 document, with no non-advisory findings; it was not rerun to manufacture a clean
-count. This is not WCAG certification. App source is unchanged since the verified
-production build; development-cache recovery is recorded below.
+count. The pre-correction T11-06 detector returned 23 advisory local token-inventory findings,
+with no non-advisory finding; the separate branding-only pass returned `[]`.
+Neither is WCAG certification or a performance benchmark. App source is unchanged
+since the verified production build; development-cache recovery is recorded below.
 
 The subsequent logo request supplies the name **CocoWallet**. Full/inverse/icon
 SVG assets live at `public/brand/` and are documented in [BRANDING.md](BRANDING.md).
 XML structure, font/raster independence, Chromium decoding and light/dark/small
-render checks pass. This asset-only delivery does not replace header/favicon or
-change application logic, and it does not claim a fresh full app-suite run.
+render checks pass. The later “okay apply it” approval applies the logo to the
+header/loading/error/404 surfaces, favicon and metadata. The wordmark follows
+explicit theme ink. CSS motion covers protected dialogs, menus, local review/edit,
+theme settling and press feedback; reduced motion remains immediate. Actual CSS
+timeline captures at 16/80/240ms show opacity/translation/scale settling with
+constant blur; they are not frame-rate measurements.
+Its bounded reviewer required one interrupted-arrival continuity correction;
+the same reviewer then scored that issue resolved with `ship` at fix-list scope.
+Six controller unit cases and targeted production frame comparisons support the
+fix. Design notes now match source timing and snapshot behavior; palette/primitive
+values remain unchanged and source/schema/reference checks pass.
 
 The exact money/precision checkpoint passes 437 feature-local Jest tests, targeted lint, formatting, and strict TypeScript checks. It adds no runtime package dependency; the precision extract retains its source MIT notice and checksums.
 
@@ -82,6 +94,14 @@ The atomic-write checkpoint passes 16 feature-local integration tests, including
   hydrated, remained stable for 300 animation frames with no further navigation
   or page errors, and opened/edited Send money. Existing tabs may require one
   hard refresh after generated chunks change. Health alone is not UI readiness.
+- T11-06 resumed development with a fresh generated cache, retaining the old one
+  at `.next/dev.pre-branding-motion-1794405063925`. A real browser verified the
+  CocoWallet header, hydration, 300 stable frames without further navigation or
+  page errors, and interactive deposit entry/dismissal. No wallet data was touched.
+- After the final continuity correction/build, development was restored the same
+  way with `.next/dev.pre-motion-continuity-1794406183800` retained. The final
+  browser probe again passed hydration, 300 stable frames with zero additional
+  reloads/errors, explicit theme selection, and deposit entry/dismissal.
 - Git is initialized on `main`; baseline commits separate ignore rules, feature requirements, architecture decisions, and vendored design tooling. Automatic Angular-style commits by intention are authorized; no remote or push is automatic.
 - Impeccable is installed locally without automatic hooks; its engine reports 4.8.2. Product context and code-first are in [PRODUCT.md](../PRODUCT.md) and `.impeccable/config.json`. The original [reference approval](DESIGN_REFERENCE.md) retains material authority; [D-025](DECISIONS.md#d-025) and [WALLET_REDESIGN.md](WALLET_REDESIGN.md) own the new topology/interactions. [WALLET_SURFACE.md](WALLET_SURFACE.md) and its `.impeccable/surfaces/` counterpart carry the current contract and corrected user-pinned provenance. [DESIGN_REVIEW.md](DESIGN_REVIEW.md) distinguishes historical/current verdicts. DESIGN.md and the version-2 sidecar are refreshed to the built system. Live-picker configuration has not been enabled automatically.
 - The approximately 22 MB Impeccable Linux engine is excluded from Git and retained locally. `sh scripts/setup-impeccable.sh` restores the pinned, checksum-verified engine; online restoration and corrupt-source rejection were tested in isolation. See [TOOLING.md](TOOLING.md).

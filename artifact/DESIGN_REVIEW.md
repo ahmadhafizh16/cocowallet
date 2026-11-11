@@ -1,6 +1,62 @@
 # Wallet shell design review
 
-## T11-04 — two-column redesign (current)
+## T11-06 — applied CocoWallet branding and motion (current)
+
+**Scope:** Apply the approved SVG geometry and [bounded motion thesis](MOTION.md)
+without changing the two-column topology or financial safeguards. The current
+runtime captures supersede the similarly named images from earlier checkpoints.
+
+**Evidence:** Full Docker check, **572 Jest tests**, optimized build, and
+**38 production Chromium checks** pass. New tests verify exact vector branding,
+metadata/favicon, explicit themes/narrow fit, actual CSS animation start and
+completion, rapid interruption, mobile menu → dialog focus, retained drafts,
+reduced motion and no animation work left running at rest. Test helpers await
+Radix exit unmounts; animation-event assertions observe an open menu before
+selecting, rather than racing an intentionally interruptible entrance.
+
+Existing desktop/light/dark/user-width/tablet/mobile/menu/dialog/loading/error
+captures now contain CocoWallet branding. Additional evidence under
+`.impeccable/review/`: `motion-open-016.png`, `motion-open-080.png`,
+`motion-open-240.png`, `motion-mobile-dark.png`, and `motion-observation.json`.
+The first three intentionally pause the actual CSS timeline at the named times;
+their partial opacity is animation evidence, not an incomplete resting render.
+Blur stays at 5px while opacity/translation/scale settle. They are not performance
+benchmarks. Parent inspection found the full wordmark fits alongside utilities
+at 320px and remains readable in explicit light/dark themes.
+
+The pre-correction detector export `branding-motion-detector.json` has **23 advisory**
+color/type/radius inventory findings and no non-advisory findings. Existing local
+scrim, responsive type and fully rounded skeleton values are documented exceptions;
+no source-wide token churn or blanket suppression was used. A separate narrow
+branding-agent detector returned `[]`; these different scopes are not conflated.
+The continuity correction introduces no new palette/type/radius values; the
+detector was not rerun to manufacture a clean count.
+
+**Initial bounded implementation verdict: `fix`.** A fresh reviewer inspected
+14 required captures, source and readable tests, finding no material branding,
+responsive-layout or financial-boundary regression. One motion issue remained:
+closing a partially opened layer restarted its exit from fully-open values.
+
+The shared `useMotionOpen` controller now captures the rendered frame before
+interaction-driven Radix state changes; explicit overview-dismiss buttons share
+that boundary. CSS preserves those values when dismissing/reversing, with no
+per-frame loop or dependency. Six unit cases retain controlled/default-open
+behavior and reduced-motion skipping. The added production test pauses actual
+arrivals at 16ms and exits at their first frame; opacity/translation/scale match
+for dialog, scrim, DropdownMenu and Select. Evidence is
+`motion-interruption.json`, `motion-interrupt-before.png`, and
+`motion-interrupt-exit-start.png`. All production checks were repeated afterward.
+
+**Fix-list verdict: `ship`.** The same reviewer scored its sole material issue
+**resolved**, with no further fix/recapture required for that issue. This is a
+bounded implementation/fix-list verdict, not global accessibility, performance,
+or persistence certification; the reviewer did not rerun tests. Design-document
+validation is separate: palette/primitives remain unchanged, current branding/
+motion/snapshot behavior is documented, and source/schema/reference checks pass.
+T11-06 is closed; broader accessibility and connected financial acceptance stay
+separate.
+
+## T11-04 — historical two-column topology checkpoint
 
 **Scope:** User-approved [two-column/dialog redesign](WALLET_REDESIGN.md), retaining
 the frosted identity. Code-led Operate surface, explicitly pinned by the user;

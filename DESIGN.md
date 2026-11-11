@@ -1,5 +1,5 @@
 ---
-name: Simulated multi-currency wallet
+name: CocoWallet
 description: Frosted wallet — icy-blue glass, softly raised controls, and clear financial UI.
 colors:
   ground: "#edf3f7"
@@ -218,7 +218,7 @@ components:
     width: "min(560px, calc(100vw - 32px))"
 ---
 
-# Design System: Simulated multi-currency wallet
+# Design System: CocoWallet
 
 ## Overview
 
@@ -236,7 +236,7 @@ Workhorse system typography, purposeful Lucide icons, and restrained navy accent
 - Named desktop icons with real tooltips, visible mobile labels, and clear focus.
 - Equivalent light/dark roles and honest unavailable states.
 
-This refresh preserves the approved identity and records current [global styles](src/app/globals.css), [wallet styles](src/features/wallet/wallet.css), [shared controls](src/components/ui/), [dashboard](src/features/wallet/dashboard.tsx), and [money dialogs](src/features/wallet/operation-workspace.tsx). Page strategy belongs in the [canonical surface brief](.impeccable/surfaces/src-app-page-tsx.md) and [two-column brief](artifact/WALLET_REDESIGN.md); product capabilities belong in [PRODUCT.md](PRODUCT.md). The direction was explicitly user-pinned; no new visual-world roll was required or performed.
+This refresh preserves the approved identity and records current [global styles](src/app/globals.css), [wallet styles](src/features/wallet/wallet.css), [shared controls](src/components/ui/), [dashboard](src/features/wallet/dashboard.tsx), and [money dialogs](src/features/wallet/operation-workspace.tsx). The approved [CocoWallet vector](src/components/brand/cocowallet-logo.tsx) and [branding/motion extension](artifact/MOTION.md) build on that world. Page strategy belongs in the [canonical surface brief](.impeccable/surfaces/src-app-page-tsx.md) and [two-column brief](artifact/WALLET_REDESIGN.md); product capabilities belong in [PRODUCT.md](PRODUCT.md). The direction was explicitly user-pinned; no new visual-world roll was required or performed.
 
 The [sidecar](.impeccable/design.json) extends the frontmatter with shadows, motion, breakpoints, narrative, and standalone visual examples. Its eight-step OKLCH ramps are **non-normative previews**, not an application palette: they derive hue/chroma from the underlying source RGB, ignore alpha, and reduce chroma toward white and black. Examples depict appearance, not functioning Radix widgets or connected financial services. Existing [review captures](.impeccable/review/) are non-shipping evidence, not product assets; this documentation pass generated no raster.
 
@@ -267,7 +267,7 @@ Icy neutrals support one muted navy accent; dark mode changes values, not jobs. 
 
 The dialog scrim is a local translucent treatment (`rgb(13 28 45 / 40%)`), not a new reusable palette primitive. Shadow colors likewise belong to elevation rather than extra color swatches.
 
-**The Theme Roles Rule.** Use semantic CSS properties in both themes; do not freeze light surfaces or white primary-action text into a theme-aware control. The brand mark now follows navy/on-navy roles too.
+**The Theme Roles Rule.** Use semantic CSS properties in both themes; do not freeze light surfaces or white primary-action text into a theme-aware control. The approved logo icon is a fixed-color asset exception; its wordmark follows ink, not on-navy action text.
 
 These extracted roles and captures are not a claim of WCAG conformance.
 
@@ -285,7 +285,7 @@ These extracted roles and captures are not a claim of WCAG conformance.
 - **Amount / currency amount:** the editable amount is (24px) with line height (32px) inside a bounded field. Wallet-row figures use the separate currency-amount role; mobile reduces them to (22px), then (20px). The currency symbol is a local (19px) marker, reduced to (16px) on compact phones; the form's inset symbol is (20px).
 - **Dialog title:** a semibold (24px) title labels the active dialog. Review headings use (18px), weight (600), line height (28px).
 
-Local brand text uses (24px), weight (550), line height (1.25), tracking (-0.035em), reducing to (22px). The standalone error heading uses (25px), weight (550), line height (1.3), and its brand line uses (22px). These local values and responsive exceptions are observed treatments, not extra global scale steps.
+The CocoWallet wordmark is font-independent vector geometry, not a new UI typeface. The standalone error heading still uses (25px), weight (550), and line height (1.3). Local values and responsive exceptions are not extra global scale steps.
 
 **The Readable Figures Rule.** Keep tabular numerals, explicit currency labels, and wrapping long values. Format money through the existing minor-unit presentation helpers; do not visually truncate an amount or account ID to preserve a card silhouette.
 
@@ -315,15 +315,28 @@ Depth combines translucent tonal layers, light-catching borders, backdrop blur, 
 - **Panel:** `--shadow`, with separate light/dark values in the sidecar; ambient separation under wallet panels and dialogs.
 - **Raised control:** `--raised`, paired soft offsets for quick actions and selected navigation, plus the compact account trigger.
 - **Shared control:** shadcn `shadow-xs` for inputs, Select triggers, secondary/outline/circle Buttons; `shadow-sm` for primary Buttons and the uncustomized Card. Select/Tooltip use `shadow-md`; DropdownMenu uses `shadow-lg`. Exact expansion is recorded in the sidecar.
-- **Brand / bottom navigation:** local source shadows, not new general elevation steps. No permanent navy account sheet remains.
+- **Bottom navigation:** its local source shadow is not a new general elevation step. The approved inline logo has no added brand-mark shadow; no permanent navy account sheet remains.
 
 Panel blur is (22px); scrim blur is (5px). Reduced transparency makes glass/inner roles solid, removes decorative washes and scrim blur. Forced colors removes washes and supplies system-color control/menu borders.
 
 The stacking contract is mobile navigation (20), theme storage note (30), dialog overlay (50), dialog content (60), Select/DropdownMenu (70), Tooltip (80), and skip link (100). Keep menus above their owning dialog and the skip link reachable; do not flatten these into one overlay level.
 
-**The Quiet Depth Rule.** Use ambient shadows for panels and paired soft offsets for raised controls; state emphasis comes from surface and border changes, not an invented lift animation.
+**The Quiet Depth Rule.** Use ambient shadows for panels and paired soft offsets for raised controls; bounded task overlays may settle through transform/opacity, not ornamental hover lift or animated blur.
 
-Shared controls use Tailwind's default transition duration (150ms) and easing for their declared color/shadow properties; the desktop rail explicitly uses (160ms ease). Menus and dialogs have no opening choreography. Skeletons breathe over (1.8s), reaching opacity (0.45) halfway through. Reduced motion disables animations/transitions and smooth scrolling. The sidecar records source motion values rather than the superseded button/quick-action timing scale.
+### Motion and continuity
+
+The approved motion thesis is protected focus and continuity: a money dialog settles into place, menus emerge from their trigger edge, and returning from review gives directional context. The source's unlayered motion rules override the base utility transitions; do not describe Tailwind's former (150ms) default as the current runtime behavior.
+
+- **Timing:** `--motion-fast` (120ms) for dismissal/press feedback, `--motion-state` (180ms) for controls/menus/local steps, `--motion-overlay` (240ms) for dialog/scrim arrivals, and `--motion-theme` (220ms) for theme colors. `--ease-settle` is `cubic-bezier(0.16, 1, 0.3, 1)`; `--ease-feedback` is `cubic-bezier(0.2, 0, 0, 1)`. Exits use `ease-in`; there is no bounce.
+- **Theme:** canvas, panels, logo wordmark, and targeted semantic text/surfaces transition background, border, and color over (220ms); shadows use (180ms). This interpolates existing roles, not a full-page overlay or filter.
+- **Controls:** Button, Input, and Select trigger transition color, background, border, shadow, and individual `translate` over (180ms), with feedback easing. Enabled shared Buttons press down (1px) over (120ms); disabled/aria-disabled Buttons do not. Rail color/background/border/shadow uses (180ms), with (120ms) translate feedback.
+- **Dialogs:** a fresh scrim fades in over (240ms), out over (120ms). Fresh content arrives over (240ms): opacity (0 → 1), vertical translate (12px → 0), scale (0.985 → 1). Exit is (120ms), fading from the currently rendered opacity, moving (6px) farther down and multiplying the current scale by (0.99). Individual translate/scale leave the centered `transform` unchanged. Panel/scrim blur stays constant at the values above.
+- **Menus / tooltips:** fresh DropdownMenu and Select arrivals use (180ms), opacity (0 → 1), scale (0.98 → 1), and vertical offset (-4px → 0), reversed to (+4px → 0) above the trigger. Use the actual Radix transform origin. Menu exit is (120ms), fading from captured opacity to (0), keeping captured translation and multiplying captured scale by (0.985); tooltips fade from their current opacity over (120ms). Closing overlay/menu surfaces do not intercept pointer events during their exit.
+- **Local review / edit:** review enters over (180ms) from opacity (0.6), horizontal translate (+8px); returning edit uses (-8px). The form's `data-entry="back"` gates the return transition; initial form entry does not add a duplicate step animation. Focus and preserved drafts remain authoritative.
+
+These spatial/opacity effects and color transitions run only when motion is permitted. Reduced motion removes animations/transitions and smooth scrolling immediately without dropping state, focus, labels, or errors. Existing loading skeletons retain their (1.8s) breathing cycle, opacity (0.45) halfway through, and stop under reduced motion; this extension adds no decorative loop. Do not tween money, rates, or outcomes, fade privacy masking, animate blur/full-page filters, add page-load choreography, or retain `will-change`. Section scrolling remains smooth only when permitted. Static sidecar examples demonstrate control feedback, not fake portal/open-close behavior or an automatic page entrance.
+
+**Interrupted presence:** before a Radix open-state change, the small shared motion controller batches current opacity/translate/scale reads and stores them as element-local CSS variables. Closing during arrival continues from that frame, not an assumed fully open value; reopening a still-mounted exiting layer likewise begins from its current frame. CSS owns timing and unmount remains Radix Presence's responsibility. Controlled and default-open APIs are preserved; there is no per-frame JavaScript loop. Reduced motion skips the snapshot work. Explicit overview-dismiss buttons use the same capture boundary.
 
 ## Shapes
 
@@ -337,6 +350,12 @@ Skeletons reserve destination geometry rather than prescribing every final corne
 
 The shared foundations are copied registry-derived shadcn/ui source with existing Radix and Lucide dependencies, not a separate new UI package. Preserve [the retained MIT notice](src/components/ui/LICENSE.shadcn). Semantic Tailwind aliases map to wallet custom properties in global styles; prefer the existing components over parallel native utility selects or hand-built focus/menu behavior.
 
+### CocoWallet branding
+
+Reuse `CocoWalletLogo` for the header, loading, error, and not-found surfaces. Its inline SVG combines the approved icon with a path-based wordmark; do not rebuild the lettering with system text or introduce a global brand font. The icon retains fixed navy (`#405e87`), white (`#ffffff`), and ice (`#a7c4e9`) in both themes. Wordmark strokes use `currentColor`, supplied by the ink role. These fixed asset colors are not new palette primitives or theme-action assignments.
+
+The source viewBox is (360 × 72), a (5:1) aspect ratio. Display size is (220 × 44px); at maximum width (760px), width is `min(220px, 48vw)` with automatic height. Keep the full mark/name and adjacent theme/account controls usable at (320px). The SVG exposes the name “CocoWallet” unless a parent supplies the accessible name and marks it decorative; do not create duplicate announcements. Page metadata uses CocoWallet, and the favicon is the approved icon. Downloadable SVG assets remain unchanged. Do not reintroduce the former circular Lucide brand mark or its local shadow.
+
 ### Buttons and quick actions
 
 Restrained, touch-sized controls with purposeful emphasis. `Button` supports `default`, `primary`, `secondary`, `outline`, `ghost`, `circle`, `destructive`, `danger`, and `link`; `default`/`primary` and `destructive`/`danger` are compatibility pairs. Its default variant remains `primary`. Sizes are `default`, `sm`, `lg`, and `icon`, with `asChild` for a real link/trigger element.
@@ -348,6 +367,7 @@ Restrained, touch-sized controls with purposeful emphasis. `Button` supports `de
 - **Destructive / danger:** danger-ground with danger text; hover uses the same ground at (80%) opacity. This available API does not mean a destructive wallet action is shipped.
 - **Small / large:** minimum heights (40px)/(48px), padding (8px 12px)/(12px 24px); small remains (14px) text.
 - **Focus / disabled:** shared Button uses a (3px) navy ring at (30%) opacity; disabled opacity is (0.5), cursor not-allowed. This is not the old global (3px) outline with (4px) offset; that outline remains on ordinary focusable content such as account IDs and the brand link.
+- **Motion:** use the state/press feedback above; a press is a (1px) acknowledgement, not a hover lift. Select triggers and Inputs share state transitions but do not inherit the Button-only press rule.
 - **Wallet quick actions:** labelled Deposit, Withdraw, Convert, Send money Buttons; minimum height (48px), padding (10px 8px), gap (7px), edge border and raised shadow. Hover/open uses solid fill and the control border. Disabled quick actions remove their raised shadow. Mobile uses two rows of two, not circular icon-only actions.
 
 ### Cards / containers
@@ -397,6 +417,8 @@ The real dashboard skeleton reserves the current two-column/stacked geometry, to
 - **Do** reuse the shared shadcn/Radix controls, visible focus, associated errors, and one loading announcement per busy region.
 - **Do** preserve dialog drafts, focus return, viewport overflow, and fixed-navigation clearance.
 - **Do** honor reduced motion, reduced transparency, and forced-colors treatments.
+- **Do** reuse the approved CocoWallet vector: fixed icon colors, ink-following wordmark, and a preserved accessible name.
+- **Do** preserve focus and drafts through bounded overlay/step motion, with immediate state changes under reduced motion.
 - **Do** keep simulation, preview, inspect-only, and unavailable states plain and visible.
 
 ### Don't:
@@ -404,6 +426,7 @@ The real dashboard skeleton reserves the current two-column/stacked geometry, to
 - **Don't** freeze light-theme colors into theme-aware controls or use white text on the dark theme's pale primary fill.
 - **Don't** replace the icy glass world with warm cream, an unapproved display font, or a different visual identity.
 - **Don't** add hard stacked shadows, ornamental lift animations, or hover-only labels on mobile.
+- **Don't** tween financial values or privacy masking, animate blur/full-page filters, or add page-load choreography and persistent `will-change`.
 - **Don't** truncate monetary values or account IDs to preserve panel geometry.
 - **Don't** restore stale native utility-select or inline-workspace examples that misrepresent the current shared controls.
 - **Don't** depict disconnected services as completed money movement, stored preview balances, real payment cards, or live exchange rates.

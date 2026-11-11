@@ -5,6 +5,8 @@ following the [two-column redesign brief](WALLET_REDESIGN.md), the retained
 [frosted identity](DESIGN_REFERENCE.md), [surface brief](WALLET_SURFACE.md), and
 [PRD-11](prd/PRD-11-interface.md). This is an interface-first implementation,
 not completion of funding, FX, accounts, history, or idempotency APIs.
+The later [T11-06](tasks/TASKS-11.md#t11-06) applies CocoWallet branding and
+bounded motion without changing these integration limits.
 
 ## Implemented surface
 
@@ -96,8 +98,8 @@ and retained validation/review/privacy behavior.
 
 ### Current verification and scope
 
-The redesign passes the full Docker check, including **562 Jest tests** and
-production build, plus **33 Chromium checks** against that build. Coverage includes
+The interface passes the full Docker check, including **572 Jest tests** and
+production build, plus **38 Chromium checks** against that build. Coverage includes
 theme/storage, keyboard entry, draft/error focus, no financial submission, privacy,
 zero-balance/self-transfer errors, clipboard fallback, history reset, 404 navigation,
 reduced motion, loading/error rendering, and widths from 320 to 1769px. Destination
@@ -110,6 +112,18 @@ scheduled typeahead focus before Enter. Dialog initial focus is synchronous.
 The final inspection also corrected a global reset overriding utility spacing.
 Detector inventory advisories and independent verdict scope belong in
 [DESIGN_REVIEW.md](DESIGN_REVIEW.md), not a claim of WCAG certification.
+
+The applied CocoWallet vector logo follows explicit light/dark ink and fits
+320px alongside the theme/account controls; favicon and metadata match. Dialogs
+settle in 240ms and dismiss in 120ms; menus, review/edit and control feedback use
+180ms, theme colors 220ms. Blur stays constant. Reduced motion makes these
+effects immediate, while privacy masks remain immediate in every mode. The
+animation tests observe real start/completion events, interruption, mobile
+menu-to-dialog focus, and no remaining running animation work at rest. Helpers
+await actual Radix exit unmounts, not arbitrary sleeps. See [MOTION.md](MOTION.md).
+Interrupted arrivals now dismiss from their rendered frame instead of jumping
+fully open; targeted production comparisons verify opacity/position/scale
+continuity for dialogs, scrims and both menu types.
 
 Connected accounts/history, server quotes, success receipts, and operation outcomes
 remain their own tasks. Cross-feature accessibility/motion acceptance remains

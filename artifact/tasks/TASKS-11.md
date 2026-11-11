@@ -114,7 +114,8 @@ scope are recorded in [BRANDING.md](../BRANDING.md).
 
 **Apply CocoWallet branding and smooth interaction motion**
 
-**Status:** In progress.
+**Status:** Done. Applied branding, bounded motion, interruption continuity,
+production verification and design/handover reconciliation are complete.
 
 **Decisions:** [D-013](../DECISIONS.md#d-013), [D-025](../DECISIONS.md#d-025), [D-026](../DECISIONS.md#d-026), [D-027](../DECISIONS.md#d-027).
 
@@ -128,3 +129,14 @@ layout, accounting or disconnected-service safeguards.
 interruption, focus, keyboard, draft, theme, privacy, reduced-motion and stable
 development checks; run Docker/production-browser verification and reconcile
 current design/review/handover evidence before closure.
+
+**Verification:** Full Docker check, optimized build, **572 Jest tests** and
+**38 production Chromium tests** pass. The independent implementation reviewer
+found one interrupted-arrival snap; a shared event-bound snapshot controller
+corrects it without a per-frame loop. The same reviewer scored that fix resolved
+and returned `ship` at fix-list scope. Production frame comparisons cover dialog,
+scrim, DropdownMenu and Select; six unit cases cover snapshot/state semantics.
+Design notes preserve palette/primitives while documenting branding, timing,
+reduced motion and interruption behavior. See [MOTION.md](../MOTION.md) and
+[DESIGN_REVIEW.md](../DESIGN_REVIEW.md) for scope and limits. No connected task or
+broader accessibility/performance certification is closed here.
