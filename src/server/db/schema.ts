@@ -3,6 +3,7 @@ import { sql } from "drizzle-orm";
 import {
   check,
   index,
+  primaryKey,
   sqliteTable,
   text,
   uniqueIndex,
@@ -175,5 +176,32 @@ export const fundingAttempts = sqliteTable(
       "funding_result_shape",
       sql`(${table.status} = '200' AND ${table.transactionId} IS NOT NULL) OR (${table.status} != '200' AND ${table.transactionId} IS NULL)`,
     ),
+  ],
+);
+
+export const fxCatalogCache = sqliteTable(
+  "fx_catalog_cache",
+  {
+    id: text("id").primaryKey(),
+    currencies: text("currencies").notNull(),
+    fetchedAt: text("fetched_at").notNull(),
+  },
+  (table) => [
+    check("fx_catalog_provider", sql`${table.id} = 'frankfurter-v2'`),
+  ],
+);
+
+export const fxRateCache = sqliteTable(
+  "fx_rate_cache",
+  {
+    base: text("base").notNull(),
+    quote: text("quote").notNull(),
+    rate: text("rate").notNull(),
+    date: text("source_date").notNull(),
+    fetchedAt: text("fetched_at").notNull(),
+  },
+  (table) => [
+    primaryKey({ columns: [table.base, table.quote] }),
+    check("fx_distinct_pair", sql`${table.base} != ${table.quote}`),
   ],
 );

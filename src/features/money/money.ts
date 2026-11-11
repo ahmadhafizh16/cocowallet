@@ -112,7 +112,7 @@ export function formatAmount(minor: bigint, exponent: number): string {
   return `${sign}${digits.slice(0, -exponent)}.${digits.slice(-exponent)}`;
 }
 
-function parseRate(rate: string): {
+export function parseRate(rate: string): {
   coefficient: bigint;
   fractionDigits: number;
 } {

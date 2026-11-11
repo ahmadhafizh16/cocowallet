@@ -8,6 +8,10 @@ import { GET as wallets } from "../accounts/[accountId]/wallets/route";
 import { GET } from "./route";
 import { POST as deposit } from "../deposits/route";
 import { randomUUID } from "node:crypto";
+import { GET as currencyCatalog } from "../currencies/route";
+import { GET as referenceRate } from "../rates/route";
+
+jest.mock("server-only", () => ({}));
 
 jest.mock("@/server/db/runtime", () => ({ getRuntimeDatabase: jest.fn() }));
 
@@ -59,6 +63,12 @@ function expectContract(value: unknown, source: Schema) {
       expect(value).toMatch(/^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d\.\d{3}Z$/);
       expect(new Date(value as string).toISOString()).toBe(value);
     }
+    if (schema.format === "date") {
+      expect(value).toMatch(/^\d{4}-\d\d-\d\d$/);
+      expect(
+        new Date(`${value as string}T00:00:00.000Z`).toISOString().slice(0, 10),
+      ).toBe(value);
+    }
     if (schema.minLength)
       expect((value as string).length).toBeGreaterThanOrEqual(schema.minLength);
   } else if (schema.type === "integer") {
@@ -86,6 +96,8 @@ describe("read-only OpenAPI contract", () => {
     const spec = await response.json();
     expect(spec.openapi).toBe("3.1.0");
     expect(Object.keys(spec.paths)).toEqual([
+      "/api/currencies",
+      "/api/rates",
       "/api/deposits",
       "/api/withdrawals",
       "/api/accounts",
@@ -157,5 +169,42 @@ describe("read-only OpenAPI contract", () => {
       );
     expectContract(await (await send("1.00")).json(), schemas.FundingReceipt!);
     expectContract(await (await send("1.001")).json(), schemas.FundingProblem!);
+  });
+
+  it("validates actual reference metadata responses against the published schemas", async () => {
+    jest.spyOn(globalThis, "fetch").mockImplementation(async (url) =>
+      String(url).endsWith("/currencies")
+        ? new Response(
+            JSON.stringify([
+              { iso_code: "USD", name: "US Dollar", type: "currency" },
+              { iso_code: "EUR", name: "Euro", type: "currency" },
+            ]),
+            { headers: { "Content-Type": "application/json" } },
+          )
+        : new Response(
+            "date,base,quote,rate\n2026-01-01,USD,EUR,0.893930000000000000000000000000000001\n",
+            { headers: { "Content-Type": "text/csv" } },
+          ),
+    );
+    expectContract(
+      await (await currencyCatalog()).json(),
+      schemas.CurrencyCatalog!,
+    );
+    expectContract(
+      await (
+        await referenceRate(
+          new Request("http://localhost/api/rates?base=USD&quote=EUR"),
+        )
+      ).json(),
+      schemas.ReferenceRate!,
+    );
+    expectContract(
+      await (
+        await referenceRate(
+          new Request("http://localhost/api/rates?base=BTC&quote=EUR"),
+        )
+      ).json(),
+      schemas.ReferenceProblem!,
+    );
   });
 });

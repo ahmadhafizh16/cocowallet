@@ -29,6 +29,13 @@
       "when": 1794414812279,
       "tag": "0003_funding_results",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "6",
+      "when": 1794416551766,
+      "tag": "0004_reference_rate_cache",
+      "breakpoints": true
     }
   ]
 }
