@@ -2,23 +2,12 @@ import {
   fundingProblem,
   normalizeRequestKey,
   type FundingKind,
-  type FundingResult,
+  validFundingInput,
 } from "@/features/funding/contracts";
 import { submitFunding } from "@/features/funding/service";
 import { getRuntimeDatabase } from "../db/runtime";
-import { readBoundedJson } from "./request-input";
-
-function respond(result: FundingResult) {
-  return Response.json(result.body, {
-    status: result.status,
-    headers: {
-      "Cache-Control": "no-store",
-      "Content-Type":
-        result.status === 200 ? "application/json" : "application/problem+json",
-      "Idempotency-Replayed": String(result.replayed),
-    },
-  });
-}
+import { jsonWriteIssue, readBoundedJson } from "./request-input";
+import { monetaryResponse as respond } from "./responses";
 
 export async function handleFunding(request: Request, kind: FundingKind) {
   const key = normalizeRequestKey(request.headers.get("Idempotency-Key"));
@@ -28,38 +17,18 @@ export async function handleFunding(request: Request, kind: FundingKind) {
       body: fundingProblem(400, code, detail, true, key ?? undefined),
       replayed: false,
     });
-  // Next's internal URL can use its bind address (0.0.0.0), not the browser's
-  // authority. Host is the direct request authority; this app supports local
-  // direct access only, not arbitrary forwarded-host/proxy configuration.
-  const url = new URL(request.url);
-  let expectedOrigin = url.origin;
-  try {
-    if (request.headers.get("host"))
-      expectedOrigin = new URL(
-        `${url.protocol}//${request.headers.get("host")}`,
-      ).origin;
-  } catch {
+  const issue = jsonWriteIssue(request);
+  if (issue === "authority") {
     return reject("INVALID_FUNDING_REQUEST", "Invalid request authority.");
   }
   // JSON plus a custom header prevents simple form CSRF; also reject explicit
   // cross-origin browser requests. CLI callers may omit Origin, not validation.
-  if (
-    (request.headers.get("origin") &&
-      request.headers.get("origin") !== expectedOrigin) ||
-    request.headers.get("sec-fetch-site") === "cross-site"
-  )
+  if (issue === "origin")
     return reject(
       "CROSS_ORIGIN_WRITE",
       "Money submissions must originate from this wallet.",
     );
-  if (
-    !key ||
-    request.headers
-      .get("content-type")
-      ?.split(";", 1)[0]
-      ?.trim()
-      .toLowerCase() !== "application/json"
-  )
+  if (!key || issue === "content-type")
     return reject(
       "INVALID_FUNDING_REQUEST",
       "Supply JSON and a UUID Idempotency-Key.",
@@ -73,6 +42,11 @@ export async function handleFunding(request: Request, kind: FundingKind) {
       "Supply a valid JSON body of at most 16 KiB.",
     );
   }
+  if (!validFundingInput(input))
+    return reject(
+      "INVALID_FUNDING_REQUEST",
+      "Supply a UUID Idempotency-Key and exactly walletId, plain-decimal amount and supported provider strings.",
+    );
   try {
     return respond(submitFunding(getRuntimeDatabase(), kind, key, input));
   } catch {

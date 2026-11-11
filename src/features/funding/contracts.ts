@@ -25,12 +25,7 @@ export type FundingReceipt = {
   provider: FundingProvider;
   createdAt: string;
 };
-export type FundingProblem = {
-  type: "about:blank";
-  title: string;
-  status: 400 | 404 | 409 | 503;
-  code: string;
-  detail: string;
+export type FundingProblem = ProblemDetails & {
   definitive: boolean;
   requestKey?: string;
 };
@@ -41,43 +36,35 @@ export type FundingResult = {
 };
 
 export function normalizeRequestKey(value: unknown): string | null {
-  return typeof value === "string" &&
-    value.length === 36 &&
-    /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(
-      value,
-    )
-    ? value.toLowerCase()
-    : null;
+  return uuidContract.is(value) ? value.toLowerCase() : null;
 }
 
+export const fundingProviderContract = enumContract([
+  "demo_bank",
+  "community_bank",
+  "crypto_gateway",
+]);
+export const fundingRequestContract = objectContract({
+  walletId: identifierContract,
+  amount: amountContract,
+  provider: fundingProviderContract,
+});
+const fundingShapeContract = objectContract({
+  walletId: textContract({}),
+  amount: textContract({}),
+  provider: textContract({}),
+});
 export function isFundingProvider(value: string): value is FundingProvider {
-  return ["demo_bank", "community_bank", "crypto_gateway"].includes(value);
+  return fundingProviderContract.is(value);
 }
 
 export function validFundingInput(value: unknown): value is FundingRequest {
-  return (
-    isFundingRequest(value) &&
-    value.walletId.trim().length > 0 &&
-    !value.walletId.includes("\0") &&
-    value.walletId.length <= 8192 &&
-    isFundingProvider(value.provider) &&
-    value.amount.length <= 24 &&
-    /^(?:0|[1-9][0-9]*)(?:\.[0-9]+)?(?![\s\S])/u.test(value.amount)
-  );
+  return fundingRequestContract.is(value);
 }
 
 /** Structural validation precedes key acceptance; business errors are recorded. */
 export function isFundingRequest(value: unknown): value is FundingRequest {
-  if (!value || typeof value !== "object" || Array.isArray(value)) return false;
-  const record = value as Record<string, unknown>;
-  const keys = Object.keys(record);
-  return (
-    keys.length === 3 &&
-    keys.every((key) => ["walletId", "amount", "provider"].includes(key)) &&
-    typeof record.walletId === "string" &&
-    typeof record.amount === "string" &&
-    typeof record.provider === "string"
-  );
+  return fundingShapeContract.is(value);
 }
 
 export function fundingProblem(
@@ -88,17 +75,17 @@ export function fundingProblem(
   requestKey?: string,
 ): FundingProblem {
   return {
-    type: "about:blank",
-    title: {
-      400: "Bad Request",
-      404: "Not Found",
-      409: "Conflict",
-      503: "Service Unavailable",
-    }[status],
-    status,
-    code,
-    detail,
+    ...problemDetails(status, code, detail),
     definitive,
     ...(requestKey ? { requestKey } : {}),
   };
 }
+import {
+  amountContract,
+  enumContract,
+  identifierContract,
+  objectContract,
+  textContract,
+  uuidContract,
+} from "../../lib/contracts";
+import { problemDetails, type ProblemDetails } from "../../lib/problem-details";

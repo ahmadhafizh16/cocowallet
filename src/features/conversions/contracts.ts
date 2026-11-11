@@ -1,9 +1,12 @@
+import { fundingProblem, type FundingProblem } from "../funding/contracts";
+import { type StoredQuote } from "../quotes/contracts";
 import {
-  fundingProblem,
-  normalizeRequestKey,
-  type FundingProblem,
-} from "../funding/contracts";
-import { isQuoteRequest, type StoredQuote } from "../quotes/contracts";
+  amountContract,
+  currencyContract,
+  identifierContract,
+  objectContract,
+  uuidContract,
+} from "../../lib/contracts";
 
 export type ConversionRequest = {
   quoteId: string;
@@ -31,31 +34,19 @@ export type ConversionResult = {
   replayed: boolean;
 };
 export const conversionProblem = fundingProblem;
+export const conversionRequestContract = objectContract({
+  quoteId: uuidContract,
+  sourceWalletId: identifierContract,
+  amount: amountContract,
+  targetCurrency: currencyContract,
+});
 
 /** Exact fields only; resource, quote binding and funds checks occur only after
  * the durable replay lookup. Rates/receive amounts are never caller inputs. */
 export function isConversionRequest(
   value: unknown,
 ): value is ConversionRequest {
-  if (!value || typeof value !== "object" || Array.isArray(value)) return false;
-  const row = value as Record<string, unknown>;
-  if (
-    Object.keys(row).length !== 4 ||
-    !Object.hasOwn(row, "quoteId") ||
-    !normalizeRequestKey(row.quoteId)
-  )
-    return false;
-  return (
-    Object.keys(row).every((k) =>
-      ["quoteId", "sourceWalletId", "amount", "targetCurrency"].includes(k),
-    ) &&
-    isQuoteRequest({
-      operation: "conversion",
-      sourceWalletId: row.sourceWalletId,
-      amount: row.amount,
-      targetCurrency: row.targetCurrency,
-    })
-  );
+  return conversionRequestContract.is(value);
 }
 export function canonicalConversionRequest(input: ConversionRequest): string {
   return JSON.stringify([

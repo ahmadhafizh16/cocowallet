@@ -15,6 +15,14 @@ an existing reviewed quote, while same-currency sends never request a rate.
 `/api/transfers` remains a candidate route, absent from the implemented OpenAPI
 document. No transfer browser recovery is implied by this backend service.
 
+[T10-01's shared HTTP boundary](HTTP.md) reuses request validation/schema objects,
+exact JSON helpers, safe Problem Details and the existing no-store/replay headers.
+Funding/conversion/quote structural validation precedes database access; domain
+validation and atomic commit/replay stay in their feature services. The existing
+400/404/409/503 baseline and endpoint shapes are unchanged. Request schemas now
+derive from shared structural definitions, but path registration remains explicit;
+no general generator or Swagger UI is selected/implemented by this stage.
+
 ## Implemented operational endpoints
 
 | Method | Route | Result |

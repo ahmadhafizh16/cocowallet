@@ -1,7 +1,6 @@
 import { readApiDocument } from "@/server/http/openapi";
+import { jsonResponse } from "@/server/http/responses";
 
 export function GET() {
-  return Response.json(readApiDocument, {
-    headers: { "Cache-Control": "no-store" },
-  });
+  return jsonResponse(readApiDocument);
 }

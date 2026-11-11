@@ -1,10 +1,13 @@
-import {
-  fundingProblem,
-  normalizeRequestKey,
-  type FundingProblem,
-} from "../funding/contracts";
+import { fundingProblem, type FundingProblem } from "../funding/contracts";
 import { conversionFailures } from "../conversions/contracts";
-import { validIdentifier, type StoredQuote } from "../quotes/contracts";
+import { type StoredQuote } from "../quotes/contracts";
+import {
+  amountContract,
+  currencyContract,
+  identifierContract,
+  objectContract,
+  uuidContract,
+} from "../../lib/contracts";
 
 export type TransferRequest = {
   sourceWalletId: string;
@@ -118,36 +121,19 @@ export class TransferError extends Error {
     this.status = transferFailures[code].status;
   }
 }
-const code = (value: unknown): value is string =>
-  typeof value === "string" && /^[A-Z]{3}(?![\s\S])/u.test(value);
+export const transferRequestContract = objectContract(
+  {
+    sourceWalletId: identifierContract,
+    recipientAccountId: identifierContract,
+    amount: amountContract,
+    targetCurrency: currencyContract,
+    recipientDefaultCurrency: currencyContract,
+    quoteId: uuidContract,
+  },
+  ["targetCurrency", "recipientDefaultCurrency", "quoteId"],
+);
 export function isTransferRequest(value: unknown): value is TransferRequest {
-  if (!value || typeof value !== "object" || Array.isArray(value)) return false;
-  const row = value as Record<string, unknown>;
-  return (
-    ["sourceWalletId", "recipientAccountId", "amount"].every((k) =>
-      Object.hasOwn(row, k),
-    ) &&
-    Object.keys(row).every((k) =>
-      [
-        "sourceWalletId",
-        "recipientAccountId",
-        "amount",
-        "targetCurrency",
-        "recipientDefaultCurrency",
-        "quoteId",
-      ].includes(k),
-    ) &&
-    validIdentifier(row.sourceWalletId) &&
-    validIdentifier(row.recipientAccountId) &&
-    typeof row.amount === "string" &&
-    row.amount.length <= 24 &&
-    /^(?:0|[1-9][0-9]*)(?:\.[0-9]+)?(?![\s\S])/u.test(row.amount) &&
-    (!Object.hasOwn(row, "targetCurrency") || code(row.targetCurrency)) &&
-    (!Object.hasOwn(row, "recipientDefaultCurrency") ||
-      code(row.recipientDefaultCurrency)) &&
-    (!Object.hasOwn(row, "quoteId") ||
-      normalizeRequestKey(row.quoteId) !== null)
-  );
+  return transferRequestContract.is(value);
 }
 export function canonicalTransferRequest(input: TransferRequest): string {
   return JSON.stringify([

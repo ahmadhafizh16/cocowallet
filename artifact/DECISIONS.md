@@ -208,6 +208,9 @@ POSTs, reference metadata GETs and immutable quote preview/readback, including
 their exact receipt/problem, idempotency/provenance/lifecycle contracts and
 maintained OpenAPI document. See [QUOTES.md](QUOTES.md) for the quote slice.
 T07-02 fixes conversion HTTP/recovery shapes in [CONVERSIONS.md](CONVERSIONS.md).
+T10-01 now shares structural guard/schema definitions and HTTP response/request
+conventions in [HTTP.md](HTTP.md), without selecting a generator or changing
+implemented endpoint shapes.
 Transfer submission/history shapes, generation and full
 filtering/pagination stay open in [API_DESIGN.md](API_DESIGN.md). Swagger UI is not implemented.
 

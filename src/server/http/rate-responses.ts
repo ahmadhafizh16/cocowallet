@@ -1,7 +1,9 @@
 import { RateDataError } from "@/features/rates/contracts";
+import { problemDetails } from "@/lib/problem-details";
+import { jsonResponse, problemResponse } from "./responses";
 
 export function rateJson(body: unknown) {
-  return Response.json(body, { headers: { "Cache-Control": "no-store" } });
+  return jsonResponse(body);
 }
 export function rateProblem(error: unknown) {
   const status = error instanceof RateDataError ? error.status : 503;
@@ -19,20 +21,5 @@ export function rateProblem(error: unknown) {
     FX_STORAGE_UNAVAILABLE:
       "Reference metadata storage is unavailable. No monetary operation was performed.",
   };
-  return Response.json(
-    {
-      type: "about:blank",
-      title: status === 400 ? "Bad Request" : "Service Unavailable",
-      status,
-      code,
-      detail: details[code],
-    },
-    {
-      status,
-      headers: {
-        "Content-Type": "application/problem+json",
-        "Cache-Control": "no-store",
-      },
-    },
-  );
+  return problemResponse(problemDetails(status, code, details[code]));
 }

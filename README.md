@@ -10,6 +10,11 @@ keys cannot be reused across funding, conversion and internal transfers. `POST /
 the existing Convert dialog now connect that service, with explicit expiry and
 reconfirmation; see [`artifact/CONVERSIONS.md`](artifact/CONVERSIONS.md).
 
+Shared HTTP groundwork now consolidates structural guards/published schemas,
+strict bounded JSON input, safe Problem Details and exact no-store/replay
+responses; see [`artifact/HTTP.md`](artifact/HTTP.md). No transfer/history endpoint
+or Swagger UI is added. Existing feature accounting and retry rules are unchanged.
+
 ## Development environment
 
 Requirements: Docker Engine and Docker Compose. Host Node 26 is not required.

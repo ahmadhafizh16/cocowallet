@@ -78,36 +78,37 @@ export class QuoteError extends Error {
 }
 
 export function validIdentifier(value: unknown): value is string {
-  return (
-    typeof value === "string" &&
-    !!value.trim() &&
-    value.length <= 8192 &&
-    !value.includes("\0")
-  );
+  return identifierContract.is(value);
 }
+const quoteInput = {
+  sourceWalletId: identifierContract,
+  amount: amountContract,
+  targetCurrency: currencyContract,
+};
+export const conversionQuoteRequestContract = objectContract({
+  ...quoteInput,
+  operation: literalContract("conversion"),
+});
+export const transferQuoteRequestContract = objectContract(
+  {
+    ...quoteInput,
+    operation: literalContract("transfer"),
+    recipientAccountId: identifierContract,
+    recipientDefaultCurrency: {
+      ...currencyContract,
+      schema: {
+        ...currencyContract.schema,
+        description:
+          "Required for an unknown destination; if supplied for an existing destination, must match its immutable default.",
+      },
+    },
+  },
+  ["recipientDefaultCurrency"],
+);
 export function isQuoteRequest(value: unknown): value is QuoteRequest {
-  if (!value || typeof value !== "object" || Array.isArray(value)) return false;
-  const row = value as Record<string, unknown>;
-  const required = ["operation", "sourceWalletId", "amount", "targetCurrency"];
-  const allowed =
-    row.operation === "transfer"
-      ? [...required, "recipientAccountId", "recipientDefaultCurrency"]
-      : required;
   return (
-    (row.operation === "conversion" || row.operation === "transfer") &&
-    required.every((k) => Object.hasOwn(row, k)) &&
-    Object.keys(row).every((k) => allowed.includes(k)) &&
-    validIdentifier(row.sourceWalletId) &&
-    typeof row.amount === "string" &&
-    row.amount.length <= 24 &&
-    /^(?:0|[1-9][0-9]*)(?:\.[0-9]+)?(?![\s\S])/u.test(row.amount) &&
-    typeof row.targetCurrency === "string" &&
-    /^[A-Z]{3}(?![\s\S])/u.test(row.targetCurrency) &&
-    (row.operation !== "transfer" ||
-      (validIdentifier(row.recipientAccountId) &&
-        (!Object.hasOwn(row, "recipientDefaultCurrency") ||
-          (typeof row.recipientDefaultCurrency === "string" &&
-            /^[A-Z]{3}(?![\s\S])/u.test(row.recipientDefaultCurrency)))))
+    conversionQuoteRequestContract.is(value) ||
+    transferQuoteRequestContract.is(value)
   );
 }
 export function canonicalQuoteRequest(request: QuoteRequest): string {
@@ -120,3 +121,10 @@ export function canonicalQuoteRequest(request: QuoteRequest): string {
     request.recipientDefaultCurrency ?? null,
   ]);
 }
+import {
+  amountContract,
+  currencyContract,
+  identifierContract,
+  literalContract,
+  objectContract,
+} from "../../lib/contracts";

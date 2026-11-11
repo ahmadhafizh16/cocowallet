@@ -1,14 +1,19 @@
-const ref = (name: string) => ({ $ref: `#/components/schemas/${name}` });
-const code = { type: "string", pattern: "^[A-Z]{3}$" };
+import {
+  currencyContract,
+  dateTimeSchema,
+  exponentSchema,
+} from "@/lib/contracts";
+import {
+  noStoreHeaders as headers,
+  problemSchema,
+  schemaRef as ref,
+} from "./schema-parts";
+const code = currencyContract.schema;
 const source = { type: "string", enum: ["fresh", "cached"] };
 const fetchedAt = {
-  type: "string",
-  format: "date-time",
+  ...dateTimeSchema,
   description:
     "Original validated fetch time, never reset by a fallback. Future or >=24-hour-old cached observations are ineligible.",
-};
-const headers = {
-  "Cache-Control": { schema: { type: "string", const: "no-store" } },
 };
 const problem = {
   description:
@@ -36,7 +41,7 @@ export const referenceSchemas = {
           properties: {
             code,
             name: { type: "string", minLength: 1, maxLength: 256 },
-            exponent: { type: "integer", minimum: 0, maximum: 4 },
+            exponent: exponentSchema,
           },
         },
       },
@@ -76,27 +81,16 @@ export const referenceSchemas = {
       fetchedAt,
     },
   },
-  ReferenceProblem: {
-    type: "object",
-    additionalProperties: false,
-    required: ["type", "title", "status", "code", "detail"],
-    properties: {
-      type: { type: "string", const: "about:blank" },
-      title: { type: "string" },
-      status: { type: "integer", enum: [400, 503] },
-      code: {
-        type: "string",
-        enum: [
-          "INVALID_CURRENCY_PAIR",
-          "UNSUPPORTED_CURRENCY",
-          "CURRENCY_CATALOG_UNAVAILABLE",
-          "FX_RATE_UNAVAILABLE",
-          "FX_STORAGE_UNAVAILABLE",
-        ],
-      },
-      detail: { type: "string" },
-    },
-  },
+  ReferenceProblem: problemSchema(
+    [400, 503],
+    [
+      "INVALID_CURRENCY_PAIR",
+      "UNSUPPORTED_CURRENCY",
+      "CURRENCY_CATALOG_UNAVAILABLE",
+      "FX_RATE_UNAVAILABLE",
+      "FX_STORAGE_UNAVAILABLE",
+    ],
+  ),
 };
 export const referencePaths = {
   "/api/currencies": {

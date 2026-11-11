@@ -1,12 +1,13 @@
 # Handover
 
-**Status:** Twenty-three of 36 tasks are closed. T08-01's internal atomic transfer
-service is verified, with recipient/wallet creation and durable global-key results.
-The board has 11 To do, 2 In progress (remaining Swagger acceptance), and 23 Done.
-Existing visual design is preserved and visual feedback deferred. Transfer HTTP/UI
-submission remains disabled; T09-01 history/API prerequisites (including T10-01
-shared HTTP) come before T08-02's connected flow. Full history/valuation, wallet
-management and Swagger retain their tasks. See [TRANSFERS.md](TRANSFERS.md).
+**Status:** Twenty-four of 36 tasks are closed. T10-01's shared HTTP consolidation
+is verified, preserving existing monetary contracts and the internal atomic
+transfer service. The board has 10 To do, 2 In progress (remaining Swagger
+acceptance), and 24 Done. Existing visual design is preserved and visual feedback
+deferred. Transfer HTTP/UI stays disabled; next is T09-01 history/API, including
+O-003/O-004's date-filter/pagination/response contract decisions, before T08-02's
+connected flow. Full history/valuation, wallet management and Swagger retain their
+tasks. See [HTTP.md](HTTP.md).
 
 ## Implemented modules and commands
 
@@ -26,6 +27,9 @@ management and Swagger retain their tasks. See [TRANSFERS.md](TRANSFERS.md).
 | `src/features/journal/write.ts` | Top-level synchronous immediate-write boundary; main-only accounting, exact credits, funds checks, atomic creation/entries, and a technical-success integration seam. [Contract](JOURNAL.md). |
 | `src/features/accounts/`, `scripts/seed.ts` | Explicit repeatable atomic account/startup-wallet initialization; account metadata and exact snapshot balance reads; no seeded journal entries. |
 | `src/app/api/accounts/`, `src/server/http/`, `src/app/api/openapi/` | Uncached reads plus shared funding HTTP boundary, safe problems and maintained OpenAPI contracts. Swagger UI remains unimplemented. |
+| `src/lib/contracts.ts`, `src/lib/problem-details.ts`, `src/server/http/schema-parts.ts` | Shared runtime guards/published structural schemas, safe Problem Details and common response/schema parts; domain money/precision/quote validation stays feature-owned. |
+| `src/server/http/request-input.ts`, `responses.ts`, `funding-handler.ts`, `conversion-handler.ts` | Bounded fatal-UTF-8 JSON, direct-origin/media policy, lossless plain JSON/no-store/replay responses and thin monetary adapters. Post-commit serialization failure keeps original-key recovery. |
+| `src/test/json-contract.ts` | Reusable test-only assertion for the document's explicit schema subset; not a standards-compliant validator, generator or shipping client dependency. |
 | `src/features/funding/`, `src/app/api/deposits/`, `src/app/api/withdrawals/` | Exact simulated funding, immutable durable original results, same-key retries, per-tab recovery, receipts and bounded completed-funding visibility. |
 | `drizzle/0003_funding_results.sql` | Retained technical outcome table and immutable update/delete triggers; no seeded funds or transactions. |
 | `src/features/rates/`, `src/app/api/currencies/`, `src/app/api/rates/` | Server-only fixed-origin Frankfurter catalog and exact CSV pair observations; fresh-first validation, bounded timeout/size and original-time eligible fallback. No binding quote or monetary change. |
@@ -64,7 +68,31 @@ Stop the dev compiler before `docker compose run --rm app npm run check`, then u
 
 Application DB: `/app/data/wallet.sqlite` in Compose's `wallet-data` volume. Tests use isolated temporary SQLite files. Normal shutdown is `docker compose down` without deleting volumes. Before applying journal migrations, the stopped app's database was backed up with SQLite's backup API to `/app/data/wallet.sqlite.pre-journal-1794390597589.bak`. Backup creation is verified; a full restore drill is not claimed.
 
-Current transfer-backend verification: full Docker check/build passes **1,114 Jest
+Current HTTP verification: full Docker check/build passes **1,228 Jest tests in 52
+suites**, plus formatting, lint, TypeScript and artifact checks (**56 documents /
+36 tasks**). A first full run found cross-realm native SQLite objects rejected by
+an overly strict JSON prototype check; that compatibility correction and explicit
+VM regressions are included in the repeated passing full run. Existing monetary
+service/concurrency/recovery tests remain green. No endpoint shape, dependency,
+schema migration or UI source changed; no
+transfer/history endpoint or Swagger UI is enabled.
+
+Verified SQLite backup `/app/data/wallet.sqlite.pre-http-1794427570259.bak` preceded
+checks. All **14 runtime tables including migration metadata** are bigint-safely
+row-identical: **1 account / 3 wallets / 0 transactions / 0 journal entries /
+0 funding attempts / 0 conversion attempts / 0 transfer attempts**, with empty
+reference caches and quote/use tables. Integrity is `ok`, FK violations zero. No
+runtime test money/recipient/quote seed, live-provider check, restore drill or
+remote push was introduced. All **63 production Chromium regressions** pass on a
+fresh guarded disposable server, preserving funding/conversion, account isolation,
+privacy, drafts, themes, layout and motion. Development resumed with
+`.next/dev.pre-http-1794428115848` retained. A browser verified **300 stable frames**,
+enabled funding review, documented conversion and absent transfer/history APIs,
+with zero extra navigations/page/console errors or financial/reference requests.
+Bounded in-thread graph/source/coverage review is not an independent-agent audit
+or exhaustive correctness/security certification. See [HTTP.md](HTTP.md).
+
+Historical transfer-backend verification: full Docker check/build passes **1,114 Jest
 tests in 48 suites**, including 119 transfer service/receipt/concurrency cases.
 Artifact checks cover **55 documents / 36 tasks**. Transfer HTTP/UI remain disabled;
 no frontend source, dependency or real-provider integration changed.
@@ -181,7 +209,7 @@ funding verification supersedes its disconnected-write boundary, not its evidenc
 The last production npm audit was clean; 23 low/moderate development-tool findings
 remain in [DEPENDENCIES.md](DEPENDENCIES.md); no new dependency was installed.
 
-Artifact validation verifies **55 documents / 36 tasks**. The previous
+Artifact validation verifies **56 documents / 36 tasks**. The previous
 T11-02 design-extraction counts and verdict are historical, not certification of
 T11-04. Current production captures include desktop light/dark, 1688/1769px,
 tablet, mobile, dialogs/menus, validation/review, loading and errors. Independent

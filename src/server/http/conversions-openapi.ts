@@ -1,28 +1,28 @@
-import { conversionFailures } from "@/features/conversions/contracts";
+import {
+  conversionFailures,
+  conversionRequestContract,
+} from "@/features/conversions/contracts";
+import {
+  dateTimeSchema,
+  objectSchema as object,
+  uuidContract,
+} from "@/lib/contracts";
+import {
+  monetaryHeaders as headers,
+  monetaryProblemSchema,
+  schemaRef as ref,
+} from "./schema-parts";
 import { fundingSchemas } from "./funding-openapi";
 import { quoteSchemas } from "./quotes-openapi";
 
-const ref = (name: string) => ({ $ref: `#/components/schemas/${name}` });
-const uuid = fundingSchemas.FundingReceipt.properties.requestKey;
+const uuid = uuidContract.schema;
 const quote = quoteSchemas.ConversionQuoteTerms.properties;
-const input = quoteSchemas.ConversionQuoteRequest.properties;
-const object = <T extends Record<string, object>>(properties: T) => ({
-  type: "object",
-  additionalProperties: false,
-  required: Object.keys(properties),
-  properties,
-});
 const wallet = object({
   ...quote.source.properties,
   balanceMinor: fundingSchemas.FundingReceipt.properties.balanceMinor,
 });
 export const conversionSchemas = {
-  ConversionRequest: object({
-    quoteId: uuid,
-    sourceWalletId: input.sourceWalletId,
-    amount: input.amount,
-    targetCurrency: input.targetCurrency,
-  }),
+  ConversionRequest: conversionRequestContract.schema,
   ConversionReceipt: object({
     requestKey: uuid,
     transactionId: uuid,
@@ -34,29 +34,17 @@ export const conversionSchemas = {
     rate: quote.rate,
     issuedAt: quote.issuedAt,
     expiresAt: quote.expiresAt,
-    createdAt: { type: "string", format: "date-time" },
+    createdAt: dateTimeSchema,
   }),
-  ConversionProblem: {
-    ...fundingSchemas.FundingProblem,
-    properties: {
-      ...fundingSchemas.FundingProblem.properties,
-      code: {
-        type: "string",
-        enum: [
-          "INVALID_CONVERSION_REQUEST",
-          ...Object.keys(conversionFailures),
-          "IDEMPOTENCY_KEY_REUSED",
-          "CONVERSION_OUTCOME_UNKNOWN",
-        ],
-      },
-    },
-  },
-};
-const headers = {
-  "Cache-Control": { schema: { type: "string", const: "no-store" } },
-  "Idempotency-Replayed": {
-    schema: { type: "string", enum: ["true", "false"] },
-  },
+  ConversionProblem: monetaryProblemSchema(
+    [400, 404, 409, 503],
+    [
+      "INVALID_CONVERSION_REQUEST",
+      ...Object.keys(conversionFailures),
+      "IDEMPOTENCY_KEY_REUSED",
+      "CONVERSION_OUTCOME_UNKNOWN",
+    ],
+  ),
 };
 const problem = {
   description:
@@ -71,7 +59,7 @@ export const conversionPaths = {
       summary:
         "Confirm reviewed server-owned conversion terms; no real funds move",
       description:
-        "Same-origin JSON, maximum 16 KiB. Required UUID key is global across funding/conversion. Exact source-wallet/amount/target strings and normalized quote UUID bind the request. Replay original definitive outcomes before quote expiry/use/current-funds checks. Fresh confirmation uses the quote's fixed full-minute terms, creates missing target metadata/wallet and commits journal/use/receipt together. No trusted client rate/receive overrides, provider call, fee or automatic retry. A replacement quote requires renewed review and a new intentional key; unknown outcomes must recover the original key and quote. Retention is indefinite.",
+        "Same-origin JSON, maximum 16 KiB. Required UUID key is global across funding/conversion/internal transfers. Exact source-wallet/amount/target strings and normalized quote UUID bind the request. Replay original definitive outcomes before quote expiry/use/current-funds checks. Fresh confirmation uses the quote's fixed full-minute terms, creates missing target metadata/wallet and commits journal/use/receipt together. No trusted client rate/receive overrides, provider call, fee or automatic retry. A replacement quote requires renewed review and a new intentional key; unknown outcomes must recover the original key and quote. Retention is indefinite.",
       parameters: [
         { name: "Idempotency-Key", in: "header", required: true, schema: uuid },
       ],

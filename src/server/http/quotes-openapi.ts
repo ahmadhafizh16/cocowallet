@@ -1,82 +1,54 @@
 import { quoteProblemDetails } from "./quote-responses";
-
-const ref = (name: string) => ({ $ref: `#/components/schemas/${name}` });
-const id = {
-  type: "string",
-  minLength: 1,
-  maxLength: 8192,
-  description:
-    "Exact nonblank identifier without NUL characters; no client-side normalization.",
-};
-const currency = { type: "string", pattern: "^[A-Z]{3}$" };
-const uuid = {
-  type: "string",
-  minLength: 36,
-  maxLength: 36,
-  pattern:
-    "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$",
-};
-const dateTime = { type: "string", format: "date-time" };
-const headers = {
-  "Cache-Control": { schema: { type: "string", const: "no-store" } },
-};
-const object = <T extends Record<string, object>>(
-  properties: T,
-  required: string[],
-) => ({
-  type: "object",
-  additionalProperties: false,
-  properties,
-  required,
-});
-const input = {
-  sourceWalletId: id,
-  amount: {
-    type: "string",
-    maxLength: 24,
-    pattern: "^(0|[1-9][0-9]*)(\\.[0-9]+)?(?![\\s\\S])",
-    description:
-      "Positive exact decimal text within source precision/range. Same original text is bound to the quote.",
-  },
-  targetCurrency: currency,
-};
+import {
+  conversionQuoteRequestContract,
+  transferQuoteRequestContract,
+} from "@/features/quotes/contracts";
+import {
+  currencyContract,
+  dateTimeSchema as dateTime,
+  exponentSchema,
+  identifierContract,
+  objectSchema as object,
+  uuidContract,
+} from "@/lib/contracts";
+import {
+  noStoreHeaders as headers,
+  problemSchema,
+  schemaRef as ref,
+} from "./schema-parts";
+const id = identifierContract.schema;
+const currency = currencyContract.schema;
+const uuid = uuidContract.schema;
 const amount = {
   accountId: id,
   currency,
   name: { type: "string", minLength: 1, maxLength: 256 },
-  exponent: { type: "integer", minimum: 0, maximum: 4 },
+  exponent: exponentSchema,
   amount: {
     type: "string",
     description: "Canonical fixed accounting-precision decimal text.",
   },
   amountMinor: {
     type: "string",
-    pattern: "^[1-9][0-9]{0,18}$",
+    pattern: "^[1-9][0-9]{0,18}(?![\\s\\S])",
     description: "Exact positive minor units, at most 9223372036854775807.",
   },
 };
 const common = {
   version: { type: "integer", const: 1 },
   quoteId: uuid,
-  source: object({ ...amount, walletId: id }, [
-    ...Object.keys(amount),
-    "walletId",
-  ]),
-  target: object(amount, Object.keys(amount)),
-  rate: object(
-    {
-      provider: { type: "string", const: "frankfurter" },
-      value: {
-        type: "string",
-        description:
-          "Exact original positive decimal text, no client override.",
-      },
-      date: { type: "string", format: "date" },
-      fetchedAt: dateTime,
-      source: { type: "string", enum: ["fresh", "cached"] },
+  source: object({ ...amount, walletId: id }),
+  target: object(amount),
+  rate: object({
+    provider: { type: "string", const: "frankfurter" },
+    value: {
+      type: "string",
+      description: "Exact original positive decimal text, no client override.",
     },
-    ["provider", "value", "date", "fetchedAt", "source"],
-  ),
+    date: { type: "string", format: "date" },
+    fetchedAt: dateTime,
+    source: { type: "string", enum: ["fresh", "cached"] },
+  }),
   issuedAt: dateTime,
   expiresAt: {
     ...dateTime,
@@ -88,81 +60,42 @@ export const quoteSchemas = {
   QuoteRequest: {
     oneOf: [ref("ConversionQuoteRequest"), ref("TransferQuoteRequest")],
   },
-  ConversionQuoteRequest: object(
-    { ...input, operation: { type: "string", const: "conversion" } },
-    ["operation", ...Object.keys(input)],
-  ),
-  TransferQuoteRequest: object(
-    {
-      ...input,
-      operation: { type: "string", const: "transfer" },
-      recipientAccountId: id,
-      recipientDefaultCurrency: {
-        ...currency,
-        description:
-          "Required for an unknown destination; if supplied for an existing destination, must match its immutable default.",
-      },
-    },
-    ["operation", ...Object.keys(input), "recipientAccountId"],
-  ),
+  ConversionQuoteRequest: conversionQuoteRequestContract.schema,
+  TransferQuoteRequest: transferQuoteRequestContract.schema,
   QuoteTerms: {
     oneOf: [ref("ConversionQuoteTerms"), ref("TransferQuoteTerms")],
   },
-  ConversionQuoteTerms: object(
-    { ...common, operation: { type: "string", const: "conversion" } },
-    [...Object.keys(common), "operation"],
-  ),
-  TransferQuoteTerms: object(
-    {
-      ...common,
-      operation: { type: "string", const: "transfer" },
-      recipient: object(
-        {
-          accountId: id,
-          defaultCurrency: currency,
-          defaultName: { type: "string", minLength: 1, maxLength: 256 },
-          defaultExponent: { type: "integer", minimum: 0, maximum: 4 },
-          existed: { type: "boolean" },
-        },
-        [
-          "accountId",
-          "defaultCurrency",
-          "defaultName",
-          "defaultExponent",
-          "existed",
-        ],
-      ),
-    },
-    [...Object.keys(common), "operation", "recipient"],
-  ),
+  ConversionQuoteTerms: object({
+    ...common,
+    operation: { type: "string", const: "conversion" },
+  }),
+  TransferQuoteTerms: object({
+    ...common,
+    operation: { type: "string", const: "transfer" },
+    recipient: object({
+      accountId: id,
+      defaultCurrency: currency,
+      defaultName: { type: "string", minLength: 1, maxLength: 256 },
+      defaultExponent: exponentSchema,
+      existed: { type: "boolean" },
+    }),
+  }),
   QuoteView: {
     oneOf: [
-      object(
-        {
-          quote: ref("QuoteTerms"),
-          state: { type: "string", enum: ["active", "expired"] },
-        },
-        ["quote", "state"],
-      ),
-      object(
-        {
-          quote: ref("QuoteTerms"),
-          state: { type: "string", const: "consumed" },
-          transactionId: id,
-        },
-        ["quote", "state", "transactionId"],
-      ),
+      object({
+        quote: ref("QuoteTerms"),
+        state: { type: "string", enum: ["active", "expired"] },
+      }),
+      object({
+        quote: ref("QuoteTerms"),
+        state: { type: "string", const: "consumed" },
+        transactionId: id,
+      }),
     ],
   },
-  QuoteProblem: object(
-    {
-      type: { type: "string", const: "about:blank" },
-      title: { type: "string" },
-      status: { type: "integer", enum: [400, 404, 409, 503] },
-      code: { type: "string", enum: Object.keys(quoteProblemDetails) },
-      detail: { type: "string" },
-    },
-    ["type", "title", "status", "code", "detail"],
+  QuoteProblem: problemSchema(
+    [400, 404, 409, 503],
+    Object.keys(quoteProblemDetails),
   ),
 };
 const problem = {

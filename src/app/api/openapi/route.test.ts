@@ -7,6 +7,7 @@ import { GET as accounts } from "../accounts/route";
 import { GET as wallets } from "../accounts/[accountId]/wallets/route";
 import { GET } from "./route";
 import { POST as deposit } from "../deposits/route";
+import { POST as withdrawal } from "../withdrawals/route";
 import { randomUUID } from "node:crypto";
 import { GET as currencyCatalog } from "../currencies/route";
 import { GET as referenceRate } from "../rates/route";
@@ -14,88 +15,17 @@ import { POST as createServerQuote } from "../quotes/route";
 import { GET as readServerQuote } from "../quotes/[quoteId]/route";
 import { withJournalWrite } from "@/features/journal/write";
 import { POST as conversion } from "../conversions/route";
+import { GET as health } from "../health/route";
+import { GET as ready } from "../ready/route";
+import { assertContract, type Schema } from "@/test/json-contract";
 
 jest.mock("server-only", () => ({}));
 
 jest.mock("@/server/db/runtime", () => ({ getRuntimeDatabase: jest.fn() }));
 
-type Schema = {
-  oneOf?: readonly Schema[];
-  $ref?: string;
-  type?: string;
-  required?: readonly string[];
-  properties?: Record<string, Schema>;
-  additionalProperties?: boolean;
-  items?: Schema;
-  pattern?: string;
-  format?: string;
-  enum?: readonly unknown[];
-  const?: unknown;
-  minLength?: number;
-  minimum?: number;
-  maximum?: number;
-};
 const schemas: Record<string, Schema> = readApiDocument.components.schemas;
-
-/** Assert precisely the JSON Schema subset used by this read contract. */
-function expectContract(value: unknown, source: Schema) {
-  const schema = source.$ref
-    ? schemas[source.$ref.split("/").at(-1)!]!
-    : source;
-  expect(schema).toBeDefined();
-  if (schema.oneOf) {
-    const matches = schema.oneOf.filter((candidate) => {
-      try {
-        expectContract(value, candidate);
-        return true;
-      } catch {
-        return false;
-      }
-    });
-    expect(matches).toHaveLength(1);
-    return;
-  }
-  if (schema.enum) expect(schema.enum).toContain(value);
-  if ("const" in schema) expect(value).toEqual(schema.const);
-  if (schema.type === "object") {
-    expect(value).not.toBeNull();
-    expect(typeof value).toBe("object");
-    expect(Array.isArray(value)).toBe(false);
-    const record = value as Record<string, unknown>;
-    for (const key of schema.required ?? [])
-      expect(Object.hasOwn(record, key)).toBe(true);
-    if (schema.additionalProperties === false)
-      expect(
-        Object.keys(record).every((key) => key in schema.properties!),
-      ).toBe(true);
-    for (const [key, item] of Object.entries(schema.properties ?? {}))
-      if (key in record) expectContract(record[key], item);
-  } else if (schema.type === "array") {
-    expect(Array.isArray(value)).toBe(true);
-    for (const item of value as unknown[]) expectContract(item, schema.items!);
-  } else if (schema.type === "string") {
-    expect(typeof value).toBe("string");
-    if (schema.pattern) expect(value).toMatch(new RegExp(schema.pattern));
-    if (schema.format === "date-time") {
-      expect(value).toMatch(/^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d\.\d{3}Z$/);
-      expect(new Date(value as string).toISOString()).toBe(value);
-    }
-    if (schema.format === "date") {
-      expect(value).toMatch(/^\d{4}-\d\d-\d\d$/);
-      expect(
-        new Date(`${value as string}T00:00:00.000Z`).toISOString().slice(0, 10),
-      ).toBe(value);
-    }
-    if (schema.minLength)
-      expect((value as string).length).toBeGreaterThanOrEqual(schema.minLength);
-  } else if (schema.type === "integer") {
-    expect(Number.isInteger(value)).toBe(true);
-    if (schema.minimum !== undefined)
-      expect(value).toBeGreaterThanOrEqual(schema.minimum);
-    if (schema.maximum !== undefined)
-      expect(value).toBeLessThanOrEqual(schema.maximum);
-  } else if (schema.type === "boolean") expect(typeof value).toBe("boolean");
-}
+const expectContract = (value: unknown, source: Schema) =>
+  assertContract(value, source, schemas);
 
 describe("read-only OpenAPI contract", () => {
   let database: WalletDatabase;
@@ -138,6 +68,199 @@ describe("read-only OpenAPI contract", () => {
     expect(spec.components.schemas.Wallet.properties.balanceMinor.type).toBe(
       "string",
     );
+  });
+
+  it("documents operational response bodies and no-store headers for every implemented response", async () => {
+    expectContract(
+      await GET().json(),
+      readApiDocument.paths["/api/openapi"].get.responses["200"].content[
+        "application/json"
+      ].schema,
+    );
+    expectContract(
+      await health().json(),
+      readApiDocument.paths["/api/health"].get.responses["200"].content[
+        "application/json"
+      ].schema,
+    );
+    expectContract(
+      await ready().json(),
+      readApiDocument.paths["/api/ready"].get.responses["200"].content[
+        "application/json"
+      ].schema,
+    );
+    for (const path of Object.values(readApiDocument.paths)) {
+      const operation = Object.values(path)[0] as {
+        responses: Record<
+          string,
+          { headers: Record<string, { schema: { const: string } }> }
+        >;
+      };
+      for (const result of Object.values(operation.responses))
+        expect(result.headers["Cache-Control"]?.schema.const).toBe("no-store");
+    }
+  });
+
+  it("validates safe unexpected failures across every storage-backed route", async () => {
+    const send = (body: unknown) =>
+      new Request("http://localhost/api/operation", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Idempotency-Key": randomUUID(),
+        },
+        body: JSON.stringify(body),
+      });
+    const cases: [() => Response | Promise<Response>, string][] = [
+      [accounts, "Problem"],
+      [
+        () =>
+          wallets(new Request("http://localhost"), {
+            params: Promise.resolve({ accountId: "main" }),
+          }),
+        "Problem",
+      ],
+      [ready, "Problem"],
+      [currencyCatalog, "ReferenceProblem"],
+      [
+        () =>
+          referenceRate(
+            new Request("http://localhost/api/rates?base=USD&quote=GBP"),
+          ),
+        "ReferenceProblem",
+      ],
+      [
+        () =>
+          createServerQuote(
+            send({
+              operation: "conversion",
+              sourceWalletId: "main-usd",
+              amount: "1.00",
+              targetCurrency: "GBP",
+            }),
+          ),
+        "QuoteProblem",
+      ],
+      [
+        () =>
+          readServerQuote(new Request("http://localhost"), {
+            params: Promise.resolve({ quoteId: randomUUID() }),
+          }),
+        "QuoteProblem",
+      ],
+      [
+        () =>
+          deposit(
+            send({
+              walletId: "main-usd",
+              amount: "1.00",
+              provider: "demo_bank",
+            }),
+          ),
+        "FundingProblem",
+      ],
+      [
+        () =>
+          withdrawal(
+            send({
+              walletId: "main-usd",
+              amount: "1.00",
+              provider: "demo_bank",
+            }),
+          ),
+        "FundingProblem",
+      ],
+      [
+        () =>
+          conversion(
+            send({
+              quoteId: randomUUID(),
+              sourceWalletId: "main-usd",
+              amount: "1.00",
+              targetCurrency: "GBP",
+            }),
+          ),
+        "ConversionProblem",
+      ],
+    ];
+    for (const [call, schema] of cases) {
+      jest.mocked(getRuntimeDatabase).mockImplementationOnce(() => {
+        throw new Error("private path /app/data/wallet.sqlite stack trace");
+      });
+      const response = await call(),
+        body = await response.json();
+      expect(response.status).toBe(503);
+      expect(response.headers.get("content-type")).toBe(
+        "application/problem+json",
+      );
+      expect(response.headers.get("cache-control")).toBe("no-store");
+      expectContract(body, schemas[schema]!);
+      expect(JSON.stringify(body)).not.toMatch(
+        /private|\/app|sqlite|stack trace/u,
+      );
+      if ("definitive" in body) expect(body.definitive).toBe(false);
+    }
+    expect(
+      database.sqlite.prepare("SELECT COUNT(*) AS n FROM transactions").get(),
+    ).toEqual({ n: 0n });
+  });
+
+  it("returns documented inspect-only conflicts without completed history or provider calls", async () => {
+    seedMainAccount(database);
+    withJournalWrite(database, (scope) => {
+      scope.createDestination({ id: "destination", defaultCurrency: "USD" });
+      scope.createWallet({
+        id: "destination-usd",
+        accountId: "destination",
+        currencyCode: "USD",
+      });
+    });
+    const fetch = jest
+      .spyOn(globalThis, "fetch")
+      .mockRejectedValue(new Error("Network forbidden"));
+    const send = (body: unknown) =>
+      new Request("http://localhost/api/operation", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Idempotency-Key": randomUUID(),
+        },
+        body: JSON.stringify(body),
+      });
+    for (const handler of [deposit, withdrawal]) {
+      const response = await handler(
+          send({
+            walletId: "destination-usd",
+            amount: "1.00",
+            provider: "demo_bank",
+          }),
+        ),
+        body = await response.json();
+      expect(response.status).toBe(409);
+      expect(body.code).toBe("INSPECT_ONLY");
+      expectContract(body, schemas.FundingProblem!);
+    }
+    const quote = await createServerQuote(
+        send({
+          operation: "conversion",
+          sourceWalletId: "destination-usd",
+          amount: "1.00",
+          targetCurrency: "GBP",
+        }),
+      ),
+      body = await quote.json();
+    expect(quote.status).toBe(409);
+    expect(body.code).toBe("INSPECT_ONLY");
+    expectContract(body, schemas.QuoteProblem!);
+    expect(fetch).not.toHaveBeenCalled();
+    expect(
+      database.sqlite.prepare("SELECT COUNT(*) AS n FROM transactions").get(),
+    ).toEqual({ n: 0n });
+    expect(
+      database.sqlite
+        .prepare("SELECT COUNT(*) AS n FROM journal_entries")
+        .get(),
+    ).toEqual({ n: 0n });
   });
 
   it("validates actual account and balance responses against their published schemas", async () => {

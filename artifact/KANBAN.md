@@ -1,8 +1,8 @@
 # Project kanban
 
-**Last updated:** T08-01 is complete: internal atomic same/FX transfers, simulated-recipient/wallet creation, immutable original results and global money-key ownership. Full check/build passes 1,114 Jest / 63 production Chromium checks. Backed-up migration 0007 was applied twice with prior rows preserved; stable development is restored. No transfer HTTP/UI submission is enabled and the visual design is unchanged. Next are T09-01 history/API prerequisites (including T10-01 shared HTTP) before T08-02's connected transfer flow; wallet management, valuation and Swagger remain separate work.
+**Last updated:** T10-01 is complete: reusable structural guards/schema objects, safe exact JSON/Problem Details, shared write policy and thin monetary HTTP adapters. Full check/build passes 1,228 Jest / 63 production Chromium checks. All 14 runtime tables are unchanged from the verified backup and stable development is restored. No new endpoint, dependency, migration or UI change is introduced. Next is T09-01's history queries/API (including its date-filter/pagination contract decisions), before T08-02's connected transfer flow. Transfer HTTP/UI, wallet management, valuation and Swagger remain separate work.
 
-**Scope:** 36 implementation tasks: **11 to do**, **2 in progress**, **0 blocked**, **23 done**. Planning activities completed below do not count as implemented features.
+**Scope:** 36 implementation tasks: **10 to do**, **2 in progress**, **0 blocked**, **24 done**. Planning activities completed below do not count as implemented features.
 
 Each task links to its detailed description, source PRD, decision IDs, dependencies, and acceptance tests. The Angular-style, one-intention-per-commit rule and local Git workflow in [D-021](DECISIONS.md#d-021) and [D-022](DECISIONS.md#d-022) apply to every task. A task moves to **Done** only when its acceptance criteria are verified and the PRD, decisions, diagrams, API documentation, and handover are updated as needed.
 
@@ -51,7 +51,6 @@ See Done for reference metadata and the verified server-owned quote backend.
 
 ### HTTP API — [PRD-10](prd/PRD-10-api.md)
 
-- [ ] [T10-01](tasks/TASKS-10.md#t10-01) — Shared HTTP schemas, handlers, and Problem Details.
 - [ ] [T10-03](tasks/TASKS-10.md#t10-03) — OpenAPI generation, Swagger UI, and contract tests.
 
 ### Interface — [PRD-11](prd/PRD-11-interface.md)
@@ -100,6 +99,7 @@ _No task is currently blocked by an explicit unresolved decision or external blo
 - [x] [T07-01](tasks/TASKS-07.md#t07-01) — Internal atomic conversion, target creation, exact quote use and retained original-result replay/global money-key ownership; 968 Jest / 53 production Chromium checks, repeated backed-up migration and stable development verified. Submission/UI remain T07-02.
 - [x] [T07-02](tasks/TASKS-07.md#t07-02) — Documented conversion endpoint, reviewed quote/expiry/reconfirmation, shared original-key recovery, exact receipts and refreshed balances/bounded history; 995 Jest / 63 production Chromium checks. Visual design/runtime data preserved; transfers remain disabled.
 - [x] [T08-01](tasks/TASKS-08.md#t08-01) — Internal atomic same/FX transfers, recipient/wallet creation and globally retained original receipts/errors; 1,114 Jest / 63 production Chromium checks, repeated backed-up migration 0007 and stable development verified. No transfer endpoint/UI submission.
+- [x] [T10-01](tasks/TASKS-10.md#t10-01) — Shared runtime/schema contracts, exact JSON/Problem Details, bounded direct-origin write policy and thin monetary adapters; 1,228 Jest / 63 production Chromium checks, unchanged runtime and stable development verified. Generator/Swagger and future endpoints remain separate tasks.
 
 ## Done — planning only
 

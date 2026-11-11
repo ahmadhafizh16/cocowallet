@@ -210,6 +210,12 @@ and renewed confirmation. Unresolved recovery never refreshes its original quote
 
 ## Code flow for a completed money operation
 
+[HTTP.md](HTTP.md) implements the shared structural guard/schema, bounded JSON,
+safe Problem Details and no-store/replay response conventions. HTTP adapters do
+not own accounting or durable outcomes. An after-commit serialization failure is
+unknown and must recover the original retained result/key, never replace it.
+This shared boundary does not enable transfer/history routes or Swagger UI.
+
 Decisions: [D-006](DECISIONS.md#d-006), [D-017](DECISIONS.md#d-017), [D-018](DECISIONS.md#d-018), [D-019](DECISIONS.md#d-019). Tasks: [T02-03](tasks/TASKS-02.md#t02-03), [T10-01](tasks/TASKS-10.md#t10-01), [T10-02](tasks/TASKS-10.md#t10-02).
 
 ```mermaid

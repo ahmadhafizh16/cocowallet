@@ -25,6 +25,7 @@ These documents distinguish decisions, proposals, and implemented work. The plat
 - [Server-owned quotes](QUOTES.md): immutable full-minute previews/readback, exact binding, no reservation and internal single-success safeguards.
 - [Reviewed conversions](CONVERSIONS.md): exact quote-bound accounting, target creation, documented endpoint, expiry/reconfirmation and original-key recovery.
 - [Atomic simulated transfers](TRANSFERS.md): internal same/FX transfer service, recipient/wallet creation and globally retained original results; no transfer HTTP/UI submission.
+- [Shared HTTP contracts](HTTP.md): reusable request guards/schema definitions, exact JSON, safe Problem Details and common write boundaries; no new endpoint or Swagger UI.
 - [Diagrams](DIAGRAMS.md): proposed architecture, data relationships, business flows, and code flow.
 - [API design](API_DESIGN.md): proposed HTTP contract, sequence diagram, and OpenAPI/Swagger approach.
 - [Idempotency discussion](IDEMPOTENCY.md): the selected failed-retry policy, alternatives, and examples.

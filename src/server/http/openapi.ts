@@ -2,21 +2,25 @@ import { fundingPath, fundingSchemas } from "./funding-openapi";
 import { referencePaths, referenceSchemas } from "./rates-openapi";
 import { quotePaths, quoteSchemas } from "./quotes-openapi";
 import { conversionPaths, conversionSchemas } from "./conversions-openapi";
-
-const json = (schema: object) => ({ "application/json": { schema } });
-const reference = (name: string) => ({ $ref: `#/components/schemas/${name}` });
+import {
+  currencyContract,
+  dateTimeSchema,
+  exponentSchema,
+  minorUnitsSchema,
+  objectSchema,
+} from "@/lib/contracts";
+import {
+  jsonContent as json,
+  noStoreHeaders as noStore,
+  problemSchema,
+  schemaRef as reference,
+} from "./schema-parts";
 const problem = {
   description: "Safe Problem Details error; never includes storage internals.",
+  headers: noStore,
   content: { "application/problem+json": { schema: reference("Problem") } },
 };
-const noStore = {
-  "Cache-Control": {
-    description: "Wallet data is never cached.",
-    schema: { type: "string", const: "no-store" },
-  },
-};
-
-/** Implemented reads and simulated funding only; no speculative FX/write routes. */
+/** Explicit registration of implemented endpoints; no speculative transfer/history paths. */
 export const readApiDocument = {
   openapi: "3.1.0",
   info: {
@@ -94,6 +98,14 @@ export const readApiDocument = {
         responses: {
           "200": {
             description: "Process liveness, not wallet/account readiness.",
+            headers: noStore,
+            content: json(
+              objectSchema({
+                status: { type: "string", const: "ok" },
+                service: { type: "string", const: "simulated-wallet" },
+                milestone: { type: "string", const: "foundation" },
+              }),
+            ),
           },
         },
       },
@@ -105,6 +117,13 @@ export const readApiDocument = {
           "200": {
             description:
               "Migrated metadata-table readiness; does not imply seeded accounts or full schema-version checks.",
+            headers: noStore,
+            content: json(
+              objectSchema({
+                status: { type: "string", const: "ok" },
+                database: { type: "string", const: "ready" },
+              }),
+            ),
           },
           "503": problem,
         },
@@ -117,6 +136,28 @@ export const readApiDocument = {
           "200": {
             description:
               "This OpenAPI document. Swagger UI and financial-route generation remain future work.",
+            headers: noStore,
+            content: json(
+              objectSchema({
+                openapi: { type: "string", const: "3.1.0" },
+                info: objectSchema({
+                  title: { type: "string" },
+                  version: { type: "string" },
+                  description: { type: "string" },
+                }),
+                servers: {
+                  type: "array",
+                  minItems: 1,
+                  items: objectSchema({ url: { type: "string", const: "/" } }),
+                },
+                paths: {
+                  type: "object",
+                  description:
+                    "Explicitly registered implemented paths, not speculative feature routes.",
+                },
+                components: objectSchema({ schemas: { type: "object" } }),
+              }),
+            ),
           },
         },
       },
@@ -135,8 +176,8 @@ export const readApiDocument = {
         properties: {
           id: { type: "string", minLength: 1 },
           role: { type: "string", enum: ["main", "destination"] },
-          defaultCurrency: { type: "string", pattern: "^[A-Z]{3}$" },
-          createdAt: { type: "string", format: "date-time" },
+          defaultCurrency: currencyContract.schema,
+          createdAt: dateTimeSchema,
           inspectOnly: {
             type: "boolean",
             description:
@@ -158,39 +199,22 @@ export const readApiDocument = {
         properties: {
           id: { type: "string", minLength: 1 },
           accountId: { type: "string", minLength: 1 },
-          currency: { type: "string", pattern: "^[A-Z]{3}$" },
+          currency: currencyContract.schema,
           name: { type: "string" },
-          exponent: { type: "integer", minimum: 0, maximum: 4 },
-          balanceMinor: {
-            type: "string",
-            pattern: "^(0|[1-9][0-9]{0,18})$",
-            description:
-              "Exact nonnegative minor-unit integer text. Server-enforced maximum 9223372036854775807; never a JSON number.",
-            "x-minor-unit-maximum": "9223372036854775807",
-          },
+          exponent: exponentSchema,
+          balanceMinor: minorUnitsSchema,
         },
       },
-      Problem: {
-        type: "object",
-        additionalProperties: false,
-        required: ["type", "title", "status", "code", "detail"],
-        properties: {
-          type: { type: "string", const: "about:blank" },
-          title: { type: "string" },
-          status: { type: "integer", enum: [400, 404, 503] },
-          code: {
-            type: "string",
-            enum: [
-              "INVALID_ACCOUNT_ID",
-              "ACCOUNT_NOT_FOUND",
-              "ACCOUNT_NOT_INITIALIZED",
-              "WALLET_DATA_UNAVAILABLE",
-              "DATABASE_NOT_READY",
-            ],
-          },
-          detail: { type: "string" },
-        },
-      },
+      Problem: problemSchema(
+        [400, 404, 503],
+        [
+          "INVALID_ACCOUNT_ID",
+          "ACCOUNT_NOT_FOUND",
+          "ACCOUNT_NOT_INITIALIZED",
+          "WALLET_DATA_UNAVAILABLE",
+          "DATABASE_NOT_READY",
+        ],
+      ),
     },
   },
 } as const;

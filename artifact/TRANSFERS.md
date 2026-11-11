@@ -146,5 +146,5 @@ not claim an enabled transfer journey.
   errors or financial/reference requests. No frontend source or visual tokens
   changed; no new UI-detector/render-review claim is made.
 - T08-02 remains To do and depends on T09-01 history/API (with T10-01 shared HTTP
-  prerequisite). No transfer HTTP endpoint, browser recovery or history UI is
+  prerequisite, now verified in [HTTP.md](HTTP.md)). No transfer HTTP endpoint, browser recovery or history UI is
   implied by this service. Checked work is committed locally; no push is authorized.

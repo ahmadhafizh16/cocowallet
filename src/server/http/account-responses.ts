@@ -1,7 +1,9 @@
 import { AccountDataError } from "@/features/accounts/errors";
+import { problemDetails } from "@/lib/problem-details";
+import { jsonResponse, problemResponse } from "./responses";
 
 export function accountJson(body: unknown) {
-  return Response.json(body, { headers: { "Cache-Control": "no-store" } });
+  return jsonResponse(body);
 }
 
 export function accountProblem(
@@ -9,26 +11,7 @@ export function accountProblem(
   code: string,
   detail: string,
 ) {
-  return Response.json(
-    {
-      type: "about:blank",
-      title: {
-        400: "Bad Request",
-        404: "Not Found",
-        503: "Service Unavailable",
-      }[status],
-      status,
-      code,
-      detail,
-    },
-    {
-      status,
-      headers: {
-        "Content-Type": "application/problem+json",
-        "Cache-Control": "no-store",
-      },
-    },
-  );
+  return problemResponse(problemDetails(status, code, detail));
 }
 
 /** Never return SQLite errors, storage paths or stack traces to a caller. */

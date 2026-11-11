@@ -1,5 +1,7 @@
 import { QuoteError } from "@/features/quotes/contracts";
 import { asQuoteError } from "@/features/quotes/errors";
+import { problemDetails } from "@/lib/problem-details";
+import { jsonResponse, problemResponse } from "./responses";
 
 export const quoteProblemDetails: Record<QuoteError["code"], string> = {
   INVALID_QUOTE_REQUEST:
@@ -43,29 +45,15 @@ export const quoteProblemDetails: Record<QuoteError["code"], string> = {
     "No eligible reference data was available when the quote could be issued. Request a new preview later.",
 };
 export function quoteJson(body: unknown) {
-  return Response.json(body, { headers: { "Cache-Control": "no-store" } });
+  return jsonResponse(body);
 }
 export function quoteProblem(error: unknown) {
   const problem = asQuoteError(error);
-  return Response.json(
-    {
-      type: "about:blank",
-      title: {
-        400: "Bad Request",
-        404: "Not Found",
-        409: "Conflict",
-        503: "Service Unavailable",
-      }[problem.status],
-      status: problem.status,
-      code: problem.code,
-      detail: quoteProblemDetails[problem.code],
-    },
-    {
-      status: problem.status,
-      headers: {
-        "Cache-Control": "no-store",
-        "Content-Type": "application/problem+json",
-      },
-    },
+  return problemResponse(
+    problemDetails(
+      problem.status,
+      problem.code,
+      quoteProblemDetails[problem.code],
+    ),
   );
 }

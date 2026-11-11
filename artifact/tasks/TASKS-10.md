@@ -7,7 +7,7 @@ Status is mirrored in [KANBAN.md](../KANBAN.md).
 ### T10-01
 
 **Shared HTTP schemas, handlers, and Problem Details**  
-**Status:** To do.  
+**Status:** Done.
 **Decisions:** [D-003](../DECISIONS.md#d-003), [D-015](../DECISIONS.md#d-015), [D-017](../DECISIONS.md#d-017), [D-018](../DECISIONS.md#d-018).  
 **Depends on:** [T01-02](TASKS-01.md#t01-02).  
 **Implementation:** Establish thin Next.js Route Handler conventions, reusable request/response validation definitions, exact monetary serialization, and `application/problem+json` responses with stable machine-readable codes. Apply the agreed 400/404/409/503 baseline; document any additional statuses before use.
@@ -17,8 +17,8 @@ Status is mirrored in [KANBAN.md](../KANBAN.md).
 **Partial groundwork:** D-029 implements thin account/wallet GET handlers, exact
 string responses, safe 400/404/503 read problems and response-contract tests.
 Funding now adds structural/business validation, safe 409 conflicts, exact receipts,
-shared request helpers and actual response/schema tests. The broader monetary
-submission/generated-schema workflow remains; this task is not globally closed.
+shared request helpers and actual response/schema tests. These historical slices
+did not alone close the reusable shared-boundary task.
 
 T06-01 additionally documents and tests eligible-catalog/exact-rate GET responses,
 including safe 400/503 metadata failures. T06-02 adds strict quote preview/readback,
@@ -27,6 +27,18 @@ bounded JSON input. It does not implement conversion/transfer submission.
 
 T07-02 adds the strict conversion endpoint, no-store/replay headers and actual
 response/schema checks. Transfers and full history remain outside this slice.
+
+**Current scope:** [HTTP.md](../HTTP.md) consolidates dependency-free runtime/schema
+definitions for implemented requests, shared exact JSON/Problem Details/header
+helpers, a common direct-origin/media/byte-bounded request policy and thin funding/
+conversion handlers. Structural validation precedes storage; domain/commit/replay
+ownership remains in feature services. No endpoint, additional wallet status,
+schema generator, Swagger UI, dependency or UI change is introduced. Full Docker
+check/build passes 1,228 Jest tests in 52 suites; the backed-up runtime remains
+row-identical across all 14 tables. All 63 production Chromium regressions pass
+on a fresh disposable server; restored development is stable for 300 frames with
+zero reloads/errors or financial/reference requests. This completes the shared
+boundary prerequisite, not T10-03 generation/Swagger or future feature endpoints.
 
 ### T10-02
 
@@ -50,6 +62,11 @@ ownership across funding/conversion, original-result replay before quote checks,
 and atomic creation/journal/quote use. See [CONVERSIONS.md](../CONVERSIONS.md).
 T07-02 adds the documented conversion HTTP/recovery UI; transfers remain T08.
 
+T08-01 now extends retained original results/global keys to the internal transfer
+service. T10-01's HTTP consolidation preserves those outcomes and verifies that a
+post-commit serialization failure remains unknown until original-key replay. No
+transfer endpoint is implied. See [TRANSFERS.md](../TRANSFERS.md).
+
 ### T10-03
 
 **OpenAPI generation, Swagger UI, and contract tests**  
@@ -65,3 +82,8 @@ for implemented read/operational, funding/conversion, reference and quote routes
 required money keys, exact amounts, discriminated quote terms/lifecycle and safe
 problems. Schema generation, transfer submission/full-history contracts and
 Swagger UI remain unimplemented; no closure implied.
+
+T10-01 now makes implemented request schemas directly reusable from their runtime
+definitions, and centralizes common response/schema parts. Full path/schema
+generation and selecting a generator still belong to this task; a small contract
+vocabulary does not silently select an external schema tool or complete Swagger.

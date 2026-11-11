@@ -1,5 +1,7 @@
 import { getRuntimeDatabase } from "@/server/db/runtime";
 import { applicationMetadata } from "@/server/db/schema";
+import { problemDetails } from "@/lib/problem-details";
+import { jsonResponse, problemResponse } from "@/server/http/responses";
 
 export const runtime = "nodejs";
 
@@ -7,27 +9,14 @@ export function GET() {
   try {
     // Reading the migrated table verifies more than opening an empty SQLite file.
     getRuntimeDatabase().db.select().from(applicationMetadata).limit(1).all();
-    return Response.json(
-      { status: "ok", database: "ready" },
-      { headers: { "Cache-Control": "no-store" } },
-    );
+    return jsonResponse({ status: "ok", database: "ready" });
   } catch {
-    return Response.json(
-      {
-        type: "about:blank",
-        title: "Service Unavailable",
-        status: 503,
-        detail:
-          "Database readiness check failed. Verify migrations and storage.",
-        code: "DATABASE_NOT_READY",
-      },
-      {
-        status: 503,
-        headers: {
-          "Content-Type": "application/problem+json",
-          "Cache-Control": "no-store",
-        },
-      },
+    return problemResponse(
+      problemDetails(
+        503,
+        "DATABASE_NOT_READY",
+        "Database readiness check failed. Verify migrations and storage.",
+      ),
     );
   }
 }
