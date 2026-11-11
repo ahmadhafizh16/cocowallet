@@ -1,8 +1,8 @@
 # Project kanban
 
-**Last updated:** Money/journal core is verified: exact arithmetic, snapshot balances, and atomic serialized writes. Impeccable product/design initialization is the next phase, before wallet screens; API/idempotency integration remains future work.
+**Last updated:** Money/journal core is verified: exact arithmetic, snapshot balances, and atomic serialized writes. Impeccable product initialization is complete in [PRODUCT.md](../PRODUCT.md); T11-01 remains in progress for the pending visual direction before wallet screens. API/idempotency integration remains future work.
 
-**Scope:** 32 implementation tasks: **24 to do**, **0 in progress**, **0 blocked**, **8 done**. Planning activities completed below do not count as implemented features.
+**Scope:** 32 implementation tasks: **23 to do**, **1 in progress**, **0 blocked**, **8 done**. Planning activities completed below do not count as implemented features.
 
 Each task links to its detailed description, source PRD, decision IDs, dependencies, and acceptance tests. The Angular-style, one-intention-per-commit rule and local Git workflow in [D-021](DECISIONS.md#d-021) and [D-022](DECISIONS.md#d-022) apply to every task. A task moves to **Done** only when its acceptance criteria are verified and the PRD, decisions, diagrams, API documentation, and handover are updated as needed.
 
@@ -64,7 +64,7 @@ See Done for the verified money/journal core.
 
 ### Interface — [PRD-11](prd/PRD-11-interface.md)
 
-- [ ] [T11-01](tasks/TASKS-11.md#t11-01) — Impeccable product context and design direction.
+See In progress for product context and design direction.
 - [ ] [T11-02](tasks/TASKS-11.md#t11-02) — Responsive shell, theme, and components.
 - [ ] [T11-03](tasks/TASKS-11.md#t11-03) — Accessibility, motion, and design review.
 
@@ -76,7 +76,7 @@ See Done for the verified money/journal core.
 
 ## In progress
 
-_No task is currently in progress at this milestone checkpoint._
+- [ ] [T11-01](tasks/TASKS-11.md#t11-01) — User-confirmed product context and code-first workflow captured; visual direction remains pending.
 
 ## Blocked
 

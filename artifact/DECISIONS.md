@@ -58,7 +58,7 @@
 
 ### D-014
 
-**Impeccable:** Use the requested design workflow. Impeccable is installed project-locally for OpenCode without automatic hooks; `/impeccable init` and product-context review remain pending before design. See the [official guide](https://impeccable.style/tutorials/getting-started/).
+**Impeccable:** Use the requested design workflow. Impeccable is installed project-locally for OpenCode without automatic hooks. Initialization and baseline confirmation are complete in [PRODUCT.md](../PRODUCT.md): the user confirmed local demo/evaluation use and the existing agreed decisions, with current open questions preserved. The user selected code-first in `.impeccable/config.json`. Visual direction remains pending; init did not create `DESIGN.md` or a wallet interface. See the [official guide](https://impeccable.style/tutorials/getting-started/).
 
 ### D-015
 

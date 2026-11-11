@@ -2,7 +2,7 @@
 
 A local-only Next.js/Node 26 wallet simulation. Product requirements, decisions, diagrams, and progress are in [`artifact/`](artifact/README.md).
 
-**Current milestone:** Docker/Next.js foundation plus the tested money/journal core: exact bigint arithmetic, pinned currency precision, journal-derived balances, and serialized atomic writes. Wallet HTTP flows, account seeding, and the interface are not implemented yet; `/` remains a technical scaffold. Impeccable design initialization is next.
+**Current milestone:** Docker/Next.js foundation plus the tested money/journal core: exact bigint arithmetic, pinned currency precision, journal-derived balances, and serialized atomic writes. Wallet HTTP flows, account seeding, and the interface are not implemented yet; `/` remains a technical scaffold. Impeccable product initialization is complete in [PRODUCT.md](PRODUCT.md); visual direction is next.
 
 ## Development environment
 
@@ -61,3 +61,7 @@ Normal shutdown will use `docker compose down`, **without `--volumes`**. Removin
 ## Design tooling
 
 See [`artifact/TOOLING.md`](artifact/TOOLING.md) to restore the checksum-verified Impeccable engine excluded from Git.
+
+Initialization confirmed local demo/evaluation use and the existing product decisions. The user selected code-first in `.impeccable/config.json`. No visual direction or `DESIGN.md` was created; live-picker setup is deferred until a renderable UI shell exists.
+
+Commit shared Impeccable artifacts when present: `PRODUCT.md`, `DESIGN.md`, `.impeccable/config.json`, `.impeccable/surfaces/`, `.impeccable/design.json`, `.impeccable/live/config.json`, and `.impeccable/critique/ignore.md`. Do not blanket-ignore `.impeccable/`; runtime directories ignore themselves, and `.impeccable/config.local.json` remains local.

@@ -1,6 +1,6 @@
 # Digital wallet planning
 
-These documents distinguish agreed decisions, proposals, and implemented work. The **platform and money/journal core are implemented**: Docker/Node 26, health/readiness, versioned accounting tables, exact arithmetic, snapshot balances, and atomic serialized writes. Wallet HTTP flows, full idempotency, account seeding, rates/quotes, Swagger, and the interface remain future work. Impeccable initialization/design is next; consult the kanban rather than assuming a draft PRD describes completed features.
+These documents distinguish agreed decisions, proposals, and implemented work. The **platform and money/journal core are implemented**: Docker/Node 26, health/readiness, versioned accounting tables, exact arithmetic, snapshot balances, and atomic serialized writes. Wallet HTTP flows, full idempotency, account seeding, rates/quotes, Swagger, and the interface remain future work. Impeccable initialization captured the confirmed product context in [PRODUCT.md](../PRODUCT.md); visual direction remains next. Consult the kanban rather than assuming a draft PRD describes completed features.
 
 - [Main PRD](PRD.md): product scope and links to the smaller feature PRDs.
 - [Decision register](DECISIONS.md): stable `D-###` decisions and `O-###` open questions.

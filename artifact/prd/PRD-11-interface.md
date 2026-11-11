@@ -1,6 +1,7 @@
 # PRD-11 — Interface, design system, and accessibility
 
-**Status:** Draft; no UI exists. Impeccable is installed but has not been initialized.  
+**Status:** Draft; no UI exists. Impeccable initialization captured the user-confirmed context in [PRODUCT.md](../../PRODUCT.md); visual direction remains pending.
+
 **Decisions:** [D-003](../DECISIONS.md#d-003), [D-011](../DECISIONS.md#d-011), [D-013](../DECISIONS.md#d-013), [D-014](../DECISIONS.md#d-014), [D-016](../DECISIONS.md#d-016).  
 **Tasks:** [T11-01–T11-03](../tasks/TASKS-11.md).  
 **Diagram:** [Business operations and history](../DIAGRAMS.md#business-operations-and-history).
