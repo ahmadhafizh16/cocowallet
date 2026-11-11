@@ -1,6 +1,58 @@
 # Wallet shell design review
 
-## T11-06 — applied CocoWallet branding and motion (current)
+## T11-07 — gradient card, flags and clearer headings (current)
+
+**Scope:** The user requested US/EU/UK-style currency markers, a distinct navy
+gradient balance card with history, then larger card headings and recognizable
+visual cues. [BALANCE_CARD.md](BALANCE_CARD.md) records the pinned refinement.
+The two-column layout, branding, motion and financial boundaries remain intact.
+
+**Evidence:** Full Docker check, **648 Jest tests**, optimized build and
+**41 production Chromium checks** pass. Seventy new chart cases verify exact
+minor-unit bounds, canonical ordered timestamps, account isolation, missing,
+empty, invalid, private, zero, single-point and max-bound behavior. Dashboard
+tests cover history switching, privacy restoration and ambiguous duplicates.
+Browser checks inspect actual 22/20px heading sizes and 24/20px icons, flags,
+two themes/five sizes, gradient/action/control/focus contrast, forced colors and
+keyboard-operable exact-value disclosures. All prior motion/draft journeys pass.
+
+The shipping preview supplies no history, so no graph line or dates are invented.
+`balance-fixture-light.png` and `balance-fixture-dark.png` show **test-only supplied
+history**, visibly labelled as such, using the real component and production CSS;
+they are not application data. Existing desktop/dark/tablet/mobile/320px/loading
+captures are refreshed against this build. All images live under
+`.impeccable/review/` as non-shipping review evidence.
+
+The taller overview revealed a capture-harness issue: Playwright full-page
+screenshots temporarily resize the viewport, which correctly dismisses Radix
+Select. Portaled menu/action screenshots now use the actual viewport, and the
+journey waits for exit unmounts and verifies the owning dialog remains open.
+Native key/mutation diagnostics confirmed the menu had closed on screenshot
+resize before Escape; no product behavior or assertion was weakened. Diagnostic
+captures are not final review evidence. The full 41-test run passed afterward.
+
+The manual changed-target detector returned **19 advisory** local type/radius
+inventory findings, no non-advisory findings. Documented card-local 22/20px and
+supporting 16/12px roles do not replace the global type scale. A separate narrow
+chart-component detector returned `[]`; these scopes are not conflated.
+**Bounded implementation verdict: `ship`.** The fresh reviewer read the source,
+tests, briefs and design notes and inspected all 12 required application/loading
+captures plus both clearly labelled history fixtures. No material fix, recapture
+or rebuild was requested within that implementation scope.
+
+The final development console check then found a server/browser trigonometric
+rounding difference in an EU star transform. Twelve fixed coordinate pairs
+replace runtime trig without a visual-direction change. A unit regression and
+pre-navigation browser console-error assertion were added. The reviewer read
+that correction and confirmed its bounded `ship` verdict stands. The parent
+repeated the full build, 648 Jest and 41 production Chromium checks afterward,
+refreshed production captures and inspected the final desktop/dark/320px/fixture
+batch. The detector predates this coordinate-only fix and was not rerun.
+Final development hydration/theme/dialog checks pass 300 stable frames with no
+reloads, page errors or console errors. This is not WCAG or performance
+certification, nor completion of connected history/valuation services.
+
+## T11-06 — historical applied-branding/motion checkpoint
 
 **Scope:** Apply the approved SVG geometry and [bounded motion thesis](MOTION.md)
 without changing the two-column topology or financial safeguards. The current

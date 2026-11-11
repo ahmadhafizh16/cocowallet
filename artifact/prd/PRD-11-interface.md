@@ -4,7 +4,7 @@
 
 **Decisions:** [D-003](../DECISIONS.md#d-003), [D-011](../DECISIONS.md#d-011), [D-013](../DECISIONS.md#d-013), [D-014](../DECISIONS.md#d-014), [D-016](../DECISIONS.md#d-016), [D-025](../DECISIONS.md#d-025), [D-027](../DECISIONS.md#d-027).
 
-**Tasks:** [T11-01–T11-06](../tasks/TASKS-11.md).
+**Tasks:** [T11-01–T11-07](../tasks/TASKS-11.md).
 
 **Diagram:** [Business operations and history](../DIAGRAMS.md#business-operations-and-history).
 
@@ -17,6 +17,9 @@ As the user, I can understand my balances and perform the simulated wallet workf
 The user-supplied app name is **CocoWallet**. The user approved applying its SVG
 logo and smooth interaction transitions; current integration and motion budgets
 are recorded in [BRANDING.md](../BRANDING.md) and [MOTION.md](../MOTION.md).
+The subsequent [D-028](../DECISIONS.md#d-028) refinement adds currency flags,
+a shared-theme navy-gradient balance card, truthful recorded-history presentation,
+and larger icon-led card headings. See [BALANCE_CARD.md](../BALANCE_CARD.md).
 
 1. Initialize Impeccable with product context and review the resulting `PRODUCT.md` before designing a new interface. Follow the skill's applicable workflow; do not invent a design system or claim design work has been done.
 2. Use registry-derived shadcn/ui foundations and Lucide React, with light/dark themes respecting system preference. Preserve pale-blue glass, navy accents, soft shadows, and rounded panels. Per D-025, use a two-column overview, accessible desktop icon tooltips, labelled mobile navigation, and draft-preserving dialogs for Send money, Deposit, Withdraw, and Convert. Theme/account menus and history filters must be themed shadcn/Radix controls, not native-looking utility selects.
@@ -37,9 +40,11 @@ are recorded in [BRANDING.md](../BRANDING.md) and [MOTION.md](../MOTION.md).
 
 Coordinate with each feature PRD for actual form behavior. Test accessible names and focus, theme switching, reduced motion, narrow layouts, and error states. [O-004](../DECISIONS.md#o-004) covers destination USD-total display; [O-005](../DECISIONS.md#o-005) covers operational ambiguities.
 
-Current branding/motion evidence: **572 Jest tests and 38 production Chromium checks**
+Current card/heading evidence: **648 Jest tests and 41 production Chromium checks**
 pass, including dialog focus/drafts, keyboard menus, utility controls, privacy,
 validation, 320–1769px layouts, actual animation lifecycle, interruption, and
 reduced-motion paths. This is not comprehensive WCAG certification.
+Additional checks cover gradient text/control/focus contrast, larger heading
+geometry, flags, forced colors, exact history bounds, account isolation and privacy.
 No final financial submission, populated history, server quote, quote expiry, or
 server-confirmed success is claimed by this interface-first checkpoint.

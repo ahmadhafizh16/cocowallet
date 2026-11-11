@@ -18,6 +18,7 @@ These documents distinguish decisions, proposals, and implemented work. The **pl
 - [Built design system](../DESIGN.md): actual visual tokens and reusable interface rules; `.impeccable/design.json` carries component-preview extensions.
 - [CocoWallet logo](BRANDING.md): standalone SVG assets, usage, provenance and checks.
 - [Interaction motion](MOTION.md): applied branding, bounded animation thesis, reduced motion and verification.
+- [Balance card](BALANCE_CARD.md): currency flags, theme-independent gradient and truthful recorded-history presentation.
 - [Diagrams](DIAGRAMS.md): proposed architecture, data relationships, business flows, and code flow.
 - [API design](API_DESIGN.md): proposed HTTP contract, sequence diagram, and OpenAPI/Swagger approach.
 - [Idempotency discussion](IDEMPOTENCY.md): the selected failed-retry policy, alternatives, and examples.

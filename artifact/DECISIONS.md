@@ -129,6 +129,19 @@ continuity, coherent control/theme feedback, and reduced-motion alternatives.
 No delayed page-load choreography, invented money animation, dependency, or
 financial capability follows. See [MOTION.md](MOTION.md).
 
+### D-028
+
+**Currency flags and a distinct balance-history card:** The user requested US /
+EU / UK-style currency flags and a navy/blue gradient balance card with a user
+balance-history graph in both themes. Preserve the two-column layout, branding,
+motion and exact-money boundaries. The graph only plots supplied account-scoped
+recorded totals; the disconnected preview shows an honest unavailable state,
+not sample history. This does not authorize new financial APIs, seeded balances,
+or fabricated FX/valuation history. The user's follow-up requests larger, clearer
+card headings and recognizable visual cues; increase title size/weight and add
+purpose-specific Lucide icons without altering factual labels or layout topology.
+See [BALANCE_CARD.md](BALANCE_CARD.md).
+
 ## Questions and resolutions
 
 ### O-001

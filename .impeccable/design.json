@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-11-11T13:49:23Z",
+  "generatedAt": "2026-11-11T14:53:54Z",
   "title": "Design System: CocoWallet",
   "extensions": {
     "colorMeta": {
@@ -548,7 +548,7 @@
       },
       "title": {
         "displayName": "Panel title",
-        "purpose": "18px semibold panel headings; local subheadings use 16px."
+        "purpose": "18px semibold global title foundation remains unchanged. Wallet-card headings locally use 22px/600/1.4 with 24px purpose-specific Lucide icons and a 10px gap; compact phones use 20px text/icons and an 8px gap. Balance-history and other panel subheadings use 16px/600. No new global scale step."
       },
       "body": {
         "displayName": "Workhorse UI sans",
@@ -738,6 +738,89 @@
         "purpose": "Section scrolling only. Reduced motion disables smooth scrolling, transitions and animations immediately, preserving state/focus. No money tween, privacy fade, page-load choreography, animated blur or persistent will-change. Static previews do not emulate portals or run entrance animations."
       }
     ],
+    "balanceCard": {
+      "scope": ".wallet-total-panel only; user-requested opaque navy exception, not a global palette or a replacement visual world.",
+      "source": "src/features/wallet/wallet.css",
+      "themeBehavior": "Identical local semantic roles in light and dark themes; surrounding frosted surfaces keep their theme roles.",
+      "roles": {
+        "--balance-start": "#142944",
+        "--balance-mid": "#243f64",
+        "--balance-end": "#315b79",
+        "--balance-ink": "#f4f8ff",
+        "--balance-muted": "#c3d6ec",
+        "--balance-action": "#bce9e1",
+        "--balance-action-hover": "#d2f3ed",
+        "--balance-action-ink": "#123d39",
+        "--balance-hover": "#375877",
+        "--balance-edge": "#9ab2cc",
+        "--balance-divider": "rgb(195 214 236 / 20%)",
+        "--balance-chart": "#79dfcf"
+      },
+      "surface": {
+        "background": "linear-gradient(118deg, var(--balance-start) 0%, var(--balance-mid) 58%, var(--balance-end) 100%)",
+        "color": "var(--balance-ink)",
+        "supportingColor": "var(--balance-muted)",
+        "borderColor": "var(--balance-edge)",
+        "backdropFilter": "none",
+        "webkitBackdropFilter": "none",
+        "geometry": "Existing wallet-panel insets, radii, ambient shadow and responsive layout are unchanged.",
+        "heading": "Local 22px/600/1.4 heading with decorative 24px CircleDollarSign icon, --balance-action ink and 10px gap; at max-width 420px, 20px heading/icon and 8px gap. Other card headings use Wallet/History icons in theme-aware navy, without icon pills. The global 18px title foundation is unchanged."
+      },
+      "actions": {
+        "deposit": "Mint --balance-action fill/border with --balance-action-ink; hover/open uses --balance-action-hover.",
+        "withdrawConvertSend": "Transparent fill, --balance-edge outline, --balance-ink labels/icons; enabled hover/open uses --balance-hover and --balance-muted border.",
+        "privacy": "--balance-muted at rest; hover uses --balance-ink on --balance-hover. At max-width 760px, hide only visible Show/Hide text while retaining the icon, accessible name/pressed state and 44px target.",
+        "shadow": "none",
+        "minimumHeight": "48px for money quick actions; existing shared privacy-control sizing remains unchanged.",
+        "disabledOpacity": 0.5,
+        "focus": "Buttons and history-detail summaries: 3px solid var(--balance-chart), 3px outline offset, no focus shadow.",
+        "selection": "var(--balance-action) background with var(--balance-action-ink) text.",
+        "cascade": "Card-scoped selectors override shared semantic text, Button and base quick-action roles; no global primitive or new animation."
+      },
+      "history": {
+        "contract": "Optional account-scoped BalanceHistorySeries: already-valued USD, exponent 2, exact balanceMinor strings and strictly increasing canonical UTC recordedAt timestamps. No inferred FX, API, connection or seed data.",
+        "preview": "History not connected; neutral grid only, with no points, line, invented figures, date range, return or flat/rising trend when future data is absent.",
+        "emptyAndInvalid": "Explicitly supplied empty series has no recorded balances. A rejected or ambiguous null selection is invalid, not disconnected. Invalid, unsupported, wrong-account or ambiguous duplicate series must not masquerade as zero or expose another account's history.",
+        "heading": "16px semibold local subheading; skeleton section titles reserve 30px height and the balance-history heading reserves 22px.",
+        "sectionMarginTop": "24px",
+        "sectionPaddingTop": "20px",
+        "sectionBorder": "1px solid var(--balance-divider)",
+        "plotHeight": "112px",
+        "missingStateMinHeight": "112px",
+        "grid": "repeating-linear-gradient(to bottom, transparent 0 36px, var(--balance-divider) 36px 37px)",
+        "line": "Straight segments; var(--balance-chart), 2.5px non-scaling stroke, round joins/caps; actual timestamp x spacing and a zero baseline.",
+        "points": "Recorded points use --balance-chart fill with a 1.5px non-scaling --balance-start stroke; a single point implies no trend.",
+        "details": "Keyboard-accessible details table preserves exact amounts and timestamps; summary minimum target height 44px.",
+        "privacy": "Immediately remove the entire plot, table, monetary values and timestamps from the DOM and accessibility tree. Do not blur, fade or merely visually mask history.",
+        "loadingAndMotion": "Skeleton reserves the 112px plot geometry using --balance-divider, with no fake trend or delay. No new amount, point, line or missing-state animation."
+      },
+      "forcedColors": {
+        "--balance-start": "Canvas",
+        "--balance-mid": "Canvas",
+        "--balance-end": "Canvas",
+        "--balance-ink": "CanvasText",
+        "--balance-muted": "CanvasText",
+        "--balance-action": "ButtonFace",
+        "--balance-action-hover": "Highlight",
+        "--balance-action-ink": "ButtonText",
+        "--balance-hover": "ButtonFace",
+        "--balance-edge": "ButtonText",
+        "--balance-divider": "GrayText",
+        "--balance-chart": "LinkText",
+        "background": "Canvas; gradient removed",
+        "historyGridBackground": "none"
+      },
+      "currencyMarkers": {
+        "source": "src/features/wallet/currency-flag.tsx",
+        "mapping": "USD / US, EUR / EU, GBP / UK; locally authored, self-contained SVG artwork, not a nationality claim.",
+        "determinism": "EU star centers use 12 fixed vector coordinate pairs; no runtime sin/cos or engine-dependent hydration transforms.",
+        "accessibility": "Decorative aria-hidden, non-focusable SVG; visible currency codes/names remain authoritative.",
+        "shape": "Overflow-clipped circle with 1px var(--control-border) boundary; SVG fills its width and height.",
+        "sizes": "42px normally, 36px at max-width 1190px, 32px at max-width 420px; no new breakpoint.",
+        "forcedColors": "SVG forced-color-adjust: none; adjacent labels remain available.",
+        "assets": "No emoji, font glyphs, downloads, external requests or new global color metadata."
+      }
+    },
     "breakpoints": [
       { "name": "compact-max-width", "value": "1190px" },
       { "name": "stacked-content-max-width", "value": "1023px" },
@@ -816,9 +899,9 @@
       "name": "Glass currency panel",
       "kind": "card",
       "refersTo": "wallet-panel",
-      "description": "Current wallet Card override with 26px desktop inset, 24px radius and one illustrative currency row. Zero is explicitly presentation-only; this excerpt does not seed or query a wallet.",
-      "html": "<section class=\"ds-panel\" aria-labelledby=\"ds-currencies-title\"><div class=\"ds-panel-head\"><h2 id=\"ds-currencies-title\">Currency wallets</h2><span class=\"ds-panel-count\">1 wallet</span></div><p class=\"ds-panel-description\">Default currency · USD</p><ul class=\"ds-currency-list\"><li class=\"ds-currency-row\"><div class=\"ds-currency-identity\"><span class=\"ds-currency-token\" aria-hidden=\"true\">$</span><div><p class=\"ds-currency-code\">USD</p><p class=\"ds-currency-name\">US dollar</p></div></div><p class=\"ds-currency-amount\">0.00<span>USD</span></p></li></ul><p class=\"ds-panel-description\">Presentation only · Not a stored balance</p></section>",
-      "css": ".ds-panel { min-width: 0; padding: 26px; border: 1px solid var(--edge, rgb(255 255 255 / 85%)); border-radius: var(--radius-panel, 24px); background: var(--glass, rgb(255 255 255 / 78%)); color: var(--ink, #223349); font: 14px/1.5 var(--font-ui, ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif); font-variant-numeric: tabular-nums; box-shadow: var(--shadow, 0 12px 38px -24px rgb(44 72 105 / 26%)); backdrop-filter: blur(22px); -webkit-backdrop-filter: blur(22px); overflow-wrap: anywhere; } .ds-panel-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; } .ds-panel h2 { margin: 0; font-size: 18px; font-weight: 600; line-height: 1.4; letter-spacing: -0.015em; } .ds-panel-count { padding: 2px 8px; border: 1px solid transparent; border-radius: 999px; background: var(--inner, rgb(255 255 255 / 55%)); font-size: 13px; font-weight: 500; line-height: calc(1 / 0.75); } .ds-panel-description { margin: 8px 0 0; color: var(--secondary, #4f6175); font-size: 13px; line-height: 1.5; } .ds-currency-list { list-style: none; margin: 18px 0 0; padding: 0; } .ds-currency-row { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); align-items: center; gap: 16px; min-height: 106px; padding-block: 24px; border-bottom: 1px solid var(--line, rgb(74 97 122 / 17%)); } .ds-currency-row:last-child { border-bottom: 0; padding-bottom: 10px; min-height: 92px; } .ds-currency-identity { display: flex; align-items: center; gap: 12px; min-width: 0; } .ds-currency-identity > div { min-width: 0; } .ds-currency-token { display: grid; place-items: center; flex-shrink: 0; width: 42px; height: 42px; border: 1px solid var(--edge, rgb(255 255 255 / 85%)); border-radius: 50%; background: var(--inner, rgb(255 255 255 / 55%)); color: var(--navy, #405e87); font-size: 19px; } .ds-currency-code { margin: 0; font-size: 15px; font-weight: 600; line-height: 1.4; } .ds-currency-name { margin: 3px 0 0; color: var(--secondary, #4f6175); font-size: 13px; } .ds-currency-amount { min-width: 0; margin: 0; text-align: right; font-size: 23px; font-weight: 500; line-height: 1.35; letter-spacing: -0.02em; overflow-wrap: anywhere; } .ds-currency-amount > span { display: block; margin-top: 3px; color: var(--secondary, #4f6175); font-size: 13px; font-weight: 400; letter-spacing: 0; } @media (max-width: 1190px) { .ds-panel { padding: 22px; } .ds-currency-row { gap: 10px; } .ds-currency-identity { gap: 9px; } .ds-currency-token { width: 36px; height: 36px; } } @media (max-width: 760px) { .ds-panel { border-radius: 22px; } .ds-currency-row { min-height: 100px; padding-block: 22px; gap: 12px; } .ds-currency-row:last-child { min-height: 88px; padding-bottom: 10px; } .ds-currency-amount { font-size: 22px; } } @media (max-width: 420px) { .ds-panel { padding: 20px; } .ds-currency-token { width: 32px; height: 32px; font-size: 16px; } .ds-currency-identity { gap: 8px; } .ds-currency-row { grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 8px; } .ds-currency-amount { font-size: 20px; } } @media (prefers-reduced-transparency: reduce) { .ds-panel, .ds-currency-token, .ds-panel-count { background: var(--solid, #f7fafc); } }"
+      "description": "Current frosted wallet Card with a clear 22px heading/24px Wallet icon and one illustrative USD row. The locally authored decorative US flag fills a 42px circular strong-boundary marker (36px compact, 32px phone); visible code/name stay authoritative. Zero is presentation-only, not seeded or queried data; this is not the opaque balance-card exception.",
+      "html": "<section class=\"ds-panel\" aria-labelledby=\"ds-currencies-title\"><div class=\"ds-panel-head\"><h2 id=\"ds-currencies-title\"><svg class=\"ds-panel-title-icon\" aria-hidden=\"true\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M20 8V5a2 2 0 0 0-2-2H6a3 3 0 0 0 0 6h14v10H6a3 3 0 0 1-3-3V6\"/><path d=\"M20 12h-4a2 2 0 0 0 0 4h4\"/></svg>Currency wallets</h2><span class=\"ds-panel-count\">1 wallet</span></div><p class=\"ds-panel-description\">Default currency · USD</p><ul class=\"ds-currency-list\"><li class=\"ds-currency-row\"><div class=\"ds-currency-identity\"><span class=\"ds-currency-token\" aria-hidden=\"true\"><svg class=\"ds-currency-flag\" data-currency=\"USD\" viewBox=\"0 0 60 40\" preserveAspectRatio=\"xMidYMid slice\" aria-hidden=\"true\" focusable=\"false\" stroke=\"none\"><defs><path id=\"ds-us-star\" d=\"M0-1 0.225-0.309 0.951-0.309 0.363 0.118 0.588 0.809 0 0.382-0.588 0.809-0.363 0.118-0.951-0.309-0.225-0.309Z\"/><g id=\"ds-us-six\" fill=\"#ffffff\"><use href=\"#ds-us-star\" transform=\"translate(2.1 2.1) scale(.9)\"/><use href=\"#ds-us-star\" transform=\"translate(6.26 2.1) scale(.9)\"/><use href=\"#ds-us-star\" transform=\"translate(10.42 2.1) scale(.9)\"/><use href=\"#ds-us-star\" transform=\"translate(14.58 2.1) scale(.9)\"/><use href=\"#ds-us-star\" transform=\"translate(18.74 2.1) scale(.9)\"/><use href=\"#ds-us-star\" transform=\"translate(22.9 2.1) scale(.9)\"/></g><g id=\"ds-us-five\" fill=\"#ffffff\"><use href=\"#ds-us-star\" transform=\"translate(4.18 4.25) scale(.9)\"/><use href=\"#ds-us-star\" transform=\"translate(8.34 4.25) scale(.9)\"/><use href=\"#ds-us-star\" transform=\"translate(12.5 4.25) scale(.9)\"/><use href=\"#ds-us-star\" transform=\"translate(16.66 4.25) scale(.9)\"/><use href=\"#ds-us-star\" transform=\"translate(20.82 4.25) scale(.9)\"/></g></defs><path fill=\"#ffffff\" d=\"M0 0h60v40H0z\"/><rect x=\"0\" y=\"0\" width=\"60\" height=\"3.076923076923077\" fill=\"#b22234\"/><rect x=\"0\" y=\"6.153846153846154\" width=\"60\" height=\"3.076923076923077\" fill=\"#b22234\"/><rect x=\"0\" y=\"12.307692307692308\" width=\"60\" height=\"3.076923076923077\" fill=\"#b22234\"/><rect x=\"0\" y=\"18.46153846153846\" width=\"60\" height=\"3.076923076923077\" fill=\"#b22234\"/><rect x=\"0\" y=\"24.615384615384617\" width=\"60\" height=\"3.076923076923077\" fill=\"#b22234\"/><rect x=\"0\" y=\"30.76923076923077\" width=\"60\" height=\"3.076923076923077\" fill=\"#b22234\"/><rect x=\"0\" y=\"36.92307692307692\" width=\"60\" height=\"3.076923076923077\" fill=\"#b22234\"/><path fill=\"#3c3b6e\" d=\"M0 0h25v21.54H0z\"/><use href=\"#ds-us-six\"/><use href=\"#ds-us-five\"/><use href=\"#ds-us-six\" transform=\"translate(0 4.3)\"/><use href=\"#ds-us-five\" transform=\"translate(0 4.3)\"/><use href=\"#ds-us-six\" transform=\"translate(0 8.6)\"/><use href=\"#ds-us-five\" transform=\"translate(0 8.6)\"/><use href=\"#ds-us-six\" transform=\"translate(0 12.9)\"/><use href=\"#ds-us-five\" transform=\"translate(0 12.9)\"/><use href=\"#ds-us-six\" transform=\"translate(0 17.2)\"/></svg></span><div><p class=\"ds-currency-code\">USD</p><p class=\"ds-currency-name\">US dollar</p></div></div><p class=\"ds-currency-amount\">0.00<span>USD</span></p></li></ul><p class=\"ds-panel-description\">Presentation only · Not a stored balance</p></section>",
+      "css": ".ds-panel { min-width: 0; padding: 26px; border: 1px solid var(--edge, rgb(255 255 255 / 85%)); border-radius: var(--radius-panel, 24px); background: var(--glass, rgb(255 255 255 / 78%)); color: var(--ink, #223349); font: 14px/1.5 var(--font-ui, ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif); font-variant-numeric: tabular-nums; box-shadow: var(--shadow, 0 12px 38px -24px rgb(44 72 105 / 26%)); backdrop-filter: blur(22px); -webkit-backdrop-filter: blur(22px); overflow-wrap: anywhere; } .ds-panel-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; } .ds-panel h2 { display: flex; align-items: center; gap: 10px; margin: 0; font-size: 22px; font-weight: 600; line-height: 1.4; letter-spacing: -0.015em; } .ds-panel-title-icon { width: 24px; height: 24px; flex-shrink: 0; color: var(--navy, #405e87); } .ds-panel-count { padding: 2px 8px; border: 1px solid transparent; border-radius: 999px; background: var(--inner, rgb(255 255 255 / 55%)); font-size: 13px; font-weight: 500; line-height: calc(1 / 0.75); } .ds-panel-description { margin: 8px 0 0; color: var(--secondary, #4f6175); font-size: 13px; line-height: 1.5; } .ds-currency-list { list-style: none; margin: 18px 0 0; padding: 0; } .ds-currency-row { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); align-items: center; gap: 16px; min-height: 106px; padding-block: 24px; border-bottom: 1px solid var(--line, rgb(74 97 122 / 17%)); } .ds-currency-row:last-child { border-bottom: 0; padding-bottom: 10px; min-height: 92px; } .ds-currency-identity { display: flex; align-items: center; gap: 12px; min-width: 0; } .ds-currency-identity > div { min-width: 0; } .ds-currency-token { display: grid; place-items: center; flex-shrink: 0; width: 42px; height: 42px; overflow: hidden; border: 1px solid var(--control-border, #a6b6c7); border-radius: 50%; background: var(--inner, rgb(255 255 255 / 55%)); color: var(--navy, #405e87); } .ds-currency-flag { display: block; width: 100%; height: 100%; } .ds-currency-code { margin: 0; font-size: 15px; font-weight: 600; line-height: 1.4; } .ds-currency-name { margin: 3px 0 0; color: var(--secondary, #4f6175); font-size: 13px; } .ds-currency-amount { min-width: 0; margin: 0; text-align: right; font-size: 23px; font-weight: 500; line-height: 1.35; letter-spacing: -0.02em; overflow-wrap: anywhere; } .ds-currency-amount > span { display: block; margin-top: 3px; color: var(--secondary, #4f6175); font-size: 13px; font-weight: 400; letter-spacing: 0; } @media (max-width: 1190px) { .ds-panel { padding: 22px; } .ds-currency-row { gap: 10px; } .ds-currency-identity { gap: 9px; } .ds-currency-token { width: 36px; height: 36px; } } @media (max-width: 760px) { .ds-panel { border-radius: 22px; } .ds-currency-row { min-height: 100px; padding-block: 22px; gap: 12px; } .ds-currency-row:last-child { min-height: 88px; padding-bottom: 10px; } .ds-currency-amount { font-size: 22px; } } @media (max-width: 420px) { .ds-panel { padding: 20px; } .ds-panel h2 { font-size: 20px; gap: 8px; } .ds-panel-title-icon { width: 20px; height: 20px; } .ds-currency-token { width: 32px; height: 32px; } .ds-currency-identity { gap: 8px; } .ds-currency-row { grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 8px; } .ds-currency-amount { font-size: 20px; } } @media (prefers-reduced-transparency: reduce) { .ds-panel, .ds-currency-token, .ds-panel-count { background: var(--solid, #f7fafc); } } @media (forced-colors: active) { .ds-currency-flag { forced-color-adjust: none; } }"
     },
     {
       "name": "Select trigger and menu",
@@ -831,7 +914,7 @@
   ],
   "narrative": {
     "northStar": "Frosted wallet",
-    "overview": "Icy-blue glass sits over a diffuse navy wash. Rounded panels and softly raised controls make the interface tactile without competing with balances, field labels, or review details. The approved reference supplies the material character, not a different banking product or a permanent page topology.\n\nWorkhorse system typography, purposeful Lucide icons, and restrained navy accents keep task completion ahead of decoration. Light and dark themes share the same material roles. Simulation notices, unavailable information, and disabled final actions remain legible parts of the composition rather than being disguised as successful financial activity.",
+      "overview": "Icy-blue glass sits over a diffuse navy wash. Rounded panels and softly raised controls make the interface tactile without competing with balances, field labels, or review details. The approved reference supplies the material character, not a different banking product or a permanent page topology.\n\nWorkhorse system typography, purposeful Lucide icons, and restrained navy accents keep task completion ahead of decoration. Light and dark themes share the same material roles. Simulation notices, unavailable information, and disabled final actions remain legible parts of the composition rather than being disguised as successful financial activity.\n\nThe user-requested [balance-card refinement](artifact/BALANCE_CARD.md) adds one opaque navy-gradient anchor, identical in light and dark themes, and locally authored currency flags. The surrounding frosted world remains unchanged. Balance history shows only supplied recorded values; when future data is absent, show no new figures or trend.",
     "keyCharacteristics": [
       "Icy-blue glass and a diffuse navy backdrop.",
       "Soft offset depth, rounded panels, and selectively raised controls.",
@@ -842,7 +925,7 @@
     "rules": [
       {
         "name": "The Theme Roles Rule",
-        "body": "Use semantic CSS properties in both themes; do not freeze light surfaces or white primary-action text into a theme-aware control. The approved logo icon is a fixed-color asset exception; its wordmark follows ink, not on-navy action text.",
+        "body": "Use semantic CSS properties in both themes; do not freeze light surfaces or white primary-action text into a theme-aware control. The approved logo icon and decorative currency flags are fixed-color asset exceptions; the logo wordmark follows ink, not on-navy action text. The explicitly user-requested opaque navy balance card is a card-scoped exception with local semantic roles identical in both themes, not a generic fixed-color rule.",
         "section": "colors"
       },
       {
@@ -866,7 +949,9 @@
       "Do honor reduced motion, reduced transparency, and forced-colors treatments.",
       "Do reuse the approved CocoWallet vector: fixed icon colors, ink-following wordmark, and a preserved accessible name.",
       "Do preserve focus and drafts through bounded overlay/step motion, with immediate state changes under reduced motion.",
-      "Do keep simulation, preview, inspect-only, and unavailable states plain and visible."
+      "Do keep simulation, preview, inspect-only, and unavailable states plain and visible.",
+      "Do keep the user-requested opaque balance gradient and its semantic roles local, consistent in both themes, with forced-colors replacements.",
+      "Do retain visible currency codes/names beside decorative vector flags and remove history values, timestamps, plot, and table immediately when privacy is enabled."
     ],
     "donts": [
       "Don't freeze light-theme colors into theme-aware controls or use white text on the dark theme's pale primary fill.",
@@ -876,7 +961,8 @@
       "Don't truncate monetary values or account IDs to preserve panel geometry.",
       "Don't restore stale native utility-select or inline-workspace examples that misrepresent the current shared controls.",
       "Don't depict disconnected services as completed money movement, stored preview balances, real payment cards, or live exchange rates.",
-      "Don't turn the wallet's surface-specific column arrangement into a global layout prohibition."
+      "Don't turn the wallet's surface-specific column arrangement into a global layout prohibition.",
+      "Don't invent history figures, dates, returns, or a flat/rising trend when future recorded data is absent, or promote card-local/flag colors into the global palette."
     ]
   }
 }

@@ -18,6 +18,10 @@ of redundant metrics. One conversion draft has one visible context.
 rounded panels, offset soft shadows, circular raised controls, workhorse sans
 type, the approved CocoWallet vector logo, and Lucide icons. Desktop labels become accessible tooltips; mobile labels
 remain visible. Dark mode uses clear canvas/panel/control levels in blue-slate.
+The user-requested balance card is an opaque navy-to-blue anchor in both themes,
+with pale ink, a mint Deposit action and teal reserved for actual recorded data.
+US/EU/UK flag markers retain visible currency labels; larger semibold card titles
+and purpose-specific Lucide cues make sections easier to recognize.
 
 **STORY:** Understand balances and next actions immediately; open a named money
 dialog, enter/review a preserved draft, then return to the overview without fake
@@ -29,6 +33,8 @@ empty history; right holds currency wallets with count/default integrated. No
 third column, large account sheet, or disconnected conversion teaser. Dialogs
 appear only on action. Mobile stacks the content and keeps labelled navigation.
 Skeletons reserve this geometry.
+Balance history occupies the total card only; absent recorded snapshots produce
+“History not connected,” not an invented trend. See `artifact/BALANCE_CARD.md`.
 
 **FORM:** User-pinned two-column/dialog refinement of the approved frosted world;
 code-led, no new identity tournament. Seed exception: the user explicitly selected
@@ -58,6 +64,7 @@ incorrect and is withdrawn; this machine's seed support was not unavailable.
 ## Implementation record
 
 T11-04 implements this contract; T11-06 applies branding and bounded motion.
+T11-07 adds the requested flags, gradient/history presentation and clearer headings.
 `artifact/UI_FOUNDATION.md` records current
 behavior and integration limits; `artifact/DESIGN_REVIEW.md` distinguishes current
 review from the historical three-column baseline. Financial services remain

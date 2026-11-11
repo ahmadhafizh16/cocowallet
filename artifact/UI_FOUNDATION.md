@@ -98,8 +98,8 @@ and retained validation/review/privacy behavior.
 
 ### Current verification and scope
 
-The interface passes the full Docker check, including **572 Jest tests** and
-production build, plus **38 Chromium checks** against that build. Coverage includes
+The interface passes the full Docker check, including **648 Jest tests** and
+production build, plus **41 Chromium checks** against that build. Coverage includes
 theme/storage, keyboard entry, draft/error focus, no financial submission, privacy,
 zero-balance/self-transfer errors, clipboard fallback, history reset, 404 navigation,
 reduced motion, loading/error rendering, and widths from 320 to 1769px. Destination
@@ -124,6 +124,16 @@ await actual Radix exit unmounts, not arbitrary sleeps. See [MOTION.md](MOTION.m
 Interrupted arrivals now dismiss from their rendered frame instead of jumping
 fully open; targeted production comparisons verify opacity/position/scale
 continuity for dialogs, scrims and both menu types.
+
+The later [T11-07](tasks/TASKS-11.md#t11-07) adds US/EU/UK currency flags,
+an opaque navy-gradient balance surface shared by both themes, and 22px semibold
+card headings with distinct icons (20px on compact phones). History plots only
+verified account-scoped recorded USD totals; no series is supplied by the preview.
+Seventy chart tests and extended dashboard tests cover exact bounds, dates,
+missing/empty/invalid/private states and account isolation. Three added Chromium
+journeys verify contrast, header sizing, flag fit, keyboard-accessible fixture
+tables, privacy and forced colors. Populated fixture captures are explicitly
+test-only. See [BALANCE_CARD.md](BALANCE_CARD.md).
 
 Connected accounts/history, server quotes, success receipts, and operation outcomes
 remain their own tasks. Cross-feature accessibility/motion acceptance remains

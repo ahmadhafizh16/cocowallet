@@ -228,6 +228,8 @@ Icy-blue glass sits over a diffuse navy wash. Rounded panels and softly raised c
 
 Workhorse system typography, purposeful Lucide icons, and restrained navy accents keep task completion ahead of decoration. Light and dark themes share the same material roles. Simulation notices, unavailable information, and disabled final actions remain legible parts of the composition rather than being disguised as successful financial activity.
 
+The user-requested [balance-card refinement](artifact/BALANCE_CARD.md) adds one opaque navy-gradient anchor, identical in light and dark themes, and locally authored currency flags. The surrounding frosted world remains unchanged. Balance history shows only supplied recorded values; when future data is absent, show no new figures or trend.
+
 **Key Characteristics:**
 
 - Icy-blue glass and a diffuse navy backdrop.
@@ -254,7 +256,7 @@ Icy neutrals support one muted navy accent; dark mode changes values, not jobs. 
 
 - **Ground** (`ground`): full-page base. Dark ground stays distinct from panel and field levels.
 - **Frosted glass** (`glass`): outer wallet panels and selected utility treatments.
-- **Inner glass** (`inner`): quick actions, secondary surfaces, currency tokens, highlighted menu options, and the preview notice. Money inputs use the separate opaque control surface.
+- **Inner glass** (`inner`): the base quick-action treatment, secondary surfaces, highlighted menu options, and the preview notice. The balance card overrides its actions locally; currency flags fill their circular markers. Money inputs use the separate opaque control surface.
 - **Solid surface** (`solid`): dialogs, portaled menus, active desktop navigation, and the fixed mobile bar. Reduced transparency replaces both glass roles with this value.
 - **Light-catching edge / quiet divider** (`edge`, `line`): outer panel/raised-control edges versus row separators and menu boundaries. Neither substitutes for the stronger field boundary.
 - **Control surface / boundary** (`control-surface`, `control-border`): opaque, theme-aware input, Select, and outline-button treatments.
@@ -267,7 +269,11 @@ Icy neutrals support one muted navy accent; dark mode changes values, not jobs. 
 
 The dialog scrim is a local translucent treatment (`rgb(13 28 45 / 40%)`), not a new reusable palette primitive. Shadow colors likewise belong to elevation rather than extra color swatches.
 
-**The Theme Roles Rule.** Use semantic CSS properties in both themes; do not freeze light surfaces or white primary-action text into a theme-aware control. The approved logo icon is a fixed-color asset exception; its wordmark follows ink, not on-navy action text.
+**The Theme Roles Rule.** Use semantic CSS properties in both themes; do not freeze light surfaces or white primary-action text into a theme-aware control. The approved logo icon and decorative currency flags are fixed-color asset exceptions; the logo wordmark follows ink, not on-navy action text. The explicitly user-requested opaque navy balance card is a card-scoped exception with local semantic roles identical in both themes, not a generic fixed-color rule.
+
+The balance card's local roles are an opaque (118°) gradient from (`#142944`, 0%) through (`#243f64`, 58%) to (`#315b79`, 100%); pale ink (`#f4f8ff`); blue-tinted supporting ink (`#c3d6ec`); mint action (`#bce9e1`) and hover (`#d2f3ed`) with dark action ink (`#123d39`); secondary hover (`#375877`); boundary (`#9ab2cc`); divider (`rgb(195 214 236 / 20%)`); and teal chart/focus (`#79dfcf`). These live in the sidecar's `extensions.balanceCard`, not the 38 global colors or their preview ramps. Decorative flag colors likewise stay inside their self-contained SVGs, not the global palette.
+
+Forced colors replaces the balance gradient with `Canvas`, maps local ink/muted to `CanvasText`, action/secondary-hover to `ButtonFace`, action-hover to `Highlight`, action ink/boundary to `ButtonText`, divider to `GrayText`, and chart/focus to `LinkText`. All three gradient stops become `Canvas`; history-grid backgrounds are removed. Flag SVGs retain their artwork with `forced-color-adjust: none`; adjacent currency labels remain authoritative.
 
 These extracted roles and captures are not a claim of WCAG conformance.
 
@@ -279,10 +285,10 @@ These extracted roles and captures are not a claim of WCAG conformance.
 
 - **Display:** the total uses the recorded (48px), weight (450) role; mobile uses (44px). Unavailable totals use (32px), then (29px), so a status word is not forced into monetary display geometry.
 - **Headline:** the page heading uses (28px), weight (600); it becomes (26px) in the mobile layout and (25px) at the compact-phone boundary. Allow balanced wrapping.
-- **Title:** panel headings use (18px), weight (600). Panel subheadings use (16px), weight (600), line height (1.45). Currency codes use (15px), weight (600), line height (1.4).
+- **Title:** the global title foundation remains (18px), weight (600). Wallet-card headings use a local clarity override of (22px), weight (600), line height (1.4), reducing to (20px) on compact phones; do not promote this exception into the global scale. Panel subheadings, including balance history, use (16px), weight (600), line height (1.45). Currency codes use (15px), weight (600), line height (1.4).
 - **Body / supporting:** normal copy and form descriptions use the body role; secondary dashboard details use the supporting role. Empty-history text has line height (1.6) and a local maximum measure (54ch), not a universal paragraph width.
 - **Label / button:** fields use the label role; default shared actions use the button role. Mobile navigation uses (13px), weight (500), retaining the shared Button's unitless leading. Badge labels are (12px), weight (500); the wallet-count override is (13px), retaining the badge's unitless leading rather than a fixed (16px) line box.
-- **Amount / currency amount:** the editable amount is (24px) with line height (32px) inside a bounded field. Wallet-row figures use the separate currency-amount role; mobile reduces them to (22px), then (20px). The currency symbol is a local (19px) marker, reduced to (16px) on compact phones; the form's inset symbol is (20px).
+- **Amount / currency amount:** the editable amount is (24px) with line height (32px) inside a bounded field. Wallet-row figures use the separate currency-amount role; mobile reduces them to (22px), then (20px). Row markers are SVG flags, not enlarged currency glyphs; the form's inset currency symbol remains (20px).
 - **Dialog title:** a semibold (24px) title labels the active dialog. Review headings use (18px), weight (600), line height (28px).
 
 The CocoWallet wordmark is font-independent vector geometry, not a new UI typeface. The standalone error heading still uses (25px), weight (550), and line height (1.3). Local values and responsive exceptions are not extra global scale steps.
@@ -299,7 +305,7 @@ Observed wallet composition is two content columns in a (1.4:1) ratio: total/act
 
 - **Compact desktop (maximum 1190px):** shell side padding (24px), rail gap (20px), panel gap (18px), panel padding (22px), and quick actions in two columns.
 - **Stacked content (maximum 1023px):** panels become one column; quick actions return to four columns while the desktop rail remains.
-- **Mobile shell (maximum 760px):** side padding (20px), panels retain (22px) padding and use the mobile panel radius. Quick actions form a **2×2 grid**. The bottom bar has four labelled destinations/actions, minimum item height (60px), and safe-area padding. Workspace bottom clearance is `calc(116px + env(safe-area-inset-bottom))`; focused controls retain matching scroll clearance.
+- **Mobile shell (maximum 760px):** side padding (20px), panels retain (22px) padding and use the mobile panel radius. Quick actions form a **2×2 grid**. The balance privacy control hides only its visible Show/Hide text, retaining the icon, accessible name/pressed state, and (44px) target so the larger card heading remains readable. The bottom bar has four labelled destinations/actions, minimum item height (60px), and safe-area padding. Workspace bottom clearance is `calc(116px + env(safe-area-inset-bottom))`; focused controls retain matching scroll clearance.
 - **Compact phone (maximum 420px):** side padding (16px), panel padding (20px), a full-width history filter below its heading, stacked history-empty content, and smaller currency markers/figures.
 - **Dialog/theme control (maximum 640px):** dialog width is `calc(100vw - 16px)`, maximum height `calc(100dvh - 16px)`, padding (24px 20px). Theme trigger hides its text/chevron but retains its accessible name and (44px) target. The account trigger becomes icon-sized at the separate (760px) shell boundary.
 - **Input text (minimum 48rem):** shared Input text changes from (16px) to (14px); the amount editor explicitly remains (24px).
@@ -308,7 +314,7 @@ Dialogs are independently bounded and scroll internally; do not make a form fit 
 
 ## Elevation & Depth
 
-Depth combines translucent tonal layers, light-catching borders, backdrop blur, and soft offset shadows. Outer wallet panels use `--shadow`; selected desktop navigation and wallet quick actions use paired `--raised` depth. The shared secondary Button alone uses the quieter shadcn shadow, not the wallet-specific raised override. Dark mode keeps canvas, panel, and opaque control levels distinct.
+Depth combines translucent tonal layers, light-catching borders, backdrop blur, and soft offset shadows. Outer wallet panels use `--shadow`; selected desktop navigation and the base wallet quick-action treatment use paired `--raised` depth. The opaque balance card retains ambient panel depth but removes its action shadows. The shared secondary Button alone uses the quieter shadcn shadow, not the wallet-specific raised override. Dark mode keeps canvas, panel, and opaque control levels distinct.
 
 ### Shadow vocabulary
 
@@ -317,7 +323,7 @@ Depth combines translucent tonal layers, light-catching borders, backdrop blur, 
 - **Shared control:** shadcn `shadow-xs` for inputs, Select triggers, secondary/outline/circle Buttons; `shadow-sm` for primary Buttons and the uncustomized Card. Select/Tooltip use `shadow-md`; DropdownMenu uses `shadow-lg`. Exact expansion is recorded in the sidecar.
 - **Bottom navigation:** its local source shadow is not a new general elevation step. The approved inline logo has no added brand-mark shadow; no permanent navy account sheet remains.
 
-Panel blur is (22px); scrim blur is (5px). Reduced transparency makes glass/inner roles solid, removes decorative washes and scrim blur. Forced colors removes washes and supplies system-color control/menu borders.
+Frosted-panel blur is (22px); the opaque balance card alone uses `backdrop-filter: none` and `-webkit-backdrop-filter: none`. Scrim blur is (5px). Reduced transparency makes glass/inner roles solid, removes decorative washes and scrim blur; the balance card is already opaque. Forced colors removes washes and supplies system-color control/menu borders and the local balance-role replacements above.
 
 The stacking contract is mobile navigation (20), theme storage note (30), dialog overlay (50), dialog content (60), Select/DropdownMenu (70), Tooltip (80), and skip link (100). Keep menus above their owning dialog and the skip link reachable; do not flatten these into one overlay level.
 
@@ -340,7 +346,7 @@ These spatial/opacity effects and color transitions run only when motion is perm
 
 ## Shapes
 
-Generously rounded panels contrast with tighter controls: wallet panels/dialogs use the panel radius, mobile wallet panels use the mobile radius, and shared Buttons, Inputs, Select triggers, menu shells, and tooltips use the control radius. Quick-action Buttons currently inherit that same control radius; their raised material is a wallet-local override. The (14px) notice radius also appears on mobile navigation items and the history-filter skeleton; it is not the default Button radius.
+Generously rounded panels contrast with tighter controls: wallet panels/dialogs use the panel radius, mobile wallet panels use the mobile radius, and shared Buttons, Inputs, Select triggers, menu shells, and tooltips use the control radius. Quick-action Buttons currently inherit that same control radius; their base raised material is a wallet-local override, replaced by flat mint/outline treatments on the balance card. The (14px) notice radius also appears on mobile navigation items and the history-filter skeleton; it is not the default Button radius.
 
 Full rounding is reserved for theme/badge pills, the optional circle variant, avatars, desktop rail controls, and currency markers. Shared menu options use small (4px) corners. The uncustomized Card's `rounded-xl` resolves to (12px); the wallet panel overrides it to (24px). Thin (1px) edges and quiet dividers distinguish rows without hard stacked offsets.
 
@@ -368,13 +374,28 @@ Restrained, touch-sized controls with purposeful emphasis. `Button` supports `de
 - **Small / large:** minimum heights (40px)/(48px), padding (8px 12px)/(12px 24px); small remains (14px) text.
 - **Focus / disabled:** shared Button uses a (3px) navy ring at (30%) opacity; disabled opacity is (0.5), cursor not-allowed. This is not the old global (3px) outline with (4px) offset; that outline remains on ordinary focusable content such as account IDs and the brand link.
 - **Motion:** use the state/press feedback above; a press is a (1px) acknowledgement, not a hover lift. Select triggers and Inputs share state transitions but do not inherit the Button-only press rule.
-- **Wallet quick actions:** labelled Deposit, Withdraw, Convert, Send money Buttons; minimum height (48px), padding (10px 8px), gap (7px), edge border and raised shadow. Hover/open uses solid fill and the control border. Disabled quick actions remove their raised shadow. Mobile uses two rows of two, not circular icon-only actions.
+- **Wallet quick actions:** labelled Deposit, Withdraw, Convert, Send money Buttons; minimum height (48px), padding (10px 8px), gap (7px). The base treatment has an edge border and raised shadow, with solid/control-border hover/open feedback. The balance-card scope overrides that base: mint Deposit with dark ink; three transparent outlined actions with pale ink/boundaries; no action shadow. Deposit hover/open uses the lighter mint, while the other actions use the local blue hover fill and pale supporting-ink boundary. Icons inherit each action's ink. Disabled opacity remains (0.5); mobile retains two rows of two, not circular icon-only actions.
+- **Balance-card focus / selection:** buttons and history-detail summaries use a solid (3px) teal outline with (3px) offset and no focus shadow. The privacy action uses local supporting ink, becoming pale ink on the local hover fill. Text selection pairs mint fill with dark action ink. These specific card-scoped rules override shared semantic text, Button, and quick-action styling without changing other surfaces or adding motion.
 
 ### Cards / containers
 
-The registry Card supplies composable Header/Title/Description/Content/Footer regions. Wallet panels override the base spacing, radius, border, shadow, and blur with the frosted treatment; their header/content padding is zero so the outer panel supplies the inset once. Keep long values wrapping.
+The registry Card supplies composable Header/Title/Description/Content/Footer regions. Wallet panels override the base spacing, radius, border, shadow, and blur with the frosted treatment, except for the explicitly opaque navy balance card; their header/content padding is zero so the outer panel supplies the inset once. Keep long values wrapping.
 
-Currency rows pair a circular currency marker with code/name and a right-aligned amount plus explicit currency. Desktop rows have minimum height (106px), padding (24px) vertically, and a quiet bottom divider; the final row removes its divider and tightens its trailing inset. On the wallet overview, count/default metadata is integrated in the panel header rather than a separate summary card. The former large navy account object is absent; account details live in a themed menu.
+Wallet-card headings are deliberately recognizable: local (22px) semibold text pairs with a purpose-specific Lucide icon—CircleDollarSign for the approximate total, Wallet for currencies, History for recent transactions. Align icon/text centrally with a (10px) gap and a (24px) icon, using the mint action color on the balance card and theme-aware navy elsewhere. At the existing compact-phone boundary, heading text/icons become (20px) with an (8px) gap. Keep the named heading authoritative and the SVG decorative; do not add an icon pill or a new global heading token. The balance header reserves a flexible title column beside its privacy action rather than letting the utility displace the title.
+
+Currency rows pair a circular currency marker with code/name and a right-aligned amount plus explicit currency. Locally authored, self-contained [US / EU / UK SVG flags](src/features/wallet/currency-flag.tsx) identify USD / EUR / GBP, never the account holder's nationality. They are decorative (`aria-hidden`, non-focusable), not emoji, font glyphs, downloaded images, or replacement labels. Preserve visible currency codes/names. Each flag fills an overflow-clipped circle with the stronger control boundary: (42px) normally, (36px) at the existing compact-desktop boundary, and (32px) on compact phones. Desktop rows have minimum height (106px), padding (24px) vertically, and a quiet bottom divider; the final row removes its divider and tightens its trailing inset. On the wallet overview, count/default metadata is integrated in the panel header rather than a separate summary card. The former large navy account object is absent; account details live in a themed menu.
+
+Keep EU star centers as fixed vector coordinates, not runtime trigonometry; tiny server/browser math differences must not create hydration warnings.
+
+### Balance card and history
+
+The total remains an **approximate USD total** with existing presentation-only/unavailable wording; the gradient does not imply a real account, connected valuation, or a successful operation. Main/supporting copy uses the local ink/muted roles, not the surrounding theme's ink. Existing layout, radii, global typography, touch targets, money dialogs, and motion rules remain in force, with only the local card-heading clarity override above.
+
+History occupies a local section below the total, separated by a quiet divider with (24px) top margin and (20px) top inset. The chart is (112px) high; missing-state content has a minimum height of (112px), allowing copy to wrap. Its neutral horizontal grid is background context, not recorded data. In the shipping preview, absent `balanceHistory` means **History not connected**, with no data line, point, invented date range, percentage, flat zero history, or rising trend. An explicitly supplied empty series has no recorded balances, not a zero-valued series. A rejected or ambiguous `null` selection is invalid, not disconnected. Unavailable or invalid data must not become fabricated figures or a trend.
+
+The supplied-data contract is account-scoped, already-valued USD snapshots, exponent 2, exact minor-unit strings, and strictly increasing canonical UTC timestamps. Future valid snapshots use true timestamp spacing on the horizontal axis, a zero baseline, straight teal segments (2.5px, non-scaling) and recorded-point markers with a (1.5px) start-color stroke. A single point does not imply a trend. An accessible, keyboard-reachable details table retains exact amounts and timestamps; its summary has a minimum (44px) target. The graph does not compute FX, infer history from today's wallets or local drafts, seed records, add an API, or connect a service. Preserve account isolation, including ambiguous duplicate or unsupported series; see [the fixed presentation contract](artifact/BALANCE_CARD.md).
+
+Privacy immediately removes the entire plot, table, monetary values, and timestamps from the DOM and accessibility tree; it does not merely blur, fade, or visually mask them. No amount, line, point, or missing-state animation is added. Skeletons reserve this section's geometry without inventing a line or delaying the real state.
 
 ### Inputs / fields and Select
 
@@ -404,7 +425,7 @@ The always-mounted workspace preserves separate drafts/errors/reviews across clo
 
 ### Loading and error states
 
-The real dashboard skeleton reserves the current two-column/stacked geometry, top utilities, rail/bottom labels, notice, actions, history, and currency rows. Shapes are decorative; the busy main region supplies one “Loading wallet overview” status. No minimum loading delay or fake progress is introduced. Standalone errors retain the frosted world, offer retry/navigation, and do not expose exceptions or claim a known financial outcome. These source behaviors and existing captures do not certify full accessibility or connected feature acceptance; see [the scoped review](artifact/DESIGN_REVIEW.md).
+The real dashboard skeleton reserves the current two-column/stacked geometry, top utilities, rail/bottom labels, notice, actions, transaction history, currency rows, and the balance card's (112px) chart region. Section-heading placeholders are (30px) high and the balance-history heading placeholder is (22px), reflecting the clearer local headings without changing the global type scale. Balance-card shapes use its local divider role. Shapes are decorative; the busy main region supplies one “Loading wallet overview” status. No minimum loading delay or fake progress is introduced. Standalone errors retain the frosted world, offer retry/navigation, and do not expose exceptions or claim a known financial outcome. These source behaviors and existing captures do not certify full accessibility or connected feature acceptance; see [the scoped review](artifact/DESIGN_REVIEW.md).
 
 ## Do's and Don'ts
 
@@ -420,6 +441,8 @@ The real dashboard skeleton reserves the current two-column/stacked geometry, to
 - **Do** reuse the approved CocoWallet vector: fixed icon colors, ink-following wordmark, and a preserved accessible name.
 - **Do** preserve focus and drafts through bounded overlay/step motion, with immediate state changes under reduced motion.
 - **Do** keep simulation, preview, inspect-only, and unavailable states plain and visible.
+- **Do** keep the user-requested opaque balance gradient and its semantic roles local, consistent in both themes, with forced-colors replacements.
+- **Do** retain visible currency codes/names beside decorative vector flags and remove history values, timestamps, plot, and table immediately when privacy is enabled.
 
 ### Don't:
 
@@ -431,3 +454,4 @@ The real dashboard skeleton reserves the current two-column/stacked geometry, to
 - **Don't** restore stale native utility-select or inline-workspace examples that misrepresent the current shared controls.
 - **Don't** depict disconnected services as completed money movement, stored preview balances, real payment cards, or live exchange rates.
 - **Don't** turn the wallet's surface-specific column arrangement into a global layout prohibition.
+- **Don't** invent history figures, dates, returns, or a flat/rising trend when future recorded data is absent, or promote card-local/flag colors into the global palette.

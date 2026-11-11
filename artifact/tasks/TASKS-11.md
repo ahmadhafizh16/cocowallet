@@ -140,3 +140,35 @@ Design notes preserve palette/primitives while documenting branding, timing,
 reduced motion and interruption behavior. See [MOTION.md](../MOTION.md) and
 [DESIGN_REVIEW.md](../DESIGN_REVIEW.md) for scope and limits. No connected task or
 broader accessibility/performance certification is closed here.
+
+### T11-07
+
+**Currency flags and gradient balance-history card**
+
+**Status:** Done. Includes the user's follow-up on larger card headings and
+recognizable visual cues.
+
+**Decisions:** [D-025](../DECISIONS.md#d-025), [D-027](../DECISIONS.md#d-027), [D-028](../DECISIONS.md#d-028).
+
+**Depends on:** [T11-06](#t11-06).
+
+**Implementation:** Apply the [balance-card brief](../BALANCE_CARD.md): vector
+currency flags, theme-independent navy gradient, clear Deposit hierarchy, truthful
+recorded-history presentation, privacy and matching loading geometry. Incorporate
+the user's follow-up: larger, semibold card headings and purpose-specific icons.
+
+**Acceptance and tests:** Verify the brief's themes, responsive geometry, contrast,
+missing/empty/invalid/private/data states, exact bounds and account isolation;
+repeat Docker and production-browser checks, inspect rendered captures, reconcile
+design/handover records and restore stable development before closure.
+
+**Verification:** Full Docker check and production build pass **648 Jest tests**;
+all **41 production Chromium checks** pass. Seventy chart cases, five flag tests
+and expanded dashboard coverage retain exactness, truthfulness, account isolation
+and privacy. Browser coverage includes heading size/weight/icons, both themes,
+five card widths, contrast, forced colors and labelled test-only chart fixtures.
+The independent bounded reviewer returned `ship`, then confirmed deterministic
+EU star coordinates preserve that verdict after a development hydration warning
+was corrected. No recorded history or financial service is fabricated/connected.
+Source-matched design notes, 49-document/36-task validation and a 300-frame
+interactive development probe with zero reloads/browser/console errors pass.

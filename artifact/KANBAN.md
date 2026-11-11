@@ -1,8 +1,8 @@
 # Project kanban
 
-**Last updated:** T11-06 is complete: CocoWallet branding and smooth interaction/theme motion are applied, interruption continuity is corrected and reviewed, and reduced-motion/focus/draft safeguards pass production checks. Account data, wallet APIs, and idempotency integration remain future work.
+**Last updated:** T11-07 is complete: currency flags, a shared-theme navy-gradient balance card, truthful history presentation and larger icon-led card headings. Production checks, bounded review and stable development verification pass. Account data, wallet APIs, and idempotency integration remain future work.
 
-**Scope:** 35 implementation tasks: **22 to do**, **0 in progress**, **0 blocked**, **13 done**. Planning activities completed below do not count as implemented features.
+**Scope:** 36 implementation tasks: **22 to do**, **0 in progress**, **0 blocked**, **14 done**. Planning activities completed below do not count as implemented features.
 
 Each task links to its detailed description, source PRD, decision IDs, dependencies, and acceptance tests. The Angular-style, one-intention-per-commit rule and local Git workflow in [D-021](DECISIONS.md#d-021) and [D-022](DECISIONS.md#d-022) apply to every task. A task moves to **Done** only when its acceptance criteria are verified and the PRD, decisions, diagrams, API documentation, and handover are updated as needed.
 
@@ -97,6 +97,7 @@ _No task is currently blocked by an explicit unresolved decision or external blo
 - [x] [T11-04](tasks/TASKS-11.md#t11-04) — Two-column overview, draft-preserving popup workflows, icon tooltips, consistent shadcn utilities, critique corrections, refreshed design system, and scoped review; 562 Jest / 33 production Chromium checks pass.
 - [x] [T11-05](tasks/TASKS-11.md#t11-05) — CocoWallet full/inverse/icon SVG assets; self-contained vectors, XML/browser checks, and light/dark/small-size inspection. No automatic app integration.
 - [x] [T11-06](tasks/TASKS-11.md#t11-06) — Applied CocoWallet branding and continuous, reduced-motion-aware interaction transitions; 572 Jest / 38 production Chromium tests, scoped fix verdict, and current design notes.
+- [x] [T11-07](tasks/TASKS-11.md#t11-07) — Currency flags, gradient balance/history card and larger icon-led headings; 648 Jest / 41 production Chromium tests, scoped ship verdict and warning-free development.
 
 ## Done — planning only
 

@@ -1,6 +1,6 @@
 # Handover
 
-**Status:** Thirteen of 35 tasks are closed, including applied CocoWallet branding and bounded, interruptible interaction motion under T11-06. Production checks, the scoped fix verdict and design/handover reconciliation are complete. The board has 22 To do, 0 In progress, and 13 Done. Money-moving APIs, full idempotency, FX integration, Swagger, and account seeding remain unimplemented.
+**Status:** Fourteen of 36 tasks are closed, including T11-07's currency flags, gradient balance/history presentation and clearer icon-led headings. Production checks, bounded review, design records and warning-free development are verified. The board has 22 To do, 0 In progress, and 14 Done. Money-moving APIs, full idempotency, FX integration, Swagger, populated connected history, and account seeding remain unimplemented.
 
 ## Implemented modules and commands
 
@@ -24,6 +24,7 @@
 | `src/features/theme/`, `src/app/globals.css` | Approved frosted tokens, light/dark/system preference, pre-paint theme bootstrap, storage fallback, and reduced-motion styles. |
 | `src/app/page.tsx`, `layout.tsx`, `loading.tsx`, `error.tsx`, `not-found.tsx` | HTML wallet preview, styles/metadata, skip link, loading/error boundaries, and branded 404; replaces the former root JSON route. |
 | `src/features/wallet/` | Two-column overview, tooltip icon rail, labelled mobile Actions, account-scoped preview data, always-mounted draft-preserving money dialogs, exact validation/review, inspect-only presentation, and matching skeleton; no DB/API mutation. |
+| `src/features/wallet/balance-history.tsx`, `currency-flag.tsx` | Validated account-scoped recorded-USD chart and exact-value disclosure; honest disconnected/private states; deterministic local currency vectors. No history source or valuation service is connected. |
 | `DESIGN.md`, `.impeccable/design.json` | Extracted light/dark visual tokens, canonical design guidance, and version-2 component-preview extensions; actual application styles remain in source CSS. |
 | `scripts/check-artifacts.mjs` | Checks Markdown links, decision/task references, board status alignment, and task dependency cycles. |
 
@@ -42,9 +43,9 @@ Stop the dev compiler before `docker compose run --rm app npm run check`, then u
 
 Application DB: `/app/data/wallet.sqlite` in Compose's `wallet-data` volume. Tests use isolated temporary SQLite files. Normal shutdown is `docker compose down` without deleting volumes. Before applying journal migrations, the stopped app's database was backed up with SQLite's backup API to `/app/data/wallet.sqlite.pre-journal-1794390597589.bak`. Backup creation is verified; a full restore drill is not claimed.
 
-Latest branding/motion verification: the full Docker check passes artifact validation, formatting, lint, types, **572 Jest tests**, and production build; **38 Chromium tests** pass against that build (5 branding/motion, 2 foundation, 17 interaction, 12 shell, 2 visual). See [UI_FOUNDATION.md](UI_FOUNDATION.md) and [MOTION.md](MOTION.md) for coverage and commands. No packages, accounting code, schema, or DB data changed. Earlier journal checks applied/repeated all three migrations, checked integrity/foreign keys, and confirmed zero stored accounts/transactions. UI checks do not seed or move money. Earlier foundation checks covered clean `npm ci` and recreation persistence. The last production npm audit was clean; 23 low/moderate development-tool findings remain in [DEPENDENCIES.md](DEPENDENCIES.md).
+Latest card/heading verification: the full Docker check passes artifact validation, formatting, lint, types, **648 Jest tests**, and production build; **41 Chromium tests** pass against that build (3 card/history, 5 branding/motion, 2 foundation, 17 interaction, 12 shell, 2 visual). See [UI_FOUNDATION.md](UI_FOUNDATION.md) and [BALANCE_CARD.md](BALANCE_CARD.md) for coverage and commands. No packages, accounting code, schema, or DB data changed. Earlier journal checks applied/repeated all three migrations, checked integrity/foreign keys, and confirmed zero stored accounts/transactions. UI checks do not seed or move money. Earlier foundation checks covered clean `npm ci` and recreation persistence. The last production npm audit was clean; 23 low/moderate development-tool findings remain in [DEPENDENCIES.md](DEPENDENCIES.md).
 
-Artifact validation verifies **48 documents / 35 tasks**. The previous
+Artifact validation verifies **49 documents / 36 tasks**. The previous
 T11-02 design-extraction counts and verdict are historical, not certification of
 T11-04. Current production captures include desktop light/dark, 1688/1769px,
 tablet, mobile, dialogs/menus, validation/review, loading and errors. Independent
@@ -74,6 +75,17 @@ Six controller unit cases and targeted production frame comparisons support the
 fix. Design notes now match source timing and snapshot behavior; palette/primitive
 values remain unchanged and source/schema/reference checks pass.
 
+T11-07 adds locally authored US/EU/UK markers, a shared-theme opaque navy-gradient
+card and larger 22px semibold/icon-led headings (20px compact). Optional validated
+recorded USD snapshots feed a chart and exact-value disclosure; the actual preview
+supplies none and says “History not connected.” Seventy chart cases, five flag
+cases and expanded dashboard/browser tests protect exactness, privacy and account
+isolation. A bounded reviewer returned `ship` and confirmed a later fixed-vector
+EU hydration correction preserves that verdict. Final build/captures were repeated.
+The changed-target detector records 19 advisory type/radius inventory findings
+before that coordinate-only fix, no non-advisory finding. The design sidecar now
+records local card roles without changing 38 global colors or 20 primitives.
+
 The exact money/precision checkpoint passes 437 feature-local Jest tests, targeted lint, formatting, and strict TypeScript checks. It adds no runtime package dependency; the precision extract retains its source MIT notice and checksums.
 
 The balance checkpoint passes 28 combined schema/connection/balance tests, including a 2,049-entry journal with overflowing intermediate subtotals. A test commits through a second WAL connection during an account read and verifies both wallet balances retain the original snapshot; a subsequent read observes the commit. Aggregation permits arbitrary-precision intermediate subtotals but rejects negative/overflowing final balances.
@@ -102,11 +114,17 @@ The atomic-write checkpoint passes 16 feature-local integration tests, including
   way with `.next/dev.pre-motion-continuity-1794406183800` retained. The final
   browser probe again passed hydration, 300 stable frames with zero additional
   reloads/errors, explicit theme selection, and deposit entry/dismissal.
+- T11-07 retained generated caches at `.next/dev.pre-balance-card-1794409503161`
+  and, after correcting the EU star hydration warning,
+  `.next/dev.pre-flag-hydration-1794409722371`. The final browser probe confirms
+  hydration, 300 stable frames, zero additional reloads/page/console errors,
+  larger headings, all three flags, honest missing history and working theme/
+  deposit controls. No database or source was removed.
 - Git is initialized on `main`; baseline commits separate ignore rules, feature requirements, architecture decisions, and vendored design tooling. Automatic Angular-style commits by intention are authorized; no remote or push is automatic.
 - Impeccable is installed locally without automatic hooks; its engine reports 4.8.2. Product context and code-first are in [PRODUCT.md](../PRODUCT.md) and `.impeccable/config.json`. The original [reference approval](DESIGN_REFERENCE.md) retains material authority; [D-025](DECISIONS.md#d-025) and [WALLET_REDESIGN.md](WALLET_REDESIGN.md) own the new topology/interactions. [WALLET_SURFACE.md](WALLET_SURFACE.md) and its `.impeccable/surfaces/` counterpart carry the current contract and corrected user-pinned provenance. [DESIGN_REVIEW.md](DESIGN_REVIEW.md) distinguishes historical/current verdicts. DESIGN.md and the version-2 sidecar are refreshed to the built system. Live-picker configuration has not been enabled automatically.
 - The approximately 22 MB Impeccable Linux engine is excluded from Git and retained locally. `sh scripts/setup-impeccable.sh` restores the pinned, checksum-verified engine; online restoration and corrupt-source rejection were tested in isolation. See [TOOLING.md](TOOLING.md).
 - Host npm/network requests timed out during installation; a direct IPv4-first Node fetch succeeded, but the npm installer still stalled. The skill was installed with the verified cached official CLI and an official locally downloaded bundle. Diagnose Node 26/npm networking inside Docker before relying on dependency installs.
-- Icons8 MCP remains removed. Lucide supplies rendered icons and the favicon uses its wallet outline; no paid or fabricated payment branding is included.
+- Icons8 MCP remains removed. Lucide supplies UI cues; the favicon uses the approved CocoWallet SVG. Currency flags are locally authored vectors, not paid or fabricated payment branding.
 
 ## Important implemented safeguard
 
