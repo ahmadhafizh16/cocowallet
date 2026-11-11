@@ -31,11 +31,27 @@ describe("SQLite foundation", () => {
   it("enables foreign keys and WAL for file-backed connections", () => {
     const database = connect();
 
-    expect(database.sqlite.pragma("foreign_keys", { simple: true })).toBe(1);
+    expect(database.sqlite.pragma("foreign_keys", { simple: true })).toBe(1n);
     expect(database.sqlite.pragma("journal_mode", { simple: true })).toBe(
       "wal",
     );
-    expect(database.sqlite.pragma("synchronous", { simple: true })).toBe(2);
+    expect(database.sqlite.pragma("synchronous", { simple: true })).toBe(2n);
+  });
+
+  it("preserves distinct integers above JavaScript's safe-number limit", () => {
+    const database = connect();
+    const query = database.sqlite.prepare<[bigint], { value: bigint }>(
+      "SELECT CAST(? AS INTEGER) AS value",
+    );
+
+    for (const value of [
+      9_007_199_254_740_991n,
+      9_007_199_254_740_992n,
+      9_007_199_254_740_993n,
+      9_223_372_036_854_775_807n,
+    ]) {
+      expect(query.get(value)?.value).toBe(value);
+    }
   });
 
   it("applies versioned migrations repeatedly without duplicating schema", () => {

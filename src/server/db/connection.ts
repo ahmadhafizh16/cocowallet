@@ -10,6 +10,7 @@ export function openDatabase(filename: string) {
 
   const sqlite = new Database(path, { timeout: 5_000 });
   try {
+    sqlite.defaultSafeIntegers(true);
     sqlite.pragma("foreign_keys = ON");
     sqlite.pragma("journal_mode = WAL");
     sqlite.pragma("synchronous = FULL");
