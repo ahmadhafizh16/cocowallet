@@ -7,7 +7,7 @@ Status is mirrored in [KANBAN.md](../KANBAN.md).
 ### T02-01
 
 **Exact money types, currency precision, and rounding**  
-**Status:** To do; final precision source and bounds require [O-002](../DECISIONS.md#o-002).  
+**Status:** In progress. Precision-source and exact-arithmetic review is running; implementation will resolve [O-002](../DECISIONS.md#o-002).
 **Decisions:** [D-004](../DECISIONS.md#d-004), [D-018](../DECISIONS.md#d-018).  
 **Depends on:** [T01-02](TASKS-01.md#t01-02).  
 **Implementation:** Choose authoritative fiat minor-unit metadata and a decimal-safe calculation approach; parse input as decimal text; represent journal amounts as integer minor units; round FX results half up to target precision. Specify supported bounds, API serialization, overflow behavior, and a strategy safe for long journal aggregations.
@@ -17,7 +17,7 @@ Status is mirrored in [KANBAN.md](../KANBAN.md).
 ### T02-02
 
 **Journal schema and derived balance reads**  
-**Status:** To do.  
+**Status:** In progress. Implementing the journal schema and safe integer database mapping.
 **Decisions:** [D-003](../DECISIONS.md#d-003), [D-004](../DECISIONS.md#d-004), [D-012](../DECISIONS.md#d-012), [D-018](../DECISIONS.md#d-018).  
 **Depends on:** [T01-03](TASKS-01.md#t01-03), [T02-01](#t02-01).  
 **Implementation:** Design and migrate the minimal account, wallet, completed-transaction, and signed journal-entry structures, including wallet/currency uniqueness, foreign keys, and indexes. Implement exact balance reads derived from one wallet's entries; do not add a second authoritative stored balance. Coordinate main-account seeding with T03-01.
