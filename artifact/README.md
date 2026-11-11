@@ -1,6 +1,6 @@
 # Digital wallet planning
 
-These documents distinguish decisions, proposals, and implemented work. The platform, exact journal core, persistent reads, durable funding, fresh-first metadata and reviewed quote-bound conversion flow exist. Conversion includes explicit expiry/reconfirmation and shared same-key recovery. The internal atomic transfer service has isolated tests; transfer HTTP/UI, full history/valuation and Swagger remain future work. Quote previews move/reserve no funds. Consult the kanban rather than assuming a draft PRD describes completed features.
+These documents distinguish decisions, proposals, and implemented work. The platform, exact journal core, persistent account/history reads, durable funding, fresh-first metadata, shared HTTP boundaries and reviewed quote-bound conversion flow exist. History uses inclusive UTC days and user-selected numbered pages. The internal atomic transfer service is verified, but transfer HTTP/UI, full-history UI/valuation and Swagger remain future work. Quote previews move/reserve no funds. Consult the kanban rather than assuming a draft PRD describes completed features.
 
 - [Main PRD](PRD.md): product scope and links to the smaller feature PRDs.
 - [Decision register](DECISIONS.md): stable `D-###` decisions and `O-###` open questions.
@@ -26,6 +26,7 @@ These documents distinguish decisions, proposals, and implemented work. The plat
 - [Reviewed conversions](CONVERSIONS.md): exact quote-bound accounting, target creation, documented endpoint, expiry/reconfirmation and original-key recovery.
 - [Atomic simulated transfers](TRANSFERS.md): internal same/FX transfer service, recipient/wallet creation and globally retained original results; no transfer HTTP/UI submission.
 - [Shared HTTP contracts](HTTP.md): reusable request guards/schema definitions, exact JSON, safe Problem Details and common write boundaries; no new endpoint or Swagger UI.
+- [History queries/API](HISTORY.md): account-scoped completed facts, inclusive UTC-day filters and user-selected numbered pages; no full-history UI or transfer submission.
 - [Diagrams](DIAGRAMS.md): proposed architecture, data relationships, business flows, and code flow.
 - [API design](API_DESIGN.md): proposed HTTP contract, sequence diagram, and OpenAPI/Swagger approach.
 - [Idempotency discussion](IDEMPOTENCY.md): the selected failed-retry policy, alternatives, and examples.

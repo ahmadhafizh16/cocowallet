@@ -48,6 +48,21 @@ export function literalContract<const T extends string>(value: T) {
     },
   };
 }
+export function integerContract<
+  const S extends { minimum: number; maximum: number },
+>(rules: S) {
+  return {
+    schema: { type: "integer" as const, ...rules },
+    is(value: unknown): value is number {
+      return (
+        typeof value === "number" &&
+        Number.isSafeInteger(value) &&
+        value >= rules.minimum &&
+        value <= rules.maximum
+      );
+    },
+  };
+}
 export function objectSchema<const P extends Record<string, object>>(
   properties: P,
   optional: readonly (keyof P)[] = [],

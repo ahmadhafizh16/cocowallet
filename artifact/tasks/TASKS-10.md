@@ -80,8 +80,9 @@ transfer endpoint is implied. See [TRANSFERS.md](../TRANSFERS.md).
 **Partial groundwork:** `/api/openapi` serves a tested hand-maintained document
 for implemented read/operational, funding/conversion, reference and quote routes, including
 required money keys, exact amounts, discriminated quote terms/lifecycle and safe
-problems. Schema generation, transfer submission/full-history contracts and
-Swagger UI remain unimplemented; no closure implied.
+problems. Full generation, transfer submission and Swagger UI remain unimplemented;
+T09-01 now supplies the history query/detail contract in [HISTORY.md](../HISTORY.md).
+No closure of this generation/Swagger task is implied.
 
 T10-01 now makes implemented request schemas directly reusable from their runtime
 definitions, and centralizes common response/schema parts. Full path/schema

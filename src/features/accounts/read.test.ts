@@ -13,7 +13,12 @@ import { withJournalWrite } from "../journal/write";
 import { getCurrencyExponent } from "../money/currency-precision";
 import { MAX_MINOR, MoneyError } from "../money/money";
 import { AccountDataError } from "./errors";
-import { listAccounts, readAccountWallets, readOverviewSnapshot } from "./read";
+import {
+  listAccounts,
+  readAccountWallets,
+  readOverviewSnapshot,
+  readAccountMetadata,
+} from "./read";
 
 describe("persistent account read models", () => {
   let fixture: ReturnType<typeof createJournalFixture>;
@@ -25,6 +30,31 @@ describe("persistent account read models", () => {
   afterEach(() => {
     jest.restoreAllMocks();
     fixture.cleanup();
+  });
+  it("reads one account's metadata without aggregating balances or validating unrelated destinations", () => {
+    fixture.database.sqlite
+      .prepare("UPDATE accounts SET created_at='invalid' WHERE id='recipient'")
+      .run();
+    const prepare = fixture.database.sqlite.prepare.bind(
+      fixture.database.sqlite,
+    );
+    jest.spyOn(fixture.database.sqlite, "prepare").mockImplementation((sql) => {
+      if (sql.includes("journal_entries"))
+        throw new Error("Metadata reads must not aggregate money");
+      return prepare(sql);
+    });
+    fixture.database.sqlite.pragma("query_only=ON");
+    expect(readAccountMetadata(fixture.database, "main")).toMatchObject({
+      id: "main",
+      role: "main",
+      inspectOnly: false,
+    });
+    expect(() => readAccountMetadata(fixture.database, "missing")).toThrow(
+      expect.objectContaining({ code: "account_not_found" }),
+    );
+    expect(() => readAccountMetadata(fixture.database, "recipient")).toThrow(
+      expect.objectContaining({ code: "invalid_account_data" }),
+    );
   });
 
   const fund = (

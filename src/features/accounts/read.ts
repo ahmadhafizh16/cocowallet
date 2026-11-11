@@ -70,6 +70,26 @@ function currencyMetadata(
   return { name: stored.name, exponent };
 }
 
+function accountRecord(row: StoredAccount): AccountRecord {
+  if (
+    !isNonemptyText(row.id) ||
+    (row.role !== "main" && row.role !== "destination") ||
+    !isNonemptyText(row.default_currency) ||
+    !isNonemptyText(row.created_at) ||
+    !Number.isFinite(Date.parse(row.created_at)) ||
+    new Date(row.created_at).toISOString() !== row.created_at
+  )
+    return invalidData("Stored account metadata is invalid.");
+  currencyMetadata(row.default_currency, row);
+  return {
+    id: row.id,
+    role: row.role,
+    defaultCurrency: row.default_currency,
+    createdAt: row.created_at,
+    inspectOnly: row.role === "destination",
+  };
+}
+
 function loadAccounts(database: WalletDatabase): {
   main: AccountRecord;
   accounts: AccountRecord[];
@@ -92,26 +112,7 @@ function loadAccounts(database: WalletDatabase): {
   }
   if (mainCount !== 1) invalidData("Exactly one main account is required.");
 
-  const accounts = rows.map((row): AccountRecord => {
-    if (
-      !isNonemptyText(row.id) ||
-      (row.role !== "main" && row.role !== "destination") ||
-      !isNonemptyText(row.default_currency) ||
-      !isNonemptyText(row.created_at) ||
-      !Number.isFinite(Date.parse(row.created_at)) ||
-      new Date(row.created_at).toISOString() !== row.created_at
-    ) {
-      return invalidData("Stored account metadata is invalid.");
-    }
-    currencyMetadata(row.default_currency, row);
-    return {
-      id: row.id,
-      role: row.role,
-      defaultCurrency: row.default_currency,
-      createdAt: row.created_at,
-      inspectOnly: row.role === "destination",
-    };
-  });
+  const accounts = rows.map(accountRecord);
   const main = accounts[0];
   if (!main || main.role !== "main") {
     return invalidData("Stored main account is invalid.");
@@ -168,6 +169,39 @@ function loadWallets(
 
 export function listAccounts(database: WalletDatabase): AccountRecord[] {
   return database.sqlite.transaction(() => loadAccounts(database).accounts)();
+}
+
+/** Selected-account metadata only: no balance aggregation or scan of every
+ * destination. A nested call joins its caller's existing read snapshot. */
+export function readAccountMetadata(
+  database: WalletDatabase,
+  accountId: string,
+): AccountRecord {
+  return database.sqlite.transaction(() => {
+    const count = database.sqlite
+      .prepare<[], { n: bigint }>(
+        "SELECT COUNT(*) AS n FROM accounts WHERE role='main'",
+      )
+      .get()!.n;
+    if (count === 0n)
+      throw new AccountDataError(
+        "account_not_initialized",
+        "The main account has not been initialized.",
+      );
+    if (count !== 1n)
+      return invalidData("Exactly one main account is required.");
+    const row = database.sqlite
+      .prepare<[string], StoredAccount>(
+        `SELECT a.id,a.role,a.default_currency,a.created_at,c.code AS metadata_code,c.name,c.minor_unit FROM accounts a LEFT JOIN currencies c ON c.code=a.default_currency WHERE a.id=?`,
+      )
+      .get(accountId);
+    if (!row)
+      throw new AccountDataError(
+        "account_not_found",
+        "Account does not exist.",
+      );
+    return accountRecord(row);
+  })();
 }
 
 export function readAccountWallets(

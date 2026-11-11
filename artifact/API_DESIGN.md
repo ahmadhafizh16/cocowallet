@@ -1,6 +1,6 @@
 # HTTP API design: draft
 
-**Status:** Account/wallet reads, simulated funding/conversion POSTs, fresh-first reference metadata and immutable quotes are implemented with maintained OpenAPI contracts. T07-02's connected conversion flow is verified. T08-01 adds an internal atomic service, not a transfer endpoint; transfer HTTP/UI, full history contracts, generation and Swagger UI remain future work. See [FUNDING.md](FUNDING.md), [RATES.md](RATES.md), [QUOTES.md](QUOTES.md), [CONVERSIONS.md](CONVERSIONS.md) and [TRANSFERS.md](TRANSFERS.md).
+**Status:** Account/wallet/history reads, simulated funding/conversion POSTs, fresh-first reference metadata and immutable quotes are implemented with maintained OpenAPI contracts. T09-01 adds account-scoped completed history/detail, inclusive UTC days and user-selected numbered pages. Transfer HTTP/UI, full-history UI, full generation and Swagger UI remain future work. See [HISTORY.md](HISTORY.md), [HTTP.md](HTTP.md) and [TRANSFERS.md](TRANSFERS.md).
 
 T07-01's atomic service now backs `POST /api/conversions` under T07-02.
 Funding/conversion retry keys share ownership, including recorded failures;
@@ -40,6 +40,8 @@ no general generator or Swagger UI is selected/implemented by this stage.
 | GET | `/api/rates?base=USD&quote=EUR` | Exact direct reference observation with source/fetch dates and fresh/cached provenance; not a binding quote. |
 | POST | `/api/quotes` | Persist immutable conversion/cross-currency transfer preview terms; no funds reservation or money idempotency key. |
 | GET | `/api/quotes/{quoteId}` | Read immutable terms and active/expired/consumed state without refreshing the rate or expiry. |
+| GET | `/api/transactions?accountId=…` | Selected-account completed journal facts, type/either-currency/inclusive-UTC-day filters, numbered page/pageSize and matching counts. |
+| GET | `/api/transactions/{transactionId}?accountId=…` | Exact stored operation in this account; foreign/missing transaction is the same 404. No balances or retry keys. |
 
 Routes are in `src/app/`; Jest tests verify isolated database reads, safe errors and read-response/spec agreement. Wallet GETs never seed or mutate storage and return `Cache-Control: no-store`. Missing initialization/storage is 503, unknown account is 404, empty/null-character path ID is 400. Read codes are `ACCOUNT_NOT_INITIALIZED`, `WALLET_DATA_UNAVAILABLE`, `ACCOUNT_NOT_FOUND` and `INVALID_ACCOUNT_ID`; all use safe Problem Details. Unsupported methods retain Next.js's 405 with no mutation/body contract. See [the fixed read shapes](BACKEND_READS.md).
 
@@ -80,12 +82,12 @@ disabled. Operational readiness does not imply accounts have been seeded.
 | POST | `/api/wallets` | Add a supported fiat wallet to the main account. |
 | PATCH | `/api/accounts/{accountId}/default-currency` | Change the main account's default currency; destinations are read-only. |
 | POST | `/api/transfers` | Transfer to an existing or newly created simulated account. |
-| GET | `/api/transactions` | List/filter an account's transactions. |
-| GET | `/api/transactions/{transactionId}` | Inspect an individual transaction. |
 
-These remaining examples are not finalized write/history contracts. The two
-account GETs and quote routes above are implemented; decide default updates,
-pagination and remaining resource names before implementing their routes.
+These remaining wallet/default/transfer examples are not finalized write
+contracts. History GETs are now fixed under D-033 in [HISTORY.md](HISTORY.md):
+required accountId, inclusive UTC days and numbered pages, default 50/maximum 100.
+Each count/page shares one snapshot; new activity between requests can shift page
+boundaries. They never fetch current rates or authorize a transfer.
 
 ## Funding request/response contract
 
@@ -112,8 +114,8 @@ The names, fields, example IDs, successful response statuses, and payloads in th
 | FX quote | Implemented POST/GET; exact fields in [QUOTES.md](QUOTES.md) supersede this proposal | Immutable terms and lifecycle state; no funds reservation | [D-032](DECISIONS.md#d-032) |
 | Convert | Implemented exact contract in [CONVERSIONS.md](CONVERSIONS.md), superseding this proposal | Original retained conversion receipt with exact debit/credit, balance snapshots and rate provenance | [D-009](DECISIONS.md#d-009), [D-018](DECISIONS.md#d-018), [D-019](DECISIONS.md#d-019), [D-032](DECISIONS.md#d-032) |
 | Transfer | Source wallet, destination account ID, amount, target/default-currency information, quote reference when FX is needed, and `Idempotency-Key` | One completed transfer and destination identity; the credited wallet/account is created when needed | [D-010](DECISIONS.md#d-010), [D-018](DECISIONS.md#d-018), [D-019](DECISIONS.md#d-019) |
-| Transaction list | Account ID and optional type, currency, date filters | Completed records, newest first; pagination is open | [D-012](DECISIONS.md#d-012), [O-003](DECISIONS.md#o-003) |
-| Transaction detail | Transaction ID and, if needed, inspected account context | Stored operation details, including provider/destination and historical rate as applicable | [D-012](DECISIONS.md#d-012), [O-003](DECISIONS.md#o-003) |
+| Transaction list | Implemented GET with required accountId and optional type/currency/from/to/page/pageSize; [HISTORY.md](HISTORY.md) supersedes the proposal | Completed records with exact strings, newest first and numbered-page counts | [D-012](DECISIONS.md#d-012), [D-033](DECISIONS.md#d-033) |
+| Transaction detail | Implemented GET with transaction ID and required accountId | Stored operation facts and context-relative direction; no foreign-account fallback, balances or retry keys | [D-012](DECISIONS.md#d-012), [D-033](DECISIONS.md#d-033) |
 
 Illustrative deposit request; the provider code and path are proposals:
 

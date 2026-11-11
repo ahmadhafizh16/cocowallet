@@ -18,6 +18,8 @@ import { POST as conversion } from "../conversions/route";
 import { GET as health } from "../health/route";
 import { GET as ready } from "../ready/route";
 import { assertContract, type Schema } from "@/test/json-contract";
+import { GET as historyList } from "../transactions/route";
+import { GET as historyDetail } from "../transactions/[transactionId]/route";
 
 jest.mock("server-only", () => ({}));
 
@@ -43,6 +45,8 @@ describe("read-only OpenAPI contract", () => {
     const spec = await response.json();
     expect(spec.openapi).toBe("3.1.0");
     expect(Object.keys(spec.paths)).toEqual([
+      "/api/transactions",
+      "/api/transactions/{transactionId}",
       "/api/conversions",
       "/api/quotes",
       "/api/quotes/{quoteId}",
@@ -121,6 +125,23 @@ describe("read-only OpenAPI contract", () => {
         "Problem",
       ],
       [ready, "Problem"],
+      [
+        () =>
+          historyList(
+            new Request("http://localhost/api/transactions?accountId=main"),
+          ),
+        "HistoryProblem",
+      ],
+      [
+        () =>
+          historyDetail(
+            new Request(
+              "http://localhost/api/transactions/missing?accountId=main",
+            ),
+            { params: Promise.resolve({ transactionId: "missing" }) },
+          ),
+        "HistoryProblem",
+      ],
       [currencyCatalog, "ReferenceProblem"],
       [
         () =>

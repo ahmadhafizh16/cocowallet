@@ -163,6 +163,12 @@ flowchart TD
 
 No action moves real money. Destination accounts can be inspected but cannot initiate operations. A transfer to the main account's own ID is rejected; conversions handle the main account's currency changes.
 
+[HISTORY.md](HISTORY.md) now implements completed journal-backed list/detail GETs,
+required account context, either-side currency filters and inclusive UTC days.
+Numbered pages/counts share one read snapshot, but activity between requests may
+shift page boundaries (D-033). The full history UI and incoming-transfer browser
+inspection above remain T09-02/T08-02; history reads do not enable transfer writes.
+
 ## Rate, cache, and quote sequence
 
 Decisions: [D-007](DECISIONS.md#d-007), [D-008](DECISIONS.md#d-008), [D-018](DECISIONS.md#d-018), [D-023](DECISIONS.md#d-023), [D-032](DECISIONS.md#d-032). Tasks: [T06-01](tasks/TASKS-06.md#t06-01), [T06-02](tasks/TASKS-06.md#t06-02).

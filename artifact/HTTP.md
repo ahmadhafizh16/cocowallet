@@ -137,3 +137,8 @@ recipients, quotes or live-provider check is needed for this stage.
   response contracts to finalize under O-003/O-004 before implementation. Transfer
   submission, full OpenAPI generation and Swagger UI remain their own tasks. No
   dependency or live-provider integration changed; no remote push is authorized.
+
+The checkpoint above records T10-01's boundary. T09-01 now implements the read-only
+history GETs in [HISTORY.md](HISTORY.md), with user-selected UTC days and numbered
+pages under D-033. It reuses these helpers; this does not enable transfer submission
+or complete generation/Swagger work.

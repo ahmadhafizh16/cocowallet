@@ -1,13 +1,12 @@
 # Handover
 
-**Status:** Twenty-four of 36 tasks are closed. T10-01's shared HTTP consolidation
-is verified, preserving existing monetary contracts and the internal atomic
-transfer service. The board has 10 To do, 2 In progress (remaining Swagger
-acceptance), and 24 Done. Existing visual design is preserved and visual feedback
-deferred. Transfer HTTP/UI stays disabled; next is T09-01 history/API, including
-O-003/O-004's date-filter/pagination/response contract decisions, before T08-02's
-connected flow. Full history/valuation, wallet management and Swagger retain their
-tasks. See [HTTP.md](HTTP.md).
+**Status:** Twenty-five of 36 tasks are closed. T09-01's account-scoped completed
+history/detail API is verified, with user-selected inclusive UTC days and numbered
+pages (D-033). The board has 9 To do, 2 In progress (remaining Swagger acceptance),
+and 25 Done. Existing visual design and monetary contracts are preserved. Next is
+T08-02's reviewed transfer submission/recovery and destination inspection. Transfer
+HTTP/UI is still disabled; full-history UI, valuation, wallet management and Swagger
+remain separate work. See [HISTORY.md](HISTORY.md).
 
 ## Implemented modules and commands
 
@@ -30,6 +29,8 @@ tasks. See [HTTP.md](HTTP.md).
 | `src/lib/contracts.ts`, `src/lib/problem-details.ts`, `src/server/http/schema-parts.ts` | Shared runtime guards/published structural schemas, safe Problem Details and common response/schema parts; domain money/precision/quote validation stays feature-owned. |
 | `src/server/http/request-input.ts`, `responses.ts`, `funding-handler.ts`, `conversion-handler.ts` | Bounded fatal-UTF-8 JSON, direct-origin/media policy, lossless plain JSON/no-store/replay responses and thin monetary adapters. Post-commit serialization failure keeps original-key recovery. |
 | `src/test/json-contract.ts` | Reusable test-only assertion for the document's explicit schema subset; not a standards-compliant validator, generator or shipping client dependency. |
+| `src/features/history/`, `src/app/api/transactions/`, `src/server/http/history-*` | Read-only account-scoped completed facts, inclusive UTC days, numbered pages/counts in one snapshot, scoped detail 404, exact stored amounts/rates and maintained OpenAPI. No current balances/keys/valuation or full-history UI wiring. |
+| `e2e/zzzzz-history.spec.ts` | Guarded disposable-server API checks for confirmed facts, either conversion currency, UTC filters, numbered pages, errors, GET-only registration and unchanged balances after reads. |
 | `src/features/funding/`, `src/app/api/deposits/`, `src/app/api/withdrawals/` | Exact simulated funding, immutable durable original results, same-key retries, per-tab recovery, receipts and bounded completed-funding visibility. |
 | `drizzle/0003_funding_results.sql` | Retained technical outcome table and immutable update/delete triggers; no seeded funds or transactions. |
 | `src/features/rates/`, `src/app/api/currencies/`, `src/app/api/rates/` | Server-only fixed-origin Frankfurter catalog and exact CSV pair observations; fresh-first validation, bounded timeout/size and original-time eligible fallback. No binding quote or monetary change. |
@@ -68,7 +69,33 @@ Stop the dev compiler before `docker compose run --rm app npm run check`, then u
 
 Application DB: `/app/data/wallet.sqlite` in Compose's `wallet-data` volume. Tests use isolated temporary SQLite files. Normal shutdown is `docker compose down` without deleting volumes. Before applying journal migrations, the stopped app's database was backed up with SQLite's backup API to `/app/data/wallet.sqlite.pre-journal-1794390597589.bak`. Backup creation is verified; a full restore drill is not claimed.
 
-Current HTTP verification: full Docker check/build passes **1,228 Jest tests in 52
+Current history-backend verification: full Docker check/build passes **1,353 Jest
+tests in 55 suites**, plus formatting, lint, TypeScript and artifact checks
+(**57 documents / 36 tasks**). All **65 production Chromium checks** pass against
+a fresh guarded disposable server. Two new API checks cover exact confirmed facts,
+either conversion currency, UTC filters, numbered pages, scoped errors, GET-only
+registration and unchanged balances after reads. Incoming transfers and every
+operation/precision/role/snapshot/corruption case are covered by isolated service/
+HTTP tests, not a claimed transfer browser journey or full-history UI.
+
+Verified backup `/app/data/wallet.sqlite.pre-history-1794429710767.bak` preceded
+checks; all **14 runtime tables including migration metadata** remain
+bigint-safely row-identical: **1 account / 3 wallets / 0 transactions / 0 journal
+entries / 0 funding attempts / 0 conversion attempts / 0 transfer attempts**, with
+empty reference caches and quote/use tables. Integrity is `ok`, FK violations zero.
+No migration, dependency, runtime test funds/recipient/quote seed, live-provider
+check, restore drill or push was introduced.
+
+Development resumed with `.next/dev.pre-history-1794430024699` retained. A browser
+verified **300 stable frames**, enabled funding review, documented history GETs,
+an actual empty history page and absent transfer submission, with zero extra
+navigations/page/console errors or financial/reference requests. Bounded in-thread
+Verify review uses graph, coverage and exact source, including direct reads of
+the old journal-trigger SQL parse gaps exercised by isolated corruption tests.
+No independent-agent audit, exhaustive security/correctness or performance claim
+is made. See [HISTORY.md](HISTORY.md).
+
+Historical HTTP verification: full Docker check/build passes **1,228 Jest tests in 52
 suites**, plus formatting, lint, TypeScript and artifact checks (**56 documents /
 36 tasks**). A first full run found cross-realm native SQLite objects rejected by
 an overly strict JSON prototype check; that compatibility correction and explicit
@@ -209,7 +236,7 @@ funding verification supersedes its disconnected-write boundary, not its evidenc
 The last production npm audit was clean; 23 low/moderate development-tool findings
 remain in [DEPENDENCIES.md](DEPENDENCIES.md); no new dependency was installed.
 
-Artifact validation verifies **56 documents / 36 tasks**. The previous
+Artifact validation verifies **57 documents / 36 tasks**. The previous
 T11-02 design-extraction counts and verdict are historical, not certification of
 T11-04. Current production captures include desktop light/dark, 1688/1769px,
 tablet, mobile, dialogs/menus, validation/review, loading and errors. Independent
@@ -261,7 +288,7 @@ The atomic-write checkpoint passes 16 feature-local integration tests, including
 - The workspace was empty before the draft documents were added.
 - The available host `node` command reports v24.22.1; the application will run on Node.js 26 in Docker, avoiding a requirement to install Node 26 on the host.
 - The `sqlite3` CLI was not found. It is optional if the selected application driver manages the SQLite file.
-- Docker and Compose run the application at `http://localhost:3000`; `/` renders stored balances with reviewed simulated funding/conversion, explicit quote expiry/reconfirmation and shared recovery. Health/readiness are separate endpoints. Transfers, full history and valuation remain disconnected; transfer submission is disabled.
+- Docker and Compose run the application at `http://localhost:3000`; `/` renders stored balances with reviewed simulated funding/conversion, explicit quote expiry/reconfirmation and shared recovery. History GETs now expose scoped recorded facts, UTC filters and numbered pages. Transfer submission, full-history UI and valuation remain disconnected; the visual design is unchanged.
 - T03-01 changes `/` to the dynamic journal-backed read-only overview. Startup
   now requires explicit `db:migrate` then `db:seed`; GET and build never seed.
   Before initialization, SQLite's backup API saved

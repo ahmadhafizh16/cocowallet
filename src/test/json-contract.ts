@@ -136,7 +136,8 @@ export function assertContract(
     );
     if (source.minimum !== undefined) assert(value >= source.minimum);
     if (source.maximum !== undefined) assert(value <= source.maximum);
-  } else if (source.type === "boolean") assert.equal(typeof value, "boolean");
+  } else if (source.type === "null") assert.equal(value, null);
+  else if (source.type === "boolean") assert.equal(typeof value, "boolean");
   else
     assert(
       source.type === undefined,

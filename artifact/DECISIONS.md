@@ -191,6 +191,18 @@ a new quote; an existing quote is never extended. T06-02 implements preview,
 readback and internal validation/consumption safeguards, not conversion/transfer
 HTTP submission. Exact contracts are in [QUOTES.md](QUOTES.md).
 
+### D-033
+
+**History dates and numbered pages:** The user selected inclusive UTC calendar
+days for `from`/`to` history filters (YYYY-MM-DD), and **numbered pages**, not the
+recommended cursor alternative. List/detail requests require explicit `accountId`;
+currency filters match either affected side and an unrelated account's detail is
+404. Use 50 records by default, at most 100 per page, newest first with a stable
+transaction-ID tie-breaker. Each page/count shares one read snapshot, but new
+activity between requests can shift records across pages; no cursor/snapshot-token
+guarantee is implied. T09-01 implements read-only queries/API, not T09-02's full
+history interface or T08-02's transfer submission.
+
 ## Questions and resolutions
 
 ### O-001
@@ -211,12 +223,18 @@ T07-02 fixes conversion HTTP/recovery shapes in [CONVERSIONS.md](CONVERSIONS.md)
 T10-01 now shares structural guard/schema definitions and HTTP response/request
 conventions in [HTTP.md](HTTP.md), without selecting a generator or changing
 implemented endpoint shapes.
-Transfer submission/history shapes, generation and full
-filtering/pagination stay open in [API_DESIGN.md](API_DESIGN.md). Swagger UI is not implemented.
+D-033 and T09-01 fix the history query/detail slice in [HISTORY.md](HISTORY.md):
+explicit account context, inclusive UTC days, either-side currency filtering and
+numbered pages. Transfer submission, generation and other remaining shapes stay
+open in [API_DESIGN.md](API_DESIGN.md). Swagger UI is not implemented.
 
 ### O-004
 
 **Account and display details:** Confirm whether the USD total also appears for an inspected destination account; define date-filter time-zone boundaries and behavior when changing a main-account default to a currency without a wallet.
+
+The history date-filter portion is resolved by D-033: inclusive UTC calendar days,
+not browser-local boundaries. Destination valuation/default-wallet behavior remains
+open and is not changed by the history backend.
 
 ### O-005
 
