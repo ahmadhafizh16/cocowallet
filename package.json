@@ -20,6 +20,7 @@
     "test:e2e": "playwright test",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "tsx scripts/migrate.ts",
+    "db:seed": "tsx scripts/seed.ts",
     "artifacts:check": "node scripts/check-artifacts.mjs",
     "check": "npm run artifacts:check && npm run format:check && npm run lint && npm run typecheck && npm test && npm run build"
   },
