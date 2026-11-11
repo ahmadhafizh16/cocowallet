@@ -1,0 +1,100 @@
+# Project kanban
+
+**Last updated:** Local Git and baseline setup verified; Docker foundation in progress. No wallet functionality exists yet.  
+**Scope:** 32 implementation tasks: **29 to do**, **1 in progress**, **0 blocked**, **2 done**. Planning activities completed below do not count as implemented features.
+
+Each task links to its detailed description, source PRD, decision IDs, dependencies, and acceptance tests. The Angular-style, one-intention-per-commit rule and local Git workflow in [D-021](DECISIONS.md#d-021) and [D-022](DECISIONS.md#d-022) apply to every task. A task moves to **Done** only when its acceptance criteria are verified and the PRD, decisions, diagrams, API documentation, and handover are updated as needed.
+
+## To do
+
+### Git setup — [PRD-01](prd/PRD-01-platform.md)
+
+See the In progress and Done sections for Git setup.
+
+### Platform — [PRD-01](prd/PRD-01-platform.md)
+
+- [ ] [T01-02](tasks/TASKS-01.md#t01-02) — Scaffold Next.js and quality tooling.
+- [ ] [T01-03](tasks/TASKS-01.md#t01-03) — SQLite connection, migrations, and volume lifecycle.
+
+### Journal and money — [PRD-02](prd/PRD-02-journal.md)
+
+- [ ] [T02-01](tasks/TASKS-02.md#t02-01) — Exact money types, precision, and rounding; resolve [O-002](DECISIONS.md#o-002) before closing.
+- [ ] [T02-02](tasks/TASKS-02.md#t02-02) — Journal schema and derived balance reads.
+- [ ] [T02-03](tasks/TASKS-02.md#t02-03) — Atomic writes and concurrent spending.
+
+### Accounts and wallets — [PRD-03](prd/PRD-03-accounts.md)
+
+- [ ] [T03-01](tasks/TASKS-03.md#t03-01) — Main-account seed and account switcher data.
+- [ ] [T03-02](tasks/TASKS-03.md#t03-02) — Fiat wallets and default-currency management.
+- [ ] [T03-03](tasks/TASKS-03.md#t03-03) — Balance views and approximate USD total.
+
+### Deposits — [PRD-04](prd/PRD-04-deposits.md)
+
+- [ ] [T04-01](tasks/TASKS-04.md#t04-01) — Deposit service and journal write.
+- [ ] [T04-02](tasks/TASKS-04.md#t04-02) — Deposit HTTP flow and interface.
+
+### Withdrawals — [PRD-05](prd/PRD-05-withdrawals.md)
+
+- [ ] [T05-01](tasks/TASKS-05.md#t05-01) — Withdrawal service and protected debit.
+- [ ] [T05-02](tasks/TASKS-05.md#t05-02) — Withdrawal HTTP flow and interface.
+
+### FX rates and quotes — [PRD-06](prd/PRD-06-rates.md)
+
+- [ ] [T06-01](tasks/TASKS-06.md#t06-01) — Frankfurter adapter, currency listing, and rate cache.
+- [ ] [T06-02](tasks/TASKS-06.md#t06-02) — Server-owned preview and one-minute quote.
+
+### Conversion — [PRD-07](prd/PRD-07-conversion.md)
+
+- [ ] [T07-01](tasks/TASKS-07.md#t07-01) — Atomic conversion service.
+- [ ] [T07-02](tasks/TASKS-07.md#t07-02) — Preview, confirmation, and HTTP flow.
+
+### Transfers — [PRD-08](prd/PRD-08-transfers.md)
+
+- [ ] [T08-01](tasks/TASKS-08.md#t08-01) — Simulated destination and atomic transfer service.
+- [ ] [T08-02](tasks/TASKS-08.md#t08-02) — Transfer interface and destination inspection.
+
+### History — [PRD-09](prd/PRD-09-history.md)
+
+- [ ] [T09-01](tasks/TASKS-09.md#t09-01) — History queries, filters, and detail API.
+- [ ] [T09-02](tasks/TASKS-09.md#t09-02) — History list and detail interface.
+
+### HTTP API — [PRD-10](prd/PRD-10-api.md)
+
+- [ ] [T10-01](tasks/TASKS-10.md#t10-01) — Shared HTTP schemas, handlers, and Problem Details.
+- [ ] [T10-02](tasks/TASKS-10.md#t10-02) — Durable idempotency implementation; the stable-result policy is agreed.
+- [ ] [T10-03](tasks/TASKS-10.md#t10-03) — OpenAPI generation, Swagger UI, and contract tests.
+
+### Interface — [PRD-11](prd/PRD-11-interface.md)
+
+- [ ] [T11-01](tasks/TASKS-11.md#t11-01) — Impeccable product context and design direction.
+- [ ] [T11-02](tasks/TASKS-11.md#t11-02) — Responsive shell, theme, and components.
+- [ ] [T11-03](tasks/TASKS-11.md#t11-03) — Accessibility, motion, and design review.
+
+### Verification and handover — [PRD-12](prd/PRD-12-quality.md)
+
+- [ ] [T12-01](tasks/TASKS-12.md#t12-01) — Critical Jest unit and integration coverage.
+- [ ] [T12-02](tasks/TASKS-12.md#t12-02) — Playwright end-to-end journeys.
+- [ ] [T12-03](tasks/TASKS-12.md#t12-03) — Operational verification and complete handover.
+
+## In progress
+
+- [ ] [T01-01](tasks/TASKS-01.md#t01-01) — Docker-first Node 26 workflow.
+
+## Blocked
+
+_No task is currently blocked by an explicit unresolved decision or external blocker._
+
+## Done — implementation tasks
+
+- [x] [T00-01](tasks/TASKS-00.md#t00-01) — Local Git initialized on `main`; targeted ignores verified.
+- [x] [T00-02](tasks/TASKS-00.md#t00-02) — Baseline separated by intention; checksum-verified skill restoration and corruption rejection tested.
+
+## Done — planning only
+
+- [x] **PL-01:** Captured the agreed stack and product decisions in the [decision register](DECISIONS.md) ([D-001](DECISIONS.md#d-001)–[D-022](DECISIONS.md#d-022)).
+- [x] **PL-02:** Installed and verified Impeccable project-locally, without automatic hooks ([D-014](DECISIONS.md#d-014)). Initialization/design remains [T11-01](tasks/TASKS-11.md#t11-01).
+- [x] **PL-03:** Moved planning documentation to `artifact/` and drafted feature PRDs, traceable tasks, diagrams, and this board ([D-020](DECISIONS.md#d-020)). These drafts do not count as completed app functionality.
+
+## Board maintenance
+
+Move a task's link between sections and update its `Status` in the detailed task file in the same change. Record evidence and actual test commands when closing it. Update the counts above and the [handover](HANDOVER.md). Unstarted prerequisite tasks may remain in **To do**; **Blocked** is reserved for an explicit unresolved decision or external blocker.

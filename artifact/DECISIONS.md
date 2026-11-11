@@ -120,11 +120,11 @@
 
 ### O-007
 
-**Resolved by D-022:** Initialize locally when implementation begins, commit automatically by intention, and exclude the approximately 22 MB Impeccable engine binary while retaining it locally. No Git repository or commit has been created yet.
+**Resolved by D-022:** Local Git is initialized on `main`, and baseline commits are separated by intention. The installed Impeccable engine is excluded while remaining available locally. No remote or push was performed.
 
 ### O-008
 
-**Skill restoration details:** Document and verify how to restore the excluded Impeccable engine with the required version and integrity checks, including supported platforms and offline/network limitations. Excluding the binary must not silently make the committed design skill unusable on a fresh checkout.
+**Resolved:** [TOOLING.md](TOOLING.md) and `scripts/setup-impeccable.sh` document pinned online/offline restoration and verification. The official Linux x64 asset was restored and run in an isolated directory; a deliberately corrupt source was rejected without replacing the valid engine. Other platform binaries are not tested in this Linux environment.
 
 ## Maintenance rule
 
