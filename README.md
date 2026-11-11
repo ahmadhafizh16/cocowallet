@@ -40,6 +40,10 @@ docker compose --profile test run --rm browser-tests
 
 The Playwright image runs Node 26 with its pinned Chromium and required Linux libraries. It addresses the app as `wallet.test` on the private Compose network; the bare `app` hostname can trigger Chromium's HTTPS upgrade for the `.app` namespace. No HTTPS validation is disabled to work around that.
 
+`next.config.ts` allows only this additional development origin (`wallet.test`)
+so Next's private-network HMR handshake does not block client hydration. It does
+not allow arbitrary origins or change the localhost-only host-port binding.
+
 The browser tests are foundation smoke tests, not wallet journeys. The 486 Jest tests additionally verify exact money, metadata, schema, snapshots, rollback, and independent-connection concurrency. See [`artifact/MONEY.md`](artifact/MONEY.md), [`artifact/JOURNAL.md`](artifact/JOURNAL.md), and [`artifact/DEPENDENCIES.md`](artifact/DEPENDENCIES.md).
 
 For the complete local check (including a production build), stop the development compiler first:
