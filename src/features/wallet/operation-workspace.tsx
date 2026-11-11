@@ -99,6 +99,7 @@ export function OperationWorkspace({
   const [reviews, setReviews] = useState<
     Partial<Record<Operation, OperationReview>>
   >({});
+  const [returningToEdit, setReturningToEdit] = useState(false);
   const draft = drafts[operation];
   const errors = errorsByOperation[operation] ?? {};
   const savedReview = reviews[operation];
@@ -154,6 +155,7 @@ export function OperationWorkspace({
 
   function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    setReturningToEdit(false);
     const result = validateOperation({ operation, draft, account, wallets });
     setErrors((current) => ({ ...current, [operation]: result.errors }));
     if (result.review) {
@@ -169,6 +171,7 @@ export function OperationWorkspace({
   }
 
   function editReview() {
+    setReturningToEdit(true);
     setReviews((current) => ({ ...current, [operation]: undefined }));
     requestAnimationFrame(() =>
       formRef.current
@@ -291,6 +294,7 @@ export function OperationWorkspace({
             onSubmit={submit}
             noValidate
             className="wallet-dialog-form"
+            data-entry={returningToEdit ? "back" : "initial"}
           >
             <FieldSet
               disabled={!hydrated}

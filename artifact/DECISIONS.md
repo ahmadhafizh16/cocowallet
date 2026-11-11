@@ -119,6 +119,16 @@ in the incumbent navy/icy-blue palette. No font/network/raster dependency or
 automatic header/favicon replacement follows from this asset request. See
 [BRANDING.md](BRANDING.md) for files, provenance and validation.
 
+### D-027
+
+**Apply CocoWallet branding and purposeful motion:** The user approved applying
+the SVG logo to the app and requested smooth animations/transitions. This
+supersedes D-026's asset-only integration limit. Preserve the frosted identity
+and two-column layout; use bounded money-dialog/menu transitions, review/edit
+continuity, coherent control/theme feedback, and reduced-motion alternatives.
+No delayed page-load choreography, invented money animation, dependency, or
+financial capability follows. See [MOTION.md](MOTION.md).
+
 ## Questions and resolutions
 
 ### O-001

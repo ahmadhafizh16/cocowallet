@@ -109,3 +109,22 @@ dependencies. No app or database code changed.
 **Acceptance and tests:** Verify XML structure/browser decoding and inspect the
 full logo on light/dark plus small-icon sizes. All checks pass; provenance and
 scope are recorded in [BRANDING.md](../BRANDING.md).
+
+### T11-06
+
+**Apply CocoWallet branding and smooth interaction motion**
+
+**Status:** In progress.
+
+**Decisions:** [D-013](../DECISIONS.md#d-013), [D-025](../DECISIONS.md#d-025), [D-026](../DECISIONS.md#d-026), [D-027](../DECISIONS.md#d-027).
+
+**Depends on:** [T11-04](#t11-04), [T11-05](#t11-05).
+
+**Implementation:** Apply the approved SVG branding consistently and implement
+the bounded, dependency-free [motion thesis](../MOTION.md), without changing
+layout, accounting or disconnected-service safeguards.
+
+**Acceptance and tests:** Follow the motion brief's branding, viewport,
+interruption, focus, keyboard, draft, theme, privacy, reduced-motion and stable
+development checks; run Docker/production-browser verification and reconcile
+current design/review/handover evidence before closure.

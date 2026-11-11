@@ -4,7 +4,7 @@ import "./globals.css";
 import "@/features/wallet/wallet.css";
 
 export const metadata: Metadata = {
-  title: "Wallet · Multi-currency simulation",
+  title: "CocoWallet · Multi-currency simulation",
   description: "A local multi-currency wallet simulation. No real funds move.",
   robots: { index: false, follow: false },
 };

@@ -6,6 +6,9 @@ export async function chooseTheme(
 ) {
   await page.getByRole("button", { name: "Color theme", exact: true }).click();
   await page.getByRole("menuitemradio", { name: theme, exact: true }).click();
+  await expect(page.locator('[data-slot="dropdown-menu-content"]')).toHaveCount(
+    0,
+  );
 }
 
 export async function openMoneyForm(
@@ -22,9 +25,11 @@ export async function openMoneyForm(
 export async function closeMoneyForm(page: Page) {
   await page.getByRole("button", { name: "Close dialog", exact: true }).click();
   await expect(page.getByRole("dialog")).toHaveCount(0);
+  await expect(page.locator('[data-slot="dialog-content"]')).toHaveCount(0);
 }
 
 export async function chooseOption(page: Page, label: string, value: string) {
   await page.getByRole("combobox", { name: label, exact: true }).click();
   await page.getByRole("option", { name: value, exact: true }).click();
+  await expect(page.locator('[data-slot="select-content"]')).toHaveCount(0);
 }

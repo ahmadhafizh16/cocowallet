@@ -17,6 +17,7 @@ import {
   Send,
   Wallet,
 } from "lucide-react";
+import { CocoWalletLogo } from "@/components/brand/cocowallet-logo";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -157,12 +158,9 @@ export function WalletDashboard({ model }: { model: WalletOverview }) {
             href="#overview"
             className="wallet-brand"
             onClick={() => setActiveSection("overview")}
-            aria-label="Wallet overview"
+            aria-label="CocoWallet overview"
           >
-            <span className="wallet-brand-mark">
-              <Wallet aria-hidden="true" />
-            </span>
-            <span className="wallet-brand-name">wallet</span>
+            <CocoWalletLogo aria-hidden="true" />
           </a>
           <div className="wallet-top-meta">
             <ThemeMenu />

@@ -1,12 +1,13 @@
 import Link from "next/link";
-import { ArrowLeft, Wallet } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
+import { CocoWalletLogo } from "@/components/brand/cocowallet-logo";
 import { Button } from "@/components/ui/button";
 
 export default function NotFound() {
   return (
     <main id="main-content" className="error-page">
       <div className="error-brand">
-        <Wallet aria-hidden="true" /> wallet
+        <CocoWalletLogo />
       </div>
       <section className="error-panel">
         <h1>This page isn’t in your wallet</h1>

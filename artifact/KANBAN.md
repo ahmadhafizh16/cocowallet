@@ -1,8 +1,8 @@
 # Project kanban
 
-**Last updated:** T11-05 adds the requested standalone CocoWallet SVG logo assets, checked in Chromium at light/dark and small-icon sizes. T11-04's reviewed redesign remains unchanged. Account data, wallet APIs, and idempotency integration remain future work.
+**Last updated:** T11-06 is in progress: apply the approved CocoWallet logo and add smooth, bounded interaction/theme motion with reduced-motion support. The two-column layout and financial safeguards remain fixed. Account data, wallet APIs, and idempotency integration remain future work.
 
-**Scope:** 34 implementation tasks: **22 to do**, **0 in progress**, **0 blocked**, **12 done**. Planning activities completed below do not count as implemented features.
+**Scope:** 35 implementation tasks: **22 to do**, **1 in progress**, **0 blocked**, **12 done**. Planning activities completed below do not count as implemented features.
 
 Each task links to its detailed description, source PRD, decision IDs, dependencies, and acceptance tests. The Angular-style, one-intention-per-commit rule and local Git workflow in [D-021](DECISIONS.md#d-021) and [D-022](DECISIONS.md#d-022) apply to every task. A task moves to **Done** only when its acceptance criteria are verified and the PRD, decisions, diagrams, API documentation, and handover are updated as needed.
 
@@ -76,7 +76,7 @@ See Done for the approved direction and verified interface-preview foundation.
 
 ## In progress
 
-_No task is currently in progress at this interface-preview checkpoint._
+- [ ] [T11-06](tasks/TASKS-11.md#t11-06) — Apply CocoWallet branding and smooth, reduced-motion-aware dialog/menu/theme/control transitions.
 
 ## Blocked
 

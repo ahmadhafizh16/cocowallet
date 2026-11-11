@@ -1,6 +1,7 @@
 "use client";
 
-import { AlertCircle, RotateCcw, Wallet } from "lucide-react";
+import { AlertCircle, RotateCcw } from "lucide-react";
+import { CocoWalletLogo } from "@/components/brand/cocowallet-logo";
 import { Button } from "@/components/ui/button";
 
 export default function WalletError({
@@ -12,7 +13,7 @@ export default function WalletError({
   return (
     <main id="main-content" className="error-page">
       <div className="error-brand">
-        <Wallet aria-hidden="true" /> wallet
+        <CocoWalletLogo />
       </div>
       <section className="error-panel" role="alert">
         <AlertCircle aria-hidden="true" />

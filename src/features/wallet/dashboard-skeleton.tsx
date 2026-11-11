@@ -1,4 +1,4 @@
-import { Wallet } from "lucide-react";
+import { CocoWalletLogo } from "@/components/brand/cocowallet-logo";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -30,10 +30,7 @@ export function WalletDashboardSkeleton() {
       <div aria-hidden="true">
         <div className="wallet-topbar">
           <div className="wallet-brand">
-            <span className="wallet-brand-mark">
-              <Wallet />
-            </span>
-            <span className="wallet-brand-name">wallet</span>
+            <CocoWalletLogo aria-hidden="true" />
           </div>
           <div className="wallet-top-meta">
             <Skeleton className="wallet-skeleton-theme" />
