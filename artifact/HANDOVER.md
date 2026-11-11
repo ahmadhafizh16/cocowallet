@@ -1,6 +1,6 @@
 # Handover
 
-**Status:** Platform foundation and exact money handling implemented; six of 32 tasks are closed. Journal balance/write tasks remain in progress. Money-moving APIs, FX integration, Swagger, and interface design are not implemented.
+**Status:** Platform foundation, exact money handling, and journal snapshot reads implemented; seven of 32 tasks are closed. Atomic write review remains in progress. Money-moving APIs, FX integration, Swagger, and interface design are not implemented.
 
 ## Implemented modules and commands
 
@@ -16,6 +16,7 @@
 | `src/server/db/test-fixture.ts`, `schema.test.ts` | Isolated journal fixtures and constraint regression tests; fixtures refuse non-test use. |
 | `src/features/money/money.ts` | Bounded exact bigint amount parsing/formatting and rational positive half-up FX; [contract](MONEY.md). |
 | `src/features/money/currency-precision.*` | Pinned, attributed accounting exponents; unknown/unspecified codes fail closed. [Provenance](CURRENCY_METADATA.md). |
+| `src/features/journal/balances.ts` | Stream exact per-wallet bigint balances; account reads share one snapshot and validate final bounds. |
 | `components.json`, `postcss.config.mjs`, `src/lib/utils.ts` | shadcn/Lucide/Tailwind configuration and tested class helper; not an implemented wallet design. |
 | `scripts/check-artifacts.mjs` | Checks Markdown links, decision/task references, board status alignment, and task dependency cycles. |
 
@@ -37,6 +38,8 @@ Application DB: `/app/data/wallet.sqlite` in Compose's `wallet-data` volume. Tes
 Verification evidence: foundation checks passed 10 Jest tests and 2 real-Chromium Playwright smoke tests, clean `npm ci`, repeat migration, lint/format/type checks, and production build. The journal-schema checkpoint additionally passes 19 targeted connection/schema tests, formatting, lint, and type checks. New journal migrations have only been exercised in isolated fixtures so far, not the persistent application DB. A test-only operational marker survived app container recreation and was then removed; no user transaction data was deleted. The production npm audit is clean; the full development audit has 23 low/moderate findings documented in [DEPENDENCIES.md](DEPENDENCIES.md).
 
 The exact money/precision checkpoint passes 437 feature-local Jest tests, targeted lint, formatting, and strict TypeScript checks. It adds no runtime package dependency; the precision extract retains its source MIT notice and checksums.
+
+The balance checkpoint passes 28 combined schema/connection/balance tests, including a 2,049-entry journal with overflowing intermediate subtotals. A test commits through a second WAL connection during an account read and verifies both wallet balances retain the original snapshot; a subsequent read observes the commit. Aggregation permits arbitrary-precision intermediate subtotals but rejects negative/overflowing final balances.
 
 ## Current environment
 

@@ -1,8 +1,8 @@
 # Project kanban
 
-**Last updated:** Exact money handling and pinned accounting precision are verified; journal balance reads and atomic writes are next.
+**Last updated:** Exact money, journal schema, and snapshot balance reads are verified; the atomic write boundary is in progress.
 
-**Scope:** 32 implementation tasks: **25 to do**, **1 in progress**, **0 blocked**, **6 done**. Planning activities completed below do not count as implemented features.
+**Scope:** 32 implementation tasks: **24 to do**, **1 in progress**, **0 blocked**, **7 done**. Planning activities completed below do not count as implemented features.
 
 Each task links to its detailed description, source PRD, decision IDs, dependencies, and acceptance tests. The Angular-style, one-intention-per-commit rule and local Git workflow in [D-021](DECISIONS.md#d-021) and [D-022](DECISIONS.md#d-022) apply to every task. A task moves to **Done** only when its acceptance criteria are verified and the PRD, decisions, diagrams, API documentation, and handover are updated as needed.
 
@@ -18,7 +18,7 @@ See Done for the verified platform foundation.
 
 ### Journal and money — [PRD-02](prd/PRD-02-journal.md)
 
-- [ ] [T02-03](tasks/TASKS-02.md#t02-03) — Atomic writes and concurrent spending.
+See Done for exact money/schema/reads and In progress for atomic writes.
 
 ### Accounts and wallets — [PRD-03](prd/PRD-03-accounts.md)
 
@@ -76,7 +76,7 @@ See Done for the verified platform foundation.
 
 ## In progress
 
-- [ ] [T02-02](tasks/TASKS-02.md#t02-02) — Journal schema and derived balance reads.
+- [ ] [T02-03](tasks/TASKS-02.md#t02-03) — Atomic writes and concurrent spending.
 
 ## Blocked
 
@@ -90,6 +90,7 @@ _No task is currently blocked by an explicit unresolved decision or external blo
 - [x] [T01-02](tasks/TASKS-01.md#t01-02) — Verified Next.js scaffold, component tooling, local checks, Jest/Playwright smoke tests, clean install, and build.
 - [x] [T01-03](tasks/TASKS-01.md#t01-03) — SQLite connection, repeatable metadata migration, isolated tests, rollback, and service-recreation persistence verified.
 - [x] [T02-01](tasks/TASKS-02.md#t02-01) — Exact bigint parsing/formatting, bounded rational half-up FX, pinned accounting precision, and 437 regression tests.
+- [x] [T02-02](tasks/TASKS-02.md#t02-02) — Immutable journal schema, exact streamed bigint balances, wallet isolation, and consistent account snapshots.
 
 ## Done — planning only
 
