@@ -1,6 +1,6 @@
 # Architecture and flow diagrams
 
-**Status:** The platform diagram below documents the implemented foundation. The subsequent wallet/account/journal/FX diagrams are still proposals, not completed features. The [decision register](DECISIONS.md) is authoritative when a diagram and an open question conflict.
+**Status:** The platform foundation and account/wallet/completed-transaction/journal schema are implemented and tested. Balance and write orchestration are in progress; HTTP operations, quotes, idempotency storage, and interface diagrams still describe future features. The [decision register](DECISIONS.md) is authoritative when a diagram and an open question conflict.
 
 ## Implemented foundation flow
 
@@ -62,7 +62,7 @@ erDiagram
     IDEMPOTENCY_KEY o|--o| TRANSACTION : protects
 ```
 
-This is a conceptual model, not the final schema. A wallet is unique by account and currency. A deposit or withdrawal affects one wallet; a conversion or transfer affects two wallets and stores one related debit and one related credit. Amounts use each wallet currency's minor units, so entries in different currencies must **not** be summed together. A wallet balance is derived from its own journal entries. A quote is needed only when FX applies. Definitive failed-result metadata is separate from completed transactions; retention and recovery details are [O-006](DECISIONS.md#o-006).
+Account, wallet, transaction, and journal tables now exist; FX quote and idempotency relationships remain conceptual. A wallet is unique by account and currency. A deposit or withdrawal affects one wallet; a conversion or transfer affects two wallets and stores one related debit and one related credit. Amounts use each wallet currency's minor units, so entries in different currencies must **not** be summed together. A wallet balance is derived from its own journal entries. Triggers protect recorded history, wallet/account identity, journal direction, and used currency precision. Full journal cardinality and balance checks belong to the upcoming application write boundary, not a claim that arbitrary direct SQL is safe. A quote is needed only when FX applies. Definitive failed-result metadata is separate from completed transactions; retention and recovery details are [O-006](DECISIONS.md#o-006).
 
 ## Business operations and history
 

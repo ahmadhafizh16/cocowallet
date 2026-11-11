@@ -1,6 +1,6 @@
 # PRD-02 — Journal, money, and atomicity
 
-**Status:** Draft; no journal schema or money module exists. The separate operational-metadata schema and SQLite connection are implemented under PRD-01.
+**Status:** In progress. Account, wallet, completed-transaction, and journal migrations and schema constraints are tested. Exact money helpers, balance reads, and the serialized write boundary are being implemented; no money-moving HTTP API exists yet.
 
 **Decisions:** [D-006](../DECISIONS.md#d-006), [D-018](../DECISIONS.md#d-018), [D-019](../DECISIONS.md#d-019).  
 **Tasks:** [T02-01–T02-03](../tasks/TASKS-02.md).  

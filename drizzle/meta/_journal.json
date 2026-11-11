@@ -8,6 +8,20 @@
       "when": 1794388087597,
       "tag": "0000_platform_metadata",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1794389589564,
+      "tag": "0001_wallet_journal",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1794389594718,
+      "tag": "0002_journal_invariants",
+      "breakpoints": true
     }
   ]
 }
