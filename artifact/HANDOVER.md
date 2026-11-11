@@ -1,6 +1,6 @@
 # Handover
 
-**Status:** Nine of 32 tasks are closed: platform/money/journal core plus Impeccable product and direction confirmation. The reference-led frosted interface is in progress under T11-02, including skeletons and honest preview states. Money-moving APIs, full idempotency, FX integration, Swagger, and account seeding remain unimplemented.
+**Status:** Ten of 32 tasks are closed: platform/money/journal core, product/direction confirmation, and T11-02's reviewed frosted interface-preview foundation with design documentation. The board has 22 To do and no In progress tasks. Money-moving APIs, full idempotency, FX integration, Swagger, and account seeding remain unimplemented.
 
 ## Implemented modules and commands
 
@@ -18,11 +18,12 @@
 | `src/features/money/currency-precision.*` | Pinned, attributed accounting exponents; unknown/unspecified codes fail closed. [Provenance](CURRENCY_METADATA.md). |
 | `src/features/journal/balances.ts` | Stream exact per-wallet bigint balances; account reads share one snapshot and validate final bounds. |
 | `src/features/journal/write.ts` | Top-level synchronous immediate-write boundary; main-only accounting, exact credits, funds checks, atomic creation/entries, and a technical-success integration seam. [Contract](JOURNAL.md). |
-| `components.json`, `postcss.config.mjs`, `src/lib/utils.ts` | shadcn/Lucide/Tailwind configuration and tested class helper; not an implemented wallet design. |
+| `components.json`, `postcss.config.mjs`, `src/lib/utils.ts` | shadcn/Lucide/Tailwind configuration and tested class helper used by the local UI components. |
 | `src/components/ui/` | Local shadcn-style button/input/skeleton primitives and Radix-backed dialog; explicit button types, focus handling, and decorative skeleton semantics. |
 | `src/features/theme/`, `src/app/globals.css` | Approved frosted tokens, light/dark/system preference, pre-paint theme bootstrap, storage fallback, and reduced-motion styles. |
 | `src/app/page.tsx`, `layout.tsx`, `loading.tsx`, `error.tsx`, `not-found.tsx` | HTML wallet preview, styles/metadata, skip link, loading/error boundaries, and branded 404; replaces the former root JSON route. |
 | `src/features/wallet/` | Responsive dashboard, account-scoped preview data, exact formatting, draft validation/review, inspect-only presentation, and matching skeleton; no DB/API mutation. |
+| `DESIGN.md`, `.impeccable/design.json` | Extracted light/dark visual tokens, canonical design guidance, and version-2 component-preview extensions; actual application styles remain in source CSS. |
 | `scripts/check-artifacts.mjs` | Checks Markdown links, decision/task references, board status alignment, and task dependency cycles. |
 
 Fresh local setup and checks:
@@ -42,6 +43,14 @@ Application DB: `/app/data/wallet.sqlite` in Compose's `wallet-data` volume. Tes
 
 Latest implementation verification: the full Docker check passes artifact validation, formatting, lint, types, **557 Jest tests**, and production build; **22 Chromium tests** pass against that build. See [UI_FOUNDATION.md](UI_FOUNDATION.md) for coverage and production-browser commands. No dependencies or schema changed in this UI checkpoint. Earlier journal checks applied/repeated all three migrations, checked integrity/foreign keys, and confirmed zero stored accounts/transactions. UI checks do not seed or move money. Earlier foundation checks covered clean `npm ci` and recreation persistence. The last production npm audit was clean; 23 low/moderate development-tool findings remain in [DEPENDENCIES.md](DEPENDENCIES.md).
 
+Documentation closure additionally verifies 45 artifact documents and all 32 task
+records, formatting, design YAML/JSON, eight canonical design sections, 34
+source-matched light/dark colors, resolved token references, and ten standalone
+component examples. The sidecar's 272 synthesized ramp colors are ordered,
+in-gamut preview metadata, not an application palette. Application code is
+unchanged since the successful production build/browser review; the development
+service is healthy at `http://localhost:3000`.
+
 The exact money/precision checkpoint passes 437 feature-local Jest tests, targeted lint, formatting, and strict TypeScript checks. It adds no runtime package dependency; the precision extract retains its source MIT notice and checksums.
 
 The balance checkpoint passes 28 combined schema/connection/balance tests, including a 2,049-entry journal with overflowing intermediate subtotals. A test commits through a second WAL connection during an account read and verifies both wallet balances retain the original snapshot; a subsequent read observes the commit. Aggregation permits arbitrary-precision intermediate subtotals but rejects negative/overflowing final balances.
@@ -55,7 +64,7 @@ The atomic-write checkpoint passes 16 feature-local integration tests, including
 - The `sqlite3` CLI was not found. It is optional if the selected application driver manages the SQLite file.
 - Docker and Compose run the application at `http://localhost:3000`; `/` now renders the frosted interface preview. Health/readiness remain separate JSON endpoints. Financial services are explicitly disconnected and final money submissions are disabled.
 - Git is initialized on `main`; baseline commits separate ignore rules, feature requirements, architecture decisions, and vendored design tooling. Automatic Angular-style commits by intention are authorized; no remote or push is automatic.
-- Impeccable is installed locally without automatic hooks; its engine reports 4.8.2. Product context and code-first are in [PRODUCT.md](../PRODUCT.md) and `.impeccable/config.json`. The approved reference is in [DESIGN_REFERENCE.md](DESIGN_REFERENCE.md); the implementation contract is [WALLET_SURFACE.md](WALLET_SURFACE.md) and its `.impeccable/surfaces/` counterpart. Production captures and independent review are complete: the reviewer required one mobile navigation correction, then scored it resolved with disposition `ship` at that fix-list scope. Built design-system documentation is being extracted. Live-picker configuration has not been enabled automatically.
+- Impeccable is installed locally without automatic hooks; its engine reports 4.8.2. Product context and code-first are in [PRODUCT.md](../PRODUCT.md) and `.impeccable/config.json`. The approved reference is in [DESIGN_REFERENCE.md](DESIGN_REFERENCE.md); the implementation contract is [WALLET_SURFACE.md](WALLET_SURFACE.md) and its `.impeccable/surfaces/` counterpart. The [review record](DESIGN_REVIEW.md) covers production captures, one corrected mobile navigation finding, and the reviewer's `ship` verdict at fix-list scope. [DESIGN.md](../DESIGN.md) and the version-2 sidecar capture the built system. Live-picker configuration has not been enabled automatically.
 - The approximately 22 MB Impeccable Linux engine is excluded from Git and retained locally. `sh scripts/setup-impeccable.sh` restores the pinned, checksum-verified engine; online restoration and corrupt-source rejection were tested in isolation. See [TOOLING.md](TOOLING.md).
 - Host npm/network requests timed out during installation; a direct IPv4-first Node fetch succeeded, but the npm installer still stalled. The skill was installed with the verified cached official CLI and an official locally downloaded bundle. Diagnose Node 26/npm networking inside Docker before relying on dependency installs.
 - Icons8 MCP remains removed. Lucide supplies rendered icons and the favicon uses its wallet outline; no paid or fabricated payment branding is included.
@@ -91,4 +100,4 @@ Tests open their own temporary database through `openDatabase`, apply committed 
 
 ## Next steps
 
-Read [README.md](README.md), the [main PRD](PRD.md), [decision register](DECISIONS.md), [readiness checklist](READINESS.md), and [kanban](KANBAN.md). Work from the linked feature PRDs and task acceptance criteria, and resolve remaining implementation details as needed. Update this handover with actual code paths and commands only after implementation exists.
+Next is actual account data and service/API integration, starting with main-account seeding and account-scoped balance reads under [Tasks 03](tasks/TASKS-03.md). Resolve the relevant API/idempotency questions before enabling money submission. Preserve the reviewed shell and replace explicit preview data only with verified server data; do not enable its final actions as a cosmetic change. Follow the [plan](PLAN.md), [readiness checklist](READINESS.md), and [kanban](KANBAN.md), and keep this handover grounded in implemented paths and verified commands.

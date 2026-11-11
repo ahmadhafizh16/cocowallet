@@ -1,0 +1,731 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-11T11:39:02.766Z",
+  "title": "Design System: Simulated multi-currency wallet",
+  "extensions": {
+    "colorMeta": {
+      "ground": {
+        "role": "neutral",
+        "displayName": "Icy page ground",
+        "tonalRamp": [
+          "oklch(15% 0.004187 232.366)",
+          "oklch(26.429% 0.006808 232.366)",
+          "oklch(37.857% 0.008561 232.366)",
+          "oklch(49.286% 0.009222 232.366)",
+          "oklch(60.714% 0.008706 232.366)",
+          "oklch(72.143% 0.00708 232.366)",
+          "oklch(83.571% 0.004552 232.366)",
+          "oklch(95% 0.001443 232.366)"
+        ]
+      },
+      "glass": {
+        "role": "neutral",
+        "displayName": "Frosted outer glass",
+        "tonalRamp": [
+          "oklch(15% 0 0)",
+          "oklch(26.429% 0 0)",
+          "oklch(37.857% 0 0)",
+          "oklch(49.286% 0 0)",
+          "oklch(60.714% 0 0)",
+          "oklch(72.143% 0 0)",
+          "oklch(83.571% 0 0)",
+          "oklch(95% 0 0)"
+        ]
+      },
+      "inner": {
+        "role": "neutral",
+        "displayName": "Inner glass",
+        "tonalRamp": [
+          "oklch(15% 0 0)",
+          "oklch(26.429% 0 0)",
+          "oklch(37.857% 0 0)",
+          "oklch(49.286% 0 0)",
+          "oklch(60.714% 0 0)",
+          "oklch(72.143% 0 0)",
+          "oklch(83.571% 0 0)",
+          "oklch(95% 0 0)"
+        ]
+      },
+      "solid": {
+        "role": "neutral",
+        "displayName": "Solid light surface",
+        "tonalRamp": [
+          "oklch(15% 0.001893 236.496)",
+          "oklch(26.429% 0.003079 236.496)",
+          "oklch(37.857% 0.003871 236.496)",
+          "oklch(49.286% 0.00417 236.496)",
+          "oklch(60.714% 0.003937 236.496)",
+          "oklch(72.143% 0.003202 236.496)",
+          "oklch(83.571% 0.002058 236.496)",
+          "oklch(95% 0.000652 236.496)"
+        ]
+      },
+      "edge": {
+        "role": "neutral",
+        "displayName": "Light-catching edge",
+        "tonalRamp": [
+          "oklch(15% 0 0)",
+          "oklch(26.429% 0 0)",
+          "oklch(37.857% 0 0)",
+          "oklch(49.286% 0 0)",
+          "oklch(60.714% 0 0)",
+          "oklch(72.143% 0 0)",
+          "oklch(83.571% 0 0)",
+          "oklch(95% 0 0)"
+        ]
+      },
+      "line": {
+        "role": "neutral",
+        "displayName": "Quiet divider",
+        "tonalRamp": [
+          "oklch(15% 0.022288 250.945)",
+          "oklch(26.429% 0.036238 250.945)",
+          "oklch(37.857% 0.045565 250.945)",
+          "oklch(49.286% 0.049082 250.945)",
+          "oklch(60.714% 0.04634 250.945)",
+          "oklch(72.143% 0.037687 250.945)",
+          "oklch(83.571% 0.024229 250.945)",
+          "oklch(95% 0.00768 250.945)"
+        ]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Primary ink",
+        "tonalRamp": [
+          "oklch(15% 0.020698 255.235)",
+          "oklch(26.429% 0.033652 255.235)",
+          "oklch(37.857% 0.042314 255.235)",
+          "oklch(49.286% 0.04558 255.235)",
+          "oklch(60.714% 0.043033 255.235)",
+          "oklch(72.143% 0.034998 255.235)",
+          "oklch(83.571% 0.0225 255.235)",
+          "oklch(95% 0.007132 255.235)"
+        ]
+      },
+      "secondary": {
+        "role": "neutral",
+        "displayName": "Secondary ink",
+        "tonalRamp": [
+          "oklch(15% 0.017754 251.318)",
+          "oklch(26.429% 0.028866 251.318)",
+          "oklch(37.857% 0.036296 251.318)",
+          "oklch(49.286% 0.039097 251.318)",
+          "oklch(60.714% 0.036913 251.318)",
+          "oklch(72.143% 0.03002 251.318)",
+          "oklch(83.571% 0.0193 251.318)",
+          "oklch(95% 0.006117 251.318)"
+        ]
+      },
+      "navy": {
+        "role": "primary",
+        "displayName": "Muted navy action",
+        "tonalRamp": [
+          "oklch(15% 0.034347 256.426)",
+          "oklch(26.429% 0.055844 256.426)",
+          "oklch(37.857% 0.070218 256.426)",
+          "oklch(49.286% 0.075638 256.426)",
+          "oklch(60.714% 0.071412 256.426)",
+          "oklch(72.143% 0.058077 256.426)",
+          "oklch(83.571% 0.037338 256.426)",
+          "oklch(95% 0.011835 256.426)"
+        ]
+      },
+      "navy-hover": {
+        "role": "primary",
+        "displayName": "Navy action hover",
+        "tonalRamp": [
+          "oklch(15% 0.033392 257.56)",
+          "oklch(26.429% 0.054291 257.56)",
+          "oklch(37.857% 0.068265 257.56)",
+          "oklch(49.286% 0.073534 257.56)",
+          "oklch(60.714% 0.069425 257.56)",
+          "oklch(72.143% 0.056462 257.56)",
+          "oklch(83.571% 0.0363 257.56)",
+          "oklch(95% 0.011506 257.56)"
+        ]
+      },
+      "on-navy": {
+        "role": "primary",
+        "displayName": "On-navy action text",
+        "tonalRamp": [
+          "oklch(15% 0 0)",
+          "oklch(26.429% 0 0)",
+          "oklch(37.857% 0 0)",
+          "oklch(49.286% 0 0)",
+          "oklch(60.714% 0 0)",
+          "oklch(72.143% 0 0)",
+          "oklch(83.571% 0 0)",
+          "oklch(95% 0 0)"
+        ]
+      },
+      "positive": {
+        "role": "semantic",
+        "displayName": "Positive text (defined foundation)",
+        "tonalRamp": [
+          "oklch(15% 0.030258 168.326)",
+          "oklch(26.429% 0.052312 168.326)",
+          "oklch(37.857% 0.065777 168.326)",
+          "oklch(49.286% 0.070854 168.326)",
+          "oklch(60.714% 0.066895 168.326)",
+          "oklch(72.143% 0.054404 168.326)",
+          "oklch(83.571% 0.034976 168.326)",
+          "oklch(95% 0.011086 168.326)"
+        ]
+      },
+      "positive-ground": {
+        "role": "semantic",
+        "displayName": "Positive ground (defined foundation)",
+        "tonalRamp": [
+          "oklch(15% 0.008364 166.362)",
+          "oklch(26.429% 0.0136 166.362)",
+          "oklch(37.857% 0.0171 166.362)",
+          "oklch(49.286% 0.01842 166.362)",
+          "oklch(60.714% 0.017391 166.362)",
+          "oklch(72.143% 0.014144 166.362)",
+          "oklch(83.571% 0.009093 166.362)",
+          "oklch(95% 0.002882 166.362)"
+        ]
+      },
+      "danger": {
+        "role": "semantic",
+        "displayName": "Danger text and invalid stroke",
+        "tonalRamp": [
+          "oklch(15% 0.053992 28.728)",
+          "oklch(26.429% 0.087783 28.728)",
+          "oklch(37.857% 0.110378 28.728)",
+          "oklch(49.286% 0.118897 28.728)",
+          "oklch(60.714% 0.112254 28.728)",
+          "oklch(72.143% 0.091293 28.728)",
+          "oklch(83.571% 0.058693 28.728)",
+          "oklch(95% 0.018604 28.728)"
+        ]
+      },
+      "danger-ground": {
+        "role": "semantic",
+        "displayName": "Danger control ground",
+        "tonalRamp": [
+          "oklch(15% 0.008792 33.365)",
+          "oklch(26.429% 0.014296 33.365)",
+          "oklch(37.857% 0.017975 33.365)",
+          "oklch(49.286% 0.019363 33.365)",
+          "oklch(60.714% 0.018281 33.365)",
+          "oklch(72.143% 0.014867 33.365)",
+          "oklch(83.571% 0.009558 33.365)",
+          "oklch(95% 0.003029 33.365)"
+        ]
+      },
+      "wash": {
+        "role": "neutral",
+        "displayName": "Diffuse blue wash",
+        "tonalRamp": [
+          "oklch(15% 0.015395 248.241)",
+          "oklch(26.429% 0.025031 248.241)",
+          "oklch(37.857% 0.031473 248.241)",
+          "oklch(49.286% 0.033902 248.241)",
+          "oklch(60.714% 0.032008 248.241)",
+          "oklch(72.143% 0.026031 248.241)",
+          "oklch(83.571% 0.016736 248.241)",
+          "oklch(95% 0.005304 248.241)"
+        ]
+      },
+      "wash-deep": {
+        "role": "neutral",
+        "displayName": "Deep blue wash",
+        "tonalRamp": [
+          "oklch(15% 0.025138 249.534)",
+          "oklch(26.429% 0.040872 249.534)",
+          "oklch(37.857% 0.051392 249.534)",
+          "oklch(49.286% 0.055358 249.534)",
+          "oklch(60.714% 0.052265 249.534)",
+          "oklch(72.143% 0.042506 249.534)",
+          "oklch(83.571% 0.027327 249.534)",
+          "oklch(95% 0.008662 249.534)"
+        ]
+      },
+      "dark-ground": {
+        "role": "neutral",
+        "displayName": "Dark page ground",
+        "tonalRamp": [
+          "oklch(15% 0.013346 247.152)",
+          "oklch(26.429% 0.021698 247.152)",
+          "oklch(37.857% 0.027283 247.152)",
+          "oklch(49.286% 0.029389 247.152)",
+          "oklch(60.714% 0.027747 247.152)",
+          "oklch(72.143% 0.022566 247.152)",
+          "oklch(83.571% 0.014508 247.152)",
+          "oklch(95% 0.004598 247.152)"
+        ]
+      },
+      "dark-glass": {
+        "role": "neutral",
+        "displayName": "Dark frosted outer glass",
+        "tonalRamp": [
+          "oklch(15% 0.018093 249.136)",
+          "oklch(26.429% 0.029417 249.136)",
+          "oklch(37.857% 0.036988 249.136)",
+          "oklch(49.286% 0.039843 249.136)",
+          "oklch(60.714% 0.037617 249.136)",
+          "oklch(72.143% 0.030593 249.136)",
+          "oklch(83.571% 0.019668 249.136)",
+          "oklch(95% 0.006234 249.136)"
+        ]
+      },
+      "dark-inner": {
+        "role": "neutral",
+        "displayName": "Dark inner glass",
+        "tonalRamp": [
+          "oklch(15% 0.021408 248.912)",
+          "oklch(26.429% 0.034807 248.912)",
+          "oklch(37.857% 0.043766 248.912)",
+          "oklch(49.286% 0.047144 248.912)",
+          "oklch(60.714% 0.04451 248.912)",
+          "oklch(72.143% 0.036199 248.912)",
+          "oklch(83.571% 0.023272 248.912)",
+          "oklch(95% 0.007376 248.912)"
+        ]
+      },
+      "dark-solid": {
+        "role": "neutral",
+        "displayName": "Solid dark surface",
+        "tonalRamp": [
+          "oklch(15% 0.020752 249.277)",
+          "oklch(26.429% 0.03374 249.277)",
+          "oklch(37.857% 0.042424 249.277)",
+          "oklch(49.286% 0.045699 249.277)",
+          "oklch(60.714% 0.043145 249.277)",
+          "oklch(72.143% 0.035089 249.277)",
+          "oklch(83.571% 0.022559 249.277)",
+          "oklch(95% 0.00715 249.277)"
+        ]
+      },
+      "dark-edge": {
+        "role": "neutral",
+        "displayName": "Dark light-catching edge",
+        "tonalRamp": [
+          "oklch(15% 0.015268 248.225)",
+          "oklch(26.429% 0.024824 248.225)",
+          "oklch(37.857% 0.031214 248.225)",
+          "oklch(49.286% 0.033623 248.225)",
+          "oklch(60.714% 0.031745 248.225)",
+          "oklch(72.143% 0.025817 248.225)",
+          "oklch(83.571% 0.016598 248.225)",
+          "oklch(95% 0.005261 248.225)"
+        ]
+      },
+      "dark-line": {
+        "role": "neutral",
+        "displayName": "Dark quiet divider",
+        "tonalRamp": [
+          "oklch(15% 0.015268 248.225)",
+          "oklch(26.429% 0.024824 248.225)",
+          "oklch(37.857% 0.031214 248.225)",
+          "oklch(49.286% 0.033623 248.225)",
+          "oklch(60.714% 0.031745 248.225)",
+          "oklch(72.143% 0.025817 248.225)",
+          "oklch(83.571% 0.016598 248.225)",
+          "oklch(95% 0.005261 248.225)"
+        ]
+      },
+      "dark-ink": {
+        "role": "neutral",
+        "displayName": "Dark-theme primary ink",
+        "tonalRamp": [
+          "oklch(15% 0.005678 255.505)",
+          "oklch(26.429% 0.009232 255.505)",
+          "oklch(37.857% 0.011608 255.505)",
+          "oklch(49.286% 0.012504 255.505)",
+          "oklch(60.714% 0.011805 255.505)",
+          "oklch(72.143% 0.009601 255.505)",
+          "oklch(83.571% 0.006172 255.505)",
+          "oklch(95% 0.001956 255.505)"
+        ]
+      },
+      "dark-secondary": {
+        "role": "neutral",
+        "displayName": "Dark-theme secondary ink",
+        "tonalRamp": [
+          "oklch(15% 0.015097 249.675)",
+          "oklch(26.429% 0.024547 249.675)",
+          "oklch(37.857% 0.030865 249.675)",
+          "oklch(49.286% 0.033247 249.675)",
+          "oklch(60.714% 0.031389 249.675)",
+          "oklch(72.143% 0.025528 249.675)",
+          "oklch(83.571% 0.016412 249.675)",
+          "oklch(95% 0.005202 249.675)"
+        ]
+      },
+      "dark-navy": {
+        "role": "primary",
+        "displayName": "Pale blue dark-theme action",
+        "tonalRamp": [
+          "oklch(15% 0.027806 254.662)",
+          "oklch(26.429% 0.045208 254.662)",
+          "oklch(37.857% 0.056845 254.662)",
+          "oklch(49.286% 0.061232 254.662)",
+          "oklch(60.714% 0.057811 254.662)",
+          "oklch(72.143% 0.047016 254.662)",
+          "oklch(83.571% 0.030227 254.662)",
+          "oklch(95% 0.009581 254.662)"
+        ]
+      },
+      "dark-navy-hover": {
+        "role": "primary",
+        "displayName": "Pale blue action hover",
+        "tonalRamp": [
+          "oklch(15% 0.021229 255.371)",
+          "oklch(26.429% 0.034515 255.371)",
+          "oklch(37.857% 0.043399 255.371)",
+          "oklch(49.286% 0.046749 255.371)",
+          "oklch(60.714% 0.044137 255.371)",
+          "oklch(72.143% 0.035895 255.371)",
+          "oklch(83.571% 0.023077 255.371)",
+          "oklch(95% 0.007315 255.371)"
+        ]
+      },
+      "dark-on-navy": {
+        "role": "primary",
+        "displayName": "Dark ink on pale action",
+        "tonalRamp": [
+          "oklch(15% 0.017931 249.581)",
+          "oklch(26.429% 0.029154 249.581)",
+          "oklch(37.857% 0.036658 249.581)",
+          "oklch(49.286% 0.039488 249.581)",
+          "oklch(60.714% 0.037281 249.581)",
+          "oklch(72.143% 0.03032 249.581)",
+          "oklch(83.571% 0.019493 249.581)",
+          "oklch(95% 0.006178 249.581)"
+        ]
+      },
+      "dark-positive": {
+        "role": "semantic",
+        "displayName": "Dark positive text (defined foundation)",
+        "tonalRamp": [
+          "oklch(15% 0.03083 163.308)",
+          "oklch(26.429% 0.050126 163.308)",
+          "oklch(37.857% 0.063028 163.308)",
+          "oklch(49.286% 0.067893 163.308)",
+          "oklch(60.714% 0.064099 163.308)",
+          "oklch(72.143% 0.05213 163.308)",
+          "oklch(83.571% 0.033515 163.308)",
+          "oklch(95% 0.010623 163.308)"
+        ]
+      },
+      "dark-positive-ground": {
+        "role": "semantic",
+        "displayName": "Dark positive ground (defined foundation)",
+        "tonalRamp": [
+          "oklch(15% 0.019647 177.468)",
+          "oklch(26.429% 0.031943 177.468)",
+          "oklch(37.857% 0.040165 177.468)",
+          "oklch(49.286% 0.043266 177.468)",
+          "oklch(60.714% 0.040848 177.468)",
+          "oklch(72.143% 0.033221 177.468)",
+          "oklch(83.571% 0.021358 177.468)",
+          "oklch(95% 0.00677 177.468)"
+        ]
+      },
+      "dark-danger": {
+        "role": "semantic",
+        "displayName": "Dark danger text and invalid stroke",
+        "tonalRamp": [
+          "oklch(15% 0.031676 30.586)",
+          "oklch(26.429% 0.051502 30.586)",
+          "oklch(37.857% 0.064758 30.586)",
+          "oklch(49.286% 0.069756 30.586)",
+          "oklch(60.714% 0.065858 30.586)",
+          "oklch(72.143% 0.053561 30.586)",
+          "oklch(83.571% 0.034434 30.586)",
+          "oklch(95% 0.010915 30.586)"
+        ]
+      },
+      "dark-danger-ground": {
+        "role": "semantic",
+        "displayName": "Dark danger control ground",
+        "tonalRamp": [
+          "oklch(15% 0.018748 21.692)",
+          "oklch(26.429% 0.030483 21.692)",
+          "oklch(37.857% 0.038329 21.692)",
+          "oklch(49.286% 0.041287 21.692)",
+          "oklch(60.714% 0.03898 21.692)",
+          "oklch(72.143% 0.031701 21.692)",
+          "oklch(83.571% 0.020381 21.692)",
+          "oklch(95% 0.00646 21.692)"
+        ]
+      },
+      "dark-wash": {
+        "role": "neutral",
+        "displayName": "Dark diffuse blue wash",
+        "tonalRamp": [
+          "oklch(15% 0.02913 247.543)",
+          "oklch(26.429% 0.047362 247.543)",
+          "oklch(37.857% 0.059553 247.543)",
+          "oklch(49.286% 0.064149 247.543)",
+          "oklch(60.714% 0.060565 247.543)",
+          "oklch(72.143% 0.049256 247.543)",
+          "oklch(83.571% 0.031667 247.543)",
+          "oklch(95% 0.010037 247.543)"
+        ]
+      },
+      "dark-wash-deep": {
+        "role": "neutral",
+        "displayName": "Dark deep blue wash",
+        "tonalRamp": [
+          "oklch(15% 0.031511 249.385)",
+          "oklch(26.429% 0.051233 249.385)",
+          "oklch(37.857% 0.06442 249.385)",
+          "oklch(49.286% 0.069392 249.385)",
+          "oklch(60.714% 0.065515 249.385)",
+          "oklch(72.143% 0.053282 249.385)",
+          "oklch(83.571% 0.034255 249.385)",
+          "oklch(95% 0.010858 249.385)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Wallet total",
+        "purpose": "Light-weight total figures; mobile overrides the clamp with 42px."
+      },
+      "headline": {
+        "displayName": "Page heading",
+        "purpose": "Primary screen heading; mobile uses 20px."
+      },
+      "title": {
+        "displayName": "Panel title",
+        "purpose": "Compact, semibold panel hierarchy."
+      },
+      "body": {
+        "displayName": "Workhorse UI sans",
+        "purpose": "Shared native system stack and normal UI copy; tabular numerals are applied by the source CSS."
+      },
+      "label": {
+        "displayName": "Supporting label",
+        "purpose": "Field labels, utility copy, hints, and notices; navigation uses weight 500."
+      },
+      "navigation": {
+        "displayName": "Navigation label",
+        "purpose": "Visible rail and mobile-bar labels at weight 500."
+      },
+      "button": {
+        "displayName": "Action label",
+        "purpose": "Default button size; small buttons use 12px."
+      },
+      "amount": {
+        "displayName": "Editable amount",
+        "purpose": "Borderless amount entry with decimal input mode."
+      },
+      "currency-amount": {
+        "displayName": "Wallet-row amount",
+        "purpose": "Right-aligned currency figures that wrap instead of truncating."
+      },
+      "dialog-title": {
+        "displayName": "Dialog foundation title",
+        "purpose": "Available dialog foundation, not the shipped inline operation workspace."
+      }
+    },
+    "shadows": [
+      {
+        "name": "panel-light",
+        "value": "0 12px 38px -24px rgb(44 72 105 / 26%)",
+        "purpose": "Light --shadow: ambient separation under outer glass panels and dialog foundations."
+      },
+      {
+        "name": "panel-dark",
+        "value": "0 12px 38px -24px rgb(0 0 0 / 50%)",
+        "purpose": "Dark --shadow: the same ambient role under dark glass."
+      },
+      {
+        "name": "raised-light",
+        "value": "5px 6px 16px rgb(145 165 184 / 16%), -4px -4px 14px rgb(255 255 255 / 65%)",
+        "purpose": "Light --raised: paired soft offsets on secondary buttons, circular controls, navigation, and theme utility."
+      },
+      {
+        "name": "raised-dark",
+        "value": "5px 6px 16px rgb(0 0 0 / 16%), -3px -3px 12px rgb(100 134 162 / 6%)",
+        "purpose": "Dark --raised: quieter opposing highlight for the same control roles."
+      },
+      {
+        "name": "primary-action",
+        "value": "0 5px 14px -7px rgb(36 60 91 / 45%)",
+        "purpose": "Shared primary-button shadow in both themes; disabled buttons remove it."
+      },
+      {
+        "name": "brand-mark-local",
+        "value": "0 4px 12px rgb(48 76 108 / 14%)",
+        "purpose": "Local circular brand-mark treatment, not a generalized elevation step."
+      },
+      {
+        "name": "account-sheet-local",
+        "value": "0 8px 20px -14px #1d354e",
+        "purpose": "Local inset account sheet, not a payment-card capability."
+      },
+      {
+        "name": "mobile-navigation-local",
+        "value": "0 -5px 22px -12px rgb(44 72 105 / 20%)",
+        "purpose": "Local separation above the fixed mobile navigation bar."
+      }
+    ],
+    "motion": [
+      {
+        "name": "shared-control-transition",
+        "value": "background-color 160ms ease, box-shadow 160ms ease",
+        "purpose": "Shared button fill and shadow transitions; no lift transform."
+      },
+      {
+        "name": "quick-action-transition",
+        "value": "background-color 180ms ease, box-shadow 180ms ease",
+        "purpose": "Raised quick-action hover and selected-surface changes."
+      },
+      {
+        "name": "navigation-transition",
+        "value": "background-color 180ms ease",
+        "purpose": "Desktop navigation-circle surface change."
+      },
+      {
+        "name": "skeleton-breathe",
+        "value": "skeleton-breathe 1.8s ease-in-out infinite",
+        "purpose": "Decorative skeleton breathing, with opacity 0.45 at 50%; reduced motion disables it."
+      },
+      {
+        "name": "scroll-behavior",
+        "value": "smooth",
+        "purpose": "Section scrolling; reduced motion uses non-smooth scrolling and disables all transitions and animations."
+      }
+    ],
+    "breakpoints": [
+      { "name": "wide-min-width", "value": "1530px" },
+      { "name": "compact-max-width", "value": "1190px" },
+      { "name": "tablet-min-width", "value": "701px" },
+      { "name": "tablet-max-width", "value": "990px" },
+      { "name": "mobile-max-width", "value": "700px" },
+      { "name": "narrow-max-width", "value": "380px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Default review action with live theme roles; this example does not submit funds.",
+      "html": "<button class=\"ds-button-primary\" type=\"button\">Review transfer<svg aria-hidden=\"true\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.7\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M5 12h14\"/><path d=\"m12 5 7 7-7 7\"/></svg></button>",
+      "css": ".ds-button-primary { display: inline-flex; align-items: center; justify-content: center; gap: 9px; min-height: 44px; padding: 10px 19px; border: 1px solid transparent; border-radius: 999px; background: var(--navy); color: var(--on-navy); font-family: var(--font-ui); font-size: 13px; font-weight: 500; line-height: 1.5; white-space: normal; text-align: center; cursor: pointer; box-shadow: 0 5px 14px -7px rgb(36 60 91 / 45%); transition: background-color 160ms ease, box-shadow 160ms ease; } .ds-button-primary svg { width: 18px; height: 18px; flex-shrink: 0; } .ds-button-primary:hover:not(:disabled) { background: var(--navy-hover); } .ds-button-primary:focus-visible { outline: 3px solid var(--navy); outline-offset: 4px; } .ds-button-primary:disabled { opacity: 0.52; box-shadow: none; cursor: not-allowed; } @media (prefers-reduced-motion: reduce) { .ds-button-primary { transition: none; } } @media (forced-colors: active) { .ds-button-primary { border-color: ButtonText; } }"
+    },
+    {
+      "name": "Secondary button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Raised inner-glass alternative action with a solid hover surface.",
+      "html": "<button class=\"ds-button-secondary\" type=\"button\">Explore conversion<svg aria-hidden=\"true\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.7\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M5 12h14\"/><path d=\"m12 5 7 7-7 7\"/></svg></button>",
+      "css": ".ds-button-secondary { display: inline-flex; align-items: center; justify-content: center; gap: 9px; min-height: 44px; padding: 10px 19px; border: 1px solid var(--edge); border-radius: 999px; background: var(--inner); color: var(--ink); font-family: var(--font-ui); font-size: 13px; font-weight: 500; line-height: 1.5; white-space: normal; text-align: center; box-shadow: var(--raised); cursor: pointer; transition: background-color 160ms ease, box-shadow 160ms ease; } .ds-button-secondary svg { width: 18px; height: 18px; flex-shrink: 0; } .ds-button-secondary:hover:not(:disabled) { background: var(--solid); } .ds-button-secondary:focus-visible { outline: 3px solid var(--navy); outline-offset: 4px; } .ds-button-secondary:disabled { opacity: 0.52; box-shadow: none; cursor: not-allowed; } @media (prefers-reduced-motion: reduce) { .ds-button-secondary { transition: none; } } @media (prefers-reduced-transparency: reduce) { .ds-button-secondary { background: var(--solid); } } @media (forced-colors: active) { .ds-button-secondary { border-color: ButtonText; } }"
+    },
+    {
+      "name": "Ghost button",
+      "kind": "button",
+      "refersTo": "button-ghost",
+      "description": "Low-emphasis editing action; hover introduces inner glass without a lift transform.",
+      "html": "<button class=\"ds-button-ghost\" type=\"button\"><svg aria-hidden=\"true\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.7\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"m12 19-7-7 7-7\"/><path d=\"M19 12H5\"/></svg>Edit details</button>",
+      "css": ".ds-button-ghost { display: inline-flex; align-items: center; justify-content: center; gap: 9px; min-height: 44px; padding: 10px 19px; border: 1px solid transparent; border-radius: 999px; background: transparent; color: var(--navy); font-family: var(--font-ui); font-size: 13px; font-weight: 500; line-height: 1.5; white-space: normal; text-align: center; cursor: pointer; transition: background-color 160ms ease, box-shadow 160ms ease; } .ds-button-ghost svg { width: 18px; height: 18px; flex-shrink: 0; } .ds-button-ghost:hover:not(:disabled) { background: var(--inner); } .ds-button-ghost:focus-visible { outline: 3px solid var(--navy); outline-offset: 4px; } .ds-button-ghost:disabled { opacity: 0.52; box-shadow: none; cursor: not-allowed; } @media (prefers-reduced-motion: reduce) { .ds-button-ghost { transition: none; } } @media (forced-colors: active) { .ds-button-ghost { border-color: ButtonText; } }"
+    },
+    {
+      "name": "Circle button foundation",
+      "kind": "button",
+      "refersTo": "button-circle",
+      "description": "Available circle variant at icon size, shown with a visible caption as used by the wallet's raised-action language; not a separate shipped deposit flow.",
+      "html": "<figure class=\"ds-circle-example\"><button class=\"ds-button-circle\" type=\"button\" aria-labelledby=\"ds-circle-caption\"><svg aria-hidden=\"true\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.7\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M5 12h14\"/><path d=\"M12 5v14\"/></svg></button><figcaption id=\"ds-circle-caption\">Deposit</figcaption></figure>",
+      "css": ".ds-circle-example { display: inline-flex; flex-direction: column; align-items: center; gap: 9px; margin: 0; color: var(--ink); font-family: var(--font-ui); font-size: 12px; line-height: 1.5; } .ds-button-circle { display: inline-flex; align-items: center; justify-content: center; min-width: 44px; min-height: 44px; padding: 11px; border: 1px solid var(--edge); border-radius: 999px; background: var(--inner); color: var(--ink); box-shadow: var(--raised); cursor: pointer; transition: background-color 160ms ease, box-shadow 160ms ease; } .ds-button-circle svg { width: 18px; height: 18px; flex-shrink: 0; } .ds-button-circle:hover:not(:disabled) { background: var(--solid); } .ds-button-circle:focus-visible { outline: 3px solid var(--navy); outline-offset: 4px; } .ds-button-circle:disabled { opacity: 0.52; box-shadow: none; cursor: not-allowed; } @media (prefers-reduced-motion: reduce) { .ds-button-circle { transition: none; } } @media (prefers-reduced-transparency: reduce) { .ds-button-circle { background: var(--solid); } } @media (forced-colors: active) { .ds-button-circle { border-color: ButtonText; } }"
+    },
+    {
+      "name": "Danger button foundation",
+      "kind": "button",
+      "refersTo": "button-danger",
+      "description": "Available semantic variant only; no destructive action is shipped by this shell and no distinct danger-hover fill is defined.",
+      "html": "<button class=\"ds-button-danger\" type=\"button\">Danger variant</button>",
+      "css": ".ds-button-danger { display: inline-flex; align-items: center; justify-content: center; gap: 9px; min-height: 44px; padding: 10px 19px; border: 1px solid transparent; border-radius: 999px; background: var(--danger-ground); color: var(--danger); font-family: var(--font-ui); font-size: 13px; font-weight: 500; line-height: 1.5; white-space: normal; text-align: center; cursor: pointer; transition: background-color 160ms ease, box-shadow 160ms ease; } .ds-button-danger:hover:not(:disabled) { background: var(--danger-ground); } .ds-button-danger:focus-visible { outline: 3px solid var(--navy); outline-offset: 4px; } .ds-button-danger:disabled { opacity: 0.52; box-shadow: none; cursor: not-allowed; } @media (prefers-reduced-motion: reduce) { .ds-button-danger { transition: none; } } @media (forced-colors: active) { .ds-button-danger { border-color: ButtonText; } }"
+    },
+    {
+      "name": "Labeled input",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "Inset recipient field with a visible label and associated hint; invalid styling uses aria-invalid with error copy supplied by the form.",
+      "html": "<div class=\"ds-field\"><label for=\"ds-recipient\">Simulated recipient account ID</label><input class=\"ds-input\" id=\"ds-recipient\" type=\"text\" placeholder=\"Enter an account ID\" autocomplete=\"off\" autocapitalize=\"none\" spellcheck=\"false\" maxlength=\"128\" aria-describedby=\"ds-recipient-hint\"/><p class=\"ds-field-hint\" id=\"ds-recipient-hint\">IDs are not verified or saved in this preview.</p></div>",
+      "css": ".ds-field { display: grid; gap: 7px; min-width: 0; color: var(--ink); font-family: var(--font-ui); font-size: 14px; line-height: 1.5; } .ds-field label { color: var(--secondary); font-size: 12px; } .ds-input { width: 100%; min-width: 0; min-height: 46px; padding: 10px 13px; border: 1px solid var(--line); border-radius: var(--radius-control); background: var(--inner); color: var(--ink); font-family: var(--font-ui); font-size: 14px; line-height: 1.5; caret-color: var(--navy); } .ds-input::placeholder { color: var(--secondary); opacity: 1; } .ds-input:focus-visible { outline: 3px solid var(--navy); outline-offset: 4px; } .ds-input[aria-invalid=\"true\"] { border-color: var(--danger); } .ds-input:disabled { opacity: 0.6; cursor: not-allowed; } .ds-field-hint { margin: 2px 0 0; color: var(--secondary); font-size: 12px; line-height: 1.5; } .ds-field-error { margin: 5px 0 0; color: var(--danger); font-size: 12px; line-height: 1.5; } @media (prefers-reduced-transparency: reduce) { .ds-input { background: var(--solid); } } @media (forced-colors: active) { .ds-input { border-color: ButtonText; } }"
+    },
+    {
+      "name": "Labeled wallet navigation",
+      "kind": "nav",
+      "refersTo": "navigation",
+      "description": "Static placement excerpt of the rail and mobile bar. Actions appears at mobile width and links to the current workspace without changing its selected form; viewport-fixed placement belongs to the wallet shell.",
+      "html": "<nav class=\"ds-nav\" aria-label=\"Wallet navigation\"><a href=\"#overview\" aria-current=\"location\"><span class=\"ds-nav-circle\"><svg aria-hidden=\"true\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8\"/><path d=\"M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z\"/></svg></span>Overview</a><a href=\"#wallets\"><span class=\"ds-nav-circle\"><svg aria-hidden=\"true\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1\"/><path d=\"M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4\"/></svg></span>Wallets</a><a href=\"#history\"><span class=\"ds-nav-circle\"><svg aria-hidden=\"true\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8\"/><path d=\"M3 3v5h5\"/><path d=\"M12 7v5l4 2\"/></svg></span>History</a><a class=\"ds-nav-actions\" href=\"#operations\"><span class=\"ds-nav-circle\"><svg aria-hidden=\"true\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z\"/><path d=\"m21.854 2.147-10.94 10.939\"/></svg></span>Actions</a><a class=\"ds-nav-account\" href=\"#account\"><span class=\"ds-nav-circle\"><svg aria-hidden=\"true\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M10 5H3\"/><path d=\"M12 19H3\"/><path d=\"M14 3v4\"/><path d=\"M16 17v4\"/><path d=\"M21 12h-9\"/><path d=\"M21 19h-5\"/><path d=\"M21 5h-7\"/><path d=\"M8 10v4\"/><path d=\"M8 12H3\"/></svg></span>Account</a></nav>",
+      "css": ".ds-nav { display: flex; flex-direction: column; gap: 22px; color: var(--ink); font-family: var(--font-ui); font-size: 12px; line-height: 1.5; } .ds-nav a { display: flex; flex-direction: column; align-items: center; gap: 7px; border-radius: 12px; color: var(--secondary); font-weight: 500; text-decoration: none; } .ds-nav-circle { display: grid; place-items: center; width: 45px; height: 45px; border: 1px solid var(--edge); border-radius: 50%; background: var(--glass); box-shadow: var(--raised); transition: background-color 180ms ease; } .ds-nav svg { width: 21px; height: 21px; stroke-width: 1.7; } .ds-nav a:hover .ds-nav-circle { background: var(--solid); } .ds-nav a:focus-visible { outline: 3px solid var(--navy); outline-offset: 4px; } .ds-nav a[aria-current] { color: var(--navy); } .ds-nav a[aria-current] .ds-nav-circle { background: var(--solid); box-shadow: var(--raised), inset 0 0 0 1px var(--edge); } .ds-nav a[aria-current] svg { stroke-width: 2.2; } .ds-nav .ds-nav-actions { display: none; } .ds-nav-account { margin-top: auto; } @media (max-width: 700px) { .ds-nav { flex-direction: row; justify-content: space-around; gap: 0; padding: 10px 10px calc(12px + env(safe-area-inset-bottom)); border-top: 1px solid var(--edge); background: var(--solid); box-shadow: 0 -5px 22px -12px rgb(44 72 105 / 20%); } .ds-nav a { gap: 3px; min-width: 51px; } .ds-nav-circle { width: 39px; height: 29px; border: none; border-radius: 20px; background: transparent; box-shadow: none; } .ds-nav a[aria-current] .ds-nav-circle { background: var(--inner); box-shadow: inset 0 0 0 1px var(--line); } .ds-nav svg { width: 19px; height: 19px; } .ds-nav .ds-nav-actions { display: flex; } .ds-nav-account { margin: 0; } } @media (prefers-reduced-motion: reduce) { .ds-nav-circle { transition: none; } } @media (prefers-reduced-transparency: reduce) { .ds-nav-circle { background: var(--solid); } }"
+    },
+    {
+      "name": "Default-currency badge",
+      "kind": "chip",
+      "refersTo": "default-badge",
+      "description": "A noninteractive metadata badge, not a selectable filter or success state.",
+      "html": "<span class=\"ds-default-badge\">Default</span>",
+      "css": ".ds-default-badge { display: inline; padding: 0 5px; border: 1px solid var(--line); border-radius: 10px; background: var(--inner); color: var(--navy); font-family: var(--font-ui); font-size: 10px; font-weight: 500; line-height: 1.5; } @media (prefers-reduced-transparency: reduce) { .ds-default-badge { background: var(--solid); } }"
+    },
+    {
+      "name": "Glass currency panel",
+      "kind": "card",
+      "refersTo": "wallet-panel",
+      "description": "Outer frosted panel with an honest presentation-only zero balance, a quiet row structure, and wrapping figures.",
+      "html": "<section class=\"ds-panel\" aria-labelledby=\"ds-currencies-title\"><div class=\"ds-panel-head\"><h2 id=\"ds-currencies-title\">Your currencies</h2><span>Preview</span></div><ul class=\"ds-currency-list\"><li class=\"ds-currency-row\"><div class=\"ds-currency-identity\"><span class=\"ds-currency-token\" aria-hidden=\"true\">$</span><div><p class=\"ds-currency-code\">USD</p><p class=\"ds-currency-name\">US dollar</p></div></div><p class=\"ds-currency-amount\">0.00<span>USD</span></p></li></ul></section>",
+      "css": ".ds-panel { min-width: 0; padding: 24px; border: 1px solid var(--edge); border-radius: var(--radius-panel); background: var(--glass); color: var(--ink); font-family: var(--font-ui); font-size: 14px; line-height: 1.5; font-variant-numeric: tabular-nums; box-shadow: var(--shadow); backdrop-filter: blur(22px); -webkit-backdrop-filter: blur(22px); overflow-wrap: anywhere; } .ds-panel-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px 12px; } .ds-panel h2 { margin: 0; font-size: 15px; font-weight: 600; line-height: 1.4; letter-spacing: -0.012em; } .ds-panel-head > span { color: var(--secondary); font-size: 12px; } .ds-currency-list { list-style: none; margin: 9px 0 0; padding: 0; } .ds-currency-row { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); align-items: center; gap: 12px; min-height: 81px; padding: 17px 0; border-bottom: 1px solid var(--line); } .ds-currency-row:last-child { border-bottom: 0; } .ds-currency-identity { display: flex; align-items: center; gap: 11px; min-width: 0; } .ds-currency-identity > div { min-width: 0; } .ds-currency-token { display: grid; place-items: center; flex-shrink: 0; width: 34px; height: 34px; border: 1px solid var(--edge); border-radius: 50%; background: var(--inner); color: var(--navy); font-size: 15px; } .ds-currency-code { margin: 0; font-size: 14px; font-weight: 600; } .ds-currency-name { margin: 2px 0 0; color: var(--secondary); font-size: 12px; } .ds-currency-amount { min-width: 0; margin: 0; text-align: right; font-size: 18px; font-weight: 400; letter-spacing: -0.02em; overflow-wrap: anywhere; } .ds-currency-amount > span { display: block; margin-top: 2px; color: var(--secondary); font-size: 12px; letter-spacing: 0; } @media (min-width: 1530px) { .ds-panel { padding: 27px; } } @media (max-width: 1190px) { .ds-panel { padding: 20px; border-radius: 24px; } .ds-currency-identity { gap: 8px; } } @media (min-width: 701px) and (max-width: 990px) { .ds-panel { padding: 22px; } } @media (max-width: 700px) { .ds-panel { padding: 23px; border-radius: 25px; } } @media (max-width: 380px) { .ds-panel { padding: 20px; } .ds-currency-identity { gap: 7px; } .ds-currency-token { width: 30px; height: 30px; } } @media (prefers-reduced-transparency: reduce) { .ds-panel, .ds-currency-token { background: var(--solid); } }"
+    },
+    {
+      "name": "Decorative loading shapes",
+      "kind": "custom",
+      "refersTo": "skeleton",
+      "description": "One busy region and one status announcement; each breathing rectangle is hidden from assistive technology.",
+      "html": "<section class=\"ds-loading\" aria-busy=\"true\" aria-label=\"Wallet overview\"><span class=\"ds-loading-status\" role=\"status\">Loading wallet overview</span><div class=\"ds-loading-lines\" aria-hidden=\"true\"><div class=\"ds-skeleton\" aria-hidden=\"true\"></div><div class=\"ds-skeleton\" aria-hidden=\"true\"></div><div class=\"ds-skeleton ds-skeleton-short\" aria-hidden=\"true\"></div></div></section>",
+      "css": ".ds-loading { color: var(--ink); font-family: var(--font-ui); } .ds-loading-status { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; } .ds-loading-lines { display: grid; gap: 9px; width: 100%; } .ds-skeleton { min-height: 16px; border-radius: 8px; background: var(--line); animation: ds-skeleton-breathe 1.8s ease-in-out infinite; } .ds-skeleton-short { width: 65%; } @keyframes ds-skeleton-breathe { 50% { opacity: 0.45; } } @media (prefers-reduced-motion: reduce) { .ds-skeleton { animation: none; } }"
+    }
+  ],
+  "narrative": {
+    "northStar": "Frosted wallet",
+    "overview": "Icy-blue glass sits over a diffuse navy wash. Rounded panels and softly raised circular controls make the interface tactile without competing with balances, field labels, or review details. The approved reference is adapted to a wallet workspace, not reproduced as a different banking product.\n\nWorkhorse system typography, visible Lucide labels, and restrained navy accents keep task completion ahead of decoration. Light and dark themes share the same material roles. Simulation notices, unavailable information, and disabled final actions remain legible parts of the composition rather than being disguised as successful financial activity.",
+    "keyCharacteristics": [
+      "Icy-blue glass and a diffuse navy backdrop.",
+      "Soft offset depth, rounded panels, and raised circular controls.",
+      "Workhorse UI type with tabular figures and wrapping long values.",
+      "Visible labels, clear focus, and equivalent light/dark roles.",
+      "Plain simulation boundaries and honest unavailable states."
+    ],
+    "rules": [
+      {
+        "name": "The Theme Roles Rule",
+        "body": "Use the semantic CSS custom properties in both themes; do not freeze a light surface or white action label into a theme-aware control. The account sheet and brand mark are intentional fixed navy treatments in the source, not replacements for the theme-aware action palette.",
+        "section": "colors"
+      },
+      {
+        "name": "The Readable Figures Rule",
+        "body": "Keep tabular numerals, explicit currency labels, and wrapping long values. Format money through the existing minor-unit presentation helpers; do not visually truncate an amount or account ID to preserve a card silhouette.",
+        "section": "typography"
+      },
+      {
+        "name": "The Quiet Depth Rule",
+        "body": "Use ambient shadows for panels and paired soft offsets for raised controls; state emphasis comes from surface and border changes, not an invented lift animation.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do use semantic theme roles for glass, ink, navy actions, and their dark counterparts.",
+      "Do preserve soft offset depth, rounded panels, and raised circular controls.",
+      "Do use the native UI sans stack, tabular figures, explicit currencies, and wrapping long values.",
+      "Do retain visible task labels, keyboard focus, associated errors, and one loading announcement per busy region.",
+      "Do honor reduced motion, reduced transparency, and forced-colors treatments.",
+      "Do keep simulation, preview, inspect-only, and unavailable states plain and visible."
+    ],
+    "donts": [
+      "Don't freeze light-theme colors into theme-aware controls or use white text on the dark theme's pale primary fill.",
+      "Don't replace the icy glass world with warm cream, an unapproved display font, or a different visual identity.",
+      "Don't add hard stacked shadows, ornamental lift animations, or icon-only replacements for visible task labels.",
+      "Don't truncate monetary values or account IDs to preserve panel geometry.",
+      "Don't label mobile operation navigation Transfer or reset the selected form when Actions is used.",
+      "Don't depict disconnected services as completed money movement, real payment cards, or live exchange rates.",
+      "Don't turn the wallet's surface-specific column arrangement into a global layout prohibition."
+    ]
+  }
+}

@@ -66,6 +66,6 @@ Normal shutdown will use `docker compose down`, **without `--volumes`**. Removin
 
 See [`artifact/TOOLING.md`](artifact/TOOLING.md) to restore the checksum-verified Impeccable engine excluded from Git.
 
-The user confirmed local demo/evaluation use, code-first, and the frosted reference adaptation. The shell exists; finish review and extraction of its built design system follow Impeccable. Live-picker configuration has not been enabled automatically.
+The user confirmed local demo/evaluation use, code-first, and the frosted reference adaptation. The built shell's [review record](artifact/DESIGN_REVIEW.md) documents its corrected finding and verdict scope. [DESIGN.md](DESIGN.md) and `.impeccable/design.json` capture its actual tokens and component examples. Live-picker configuration has not been enabled automatically.
 
 Commit shared Impeccable artifacts when present: `PRODUCT.md`, `DESIGN.md`, `.impeccable/config.json`, `.impeccable/surfaces/`, `.impeccable/design.json`, `.impeccable/live/config.json`, and `.impeccable/critique/ignore.md`. Do not blanket-ignore `.impeccable/`; runtime directories ignore themselves, and `.impeccable/config.local.json` remains local.

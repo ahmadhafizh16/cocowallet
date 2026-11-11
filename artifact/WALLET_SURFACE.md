@@ -11,9 +11,10 @@ This phase implements the shell, not seeding, FX, or money-moving HTTP services.
 
 ## Direction contract
 
-**THESIS:** A familiar three-column wallet workspace with a persistent transfer
-area, not a generic grid of interchangeable metrics. The source-to-target amount
-strip connects conversion entry/review without animating invented balances.
+**THESIS:** A familiar three-column wallet workspace with a persistent operation
+area, initially Transfer, not a generic grid of interchangeable metrics. The
+source-to-target amount strip connects conversion entry/review without animating
+invented balances.
 
 **OWN-WORLD:** Icy blue ground, a diffuse navy light field, translucent white
 rounded panels, offset soft shadows, circular raised controls, workhorse sans
@@ -48,3 +49,13 @@ the approved HTML. `seed: none (unavailable)`.
   real balances, rates/quotes, and operation outcomes remain future integration.
 - The scene is a local evaluation at a desk or on a phone under normal ambient
   light; light follows the supplied reference, dark follows system/user preference.
+
+## Implementation record
+
+The shell is implemented at the targets above, with the loading geometry and
+honest states specified here. Mobile navigation calls the shared workspace
+**Actions** and preserves the selected workflow. `artifact/UI_FOUNDATION.md`
+records behavior and integration limits; `artifact/DESIGN_REVIEW.md` records the
+review and bounded verdict. Root `DESIGN.md` and `.impeccable/design.json` describe
+the built visual system. Financial services remain disconnected; this record does
+not close connected feature tasks or full cross-feature accessibility acceptance.

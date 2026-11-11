@@ -1,6 +1,6 @@
 # PRD-11 — Interface, design system, and accessibility
 
-**Status:** Product context and reference-led frosted visual direction are user-approved; T11-01 is complete. See [PRODUCT.md](../../PRODUCT.md) and the [approved sketch brief](../DESIGN_REFERENCE.md). Production UI, final design-system tokens, accessibility review, and working flows remain unimplemented.
+**Status:** The approved frosted shell is implemented as an explicit interface preview, with themes, skeleton/empty/error states, local validation/review, and account-scoped presentation. See [UI_FOUNDATION.md](../UI_FOUNDATION.md), [DESIGN_REVIEW.md](../DESIGN_REVIEW.md), and the extracted [design system](../../DESIGN.md). Connected flows and complete cross-feature accessibility acceptance remain future work.
 
 **Decisions:** [D-003](../DECISIONS.md#d-003), [D-011](../DECISIONS.md#d-011), [D-013](../DECISIONS.md#d-013), [D-014](../DECISIONS.md#d-014), [D-016](../DECISIONS.md#d-016).  
 **Tasks:** [T11-01–T11-03](../tasks/TASKS-11.md).  
@@ -30,3 +30,7 @@ As the user, I can understand my balances and perform the simulated wallet workf
 ## Tests and open items
 
 Coordinate with each feature PRD for actual form behavior. Test accessible names and focus, theme switching, reduced motion, narrow layouts, and error states. [O-004](../DECISIONS.md#o-004) covers destination USD-total display; [O-005](../DECISIONS.md#o-005) covers operational ambiguities.
+
+Current shell evidence: 557 Jest tests and 22 production Chromium checks pass.
+No final financial submission, populated history, server quote, quote expiry, or
+server-confirmed success is claimed by this interface-first checkpoint.

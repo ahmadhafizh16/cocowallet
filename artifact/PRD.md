@@ -1,6 +1,6 @@
 # Product requirements: simulated multi-currency wallet
 
-**Status:** Feature planning overview. The platform and exact money/journal core are implemented and tested; wallet HTTP flows, seeding, rates/quotes, full idempotency, and the interface remain to do. Impeccable initialization captured the confirmed product context in [PRODUCT.md](../PRODUCT.md); visual direction remains pending before wallet screens. See the linked feature PRDs and kanban for actual completion.
+**Status:** Platform, money/journal core, and the approved frosted interface-preview shell are implemented and tested. Wallet APIs, seeding, rates/quotes, and full idempotency remain future work; preview controls cannot submit money. Product context is in [PRODUCT.md](../PRODUCT.md); see the [interface record](UI_FOUNDATION.md), linked feature PRDs, and kanban for actual completion.
 
 ## Goal
 

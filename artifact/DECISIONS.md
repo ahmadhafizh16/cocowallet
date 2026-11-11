@@ -54,11 +54,11 @@
 
 ### D-013
 
-**Interface:** Use shadcn/ui and Lucide React for a modern fintech interface, light and dark themes with system preference, smooth transitions, and reduced-motion support. The user approved the reference-led frosted wallet sketch: pale-blue translucent panels, diffuse navy backdrop, rounded/raised controls, labelled icons, and the adapted three-column desktop layout. See [DESIGN_REFERENCE.md](DESIGN_REFERENCE.md) for the approved brief and scope. Icons8 MCP was removed. Exact production tokens and the final design-system contract await implementation and visual review.
+**Interface:** Use shadcn/ui and Lucide React for a modern fintech interface, light and dark themes with system preference, smooth transitions, and reduced-motion support. The user approved the reference-led frosted wallet sketch: pale-blue translucent panels, diffuse navy backdrop, rounded/raised controls, labelled icons, and the adapted three-column desktop layout. See [DESIGN_REFERENCE.md](DESIGN_REFERENCE.md) for approval and scope. The built shell now follows that direction; [DESIGN.md](../DESIGN.md) records its actual tokens and reusable visual rules. [UI_FOUNDATION.md](UI_FOUNDATION.md) distinguishes the implemented interface preview from future connected features. Icons8 MCP remains removed.
 
 ### D-014
 
-**Impeccable:** Use the requested design workflow. Impeccable is installed project-locally for OpenCode without automatic hooks. Product initialization and the reference-led visual direction are user-confirmed, with existing product questions preserved. [PRODUCT.md](../PRODUCT.md) captures product truth; `.impeccable/config.json` records code-first; [DESIGN_REFERENCE.md](DESIGN_REFERENCE.md) records sketch approval. No production wallet UI or final `DESIGN.md` exists yet. See the [official guide](https://impeccable.style/tutorials/getting-started/).
+**Impeccable:** Use the requested design workflow. Impeccable is installed project-locally for OpenCode without automatic hooks. Product context and the frosted direction are user-confirmed; existing product questions remain open. [PRODUCT.md](../PRODUCT.md) captures product truth, `.impeccable/config.json` records code-first, and [DESIGN_REFERENCE.md](DESIGN_REFERENCE.md) records sketch approval. The shell was built, checked with the manual detector, and visually reviewed; [DESIGN_REVIEW.md](DESIGN_REVIEW.md) records the corrected finding and bounded verdict. [DESIGN.md](../DESIGN.md) and `.impeccable/design.json` capture the built system, rather than an unimplemented seed. This does not complete connected workflows or T11-03. See the [official guide](https://impeccable.style/tutorials/getting-started/).
 
 ### D-015
 

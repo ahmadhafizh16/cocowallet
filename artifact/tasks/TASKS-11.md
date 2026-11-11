@@ -7,15 +7,15 @@ Status is mirrored in [KANBAN.md](../KANBAN.md).
 ### T11-01
 
 **Impeccable product context and design direction**  
-**Status:** Done. Product context, code-first workflow, and the reference-led frosted wallet direction are user-confirmed. Approval and the bounded design brief are recorded in [DESIGN_REFERENCE.md](../DESIGN_REFERENCE.md); production UI remains T11-02.
+**Status:** Done. Product context, code-first workflow, and the reference-led frosted wallet direction are user-confirmed. Approval and the bounded design brief are recorded in [DESIGN_REFERENCE.md](../DESIGN_REFERENCE.md); shell implementation is tracked separately under T11-02.
 
 **Decisions:** [D-013](../DECISIONS.md#d-013), [D-014](../DECISIONS.md#d-014), [D-020](../DECISIONS.md#d-020).  
 **Depends on:** None; coordinate with [T01-02](TASKS-01.md#t01-02) before UI implementation.  
 **Implementation:** Run the skill's initialization workflow with the user, review the resulting `PRODUCT.md`, and develop a suitable operate-mode fintech direction. Preserve all agreed simulation, read-only, theme, and accessibility constraints. Do not assume a pre-existing design system.
 
-**Progress:** Init ran the context launcher once and reviewed repository evidence. The user confirmed local demo/evaluation use, the existing agreed product/interface requirements, and code-first. [PRODUCT.md](../../PRODUCT.md) captures the confirmed record, implementation boundaries, and open questions; `.impeccable/config.json` stores the workflow choice. Initialization did not create a UI or final `DESIGN.md`. Live-picker setup remains deferred until the app has a renderable document shell.
+**Progress:** Init ran the context launcher once and reviewed repository evidence. The user confirmed local demo/evaluation use, the existing agreed product/interface requirements, and code-first. [PRODUCT.md](../../PRODUCT.md) captures the confirmed record, implementation boundaries, and open questions; `.impeccable/config.json` stores the workflow choice. Initialization itself did not create UI or final design tokens. Live-picker setup has not been enabled automatically.
 
-**Reference approval:** The user supplied a frosted pale-blue banking dashboard, chose to adapt it to our wallet scope rather than lock Atlas, then approved the resulting Impeccable sketch with “yes, this is good”. It shows desktop/mobile and light/dark views, labelled Lucide icons, and illustrative data. See the [approved brief and sketch record](../DESIGN_REFERENCE.md). No application UI or final design-system contract has been written.
+**Reference approval:** The user supplied a frosted pale-blue banking dashboard, chose to adapt it to our wallet scope rather than lock Atlas, then approved the resulting Impeccable sketch with “yes, this is good”. It shows desktop/mobile and light/dark views, labelled Lucide icons, and illustrative data. See the [approved brief and sketch record](../DESIGN_REFERENCE.md). This was direction approval, not completion of the shell or connected financial flows.
 
 **Acceptance and tests:** The user has reviewed the captured product context and an agreed direction exists before UI coding. Keep any skill-required root context files where the skill discovers them; keep project PRDs/decisions/tasks in `artifact/` per D-020.
 
@@ -24,12 +24,31 @@ Status is mirrored in [KANBAN.md](../KANBAN.md).
 ### T11-02
 
 **Responsive app shell, theme, and component foundation**  
-**Status:** In progress. Building the approved frosted shell, responsive navigation, theme controls, reusable components, and skeleton/empty/error/validation states. See [the surface brief](../WALLET_SURFACE.md).
+**Status:** Done. The approved frosted shell, responsive navigation, themes, shared controls, matching skeletons, and honest empty/error/validation/review states are implemented and verified. The built design system is captured in [DESIGN.md](../../DESIGN.md) and `.impeccable/design.json`. See [the interface record](../UI_FOUNDATION.md) and [review evidence](../DESIGN_REVIEW.md).
+
 **Decisions:** [D-003](../DECISIONS.md#d-003), [D-013](../DECISIONS.md#d-013), [D-014](../DECISIONS.md#d-014), [D-015](../DECISIONS.md#d-015).  
 **Depends on:** [T01-02](TASKS-01.md#t01-02), [T11-01](#t11-01).  
 **Implementation:** Assemble a coherent app shell and reusable shadcn/ui components with Lucide icons, responsive navigation, account switching, and light/dark themes following system preference. Define design tokens and component states from the reviewed Impeccable direction.
 
 **Acceptance and tests:** Verify keyboard focus, labels, responsive navigation, theme switching, and destination inspect-only indication. No Icons8 MCP, paid icon package, or fabricated payment branding is required. Feature-specific forms remain in their own tasks.
+
+**Verification:** `docker compose run --rm app npm run check` passed formatting,
+lint, types, **557 Jest tests**, artifact validation, and production build. Against
+that build, **22 Chromium tests** passed; coverage includes 320–1440px layouts,
+themes/storage fallback, keyboard entry, field/review focus, preserved drafts,
+privacy, and no financial submission. React fixtures verify destination isolation
+and inspect-only presentation. The detector returned `[]`; rendered desktop,
+tablet, mobile, dark, loading, error, review, and validation states were inspected.
+The independent reviewer required one mobile navigation correction, then scored
+that finding resolved with disposition `ship` at fix-list scope. Design-document
+checks cover YAML/JSON structure, source values, token references, and the version-2
+sidecar. Commands and limitations are recorded in the linked implementation/review
+documents.
+
+**Boundary:** The shipped model is explicitly presentation-only; it neither seeds
+nor queries wallet data. Final money submission is disabled until server services
+and idempotency are integrated. This closes the shell foundation, not the connected
+feature tasks or T11-03's cross-feature accessibility acceptance.
 
 ### T11-03
 

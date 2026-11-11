@@ -1,9 +1,9 @@
 # Reference-led wallet sketch
 
-**Status:** User-approved visual direction for [T11-01](tasks/TASKS-11.md#t11-01).
+**Status:** Historical approval record for [T11-01](tasks/TASKS-11.md#t11-01).
 After reviewing the adapted sketch, the user confirmed: “yes, this is good”.
-This approves the reference-led direction, not application implementation or
-production readiness. The previous Atlas proposal was not locked. The user
+That approval established the reference-led direction, not application implementation
+or production readiness. The previous Atlas proposal was not locked. The user
 supplied a pale-blue frosted banking dashboard and chose to adapt its visual
 treatment to our actual wallet features.
 Related requirements: [PRD-11](prd/PRD-11-interface.md),
@@ -38,7 +38,7 @@ Related requirements: [PRD-11](prd/PRD-11-interface.md),
 - **Boundaries:** illustrative values are not seed data. No bills, payment cards,
   real banking, extra brand identity, or settled answers to open product questions
   follow from this visual approval. Production first-run balances remain zero.
-- **Next stage:** implement the responsive shell under T11-02, then integrate
+- **Agreed sequence:** implement the responsive shell under T11-02, then integrate
   real feature flows. Produce the final token-bearing `DESIGN.md` from the built,
   visually reviewed interface, not from an unimplemented rulebook.
 
@@ -68,7 +68,10 @@ Git-ignored by the established tooling policy; this note records the approval.
 The approved HTML's SHA-256 is
 `a1dc740678fd0876c5565098e57c898b5b0c422565d6a0088a4579c76f2ebad8`.
 Preserve it as the local visual reference; future alternatives need separate files.
-No `src/` files, production styles, routes, money, or database state were changed.
+No `src/` files, production styles, routes, money, or database state were changed
+by that sketch-planning stage. The later interface implementation is recorded in
+[UI_FOUNDATION.md](UI_FOUNDATION.md) and [DESIGN_REVIEW.md](DESIGN_REVIEW.md), with
+actual visual tokens in [DESIGN.md](../DESIGN.md).
 
 - Desktop retains the three-column composition; tablet uses two columns; mobile
   stacks the workspaces and moves labelled navigation to the bottom.
@@ -82,6 +85,6 @@ No `src/` files, production styles, routes, money, or database state were change
   balance visibility, currency-change/FX notice, review notice, and inspection
   boundary were exercised. No production accessibility certification is implied.
 
-**Approval boundary:** the direction is now agreed. No application UI or final
-`DESIGN.md` was created in this planning stage. T11-02 and subsequent feature
-tasks retain their implementation, verification, and review requirements.
+**Approval boundary:** no application UI or final design tokens were created by
+the planning approval itself. T11-02 separately implements and verifies the shell;
+connected feature tasks retain their own implementation and acceptance requirements.

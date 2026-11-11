@@ -13,13 +13,13 @@
 
 ## Before implementing money movement
 
-- [ ] Resolve [O-002](DECISIONS.md#o-002): trusted per-currency minor-unit metadata, decimal arithmetic configuration, supported numeric bounds, and an overflow-safe journal aggregation strategy.
+- [x] Resolve [O-002](DECISIONS.md#o-002): pinned accounting metadata, exact bigint rational arithmetic, supported bounds, and snapshot-based streamed aggregation are implemented under [D-023](DECISIONS.md#d-023).
 - [ ] Resolve implementation details in [O-006](DECISIONS.md#o-006): idempotency key format and retention, request fingerprinting, in-progress concurrency, and recovery when a result cannot be durably stored. The **stable definitive success/error replay** policy itself is already agreed in [D-019](DECISIONS.md#d-019).
 - [ ] Finish the feature-specific requests, quote binding, and error schemas in [O-003](DECISIONS.md#o-003) and [API_DESIGN.md](API_DESIGN.md) before finalizing HTTP/Swagger endpoints.
 
 ## Before visual design and feature completion
 
-- [x] Run the installed Impeccable initialization workflow with the user and confirm its baseline. [PRODUCT.md](../PRODUCT.md) captures local demo/evaluation use, existing agreed decisions, implementation boundaries, and open questions; `.impeccable/config.json` records the user's code-first choice. Visual direction remains pending in T11-01; the main PRD, handover, decisions, tasks, and diagrams remain under `artifact/`.
+- [x] Confirm Impeccable product context, code-first, and the approved frosted direction in [PRODUCT.md](../PRODUCT.md), `.impeccable/config.json`, and [DESIGN_REFERENCE.md](DESIGN_REFERENCE.md). The implemented shell has skeleton/state tests and a recorded [design review](DESIGN_REVIEW.md); feature PRDs, handover, decisions, tasks, and diagrams remain under `artifact/`.
 - [ ] Resolve the display/default-currency questions in [O-004](DECISIONS.md#o-004), including destination USD totals and date-filter boundaries, before finalizing their UI/API acceptance criteria.
 - [ ] Define and test the safe SQLite backup/restore and offline currency-catalog behavior in [O-005](DECISIONS.md#o-005). Avoid assuming a live database can be safely copied without accounting for active journal/WAL state.
 - [ ] Verify local-only access for the no-auth API/Swagger UI, deterministic mocked FX/clock tests, isolated test data, concurrency, rollback, and restart/volume persistence. These are tracked by the linked feature tasks and [PRD-12](prd/PRD-12-quality.md).

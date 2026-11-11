@@ -1,6 +1,6 @@
 # Architecture and flow diagrams
 
-**Status:** The platform foundation, journal schema, exact money, snapshot balances, and immediate-write orchestration are implemented and tested. HTTP operations, quotes, production idempotency storage, and interface diagrams still describe future features. The [decision register](DECISIONS.md) is authoritative when a diagram and an open question conflict.
+**Status:** The platform, money/journal core, and interface-preview shell are implemented and tested. Financial HTTP operations, quotes, production idempotency, and their connected UI flows remain future features. The [decision register](DECISIONS.md) is authoritative when a diagram and an open question conflict.
 
 ## Implemented foundation flow
 
@@ -20,6 +20,29 @@ flowchart LR
 ```
 
 The application database contains operational metadata, migration tracking, and the accounting schema; account/wallet/transaction tables are empty because seeding and HTTP flows remain future work. Ordinary unit/integration tests create their own temporary files and cannot use the configured runtime connection. The following sections distinguish implemented core behavior from future feature integration.
+
+## Implemented interface-first boundary
+
+Tasks: [T11-02](tasks/TASKS-11.md#t11-02). Contract and limitations:
+[UI_FOUNDATION.md](UI_FOUNDATION.md).
+
+```mermaid
+flowchart LR
+    Browser[Local browser] --> Page[GET /: wallet preview]
+    Page --> Model[Explicit presentation-only zero state]
+    Model --> Shell[Frosted responsive shell]
+    Shell --> Draft[Local exact input validation and review]
+    Draft --> Blocked[Final submission disabled: service not connected]
+    Page --> Loading[Next loading boundary: matching skeleton]
+    Page --> Error[Error boundary: retry without outcome claims]
+    Shell --> Theme[System/light/dark display preference]
+    Theme --> Storage[Browser preference storage, with fallback]
+    Core[Existing journal core] -. future service/API integration .-> Shell
+```
+
+The preview does not query/seed wallet data, invent a rate or completed history,
+or send financial requests. Destination fixtures test account isolation and
+inspect-only presentation without creating actual application destinations.
 
 ## System and Docker boundary
 
