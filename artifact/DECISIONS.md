@@ -92,6 +92,10 @@
 
 **Git setup and workflow:** Initialize a new local Git repository when implementation begins. Create small Angular-style commits automatically as each intention is completed and checked; do not create a remote or push without approval. Exclude the installed platform-specific Impeccable engine binary from version control while keeping the local copy; document and verify a reproducible restoration path. Do not stage unrelated user work.
 
+### D-023
+
+**Exact accounting precision and bounds (O-002):** Pin the attributed MIT-package accounting metadata extract from `@financica/iso4217@0.2.0`, not CLDR display digits; reject unknown or unspecified precision. Wallet eligibility remains separately restricted to eligible Frankfurter fiat codes. Freeze precision once used. Use native bigint minor units and exact integer-rational FX with positive half-up rounding; no decimal dependency is required. With `M = 9223372036854775807`, allow operation amounts `1..M`, balances `0..M`, deltas `-M..M`, and arbitrary-precision intermediate arithmetic. Stream journal entries in a consistent snapshot and validate only the final aggregate, without SQLite `SUM()`/`TOTAL()`. Reject overly precise user input rather than rounding it; serialize money/rates as decimal strings. Bounds, rate-text limits, provenance, and licensing limitations are documented in [MONEY.md](MONEY.md) and [CURRENCY_METADATA.md](CURRENCY_METADATA.md).
+
 ## Questions and resolutions
 
 ### O-001
@@ -100,7 +104,7 @@
 
 ### O-002
 
-**Precision and bounds:** Select authoritative fiat minor-unit metadata, the decimal arithmetic library and precision, supported amount/aggregate bounds, and an overflow-safe journal aggregation strategy. Frankfurter's currency list alone must not be assumed to define all minor-unit rules.
+**Resolved by D-023:** Explicit pinned accounting metadata, native bigint rational arithmetic, signed-storage-compatible business bounds, decimal-string serialization, and snapshot-based bigint aggregation replace any assumed two-decimal or floating-point fallback. See [MONEY.md](MONEY.md). The precision extract's upstream licensing caveat remains documented, not represented as a legal guarantee.
 
 ### O-003
 

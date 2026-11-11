@@ -1,8 +1,8 @@
 # Project kanban
 
-**Last updated:** Exact money handling and journal persistence are in progress; the platform foundation remains verified.
+**Last updated:** Exact money handling and pinned accounting precision are verified; journal balance reads and atomic writes are next.
 
-**Scope:** 32 implementation tasks: **25 to do**, **2 in progress**, **0 blocked**, **5 done**. Planning activities completed below do not count as implemented features.
+**Scope:** 32 implementation tasks: **25 to do**, **1 in progress**, **0 blocked**, **6 done**. Planning activities completed below do not count as implemented features.
 
 Each task links to its detailed description, source PRD, decision IDs, dependencies, and acceptance tests. The Angular-style, one-intention-per-commit rule and local Git workflow in [D-021](DECISIONS.md#d-021) and [D-022](DECISIONS.md#d-022) apply to every task. A task moves to **Done** only when its acceptance criteria are verified and the PRD, decisions, diagrams, API documentation, and handover are updated as needed.
 
@@ -76,7 +76,6 @@ See Done for the verified platform foundation.
 
 ## In progress
 
-- [ ] [T02-01](tasks/TASKS-02.md#t02-01) — Exact money types, precision, and rounding.
 - [ ] [T02-02](tasks/TASKS-02.md#t02-02) — Journal schema and derived balance reads.
 
 ## Blocked
@@ -90,6 +89,7 @@ _No task is currently blocked by an explicit unresolved decision or external blo
 - [x] [T01-01](tasks/TASKS-01.md#t01-01) — Node 26/non-root Compose image, npm access, and all named volumes verified across recreation.
 - [x] [T01-02](tasks/TASKS-01.md#t01-02) — Verified Next.js scaffold, component tooling, local checks, Jest/Playwright smoke tests, clean install, and build.
 - [x] [T01-03](tasks/TASKS-01.md#t01-03) — SQLite connection, repeatable metadata migration, isolated tests, rollback, and service-recreation persistence verified.
+- [x] [T02-01](tasks/TASKS-02.md#t02-01) — Exact bigint parsing/formatting, bounded rational half-up FX, pinned accounting precision, and 437 regression tests.
 
 ## Done — planning only
 

@@ -7,12 +7,12 @@ Status is mirrored in [KANBAN.md](../KANBAN.md).
 ### T02-01
 
 **Exact money types, currency precision, and rounding**  
-**Status:** In progress. Precision-source and exact-arithmetic review is running; implementation will resolve [O-002](../DECISIONS.md#o-002).
-**Decisions:** [D-004](../DECISIONS.md#d-004), [D-018](../DECISIONS.md#d-018).  
+**Status:** Done. Pinned accounting precision and exact bigint arithmetic pass 437 feature-local Jest tests; targeted lint, formatting, and type checks pass. See [MONEY.md](../MONEY.md) and [CURRENCY_METADATA.md](../CURRENCY_METADATA.md).
+**Decisions:** [D-004](../DECISIONS.md#d-004), [D-018](../DECISIONS.md#d-018), [D-023](../DECISIONS.md#d-023).  
 **Depends on:** [T01-02](TASKS-01.md#t01-02).  
 **Implementation:** Choose authoritative fiat minor-unit metadata and a decimal-safe calculation approach; parse input as decimal text; represent journal amounts as integer minor units; round FX results half up to target precision. Specify supported bounds, API serialization, overflow behavior, and a strategy safe for long journal aggregations.
 
-**Acceptance and tests:** Currency examples with zero, two, and three decimal places parse correctly; `1.005 USD` rounds to `1.01 USD`; invalid precision, nonpositive amounts, and overflow are rejected without floating-point drift. Test JavaScript safe-integer boundaries, SQLite signed 64-bit limits, and aggregate intermediate overflow.
+**Acceptance and tests:** Currency examples with zero, two, three, and four decimal places parse correctly; a computed `1.005 USD` target rounds to `1.01 USD` but the same overly precise user input is rejected. Invalid precision, nonpositive amounts, and overflow are rejected without floating-point drift. Test JavaScript safe-integer boundaries and SQLite signed 64-bit limits; aggregate intermediate overflow is additionally verified under T02-02. Command: `docker compose run --rm app npm test -- --runTestsByPath src/features/money/money.test.ts src/features/money/currency-precision.test.ts`.
 
 ### T02-02
 

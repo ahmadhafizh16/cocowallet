@@ -113,6 +113,7 @@ The diagram is a proposed contract, not an implemented API. See [DIAGRAMS.md](DI
 ## Proposed request and response practices
 
 - Send monetary amounts as decimal strings, such as `"100.00"`, rather than JSON floating-point numbers. Validate currency-specific precision and numeric bounds on the server.
+- The implemented internal [money contract](MONEY.md) fixes decimal-string formatting, int64-compatible business bounds, and fail-closed accounting precision under [D-023](DECISIONS.md#d-023). It does not finalize endpoint payloads or HTTP error mappings.
 - Use server-created quotes; a confirmation refers to its quote rather than supplying a trusted exchange rate. If it expires after one minute, refresh and reconfirm. Store the applied rate, source date, fetch timestamp, and cached/fresh status.
 - Return standard HTTP Problem Details (`application/problem+json`) with a machine-readable code. Use the baseline 400/404/409/503 statuses in D-017; define exact error types and payloads. Rejected operations are not recorded in transaction history.
 - Require `Idempotency-Key` for money-moving requests. An accepted key and matching input replay the original definitive success or error; reuse with different input is rejected. Store failed-result metadata separately from completed history. If the result is unknown, retry with the same key; after a definite error, use a new key for a new intentional attempt. See [IDEMPOTENCY.md](IDEMPOTENCY.md).
