@@ -133,6 +133,13 @@ test("search stays in the list; detail hero and real ID-copy fallback retain imm
   await expect(
     page.getByRole("heading", { name: "Transaction details", exact: true }),
   ).toHaveCSS("font-size", "22px");
+  const recordedAt = page.locator(".wallet-detail-fact").last();
+  await expect(recordedAt.locator("dt")).toHaveText("Recorded at (UTC)");
+  await expect(recordedAt).toHaveCSS("border-bottom-width", "0px");
+  await expect(page.locator(".wallet-detail-fact").first()).toHaveCSS(
+    "border-bottom-width",
+    "1px",
+  );
   await expect(page.locator(".wallet-detail-summary")).toContainText(
     `+${record.target.amount} ${record.target.currency}`,
   );

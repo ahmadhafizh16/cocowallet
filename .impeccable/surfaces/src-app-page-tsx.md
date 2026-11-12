@@ -9,6 +9,9 @@ related_targets: ["src/features/wallet/dashboard.tsx","src/features/wallet/walle
 
 ## Current History and navigation follow-up — D-041
 
+Minor detail follow-up: remove only the bottom border on the final Recorded at
+(UTC) fact; retain the other fact dividers and the information footer's own edge.
+
 Remove History's About these results and page-level Show/Hide action, not the
 Overview privacy setting or its cross-route masking. Use Apply Filter / Reset
 Filter. Center the empty icon/title and the exact bold clearing guidance. Add

@@ -136,3 +136,16 @@ Parent browser validation checks all four affected previews at 320/1440 light/da
 Readable empty/modal examples were opened. These are static documentation checks,
 not another independent live-app review or a claim that inert controls perform
 clipboard, navigation, calendar selection or money submission.
+
+### Minor recorded-time divider follow-up
+
+The user's subsequent request removes only the bottom edge of the final
+**Recorded at (UTC)** fact. A scoped final-fact CSS override leaves every other
+fact divider and the information footer's own top edge intact. The browser
+regression now asserts the final fact's label and 0px edge, plus the retained 1px
+transaction-ID edge. Read-only live verification passes all eight 320/820/1024/
+1440 light/dark branches with zero page errors/API writes; six focused historical
+presentation tests and formatting pass. Captures and the once-only detector output
+are in `.impeccable/review/recorded-at-divider/`. No accounting, data, motion, core
+token or design-file change accompanies this local polish; the full preceding
+1,549/124 results are not represented as a rerun of this follow-up.

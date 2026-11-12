@@ -1248,6 +1248,10 @@
   padding-block: 8px;
   border-bottom: 1px solid var(--line);
 }
+/* Recorded at (UTC) is the final fact; the information footer has its own edge. */
+.wallet-detail-fact:last-child {
+  border-bottom: 0;
+}
 .wallet-detail-fact dt {
   color: var(--secondary);
   font-size: 12px;
