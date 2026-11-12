@@ -100,7 +100,7 @@ async function browse(page: Page) {
   await page.getByRole("link", { name: "History", exact: true }).click();
   await expect(
     page.getByRole("heading", {
-      name: "Browse completed activity",
+      name: "Completed transactions",
       exact: true,
     }),
   ).toBeFocused();
@@ -113,7 +113,6 @@ async function choose(page: Page, label: string, value: string) {
   await page.getByRole("option", { name: value, exact: true }).click();
 }
 async function lookup(page: Page, id: string) {
-  await page.getByText("Find by transaction ID", { exact: true }).click();
   await page.getByLabel("Transaction ID", { exact: true }).fill(id);
   await page
     .getByRole("button", { name: "Find transaction", exact: true })
@@ -149,6 +148,86 @@ function fxHistoryName(
 ) {
   return `View ${direction} transfer ${receipt.transactionId} · 1.00 USD → 0.80 GBP · ${readableTime(receipt.createdAt)}`;
 }
+
+test("the supplied History reference has visible lookup, signed completion rows and one responsive paging group", async ({
+  page,
+  request,
+}) => {
+  await facts(request);
+  await page.goto("/");
+  await browse(page);
+  const rows = page
+    .getByRole("list", { name: "Full transaction history", exact: true })
+    .locator("li");
+  await expect(
+    page.getByLabel("Transaction ID", { exact: true }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("button", { name: "Find transaction", exact: true }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("heading", { name: "Completed transactions", exact: true }),
+  ).toHaveCount(1);
+  await expect(page.locator(".wallet-history-footer")).toContainText(
+    /Showing \d+ of \d+ transactions/u,
+  );
+  for (const row of await rows.all()) {
+    await expect(row.locator(".wallet-transaction-icon")).toHaveCount(1);
+    await expect(row.locator(".wallet-transaction-status")).toContainText(
+      "Completed",
+    );
+    await expect(row.locator(".wallet-history-chevron")).toHaveCount(1);
+    await expect(row.locator("time")).toContainText("UTC");
+  }
+  const transfer = rows
+    .filter({
+      has: page.locator(".wallet-transaction-title", {
+        hasText: "Outgoing transfer",
+      }),
+    })
+    .first();
+  await expect(transfer.locator(".wallet-debit")).toContainText("−");
+  await expect(transfer.locator(".wallet-credit")).toContainText("+");
+  for (const width of [320, 820, 1024, 1440])
+    for (const theme of ["light", "dark"] as const) {
+      await page.setViewportSize({ width, height: 1000 });
+      await page.emulateMedia({ colorScheme: theme });
+      expect(
+        await page
+          .locator("#history")
+          .evaluate((e) => e.scrollWidth <= e.clientWidth),
+      ).toBe(true);
+      const target = await page
+        .getByRole("button", { name: "Find transaction", exact: true })
+        .boundingBox();
+      expect(target!.width).toBeGreaterThanOrEqual(44);
+      expect(target!.height).toBeGreaterThanOrEqual(44);
+      if (width >= 1024) {
+        const positions = await page
+          .locator(".wallet-history-filter-grid [data-slot='field']")
+          .evaluateAll((nodes) =>
+            nodes.map((e) => e.getBoundingClientRect().top),
+          );
+        expect(new Set(positions).size).toBe(1);
+      }
+      await expect(
+        page.getByRole("button", { name: "Go to page", exact: true }),
+      ).toBeVisible();
+    }
+  const id = await rows
+    .first()
+    .locator("button")
+    .getAttribute("data-transaction-id");
+  await page.getByLabel("Transaction ID", { exact: true }).fill(id!);
+  await page.getByLabel("Transaction ID", { exact: true }).press("Enter");
+  await expect(
+    page.getByRole("heading", { name: "Transaction details", exact: true }),
+  ).toBeFocused();
+  await page
+    .getByRole("button", { name: "Back to results", exact: true })
+    .click();
+  await expect(rows.first().locator("button")).toBeFocused();
+});
 
 test("numbered pages and exact detail/back navigation preserve the applied filters and focused row", async ({
   page,
@@ -393,7 +472,7 @@ test("account switches discard open details/filters and show only inspect-only i
     .click();
   await expect(
     page.getByRole("heading", {
-      name: "Browse completed activity",
+      name: "Completed transactions",
       exact: true,
     }),
   ).toBeVisible();
@@ -530,7 +609,7 @@ test("privacy removes all history records, counts and timestamps; reload clears 
   await page.reload();
   await expect(
     page.getByRole("heading", {
-      name: "Browse completed activity",
+      name: "Completed transactions",
       exact: true,
     }),
   ).toBeVisible();

@@ -1,17 +1,15 @@
 # Handover
 
-**Status:** D-038 modal continuity passes **1,530 Jest / 117 Chromium** checks and
-an independent bounded **`ship`** review. Ordinary money amounts reset to zero on
-reopen, Edit keeps its exact amount, all four flows share smooth protected task
-steps and both Convert choices use USD/GBP/EUR. Original-request recovery,
-accounting, privacy, stored defaults, other balances and backend currency support
-are preserved. Approved affected design guidance/examples are refreshed without
-changing core tokens. Normal development is restored with current user activity
-intact; T11-10 is complete.
-Board: **31 of 39 tasks closed, 6 To do / 2 In progress / 31 Done**.
-See [MODAL_CONTINUITY.md](MODAL_CONTINUITY.md). Wallet/default management and
-Swagger remain separate work; D-037 patterns remain except where D-038 supersedes
-ordinary amount retention and Convert choices.
+**Status:** D-039 screenshot-led History passes **1,530 Jest / 118 Chromium**
+checks. Compact signed/icon/status rows, top filters and visible exact-ID lookup,
+account context and grouped bottom paging follow the supplied image. The independent
+reviewer scored the sole 44px hit-target correction **resolved**, **`ship`** at
+fix-list scope. Approved History guidance/examples are refreshed with core tokens
+unchanged. Normal development is restored; all current financial data is preserved.
+T11-11 is complete: **32 of 40 tasks closed, 6 To do / 2 In progress / 32 Done**.
+See [HISTORY_REFERENCE.md](HISTORY_REFERENCE.md). D-038 zero-on-reopen, exact Edit,
+protected task motion, USD/GBP/EUR Convert UI and immutable recovery remain intact.
+Wallet/default management and Swagger remain separate work.
 
 ## Implemented modules and commands
 
@@ -40,7 +38,7 @@ ordinary amount retention and Convert choices.
 | `src/features/transfers/transfer-review.tsx`, `src/features/submissions/` | Exact arbitrary recipient/default/target review; no-FX same-currency or validated expiring FX terms; transfer routing/receipt validation in the unchanged historical recovery slot alongside old funding/conversions. |
 | `src/features/history/recent-transactions.tsx`, `preview.ts` | Five compact signed matching recent rows from the bounded 50-record read, shared recent/full/detail guards and scoped detail navigation. Exact account/direction/arithmetic/filter/count/order checks; no invented merchant or net conversion amount. |
 | `e2e/zzzzzz-transfers.spec.ts` | Guarded production transfer confirmation/recovery, recipient/default/target behavior, incoming inspection/read-only permissions, expiry/funds/self-ID/storage errors and light/dark 320/1440 captures. |
-| `src/features/history/workspace.tsx`, `use-history.ts`, `transaction-facts.tsx` | Dedicated History workspace with staged/applied filters, numbered paging, GET-bound exact detail, safe retry/privacy, focus/back navigation and scoped cancellation. No persistent browsing storage or monetary write. |
+| `src/features/history/workspace.tsx`, `use-history.ts`, `transaction-facts.tsx` | Screenshot-led single-sheet History: staged filters/visible exact-ID lookup, compact signed/icon/status rows, grouped paging, GET-bound exact detail, safe retry/privacy, focus/back navigation and scoped cancellation. No persistent browsing storage or monetary write. |
 | `e2e/zzzzzzz-history-ui.spec.ts` | Guarded >50-record browsing, all operation details, UTC/either-currency filters, account switching, errors/missing/privacy, unchanged monetary recovery and 320/1440 light/dark captures. |
 | `src/features/funding/`, `src/app/api/deposits/`, `src/app/api/withdrawals/` | Exact simulated funding, immutable durable original results, same-key retries, per-tab recovery, receipts and bounded completed-funding visibility. |
 | `drizzle/0003_funding_results.sql` | Retained technical outcome table and immutable update/delete triggers; no seeded funds or transactions. |
@@ -85,14 +83,38 @@ Stop the dev compiler before `docker compose run --rm app npm run check`, then u
 
 Application DB: `/app/data/wallet.sqlite` in Compose's `wallet-data` volume. Tests use isolated temporary SQLite files. Normal shutdown is `docker compose down` without deleting volumes. Before applying journal migrations, the stopped app's database was backed up with SQLite's backup API to `/app/data/wallet.sqlite.pre-journal-1794390597589.bak`. Backup creation is verified; a full restore drill is not claimed.
 
-Current D-038 verification passes the full Docker check/build: **1,530 Jest tests
+Current D-039 verification passes the full Docker check/build: **1,530 Jest tests
+in 71 suites**, formatting/lint/types and **61 artifact documents / 40 tasks**;
+all **118 production Chromium checks** pass on the corrected isolated server.
+The independent review's one 40px lookup-target finding is resolved at 44px in all
+eight width/theme branches; **ship** is a fix-list verdict, not a new whole-app
+audit. All 34 reference-width/responsive/state captures are refreshed. The approved
+History design refresh preserves byte-identical frontmatter, existing extensions
+and 12 previews, adding one inert History-sheet example; see
+[DESIGN_REVIEW.md](DESIGN_REVIEW.md).
+
+The current backup is
+`/app/data/wallet.sqlite.pre-history-reference-1794478402550.bak`: all 15 tables
+were row-identical before restoring development, and all **13 non-cache tables
+remain identical** afterwards. Only catalog/rate caches refreshed. Preserved user
+activity is **3 accounts / 5 wallets / 6 funding attempts / 1 conversion attempt /
+2 transfer attempts / 9 transactions / 12 journal entries / 10 observations**,
+plus **5 quotes / 3 quote uses**. Integrity `ok`, no FK violations. Healthy development
+retains `.next/dev.pre-history-reference-1794480219674` and passes **300 stable
+read-only frames**, actual nine-record History/five recent rows, exact available
+total, exact-ID/details/back focus, privacy, soft navigation and zero-on-reopen,
+without extra document navigation, page/console errors or API writes. Both
+disposable previews are stopped; no normal seed/money test, migration, dependency
+change, restore drill or push ran. See [HISTORY_REFERENCE.md](HISTORY_REFERENCE.md).
+
+Historical D-038 verification passes the full Docker check/build: **1,530 Jest tests
 in 71 suites**, formatting/lint/types and **60 artifact documents / 39 tasks**;
 all **117 production Chromium checks** pass on the corrected isolated server.
 The independent read-only full finish review returns **ship**, no material fixes,
 at the bounded follow-up scope. Corrected captures record actual 240ms WAAPI
 resizing across 320/820/1440 light/dark; see [DESIGN_REVIEW.md](DESIGN_REVIEW.md).
 
-The current normal-wallet backup is
+The historical D-038 normal-wallet backup is
 `/app/data/wallet.sqlite.pre-modal-motion-1794474651486.bak`. All 15 tables were
 row-identical before restoring development; afterwards **13 non-cache tables remain
 identical**, with only catalog/rate cache refresh. Preserved activity is **3 accounts /

@@ -1,5 +1,40 @@
 # Wallet shell design review
 
+## T11-11 — screenshot-led History finish review
+
+**Initial disposition: `fix` at the bounded D-039 History-reference scope.** A
+fresh independent read-only child returned all five contract sections, verified
+all 34 required captures and inspected five contact sheets plus sampled originals.
+The inline image was unavailable to the child; the authoritative reference
+transcription traveled with the packet. No comp, new identity or raster gate was
+required for this pinned refinement.
+
+Title/back, Completed/account context, one sheet, desktop filters/actions/visible
+exact-ID lookup, summary, signed divided rows, status/chevrons and read/private/
+error states matched. Filter-column and paging wrapping, retained app chrome and
+touch sizing were accepted responsive adaptations. Type/material/ground preserve
+the incumbent frosted Operate world. The once-only detector's one primary warning
+concerns the inherited square amount editor, not a rounded History card; no blanket
+suppression or repeated scan was added.
+
+**One material fix:** the lookup-submit override was 40 × 40px, below the required
+44px hit target. It now uses 44 × 44px at zero inset, with increased input trailing
+padding to keep text clear. Browser/capture assertions verify the hit area at all
+four widths in both themes. All 34 same-view captures and five contact sheets were
+refreshed and validated. **Verdict pass: `ship`; the same reviewer scored the sole
+material fix resolved**, with no fix-introduced overlap/layout regression observed.
+This is fix-list approval, not another whole-surface audit.
+
+The parent received the final **118/118 Chromium** pass against the corrected
+build, alongside **1,530 Jest / 71 suites**, formatting/lint/types/production build
+and **61 artifact documents / 40 tasks**. These are parent-run results, not tests
+executed by the reviewer. The approved History-only DESIGN.md/sidecar refresh
+preserves byte-identical frontmatter, all existing extensions and 12 original
+previews, adding one inert History-sheet example. Parent validation is not an
+independent browser audit of that example. No exhaustive backend/security,
+performance, screen-reader or WCAG certification is claimed. See
+[HISTORY_REFERENCE.md](HISTORY_REFERENCE.md).
+
 ## T11-10 — money-modal continuity finish review
 
 **Disposition: `ship` at the bounded D-038 follow-up scope.** A fresh independent

@@ -7,7 +7,19 @@ related_targets: ["src/features/wallet/dashboard.tsx","src/features/wallet/walle
 
 # Wallet overview surface
 
-## Current continuity follow-up — D-038
+## Current History reference — D-039
+
+The user's 1024 × 629 History image is the visual reference. See
+`artifact/HISTORY_REFERENCE.md` for its authoritative transcription: Completed
+transactions/account tag above one sheet; four filters, Apply/Clear and visible
+exact-ID lookup at top; compact circular direction icons/type/UTC-time rows with
+right-aligned signed amounts, Completed badge and chevron; showing count and one
+bottom paging/jump group. Preserve app chrome, account/privacy, exact details,
+filter/paging/lookup/retry/focus and frosted themes. No new backend capability or
+money change; never seed the image's eight examples. User approved History-only
+DESIGN.md/examples refresh, preserving core identity/tokens. D-038 behavior stays.
+
+## Prior continuity follow-up — D-038
 
 Reset ordinary masked amounts to zero on explicit money-modal reopen, clearing
 stale review/errors/quotes, but retain metadata and Edit-within-modal amounts.

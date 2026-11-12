@@ -68,4 +68,10 @@ it("keeps exact visible amounts, currencies and recorded time in each history ro
   expect(html).toContain(
     'aria-label="View outgoing transfer record · 1.00 USD → 0.80 GBP · Nov 12, 2026, 12:00:00 PM UTC"',
   );
+  expect(html).toContain("wallet-history-row");
+  expect(html).toContain('class="wallet-debit">−1.00');
+  expect(html).toContain('class="wallet-credit">+0.80');
+  expect(html).toContain('title="Completed"');
+  expect(html).toContain('placeholder="Search by transaction ID…"');
+  expect(html).not.toContain("Browse completed activity");
 });

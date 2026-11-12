@@ -2,7 +2,14 @@
 
 <!-- impeccable:product-schema 1 -->
 
-The latest continuity follow-up is pinned in
+The latest History feedback is pinned in
+[HISTORY_REFERENCE.md](artifact/HISTORY_REFERENCE.md) (D-039): use the user's image
+for compact signed direction/status rows, top filters and visible exact-ID lookup,
+account context and grouped bottom paging. Preserve the frosted identity, actual
+recorded facts, read-only contracts, privacy and detail/back/focus. Reference counts
+and amounts are not seed data. History-only design guidance refresh is approved.
+
+The continuity follow-up is pinned in
 [MODAL_CONTINUITY.md](artifact/MODAL_CONTINUITY.md) (D-038): ordinary amounts reset
 to zero on reopening a money modal; Edit within the same modal keeps its amount.
 Smooth input/review/done continuity uses the existing motion world; original pending/

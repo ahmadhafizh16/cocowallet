@@ -296,6 +296,12 @@ now use USD/GBP/EUR only; other balances and backend capabilities remain intact.
 Directional task stages, a bounded dialog-height resize and a verified-success settle
 reuse the existing motion world, with immediate privacy/reduced-motion behavior.
 
+The [History reference refinement](artifact/HISTORY_REFERENCE.md) (D-039) applies
+compact completed-activity scanning to the existing frosted world. Its signed
+direction/status rows and visible exact-ID lookup reuse recorded facts and shared
+controls, not a new palette, financial capability or reference-image seed dataset.
+The History-only guidance below preserves D-038 modal continuity and recovery.
+
 **Key Characteristics:**
 
 - Icy-blue glass and a diffuse navy backdrop.
@@ -356,6 +362,7 @@ These extracted roles and captures are not a claim of WCAG conformance.
 - **Label / button:** fields use the label role; default shared actions use the button role. Mobile navigation uses (13px), weight (500), retaining the shared Button's unitless leading. Badge labels are (12px), weight (500); the wallet-count override is (13px), retaining the badge's unitless leading rather than a fixed (16px) line box.
 - **Amount / currency amount:** the shared editable amount uses the responsive `typography.amount` role in a (100px) bottom-border editor, with a separate (36px) symbol. It inherits shared Input leading rather than imposing the obsolete fixed (32px) line box. Wallet-row figures retain the separate currency-amount role; mobile reduces them to (22px), then (20px). Row markers remain SVG flags, not enlarged currency glyphs.
 - **Dialog title / review:** a semibold (24px) title labels the active dialog. Shared MoneyReview subheadings use local (20px), weight (600), text; its centered amount uses `clamp(28px, 6vw, 40px)`, weight (600), line height (1.25), and a (0.75em) currency label. Pending/recovery headings retain their (18px)/(28px) treatment. These review-local sizes are not new global type roles.
+- **Full History rows:** local type labels use (14px), weight (600), with (12px) readable UTC times; exact signed amounts use (14px) tabular figures. At maximum width (640px), type and amounts become (13px), retaining wrapping rather than truncating facts. These compact row treatments do not change the global type scale or the overview's recent-row geometry.
 
 The CocoWallet wordmark is font-independent vector geometry, not a new UI typeface. The standalone error heading still uses (25px), weight (550), and line height (1.3). Local values and responsive exceptions are not extra global scale steps.
 
@@ -368,6 +375,19 @@ Use flexible grids, `min-width: 0`, wrapping labels, and content-sized panels. T
 Observed overview composition is two content columns in a (1.4:1) ratio: total/actions and recent transactions at left, currency wallets at right. Within the total card, amount/copy and the compact sparkline share a grid with a flexible amount column, a (100–160px) chart column, and (16px) gap; actions sit below. At maximum width (640px), the chart column is (100px) and the gap (8px). At maximum width (1023px), overview content stacks as total, currencies, recent transactions. At maximum width (760px), the rail becomes a labelled fixed bottom bar. These are current CSS boundaries, not a requirement that every future surface use this topology. The original sketch remains material authority, not a three-column layout prescription.
 
 Full transaction History uses `/history` and a single-column completed-activity panel within the same [persistent route shell](<src/app/(wallet)/layout.tsx>). Account selection, privacy, money selections and protected recovery remain mounted between Overview and History. This does not retain an ordinary amount/review through a fresh explicit modal opening: that boundary resets the amount to `0` and clears stale review/errors/quotes. Reload still clears ordinary drafts. Do not describe History as an overview anchor or promise durable browsing state.
+
+Within full History, keep **Transaction history** at page-title level with privacy
+and **Back to overview** alongside, then a Completed transactions icon/heading and
+wrapping account-ID tag **above one frosted sheet**. The outer route panel is
+transparent and unboxed; do not add a nested Browse heading or a second card around
+the sheet. The sheet locally uses (20px) padding and (24px) corners, becoming
+(16px)/(20px) at maximum width (640px), without changing shared panel primitives.
+Four labelled filters share one row from (1024px), two columns from (641–1023px)
+and one column at maximum width (640px). Desktop Apply/Clear sits below at left,
+with the visible exact-ID lookup at right; at maximum width (1023px) lookup stacks
+below the actions. Results, one count/page/order summary, and the grouped bottom
+paging stay inside this same sheet. Let headings, IDs, rows and controls wrap on
+narrow screens without horizontal overflow or losing fixed-navigation clearance.
 
 ### Responsive behavior
 
@@ -484,7 +504,7 @@ Input and Radix Select use opaque control fill, visible control border, control-
 
 Thousands grouping is an exact string presentation with caret preservation; raw draft/API amounts remain ungrouped decimal strings. Invalid characters/paste are rejected with a readable hint, never parsed through floating point, silently rounded or precision-truncated. Privacy blanks/read-only masks the editor without destroying its current draft; a fresh ordinary modal opening still resets it to literal `0` and remounts caret/hint state. Never replace the field with a password input or a bare decorative number.
 
-Select menus are portaled, collision-aware solid surfaces with (4px) menu inset, (44px) minimum option height, checkmarked selection, scrolling controls, keyboard/typeahead support, and focus restoration. History uses the same Select foundation as forms, not a native select. Local history trigger width is (176px), becoming full width on compact phones.
+Select menus are portaled, collision-aware solid surfaces with (4px) menu inset, (44px) minimum option height, checkmarked selection, scrolling controls, keyboard/typeahead support, and focus restoration. History uses the same Select foundation as forms, not a native select. The overview's recent-activity trigger is locally (176px), becoming full width on compact phones; full History's type/currency triggers fill their responsive filter columns instead.
 
 Convert exposes only **USD, GBP and EUR** in both source and receiving selectors.
 Source choices also require an existing wallet; the identical receiving currency
@@ -526,6 +546,55 @@ transactions will appear here.** Clear filter remains available when applicable;
 empty is not an error or invented activity.
 
 Selecting a recent row opens its account-scoped details on `/history`; there is no Browse full history action in the recent panel. History's completed list, type/currency/inclusive-UTC-day filters, numbered pages, lookup and record details reuse the existing shared controls. Account changes reset its scoped browsing context; stale reads cannot replace current facts. Returning from details preserves the mounted list's filters/page and restores focus; leaving the page does not promise persistence of those filters. Privacy removes rows, counts, timestamps and detailed facts, not just visible amounts.
+
+Full History follows the [D-039 reference](artifact/HISTORY_REFERENCE.md), adapting
+its composition to the existing app header, navigation, themes and accessible
+controls rather than reproducing a cropped screenshot frame:
+
+- **Filters and lookup:** History type, History currency, From day (UTC) and To day
+  (UTC) retain labels and shared (44px) controls. Filter edits are staged until
+  **Apply history filters**; Apply and **Clear history filters** reset to page 1.
+  The visible **Search by transaction ID…** field is a separate explicit exact-ID
+  lookup, submitted with Enter or the arrow Button to open this account's recorded
+  details—not a fuzzy filter or an as-you-type request. Its submit target is
+  (44 × 44px), aligned at zero top/trailing inset, with input padding (36px) leading
+  and (48px) trailing so neither icon covers text. Keep its accessible label,
+  exact-lookup hint, validation and missing/retry behavior.
+- **Compact rows:** one concise matching-count/page/**Newest first** line precedes
+  quiet divided full-row actions. Use a (32px) circular direction icon, type and
+  readable UTC time at left; exact signed currency amounts align right, followed
+  by the positive Completed check/label and a chevron. Desktop rows have minimum
+  height (56px), vertical padding (8px) and (12px) gaps; long facts may grow the row.
+  Conversion uses the existing navy icon on quiet-divider ground, not a new accent.
+  At maximum width (640px), icons become (28px), gaps (6px), vertical padding
+  (12px), and the chevron (12px). The visible (20px) completion check retains its
+  screen-reader label; status and direction never depend on color alone.
+- **Recorded legs:** conversion and outgoing transfer show both stored signed
+  sides: danger debit with `−`, positive credit with `+`, each with its currency.
+  Incoming inspection shows only the positive receiving side in the row; details
+  still retain the full source/target and applicable original rate provenance.
+  Never net the legs, price them through current FX, hide a currency or truncate an
+  exact fact. Reference-image amounts and its eight rows are examples, never seeds
+  or hardcoded counts; render actual account-scoped results.
+- **Bottom paging:** **Showing N of total transactions** uses the current page's
+  row count at left. Previous page, a labelled page-number input, Go to page and
+  Next page form one group at right; bounds disable the appropriate controls.
+  Pages contain up to 50 records, not the six-record balance-history table limit.
+  Preserve positive safe-integer validation and First page recovery when page > 1,
+  including an empty out-of-range page. At maximum width (640px), controls wrap and
+  the jump form moves to its own row, without clipping errors or keyboard access.
+- **Context and states:** keep applied filters, either-side historical currency
+  matching, inclusive UTC days, the 50-record limit and the numbered-page shifting
+  tradeoff in **About these results**, with a minimum (44px) summary target.
+  Associated screen-reader field hints remain even while that disclosure is closed.
+  Detail/back returns focus to the originating row or visible heading; an account
+  switch must not steal focus from the account menu. Privacy removes rows, amounts,
+  counts, timestamps and lookup immediately while retaining browsing context only
+  in memory. Loading/error/empty/missing states never display an old page or another
+  account's facts; retain truthful status, retry and back navigation. Existing
+  account/query/revision/privacy and abort guards, read-only APIs, and unchanged
+  detail contracts remain authoritative; no durable filter storage or money-flow
+  change accompanies this presentation.
 
 Presentation dates use the shared en-US UTC helpers across recent/full history,
 chart endpoints/table, quote expiry and rate provenance. Use readable month names,
@@ -619,6 +688,7 @@ The real dashboard skeleton reserves the current two-column/stacked geometry, to
 - **Do** keep simulation, preview, inspect-only, and unavailable states plain and visible.
 - **Do** keep the user-requested opaque balance gradient and its semantic roles local, consistent in both themes, with forced-colors replacements.
 - **Do** retain visible currency codes/names beside decorative vector flags and remove history values, timestamps, plot, and table immediately when privacy is enabled.
+- **Do** keep full History in one headed sheet with visible exact-ID lookup, explicit staged filters, compact signed recorded legs and one wrapping bottom paging group; retain exact facts and accessible completion in both themes.
 
 ### Don't:
 
@@ -631,3 +701,4 @@ The real dashboard skeleton reserves the current two-column/stacked geometry, to
 - **Don't** depict disconnected services as completed money movement, stored preview balances, real payment cards, or live exchange rates.
 - **Don't** turn the wallet's surface-specific column arrangement into a global layout prohibition.
 - **Don't** invent history figures, dates, returns, or a flat/rising trend when future recorded data is absent, or promote card-local/flag colors into the global palette.
+- **Don't** seed the History reference's example rows/counts, imply fuzzy ID search, net stored transaction legs or replace historical facts with current FX.

@@ -1,6 +1,17 @@
 "use client";
 import { useEffect, useId, useRef, useState, type FormEvent } from "react";
-import { ArrowLeft, ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
+import {
+  ArrowLeft,
+  ArrowRight,
+  ArrowDownLeft,
+  ArrowUpRight,
+  ArrowRightLeft,
+  Check,
+  History,
+  Search,
+  ChevronLeft,
+  ChevronRight,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Field, FieldLabel, FieldError } from "@/components/ui/field";
@@ -19,6 +30,7 @@ import {
   historyDateContract,
   parseHistoryQuery,
   type HistoryQuery,
+  type HistoryTransaction,
   type TransactionType,
 } from "./contracts";
 import { useHistoryRead } from "./use-history";
@@ -186,8 +198,13 @@ export function HistoryWorkspace({
   }
   if (hidden)
     return (
-      <div className="space-y-4">
-        <h3 ref={heading} tabIndex={-1} className="text-lg font-semibold">
+      <div className="wallet-history-sheet space-y-4">
+        <h3
+          id="history-heading"
+          ref={heading}
+          tabIndex={-1}
+          className="text-lg font-semibold"
+        >
           History hidden
         </h3>
         <p className="text-sm text-muted-foreground">
@@ -202,7 +219,7 @@ export function HistoryWorkspace({
   const result = read.result?.kind === "list" ? read.result.page : undefined;
   if (transactionId)
     return (
-      <div className="space-y-5">
+      <div className="wallet-history-sheet space-y-5">
         <Button
           variant="ghost"
           onClick={() => {
@@ -213,7 +230,12 @@ export function HistoryWorkspace({
           <ArrowLeft aria-hidden="true" />
           Back to results
         </Button>
-        <h3 ref={heading} tabIndex={-1} className="text-lg font-semibold">
+        <h3
+          id="history-heading"
+          ref={heading}
+          tabIndex={-1}
+          className="text-lg font-semibold"
+        >
           Transaction details
         </h3>
         {read.pending ? (
@@ -243,283 +265,367 @@ export function HistoryWorkspace({
       </div>
     );
   return (
-    <div className="space-y-6">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <h3 ref={heading} tabIndex={-1} className="text-lg font-semibold">
-          Browse completed activity
+    <div className="wallet-history-workspace">
+      <div className="wallet-history-heading">
+        <h3
+          id="history-heading"
+          ref={heading}
+          tabIndex={-1}
+          className="wallet-panel-title"
+        >
+          <History aria-hidden="true" />
+          Completed transactions
         </h3>
-        <Button variant="ghost" onClick={onClose}>
-          <ArrowLeft aria-hidden="true" />
-          Back to overview
-        </Button>
+        <span className="wallet-history-account">
+          Account <bdi>{accountId}</bdi>
+        </span>
       </div>
-      <p className="text-sm text-muted-foreground wrap-anywhere">
-        Account <bdi>{accountId}</bdi>. Completed transactions only; rejected
-        attempts are not transactions.
-      </p>
-      <form
-        ref={form}
-        onSubmit={apply}
-        noValidate
-        className="space-y-4"
-        aria-label="History filters"
-      >
-        <div className="grid min-w-0 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          <Field>
-            <FieldLabel htmlFor={id("type")}>History type</FieldLabel>
-            <Select
-              value={draft.type}
-              onValueChange={(value) => change("type", value)}
-            >
-              <SelectTrigger id={id("type")}>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All activity</SelectItem>
-                {TYPES.map(([value, label]) => (
-                  <SelectItem key={value} value={value}>
-                    {label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </Field>
-          <Field>
-            <FieldLabel htmlFor={id("currency")}>History currency</FieldLabel>
-            <Select
-              value={draft.currency}
-              onValueChange={(value) => change("currency", value)}
-            >
-              <SelectTrigger
-                id={id("currency")}
-                aria-describedby={id("currency-hint")}
-              >
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All currencies</SelectItem>
-                {CURRENCIES.map((code) => (
-                  <SelectItem key={code} value={code}>
-                    {code}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </Field>
-          {(["from", "to"] as const).map((field) => (
-            <Field key={field} data-invalid={!!errors[field]}>
-              <FieldLabel htmlFor={id(field)}>
-                {field === "from" ? "From day (UTC)" : "To day (UTC)"}
+      <div className="wallet-history-sheet">
+        <div className="wallet-history-toolbar">
+          <form
+            ref={form}
+            onSubmit={apply}
+            noValidate
+            className="wallet-history-filters"
+            aria-label="History filters"
+          >
+            <div className="wallet-history-filter-grid">
+              <Field>
+                <FieldLabel htmlFor={id("type")}>History type</FieldLabel>
+                <Select
+                  value={draft.type}
+                  onValueChange={(value) => change("type", value)}
+                >
+                  <SelectTrigger id={id("type")}>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All activity</SelectItem>
+                    {TYPES.map(([value, label]) => (
+                      <SelectItem key={value} value={value}>
+                        {label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </Field>
+              <Field>
+                <FieldLabel htmlFor={id("currency")}>
+                  History currency
+                </FieldLabel>
+                <Select
+                  value={draft.currency}
+                  onValueChange={(value) => change("currency", value)}
+                >
+                  <SelectTrigger
+                    id={id("currency")}
+                    aria-describedby={id("currency-hint")}
+                  >
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All currencies</SelectItem>
+                    {CURRENCIES.map((code) => (
+                      <SelectItem key={code} value={code}>
+                        {code}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </Field>
+              {(["from", "to"] as const).map((field) => (
+                <Field key={field} data-invalid={!!errors[field]}>
+                  <FieldLabel htmlFor={id(field)}>
+                    {field === "from" ? "From day (UTC)" : "To day (UTC)"}
+                  </FieldLabel>
+                  <Input
+                    id={id(field)}
+                    value={draft[field]}
+                    onChange={(event) => change(field, event.target.value)}
+                    placeholder="YYYY-MM-DD"
+                    maxLength={10}
+                    autoComplete="off"
+                    aria-invalid={!!errors[field]}
+                    aria-describedby={`${id("date-hint")}${errors[field] ? ` ${id(`${field}-error`)}` : ""}`}
+                  />
+                  {errors[field] && (
+                    <FieldError id={id(`${field}-error`)}>
+                      {errors[field]}
+                    </FieldError>
+                  )}
+                </Field>
+              ))}
+            </div>
+            <p id={id("currency-hint")} className="sr-only">
+              Currency matches either affected side, including historical
+              accounting codes. No current FX is requested.
+            </p>
+            <p id={id("date-hint")} className="sr-only">
+              Days use YYYY-MM-DD, both inclusive in UTC—not your browser’s
+              timezone. Leave either day empty for no boundary.
+            </p>
+            <div className="wallet-history-filter-actions">
+              <Button type="submit">Apply history filters</Button>
+              <Button variant="outline" onClick={clear}>
+                Clear history filters
+              </Button>
+            </div>
+          </form>
+          <form
+            onSubmit={find}
+            noValidate
+            className="wallet-history-search"
+            aria-label="Find by transaction ID"
+          >
+            <Field data-invalid={!!lookupError}>
+              <FieldLabel htmlFor={id("lookup")} className="sr-only">
+                Transaction ID
               </FieldLabel>
-              <Input
-                id={id(field)}
-                value={draft[field]}
-                onChange={(event) => change(field, event.target.value)}
-                placeholder="YYYY-MM-DD"
-                maxLength={10}
-                autoComplete="off"
-                aria-invalid={!!errors[field]}
-                aria-describedby={`${id("date-hint")}${errors[field] ? ` ${id(`${field}-error`)}` : ""}`}
-              />
-              {errors[field] && (
-                <FieldError id={id(`${field}-error`)}>
-                  {errors[field]}
-                </FieldError>
+              <div className="wallet-history-search-control">
+                <Search aria-hidden="true" />
+                <Input
+                  ref={lookupInput}
+                  id={id("lookup")}
+                  type="search"
+                  value={lookup}
+                  placeholder="Search by transaction ID…"
+                  onChange={(event) => {
+                    setLookup(event.target.value);
+                    setLookupError(undefined);
+                  }}
+                  maxLength={8192}
+                  autoComplete="off"
+                  autoCapitalize="none"
+                  spellCheck={false}
+                  aria-invalid={!!lookupError}
+                  aria-describedby={`${id("lookup-hint")}${lookupError ? ` ${id("lookup-error")}` : ""}`}
+                />
+                <Button
+                  type="submit"
+                  variant="ghost"
+                  size="icon"
+                  aria-label="Find transaction"
+                  title="Find exact transaction ID"
+                >
+                  <ArrowRight aria-hidden="true" />
+                </Button>
+              </div>
+              <p id={id("lookup-hint")} className="sr-only">
+                Enter an exact transaction ID to open its recorded details in
+                this account.
+              </p>
+              {lookupError && (
+                <FieldError id={id("lookup-error")}>{lookupError}</FieldError>
               )}
             </Field>
-          ))}
+          </form>
         </div>
-        <p id={id("currency-hint")} className="text-sm text-muted-foreground">
-          Currency matches either affected side, including historical accounting
-          codes. No current FX is requested.
-        </p>
-        <p id={id("date-hint")} className="text-sm text-muted-foreground">
-          Days use YYYY-MM-DD, both inclusive in UTC—not your browser’s
-          timezone. Leave either day empty for no boundary.
-        </p>
-        <div className="flex flex-wrap gap-3">
-          <Button type="submit">Apply history filters</Button>
-          <Button variant="outline" onClick={clear}>
-            Clear history filters
-          </Button>
-        </div>
-      </form>
-      <div className="space-y-4" aria-busy={read.pending}>
-        {read.pending ? (
-          <Loading label="Loading this account’s history…" />
-        ) : read.failure ? (
-          <div className="space-y-3">
-            <p role="status" className="text-sm text-muted-foreground">
-              History could not be loaded or validated. No previous page or
-              other account’s records are shown.
-            </p>
-            <Button variant="outline" onClick={read.retry}>
-              Retry history
-            </Button>
-          </div>
-        ) : (
-          result && (
-            <>
+        <div className="wallet-history-results" aria-busy={read.pending}>
+          {read.pending ? (
+            <Loading label="Loading this account’s history…" />
+          ) : read.failure ? (
+            <div className="space-y-3">
               <p role="status" className="text-sm text-muted-foreground">
-                {result.pagination.totalItems} matching completed{" "}
-                {result.pagination.totalItems === 1
-                  ? "operation"
-                  : "operations"}{" "}
-                ·{" "}
-                {result.pagination.totalPages
-                  ? `Page ${query.page} of ${result.pagination.totalPages}`
-                  : "No pages to display"}
+                History could not be loaded or validated. No previous page or
+                other account’s records are shown.
               </p>
-              <p className="text-sm text-muted-foreground">
-                Applied:{" "}
-                {TYPES.find(([type]) => type === query.type)?.[1] ??
-                  "All activity"}{" "}
-                · {query.currency ?? "All currencies"} ·{" "}
-                {query.from ? readableDate(query.from) : "No start day"} to{" "}
-                {query.to ? readableDate(query.to) : "No end day"} (UTC)
-              </p>
-              <p className="text-sm text-muted-foreground">
-                Newest first · 50 per page. New activity between requests can
-                shift numbered pages.
-              </p>
-              {result.transactions.length ? (
-                <ul
-                  ref={list}
-                  className="space-y-2"
-                  aria-label="Full transaction history"
-                >
-                  {result.transactions.map((t) => (
-                    <li
-                      key={t.transactionId}
-                      className="min-w-0 border-b border-border last:border-0"
-                    >
-                      <Button
-                        variant="ghost"
-                        className="h-auto min-h-11 w-full justify-start gap-3 px-0 py-3 text-left whitespace-normal"
-                        data-transaction-id={t.transactionId}
-                        aria-label={`View ${historyTypeLabel(t).toLowerCase()} ${t.transactionId} · ${historyAmountLabel(t)} · ${readableTime(t.createdAt)}`}
-                        onClick={() => setTransaction(t.transactionId)}
-                      >
-                        <span className="min-w-0 flex-1 wrap-anywhere">
-                          <span className="block">
-                            {historyTypeLabel(t)} · {historyAmountLabel(t)}
-                          </span>
-                          <time
-                            className="mt-1 block text-sm font-normal text-muted-foreground"
-                            dateTime={t.createdAt}
-                          >
-                            {readableTime(t.createdAt)}
-                          </time>
-                        </span>
-                        <ArrowRight className="shrink-0" aria-hidden="true" />
-                      </Button>
-                    </li>
-                  ))}
-                </ul>
-              ) : (
-                <div className="space-y-2">
-                  <h4 className="font-semibold">
-                    {result.pagination.totalItems
-                      ? "No records on this page"
-                      : "No matching completed activity"}
-                  </h4>
-                  <p className="text-sm text-muted-foreground">
-                    {result.pagination.totalItems
-                      ? "Choose an earlier page or return to page 1."
-                      : "Try clearing the filters. Your completed transactions will appear here."}
+              <Button variant="outline" onClick={read.retry}>
+                Retry history
+              </Button>
+            </div>
+          ) : (
+            result && (
+              <>
+                <p role="status" className="wallet-history-summary">
+                  {result.pagination.totalItems} matching completed{" "}
+                  {result.pagination.totalItems === 1
+                    ? "operation"
+                    : "operations"}{" "}
+                  ·{" "}
+                  {result.pagination.totalPages
+                    ? `Page ${query.page} of ${result.pagination.totalPages}`
+                    : "No pages to display"}{" "}
+                  · Newest first
+                </p>
+                {result.transactions.length ? (
+                  <ul
+                    ref={list}
+                    className="wallet-history-list"
+                    aria-label="Full transaction history"
+                  >
+                    {result.transactions.map((t) => (
+                      <HistoryRow
+                        key={t.transactionId}
+                        transaction={t}
+                        onOpen={() => setTransaction(t.transactionId)}
+                      />
+                    ))}
+                  </ul>
+                ) : (
+                  <div className="space-y-2">
+                    <h4 className="font-semibold">
+                      {result.pagination.totalItems
+                        ? "No records on this page"
+                        : "No matching completed activity"}
+                    </h4>
+                    <p className="text-sm text-muted-foreground">
+                      {result.pagination.totalItems
+                        ? "Choose an earlier page or return to page 1."
+                        : "Try clearing the filters. Your completed transactions will appear here."}
+                    </p>
+                  </div>
+                )}
+                <div className="wallet-history-footer">
+                  <p>
+                    Showing {result.transactions.length} of{" "}
+                    {result.pagination.totalItems} transactions
                   </p>
+                  <nav
+                    className="wallet-history-pages"
+                    aria-label="History pages"
+                  >
+                    <Button
+                      variant="outline"
+                      disabled={query.page === 1}
+                      onClick={() => page(query.page - 1)}
+                    >
+                      <ChevronLeft aria-hidden="true" />
+                      Previous page
+                    </Button>
+                    <form
+                      onSubmit={go}
+                      noValidate
+                      className="wallet-history-page-jump"
+                      aria-label="Choose history page"
+                    >
+                      <Field data-invalid={!!pageError}>
+                        <FieldLabel htmlFor={id("page")} className="sr-only">
+                          Page number
+                        </FieldLabel>
+                        <Input
+                          id={id("page")}
+                          inputMode="numeric"
+                          maxLength={16}
+                          value={pageDraft}
+                          onChange={(event) => {
+                            setPageDraft(event.target.value);
+                            setPageError(undefined);
+                          }}
+                          aria-invalid={!!pageError}
+                          aria-describedby={
+                            pageError ? id("page-error") : undefined
+                          }
+                        />
+                      </Field>
+                      <Button variant="outline" type="submit">
+                        Go to page
+                      </Button>
+                      {pageError && (
+                        <FieldError id={id("page-error")}>
+                          {pageError}
+                        </FieldError>
+                      )}
+                    </form>
+                    <Button
+                      variant="outline"
+                      disabled={query.page >= result.pagination.totalPages}
+                      onClick={() => page(query.page + 1)}
+                    >
+                      Next page <ChevronRight aria-hidden="true" />
+                    </Button>
+                    {query.page > 1 && (
+                      <Button variant="ghost" onClick={() => page(1)}>
+                        First page
+                      </Button>
+                    )}
+                  </nav>
                 </div>
-              )}
-              <nav
-                className="flex flex-wrap items-center gap-3"
-                aria-label="History pages"
-              >
-                <Button
-                  variant="outline"
-                  disabled={query.page === 1}
-                  onClick={() => page(query.page - 1)}
-                >
-                  <ChevronLeft aria-hidden="true" />
-                  Previous page
-                </Button>
-                <Button
-                  variant="outline"
-                  disabled={query.page >= result.pagination.totalPages}
-                  onClick={() => page(query.page + 1)}
-                >
-                  Next page
-                  <ChevronRight aria-hidden="true" />
-                </Button>
-                {query.page > 1 && (
-                  <Button variant="ghost" onClick={() => page(1)}>
-                    First page
-                  </Button>
-                )}
-              </nav>
-              <form
-                onSubmit={go}
-                noValidate
-                className="flex flex-wrap items-end gap-3"
-                aria-label="Choose history page"
-              >
-                <Field className="w-32" data-invalid={!!pageError}>
-                  <FieldLabel htmlFor={id("page")}>Page number</FieldLabel>
-                  <Input
-                    id={id("page")}
-                    inputMode="numeric"
-                    maxLength={16}
-                    value={pageDraft}
-                    onChange={(event) => {
-                      setPageDraft(event.target.value);
-                      setPageError(undefined);
-                    }}
-                    aria-invalid={!!pageError}
-                    aria-describedby={pageError ? id("page-error") : undefined}
-                  />
-                </Field>
-                <Button variant="outline" type="submit">
-                  Go to page
-                </Button>
-                {pageError && (
-                  <FieldError id={id("page-error")}>{pageError}</FieldError>
-                )}
-              </form>
-            </>
-          )
-        )}
+                <details className="wallet-history-notes">
+                  <summary>About these results</summary>
+                  <div>
+                    <p>
+                      Applied:{" "}
+                      {TYPES.find(([type]) => type === query.type)?.[1] ??
+                        "All activity"}{" "}
+                      · {query.currency ?? "All currencies"} ·{" "}
+                      {query.from ? readableDate(query.from) : "No start day"}{" "}
+                      to {query.to ? readableDate(query.to) : "No end day"}{" "}
+                      (UTC)
+                    </p>
+                    <p>
+                      Completed transactions only; rejected attempts are not
+                      transactions. Currency matches either affected side,
+                      including historical codes. No current FX is requested.
+                    </p>
+                    <p>
+                      Days are inclusive in UTC. Leave either day empty for no
+                      boundary. Newest first · 50 per page. New activity between
+                      requests can shift numbered pages.
+                    </p>
+                  </div>
+                </details>
+              </>
+            )
+          )}
+        </div>
       </div>
-      <details>
-        <summary className="cursor-pointer min-h-11 py-2 text-sm">
-          Find by transaction ID
-        </summary>
-        <form onSubmit={find} noValidate className="space-y-3 pt-3">
-          <Field data-invalid={!!lookupError}>
-            <FieldLabel htmlFor={id("lookup")}>Transaction ID</FieldLabel>
-            <Input
-              ref={lookupInput}
-              id={id("lookup")}
-              value={lookup}
-              onChange={(event) => {
-                setLookup(event.target.value);
-                setLookupError(undefined);
-              }}
-              maxLength={8192}
-              autoComplete="off"
-              autoCapitalize="none"
-              spellCheck={false}
-              aria-invalid={!!lookupError}
-              aria-describedby={lookupError ? id("lookup-error") : undefined}
-            />
-            {lookupError && (
-              <FieldError id={id("lookup-error")}>{lookupError}</FieldError>
-            )}
-          </Field>
-          <Button variant="outline" type="submit">
-            Find transaction
-          </Button>
-        </form>
-      </details>
     </div>
+  );
+}
+function HistoryRow({
+  transaction: t,
+  onOpen,
+}: {
+  transaction: HistoryTransaction;
+  onOpen: () => void;
+}) {
+  const incoming = t.direction === "incoming",
+    conversion = t.type === "conversion";
+  const Icon = conversion
+    ? ArrowRightLeft
+    : incoming
+      ? ArrowDownLeft
+      : ArrowUpRight;
+  return (
+    <li className="wallet-recent-row">
+      <Button
+        variant="ghost"
+        className="wallet-history-row"
+        data-transaction-id={t.transactionId}
+        aria-label={`View ${historyTypeLabel(t).toLowerCase()} ${t.transactionId} · ${historyAmountLabel(t)} · ${readableTime(t.createdAt)}`}
+        onClick={onOpen}
+      >
+        <span
+          className={`wallet-transaction-icon ${conversion ? "is-conversion" : incoming ? "is-credit" : "is-debit"}`}
+          aria-hidden="true"
+        >
+          <Icon />
+        </span>
+        <span className="wallet-transaction-identity">
+          <span className="wallet-transaction-title">
+            {historyTypeLabel(t)}
+          </span>
+          <time dateTime={t.createdAt}>{readableTime(t.createdAt)}</time>
+        </span>
+        <span className="wallet-transaction-amounts">
+          {!incoming && t.source && (
+            <span className="wallet-debit">
+              −{t.source.amount} {t.source.currency}
+            </span>
+          )}
+          {t.target && (
+            <span className="wallet-credit">
+              +{t.target.amount} {t.target.currency}
+            </span>
+          )}
+        </span>
+        <span className="wallet-transaction-status" title="Completed">
+          <Check aria-hidden="true" />
+          <span className="wallet-status-label">Completed</span>
+        </span>
+        <ChevronRight className="wallet-history-chevron" aria-hidden="true" />
+      </Button>
+    </li>
   );
 }
 function Loading({ label }: { label: string }) {

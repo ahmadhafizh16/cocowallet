@@ -1,5 +1,14 @@
 # Completed history queries, API and interface
 
+**Current UI refinement:** [D-039](DECISIONS.md#d-039) /
+[HISTORY_REFERENCE.md](HISTORY_REFERENCE.md) applies the user's supplied History
+image to the existing read-only workspace: compact signed direction/status rows,
+visible exact-ID lookup beside filter actions, account context above one sheet and
+grouped bottom paging. Extra UTC/currency/applied-query explanations remain in
+About these results. Details/back, account isolation, 50-record pages, validation,
+privacy and the APIs below are unchanged. Reference examples are not seed data;
+historical in-panel placement below remains superseded by the dedicated page.
+
 **Status:** Scoped completed-history APIs, explicit filters, numbered pages and
 exact detail/back navigation are connected. D-035 supersedes T09-02's original
 in-panel placement: History now lives at `/history` via existing navigation,

@@ -259,6 +259,17 @@ choice and approved refreshing affected design guidance/examples. See
 [MODAL_CONTINUITY.md](MODAL_CONTINUITY.md). This supersedes ordinary amount draft
 retention across reopen/navigation in prior UI decisions, not recovery guarantees.
 
+### D-039
+
+**History reference refinement:** Use the user's supplied History screenshot as
+the reference for compact signed rows, top filters/visible exact-ID search,
+account context, completion badges and bottom grouped paging. Preserve existing
+read-only contracts, UTC/account isolation, detail/back/focus/privacy behavior and
+the surrounding frosted identity. The user approved refreshing only History design
+guidance/examples, with unchanged core tokens. See
+[HISTORY_REFERENCE.md](HISTORY_REFERENCE.md). Reference amounts/counts are not seed
+data; current user activity is preserved.
+
 ## Questions and resolutions
 
 ### O-001

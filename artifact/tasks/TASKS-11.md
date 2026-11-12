@@ -205,6 +205,36 @@ two-record History, privacy/draft navigation and no financial POSTs or errors;
 existing user financial data remains unchanged. See
 [PRESENTATION_REFINEMENT.md](../PRESENTATION_REFINEMENT.md) for limits and evidence.
 
+### T11-11
+
+**Screenshot-led History page refinement**
+
+**Status:** Done.
+
+**Decisions:** [D-039](../DECISIONS.md#d-039).
+**Depends on:** [T11-10](#t11-10), [T09-02](TASKS-09.md#t09-02).
+
+**Implementation:** Follow [HISTORY_REFERENCE.md](../HISTORY_REFERENCE.md): compact
+signed/icon/status rows, top filters and visible exact-ID lookup, account context
+and bottom grouped paging. Preserve real recorded facts, isolation, privacy,
+detail/back/focus, safe errors and the incumbent frosted identity.
+
+**Acceptance and tests:** Reference-width and mobile/tablet/wide light/dark renders;
+all transaction directions, exact amounts/time, functional lookup/filter/paging,
+empty/loading/error/private states and unchanged monetary recovery. Docker-first
+regressions, independent finish review, approved History-only design refresh,
+current data preservation/restored development and local commit; no push.
+
+**Verified:** Full Docker check/build passes **1,530 Jest / 71 suites**; all
+**118 Chromium checks** pass against the corrected 44px-submit build. All 34
+reference-width/responsive/state originals are refreshed. The independent reviewer
+scored the sole hit-target correction resolved, **ship** at fix-list scope.
+Approved History-only design refresh preserves core tokens and existing previews.
+Restored development passes 300 stable read-only frames, actual nine-record History,
+exact-ID/details/back focus, privacy and zero-on-reopen without errors or API writes.
+All 13 non-cache tables remain unchanged; only reference caches refreshed. See
+[HISTORY_REFERENCE.md](../HISTORY_REFERENCE.md) for scope/evidence.
+
 ### T11-10
 
 **Money-modal reset and step continuity**

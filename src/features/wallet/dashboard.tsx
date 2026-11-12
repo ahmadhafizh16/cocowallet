@@ -9,6 +9,7 @@ import {
   ArrowUpRight,
   Check,
   ChevronDown,
+  ArrowLeft,
   CircleDollarSign,
   Copy,
   Eye,
@@ -458,20 +459,35 @@ export function WalletDashboard({
                   : "Your wallet, at a glance."}
               </h1>
               {historyPage && (
-                <Button
-                  variant="ghost"
-                  className="wallet-privacy-button"
-                  aria-label="Hide monetary amounts"
-                  aria-pressed={hidden}
-                  onClick={() => setHidden((value) => !value)}
-                >
-                  {hidden ? (
-                    <EyeOff aria-hidden="true" />
-                  ) : (
-                    <Eye aria-hidden="true" />
+                <>
+                  <Button
+                    variant="ghost"
+                    className="wallet-privacy-button"
+                    aria-label="Hide monetary amounts"
+                    aria-pressed={hidden}
+                    onClick={() => setHidden((value) => !value)}
+                  >
+                    {hidden ? (
+                      <EyeOff aria-hidden="true" />
+                    ) : (
+                      <Eye aria-hidden="true" />
+                    )}
+                    {hidden ? "Show" : "Hide"}
+                  </Button>
+                  {!hidden && (
+                    <Button
+                      variant="ghost"
+                      className="wallet-history-back"
+                      onClick={() => {
+                        setActiveSection("overview");
+                        router.push("/");
+                      }}
+                    >
+                      <ArrowLeft aria-hidden="true" />
+                      Back to overview
+                    </Button>
                   )}
-                  {hidden ? "Show" : "Hide"}
-                </Button>
+                </>
               )}
               {account?.role === "destination" && (
                 <Badge variant="outline">Inspect only</Badge>
@@ -661,37 +677,39 @@ export function WalletDashboard({
                   id="history"
                   aria-labelledby="history-heading"
                 >
-                  <CardHeader className="wallet-card-header wallet-section-head">
-                    <CardTitle>
-                      <h2 id="history-heading" className="wallet-panel-title">
-                        <History aria-hidden="true" />
-                        {historyPage
-                          ? "Completed transactions"
-                          : "Recent transactions"}
-                      </h2>
-                    </CardTitle>
-                    {!historyPage && (
-                      <Select
-                        value={historyFilter}
-                        onValueChange={setHistoryFilter}
-                        disabled={!hydrated}
-                      >
-                        <SelectTrigger
-                          aria-label="Filter transactions"
-                          className="wallet-history-filter"
+                  {(!historyPage || !account) && (
+                    <CardHeader className="wallet-card-header wallet-section-head">
+                      <CardTitle>
+                        <h2 id="history-heading" className="wallet-panel-title">
+                          <History aria-hidden="true" />
+                          {historyPage
+                            ? "Completed transactions"
+                            : "Recent transactions"}
+                        </h2>
+                      </CardTitle>
+                      {!historyPage && (
+                        <Select
+                          value={historyFilter}
+                          onValueChange={setHistoryFilter}
+                          disabled={!hydrated}
                         >
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {HISTORY_FILTERS.map(({ value, label }) => (
-                            <SelectItem key={value} value={value}>
-                              {label}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    )}
-                  </CardHeader>
+                          <SelectTrigger
+                            aria-label="Filter transactions"
+                            className="wallet-history-filter"
+                          >
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {HISTORY_FILTERS.map(({ value, label }) => (
+                              <SelectItem key={value} value={value}>
+                                {label}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      )}
+                    </CardHeader>
+                  )}
                   {historyPage && account ? (
                     <CardContent className="wallet-card-content">
                       <HistoryWorkspace

@@ -130,7 +130,7 @@ test("History is a real menu page; account/privacy persist and reopening resets 
   ).toHaveAttribute("aria-current", "page");
   await expect(
     page.getByRole("heading", {
-      name: "Browse completed activity",
+      name: "Completed transactions",
       exact: true,
     }),
   ).toBeFocused();
