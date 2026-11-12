@@ -37,7 +37,7 @@ export type OperationReview = {
 };
 
 export const PROVIDERS = [
-  { code: "demo_bank", label: "Demo Bank" },
+  { code: "demo_bank", label: "Bank account" },
   { code: "community_bank", label: "Community Bank" },
   { code: "crypto_gateway", label: "Crypto Gateway" },
 ] as const;

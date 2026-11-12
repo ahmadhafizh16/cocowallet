@@ -84,7 +84,7 @@ test("review moves no funds; explicit confirmation records exact balances and pe
     });
   await expect(
     page.getByRole("heading", {
-      name: "Simulated conversion completed",
+      name: "Conversion complete",
       exact: true,
     }),
   ).toBeFocused();
@@ -102,17 +102,15 @@ test("review moves no funds; explicit confirmation records exact balances and pe
       ).balanceMinor,
     ),
   ).toBe(BigInt(targetBefore.balanceMinor) + 80n);
-  await page
-    .getByRole("button", { name: "Back to overview", exact: true })
-    .click();
+  await page.getByRole("button", { name: "Done", exact: true }).click();
   await page.reload();
   await page
     .getByRole("combobox", { name: "Filter transactions", exact: true })
     .click();
   await page.getByRole("option", { name: "Conversions", exact: true }).click();
   await expect(
-    page.getByRole("list", { name: "Completed simulated activity" }),
-  ).toContainText("1.00 USD → 0.80 GBP");
+    page.getByRole("list", { name: "Recent completed activity" }),
+  ).toContainText("−1.00 USD+0.80 GBP");
 });
 
 test("an eligible missing currency wallet appears only after successful reviewed conversion", async ({
@@ -133,16 +131,14 @@ test("an eligible missing currency wallet appears only after successful reviewed
     .getByRole("button", { name: "Confirm simulated conversion", exact: true })
     .click();
   await expect(
-    page.getByRole("heading", { name: "Simulated conversion completed" }),
+    page.getByRole("heading", { name: "Conversion complete" }),
   ).toBeVisible();
   expect(
     (await main(request)).wallets.find(
       (w: { currency: string }) => w.currency === "JPY",
     ),
   ).toMatchObject({ balanceMinor: "150", exponent: 0 });
-  await page
-    .getByRole("button", { name: "Back to overview", exact: true })
-    .click();
+  await page.getByRole("button", { name: "Done", exact: true }).click();
   await page.reload();
   await expect(
     page.locator(".wallet-currency-row").filter({ hasText: "JPY" }),
@@ -302,7 +298,7 @@ test("lost committed conversion survives reload, blocks new funding and recovers
     .click();
   await expect(
     page.getByRole("heading", {
-      name: "Simulated conversion completed",
+      name: "Conversion complete",
       exact: true,
     }),
   ).toBeVisible();
@@ -373,7 +369,7 @@ for (const width of [320, 1440])
       await page.keyboard.press("Enter");
       await expect(
         page.getByRole("heading", {
-          name: "Simulated conversion completed",
+          name: "Conversion complete",
           exact: true,
         }),
       ).toBeFocused();
@@ -381,7 +377,7 @@ for (const width of [320, 1440])
         path: `.impeccable/review/conversion-flow/receipt-${width}-${theme}.png`,
       });
       await page
-        .getByRole("button", { name: "Back to overview", exact: true })
+        .getByRole("button", { name: "Close dialog", exact: true })
         .click();
       await expect(
         page
@@ -395,7 +391,12 @@ for (const width of [320, 1440])
         .locator(".wallet-quick-actions")
         .getByRole("button", { name: "Convert", exact: true })
         .click();
-      await expect(dialog).toContainText("Amount hidden");
+      await expect(dialog).toContainText(
+        "Show amounts to view the confirmation",
+      );
+      await expect(
+        page.getByRole("heading", { name: "Conversion complete", exact: true }),
+      ).toBeVisible();
       await expect(dialog).not.toContainText("0.80 GBP");
       await expect(dialog.locator("time")).toHaveCount(0);
     });

@@ -1,8 +1,8 @@
 # Project kanban
 
-**Last updated:** T09-02 is complete: user-approved in-panel full-history filters, numbered pages, scoped exact details/back navigation, privacy and safe read-only recovery. Final Docker check/build passes 1,455 Jest / 89 production Chromium checks. The independent review's sole accessible-summary fix is resolved. All 14 runtime tables remain unchanged; restored development is stable for 300 frames with actual empty browsing and no errors or financial/reference requests. Existing visual design and original-key recovery are preserved. Wallet/default management, valuation and Swagger remain separate work.
+**Last updated:** T03-03 and T11-08 are complete: direct Frankfurter-backed USD totals and immutable actual observations, compact sparkline/signed recent rows/checkmark successes, dedicated persistent-shell History and tighter wallet rows. Full Docker check/build passes 1,507 Jest / 99 production Chromium checks. Independent verdict: all four material fixes resolved, `ship` at fix-list scope; user-approved affected design documentation refreshed. The normal wallet's two deposits and all prior financial/account/wallet rows are unchanged; migration 0008 and legitimate valuation metadata only. Restored development passed 300 stable frames with no errors, extra reloads or monetary submissions. Wallet/default management and Swagger remain separate work.
 
-**Scope:** 36 implementation tasks: **7 to do**, **2 in progress**, **0 blocked**, **27 done**. Planning activities completed below do not count as implemented features.
+**Scope:** 37 implementation tasks: **6 to do**, **2 in progress**, **0 blocked**, **29 done**. Planning activities completed below do not count as implemented features.
 
 Each task links to its detailed description, source PRD, decision IDs, dependencies, and acceptance tests. The Angular-style, one-intention-per-commit rule and local Git workflow in [D-021](DECISIONS.md#d-021) and [D-022](DECISIONS.md#d-022) apply to every task. A task moves to **Done** only when its acceptance criteria are verified and the PRD, decisions, diagrams, API documentation, and handover are updated as needed.
 
@@ -23,7 +23,6 @@ See Done for the verified money/journal core.
 ### Accounts and wallets — [PRD-03](prd/PRD-03-accounts.md)
 
 - [ ] [T03-02](tasks/TASKS-03.md#t03-02) — Fiat wallets and default-currency management.
-- [ ] [T03-03](tasks/TASKS-03.md#t03-03) — Balance views and approximate USD total.
 
 ### Deposits — [PRD-04](prd/PRD-04-deposits.md)
 
@@ -73,6 +72,8 @@ _No task is currently blocked by an explicit unresolved decision or external blo
 
 ## Done — implementation tasks
 
+- [x] [T03-03](tasks/TASKS-03.md#t03-03) — Exact complete approximate USD valuation, direct fresh-first Frankfurter rates and immutable real observations for main/read-only destinations; unavailable/rounding/race/privacy/replay boundaries verified.
+- [x] [T11-08](tasks/TASKS-11.md#t11-08) — Compact signed activity/sparkline/checkmark successes, persistent-shell History and tighter wallet rows; four reviewed fixes resolved, affected design docs refreshed and normal wallet preserved/restored.
 - [x] [T00-01](tasks/TASKS-00.md#t00-01) — Local Git initialized on `main`; targeted ignores verified.
 - [x] [T00-02](tasks/TASKS-00.md#t00-02) — Baseline separated by intention; checksum-verified skill restoration and corruption rejection tested.
 - [x] [T01-01](tasks/TASKS-01.md#t01-01) — Node 26/non-root Compose image, npm access, and all named volumes verified across recreation.

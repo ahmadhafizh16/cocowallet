@@ -4,6 +4,13 @@
 [D-028](DECISIONS.md#d-028). User-pinned refinement of the existing two-column
 overview, not a replacement visual world.
 
+**Later refinement:** D-035/D-036 supersede the separate/disconnected chart
+composition below with a compact recorded-USD sparkline beside the total and
+connected Frankfurter valuation, including read-only destinations. See
+[PRESENTATION_REFINEMENT.md](PRESENTATION_REFINEMENT.md). Palette, flags, heading
+roles, accounting truth and exact disclosure remain; the original checkpoint's
+test counts and disconnected-service limitations are historical evidence only.
+
 ## Direction and truth
 
 - Replace currency-symbol discs with locally authored US / EU / UK vector flags

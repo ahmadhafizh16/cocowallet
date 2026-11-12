@@ -1,12 +1,13 @@
 # Completed history queries, API and interface
 
-**Status:** T09-01's backend and T08-02's scoped recent activity are verified.
-T09-02 now adds user-approved full browsing inside the existing history panel,
-with explicit filters, numbered pages and inline detail/back navigation, verified
-by the final Docker checks and production browser suite. The compact overview,
-visual system and money flows
-are preserved. No new route/endpoint, dependency, migration or accounting behavior.
-Historical backend-only checkpoint notes below predate these interface integrations.
+**Status:** Scoped completed-history APIs, explicit filters, numbered pages and
+exact detail/back navigation are connected. D-035 supersedes T09-02's original
+in-panel placement: History now lives at `/history` via existing navigation,
+within a shared shell preserving account, privacy and monetary drafts/recovery.
+Five signed recent rows can open their scoped detail there. Transaction-history
+contracts remain unchanged and do not fetch rates. Recorded USD-total observations
+are a separate [portfolio service](PRESENTATION_REFINEMENT.md). The historical
+checkpoints below retain their original scope/evidence, not current placement.
 
 ## Approved contract — D-033
 

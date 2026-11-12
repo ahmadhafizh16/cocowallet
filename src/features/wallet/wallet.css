@@ -468,7 +468,8 @@
   font-weight: 400;
 }
 
-.wallet-app .wallet-balance-history-plot {
+.wallet-app .wallet-balance-history-plot,
+.wallet-history-dialog .wallet-balance-history-plot {
   display: block;
   width: 100%;
   height: 112px;
@@ -617,7 +618,7 @@
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 10px;
-  margin-top: 28px;
+  margin-top: 20px;
 }
 
 .wallet-app .wallet-quick-action {
@@ -719,15 +720,276 @@
   grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
   align-items: center;
   gap: 16px;
-  min-height: 106px;
-  padding-block: 24px;
+  min-height: 76px;
+  padding-block: 14px;
   border-bottom: 1px solid var(--line);
 }
 
 .wallet-currency-row:last-child {
   border-bottom: 0;
   padding-bottom: 10px;
-  min-height: 92px;
+  min-height: 70px;
+}
+
+/* Presentation refinement: compact, recorded-data-only balance sparkline. */
+.wallet-balance-overview {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(100px, 160px);
+  align-items: center;
+  gap: 16px;
+}
+.wallet-total-copy {
+  min-width: 0;
+}
+.wallet-balance-history-compact {
+  min-width: 0;
+  color: var(--balance-chart);
+}
+.wallet-sparkline-button {
+  display: block;
+  width: 100%;
+  min-height: 80px;
+  padding: 8px;
+  border-radius: 12px;
+  cursor: pointer;
+}
+.wallet-sparkline-button:hover {
+  background: var(--balance-divider);
+}
+.wallet-app .wallet-sparkline {
+  height: 72px;
+  background: none;
+}
+.wallet-sparkline-empty {
+  color: var(--balance-muted);
+  font-size: 12px;
+  text-align: center;
+}
+.wallet-skeleton-sparkline {
+  height: 72px;
+  margin-top: 12px;
+}
+.wallet-balance-history-empty {
+  background: none;
+}
+.wallet-history-dialog {
+  width: min(640px, calc(100vw - 32px));
+  max-height: calc(100dvh - 48px);
+  overflow-y: auto;
+}
+.wallet-history-dialog .wallet-balance-history {
+  --balance-chart: var(--positive);
+  --balance-start: var(--solid);
+  --balance-divider: var(--line);
+  --balance-ink: var(--ink);
+  --balance-muted: var(--secondary);
+  margin-top: 0;
+  padding-top: 0;
+  border: 0;
+}
+.wallet-app .wallet-rate-info {
+  min-height: 44px;
+  max-width: 100%;
+  padding: 4px 0;
+  justify-content: flex-start;
+  color: var(--balance-muted);
+  font-size: 13px;
+  text-align: start;
+  white-space: normal;
+}
+.wallet-app .wallet-rate-info:hover {
+  color: var(--balance-ink);
+  background: transparent;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.wallet-rate-info svg {
+  flex-shrink: 0;
+  width: 14px;
+  height: 14px;
+}
+.wallet-history-page {
+  display: block;
+}
+.wallet-prototype-note {
+  margin-top: 24px;
+  color: var(--secondary);
+  font-size: 12px;
+  text-align: center;
+}
+.wallet-recent-list {
+  margin-top: 8px;
+}
+.wallet-recent-row {
+  min-width: 0;
+  border-bottom: 1px solid var(--line);
+}
+.wallet-recent-row:last-child {
+  border-bottom: 0;
+}
+.wallet-app .wallet-recent-button {
+  display: grid;
+  width: 100%;
+  height: auto;
+  grid-template-columns: 40px minmax(0, 1fr) minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 0;
+  text-align: start;
+  white-space: normal;
+  border-radius: 8px;
+}
+.wallet-transaction-icon {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+.wallet-transaction-icon svg {
+  width: 20px;
+  height: 20px;
+}
+.wallet-transaction-icon.is-credit {
+  color: var(--positive);
+  background: var(--positive-ground);
+}
+.wallet-transaction-icon.is-debit {
+  color: var(--danger);
+  background: var(--danger-ground);
+}
+.wallet-transaction-icon.is-conversion {
+  color: var(--navy);
+  background: var(--inner);
+}
+.wallet-transaction-identity {
+  min-width: 0;
+  display: grid;
+  gap: 4px;
+}
+.wallet-transaction-title {
+  font-size: 14px;
+  font-weight: 600;
+}
+.wallet-transaction-identity time {
+  color: var(--secondary);
+  font-size: 12px;
+  font-weight: 400;
+}
+.wallet-transaction-amounts {
+  min-width: 0;
+  display: grid;
+  gap: 4px;
+  text-align: end;
+  overflow-wrap: anywhere;
+  font-size: 14px;
+  font-variant-numeric: tabular-nums;
+}
+.wallet-credit {
+  color: var(--positive);
+}
+.wallet-debit {
+  color: var(--danger);
+}
+.wallet-transaction-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 7px;
+  border-radius: 4px;
+  color: var(--positive);
+  background: var(--positive-ground);
+  font-size: 12px;
+  font-weight: 500;
+}
+.wallet-transaction-status > svg {
+  width: 12px;
+  height: 12px;
+  flex-shrink: 0;
+}
+.wallet-submission-success {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  padding: 20px 0 4px;
+  text-align: center;
+}
+.wallet-success-check {
+  display: grid;
+  place-items: center;
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  color: var(--positive);
+  background: var(--positive-ground);
+}
+.wallet-success-check svg {
+  width: 48px;
+  height: 48px;
+}
+.wallet-submission-success h3 {
+  font-size: 24px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+.wallet-success-summary {
+  max-width: 42ch;
+  color: var(--secondary);
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+.wallet-success-summary strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+@media (max-width: 640px) {
+  .wallet-transaction-status {
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    padding: 2px;
+    border-radius: 50%;
+  }
+  .wallet-transaction-status > svg {
+    width: 16px;
+    height: 16px;
+  }
+  .wallet-status-label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+  .wallet-app .wallet-recent-button {
+    grid-template-columns: 32px minmax(0, 1fr) minmax(0, 1.1fr) 20px;
+    gap: 8px;
+    padding-block: 14px;
+  }
+  .wallet-transaction-icon {
+    width: 32px;
+    height: 32px;
+  }
+  .wallet-balance-overview {
+    grid-template-columns: minmax(0, 1fr) 100px;
+    gap: 8px;
+  }
+  .wallet-total-copy .wallet-total-value {
+    font-size: clamp(28px, 7vw, 44px);
+  }
+  .wallet-app .wallet-sparkline {
+    height: 60px;
+  }
+  .wallet-currency-row {
+    min-height: 70px;
+    padding-block: 12px;
+  }
+  .wallet-currency-row:last-child {
+    min-height: 64px;
+  }
 }
 
 .wallet-currency-identity {
@@ -1201,13 +1463,13 @@
   }
 
   .wallet-currency-row {
-    min-height: 100px;
-    padding-block: 22px;
+    min-height: 70px;
+    padding-block: 12px;
     gap: 12px;
   }
 
   .wallet-currency-row:last-child {
-    min-height: 88px;
+    min-height: 64px;
   }
 
   .wallet-currency-amount {

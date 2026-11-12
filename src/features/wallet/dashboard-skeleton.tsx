@@ -62,9 +62,6 @@ export function WalletDashboardSkeleton() {
             <div className="wallet-page-heading">
               <Skeleton className="wallet-skeleton-title" />
             </div>
-            <div className="wallet-preview-notice wallet-skeleton-notice">
-              <Skeleton className="wallet-skeleton-notice-text" />
-            </div>
             <div className="wallet-dashboard-grid">
               <div className="wallet-column">
                 <Card className="wallet-panel wallet-total-panel">
@@ -73,11 +70,12 @@ export function WalletDashboardSkeleton() {
                     <Skeleton className="wallet-skeleton-privacy" />
                   </CardHeader>
                   <CardContent className="wallet-card-content">
-                    <Skeleton className="wallet-skeleton-total" />
-                    <Skeleton className="wallet-skeleton-caption" />
-                    <div className="wallet-balance-history" aria-hidden="true">
-                      <Skeleton className="wallet-skeleton-history-heading" />
-                      <Skeleton className="wallet-skeleton-chart" />
+                    <div className="wallet-balance-overview">
+                      <div>
+                        <Skeleton className="wallet-skeleton-total" />
+                        <Skeleton className="wallet-skeleton-caption" />
+                      </div>
+                      <Skeleton className="wallet-skeleton-sparkline" />
                     </div>
                     <div className="wallet-quick-actions">
                       {Array.from({ length: 4 }, (_, index) => (

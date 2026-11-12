@@ -2,7 +2,7 @@
 
 A local-only multi-currency wallet simulation built with Next.js and Node 26. Product requirements, decisions, diagrams, and progress are in [`artifact/`](artifact/README.md).
 
-**Current milestone:** Persistent accounts, exact balances and reviewed simulated funding/conversion/transfers power the existing interface. Full-history browsing now expands the existing panel with UTC-day/type/currency filters, numbered pages and scoped inline details. Destinations stay inspect-only. Shared original-key recovery and the visual design are preserved; quotes reserve no funds. Valuation, wallet/default management and Swagger remain separate work. See [`artifact/HISTORY.md`](artifact/HISTORY.md) and [`artifact/TRANSFERS.md`](artifact/TRANSFERS.md).
+**Current milestone:** Compact signed recent activity, green-check confirmations and a dedicated `/history` page preserve account selection, privacy and money drafts in a shared shell. Frankfurter-backed USD totals include every nonzero wallet; actual account-scoped observations power the small balance-card sparkline. Destinations have independent read-only totals, never money actions. Missing FX makes the whole total unavailable; old history is not invented or repriced. Wallet/default management and Swagger remain separate work. See [`artifact/PRESENTATION_REFINEMENT.md`](artifact/PRESENTATION_REFINEMENT.md) and [`artifact/HISTORY.md`](artifact/HISTORY.md).
 
 The internal atomic conversion service now supports exact quote-bound accounting,
 missing target currency/wallet creation and durable original-result replay. Retry
@@ -30,9 +30,9 @@ docker compose up -d app
 
 Open `http://localhost:3000/api/health` for the health endpoint. Use `APP_PORT=3100 docker compose up -d app` if port 3000 is already occupied.
 
-`/api/ready` verifies SQLite and its migrated metadata table; it is not a full schema-version or seeded-account check. Eight migrations create metadata, accounting/invariants, retained funding/conversion/transfer outcomes, reference caches and immutable quote/use tables. Migration and seed commands are safe to repeat and run explicitly, never during a GET or production build. Seeding creates startup accounts/wallets, never funds, history, quotes or provider snapshots. On a fresh database, migrate and seed before opening `/`. Existing installations must back up SQLite and run `db:migrate` through migration 0007 before funding/conversion resume using shared key ownership; no volume reset is needed.
+`/api/ready` verifies SQLite and its migrated metadata table; it is not a full schema-version or seeded-account check. Nine migrations (0000–0008) create accounting/invariants, retained outcomes, reference caches, immutable quote/use tables and recorded portfolio observations. Migration and seed commands run explicitly, never during a GET or build. Seeding creates startup accounts/wallets, never funds, history, quotes or provider snapshots. On a fresh database, migrate and seed before opening `/`. Existing installations must back up SQLite and run `db:migrate` through 0008; no volume reset is needed.
 
-APIs: account/wallet GETs, `POST /api/deposits`, `POST /api/withdrawals`, `POST /api/conversions`, `POST /api/transfers`, `GET /api/currencies`, `GET /api/rates?base=USD&quote=EUR`, `POST /api/quotes`, `GET /api/quotes/{quoteId}`, `GET /api/transactions?accountId=…`, `GET /api/transactions/{transactionId}?accountId=…`, and `GET /api/openapi`. Money submissions require a UUID key; identical retries replay the original result indefinitely, while changed input is rejected. Amounts/rates are exact strings and responses are not cached. Reference GETs update technical caches, never money/wallets; eligible fallback is less than 24 hours old, without invented reciprocal/cross rates. Quotes move/reserve no funds and create no recipient/wallet. History browsing/details use scoped GETs only, without current rates, balances or retry keys. Swagger UI remains unimplemented.
+APIs: account/wallet GETs, `POST /api/deposits`, `POST /api/withdrawals`, `POST /api/conversions`, `POST /api/transfers`, `GET /api/currencies`, `GET /api/rates?base=USD&quote=EUR`, `POST /api/quotes`, `GET /api/quotes/{quoteId}`, `GET /api/transactions?accountId=…`, `GET /api/transactions/{transactionId}?accountId=…`, `GET /api/portfolio?accountId=…`, and `GET /api/openapi`. Money submissions require a UUID key; identical retries replay the original result indefinitely, while changed input is rejected. Amounts/rates are exact strings; responses are not cached. Reference/portfolio GETs can update technical caches/observations, never money/accounts/wallets. Eligible fallback is less than 24 hours old, with no invented reciprocal/cross rates. Quotes reserve no funds and create no recipient/wallet. Transaction history uses recorded facts only, without current rates, balances or retry keys. Swagger UI remains unimplemented.
 
 The application service runs as the non-root `node` user. It uses separate named volumes for Linux dependencies, Next.js output, and SQLite data, so host dependencies cannot overwrite native modules in the container. The host port is bound to `127.0.0.1`; this no-auth simulation must not be exposed publicly.
 
@@ -63,8 +63,13 @@ Jest covers exact accounting, atomic seeding, snapshot reads, funding concurrenc
 
 Reference tests mock the network and clock. The optional live check is separate:
 `docker compose run --rm -e DATABASE_PATH=/tmp/opencode/rates-smoke.sqlite -e WALLET_RATES_SMOKE=1 app node --conditions=react-server --import tsx scripts/smoke-rates.ts`.
-It refuses the runtime database. The root page makes no provider request in this
-stage, so ordinary funding/reads stay independent of Frankfurter outages.
+It refuses the runtime database. The portfolio-specific live diagnostic is
+`scripts/smoke-portfolio.ts`: use `WALLET_PORTFOLIO_SMOKE=1`, a **new**
+`/tmp/opencode/portfolio-smoke-<digits>.sqlite` path and the same Node flags.
+The visible overview requests reference rates only for nonzero foreign balances.
+Valuation/recording happens outside monetary commit/replay; an FX failure cannot
+change confirmed money. Post-response observations are best effort after a crash,
+not a guarantee to reconstruct every historical valuation.
 
 For the complete local check (including a production build), stop the development compiler first:
 
@@ -76,7 +81,7 @@ docker compose up -d app
 
 Generate a migration after an intentional schema change with `docker compose run --rm app npm run db:generate -- --name=descriptive_name`, review/commit the generated SQL and metadata, then apply it with `npm run db:migrate` in the container. Never use schema-push or a volume reset as a substitute for a reviewed migration.
 
-The wallet retains its shadcn/Radix controls, flags, gradient, branding, typography and motion. The dynamic page reads stored snapshots; `createPreviewOverview()` is test-only. Review alone never moves funds. Funding/conversion require explicit confirmation; transfers stay disabled. Ordinary drafts/quotes clear on reload. Only unresolved intent temporarily uses verified per-tab storage, now shared across funding/conversion under the historical `cocowallet.pending-funding.v1` key for compatibility. Unknown outcomes retain the exact original key/request/quote, never a replacement. Closing the tab or deleting storage can lose that context; it is not cross-device recovery. Recent transactions is labelled as the latest 50 completed funding/conversion receipts, not full history or historical USD valuation.
+The wallet retains its shadcn/Radix controls, flags, gradient, branding, typography and motion. `createPreviewOverview()` is test-only. Review alone never moves funds; funding/conversion/transfers require explicit confirmation. Ordinary drafts/quotes survive soft Overview/History navigation, not reloads. Only unresolved intent uses verified per-tab storage shared across money operations under the compatible `cocowallet.pending-funding.v1` key. Unknown outcomes retain the exact original key/request/quote, never a replacement. Closing the tab or deleting storage can lose that context; it is not cross-device recovery. Recent activity shows five matching completed records; `/history` provides UTC filters, numbered pages and exact scoped details. A single discreet prototype footer states that no real funds move.
 
 Stop the development service before building against the same Next output volume to avoid two compilers writing there at once. Existing planning files and the design skill are preserved. Node 26 is enforced by npm; TypeScript 5.9 is pinned for the initial verified Next.js toolchain rather than adopting a new TypeScript major by default.
 

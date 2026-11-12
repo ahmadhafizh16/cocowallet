@@ -43,13 +43,23 @@ transaction entries. Warning-free interactive development was restored. See
 ### T03-03
 
 **Balance views and approximate USD total**  
-**Status:** To do.  
-**Decisions:** [D-003](../DECISIONS.md#d-003), [D-007](../DECISIONS.md#d-007), [D-011](../DECISIONS.md#d-011), [D-018](../DECISIONS.md#d-018).  
+**Status:** Done. Exact reference valuation, recorded observations and normal-wallet restoration verified.
+**Decisions:** [D-003](../DECISIONS.md#d-003), [D-007](../DECISIONS.md#d-007), [D-011](../DECISIONS.md#d-011), [D-018](../DECISIONS.md#d-018), [D-036](../DECISIONS.md#d-036).
 **Depends on:** [T02-02](TASKS-02.md#t02-02), [T03-01](#t03-01), [T06-01](TASKS-06.md#t06-01).  
-**Implementation:** Read individual balances from journal entries; calculate and label an approximate USD total using eligible reference rates without silently dropping any required currency. Provide clear unavailable/loading states and retain individual balances during FX failure. Confirm destination-account total behavior in [O-004](../DECISIONS.md#o-004).
+**Implementation:** Read journal balances and calculate a complete approximate USD total using eligible direct reference rates, without silently dropping any required currency. Preserve individual balances during FX failure. D-036 approves independent read-only destination totals and recorded observations; only the unrelated main-default/missing-wallet behavior in [O-004](../DECISIONS.md#o-004) remains open.
 
-**Partial groundwork:** D-029 connects exact individual balances and rate-free
-main USD totals when all foreign balances are zero. Reference-rate/cache/rounding
-valuation and destination policy remain unimplemented; this task is not closed.
+**Historical groundwork:** D-029 connected exact individual balances and rate-free
+main USD totals when all foreign balances were zero. The current D-036 slice below
+adds direct reference valuation and the approved read-only destination policy.
 
 **Acceptance and tests:** Display exact wallet balances; the USD total matches an explicitly controlled set of test rates. If a required rate is unavailable, show the total unavailable while preserving individual balances. Test zero wallets, cache labeling, exact rounding, account switching, and no incorrect cross-account totals.
+
+**Current slice:** D-036 approves read-only destination totals and the user's
+recorded-USD sparkline. [PRESENTATION_REFINEMENT.md](../PRESENTATION_REFINEMENT.md)
+documents direct fresh-first valuation, immutable observation metadata, independent
+post-response recording, unavailable/race/privacy behavior and final evidence.
+Docker check/build passes 1,507 Jest tests in 67 suites; all 99 isolated production
+Chromium checks pass. The reviewer's portfolio-only zero-cent rounding correction
+is resolved without changing monetary conversion guards. The normal wallet's two
+deposits and existing financial/account/wallet rows are unchanged; only migration
+0008 and legitimate technical valuation metadata differ. No past backfill or push.

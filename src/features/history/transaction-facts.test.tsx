@@ -46,7 +46,7 @@ describe("recorded history presentation", () => {
       expect(historyAmountLabel(t)).toBe(`${amount} ${currency}`);
       const html = renderToStaticMarkup(<TransactionFacts transaction={t} />);
       expect(html).toContain(`${amount} ${currency}`);
-      expect(html).toContain("Demo Bank");
+      expect(html).toContain("Bank account");
       expect(html).not.toMatch(
         /Retry key|Quote ID|Balance after|balanceMinor/u,
       );

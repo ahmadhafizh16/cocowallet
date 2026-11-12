@@ -1,6 +1,8 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
 import {
   ArrowDownLeft,
   ArrowRightLeft,
@@ -57,6 +59,7 @@ import { useHydrated } from "@/lib/use-hydrated";
 import { RecentFunding } from "../funding/recent-funding";
 import { RecentTransactions } from "../history/recent-transactions";
 import { HistoryWorkspace } from "../history/workspace";
+import { usePortfolio } from "../portfolio/use-portfolio";
 import type { TransactionType } from "../history/contracts";
 import { BalanceHistory } from "./balance-history";
 import { CurrencyFlag } from "./currency-flag";
@@ -91,7 +94,17 @@ const HISTORY_FILTERS = [
   { value: "transfer", label: "Transfers", empty: "No transfers to show." },
 ] as const;
 
-export function WalletDashboard({ model }: { model: WalletOverview }) {
+export function WalletDashboard({
+  model,
+  children,
+}: {
+  model: WalletOverview;
+  children?: ReactNode;
+}) {
+  const pathname = usePathname();
+  const router = useRouter();
+  const historyPage = pathname === "/history";
+  const previousHistoryPage = useRef(historyPage);
   const hydrated = useHydrated();
   const [activeAccountId, setActiveAccount] = useState(model.activeAccountId);
   const [hidden, setHidden] = useState(false);
@@ -99,8 +112,7 @@ export function WalletDashboard({ model }: { model: WalletOverview }) {
   const [operationOpen, setOperationOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("overview");
   const [historyFilter, setHistoryFilter] = useState("all");
-  const [historyOpen, setHistoryOpen] = useState(false);
-  const historyTrigger = useRef<HTMLButtonElement>(null);
+  const [selectedTransaction, setSelectedTransaction] = useState<string>();
   const [copyResult, setCopyResult] = useState<{
     accountId: string;
     message: string;
@@ -116,6 +128,12 @@ export function WalletDashboard({ model }: { model: WalletOverview }) {
   const zeroTotal = hasZeroTotal(wallets);
   const balancesConnected = model.mode !== "interface-preview";
   const fundingEnabled = model.mode === "connected-funding";
+  const portfolio = usePortfolio(
+    account?.id,
+    wallets,
+    model,
+    fundingEnabled && !historyPage && !hidden,
+  );
   const recentFunding = model.transactions.filter(
     (receipt) =>
       (receipt.type === "conversion"
@@ -130,8 +148,14 @@ export function WalletDashboard({ model }: { model: WalletOverview }) {
               : historyFilter)),
   );
   const suppliedTotal = account ? model.usdTotals?.[account.id] : undefined;
-  const totalLabel =
-    suppliedTotal !== undefined
+  const totalLabel = fundingEnabled
+    ? portfolio.view?.total.status === "available"
+      ? displayUsdTotal({
+          status: "available",
+          balanceMinor: portfolio.view.total.balanceMinor,
+        })
+      : null
+    : suppliedTotal !== undefined
       ? displayUsdTotal(suppliedTotal)
       : zeroTotal
         ? "$0.00"
@@ -144,8 +168,15 @@ export function WalletDashboard({ model }: { model: WalletOverview }) {
       )
     : [];
   // Ambiguous duplicate series are not combined or silently selected.
-  const balanceHistory =
-    invalidHistory || histories.length > 1 ? null : histories[0];
+  const balanceHistory = fundingEnabled
+    ? portfolio.view?.history
+    : invalidHistory || histories.length > 1
+      ? null
+      : histories[0];
+  const valuationRates =
+    portfolio.view?.total.status === "available"
+      ? portfolio.view.total.rates
+      : [];
   const copyFeedback =
     copyResult?.accountId === account?.id ? (copyResult?.message ?? "") : "";
   const emptyHistoryHeading = fundingEnabled
@@ -164,6 +195,17 @@ export function WalletDashboard({ model }: { model: WalletOverview }) {
     window.addEventListener("hashchange", syncHash);
     return () => window.removeEventListener("hashchange", syncHash);
   }, []);
+
+  useEffect(() => {
+    if (historyPage)
+      document
+        .getElementById("history")
+        ?.querySelector<HTMLElement>("h3")
+        ?.focus();
+    else if (previousHistoryPage.current)
+      document.getElementById("overview")?.focus();
+    previousHistoryPage.current = historyPage;
+  }, [historyPage]);
 
   function openOperation(next: Operation, trigger: HTMLElement | null) {
     if (!isMain || !hydrated) return;
@@ -198,14 +240,14 @@ export function WalletDashboard({ model }: { model: WalletOverview }) {
     <TooltipProvider delayDuration={200}>
       <div className="wallet-app">
         <header className="wallet-topbar">
-          <a
-            href="#overview"
+          <Link
+            href="/"
             className="wallet-brand"
             onClick={() => setActiveSection("overview")}
             aria-label="CocoWallet overview"
           >
             <CocoWalletLogo aria-hidden="true" />
-          </a>
+          </Link>
           <div className="wallet-top-meta">
             <ThemeMenu />
             <DropdownMenu>
@@ -302,17 +344,33 @@ export function WalletDashboard({ model }: { model: WalletOverview }) {
                       size="icon"
                       className="wallet-nav-button"
                     >
-                      <a
-                        href={`#${id}`}
+                      <Link
+                        href={
+                          id === "history"
+                            ? "/history"
+                            : id === "overview"
+                              ? "/"
+                              : "/#wallets"
+                        }
                         aria-label={label}
                         aria-current={
-                          activeSection === id ? "location" : undefined
+                          historyPage
+                            ? id === "history"
+                              ? "page"
+                              : undefined
+                            : activeSection === id && id !== "history"
+                              ? "location"
+                              : undefined
                         }
-                        onClick={() => setActiveSection(id)}
+                        onClick={() => {
+                          if (id !== "history") setActiveSection(id);
+                          if (id === "history")
+                            setSelectedTransaction(undefined);
+                        }}
                       >
                         <Icon aria-hidden="true" />
                         <span className="wallet-mobile-nav-label">{label}</span>
-                      </a>
+                      </Link>
                     </Button>
                   </TooltipTrigger>
                   <TooltipContent side="right">{label}</TooltipContent>
@@ -394,31 +452,30 @@ export function WalletDashboard({ model }: { model: WalletOverview }) {
           </nav>
           <main id="main-content" className="wallet-main" tabIndex={-1}>
             <div className="wallet-page-heading" id="overview" tabIndex={-1}>
-              <h1>Your wallet, at a glance.</h1>
+              <h1>
+                {historyPage
+                  ? "Transaction history"
+                  : "Your wallet, at a glance."}
+              </h1>
+              {historyPage && (
+                <Button
+                  variant="ghost"
+                  className="wallet-privacy-button"
+                  aria-label="Hide monetary amounts"
+                  aria-pressed={hidden}
+                  onClick={() => setHidden((value) => !value)}
+                >
+                  {hidden ? (
+                    <EyeOff aria-hidden="true" />
+                  ) : (
+                    <Eye aria-hidden="true" />
+                  )}
+                  {hidden ? "Show" : "Hide"}
+                </Button>
+              )}
               {account?.role === "destination" && (
                 <Badge variant="outline">Inspect only</Badge>
               )}
-            </div>
-            <div className="wallet-preview-notice">
-              <Info aria-hidden="true" />
-              <p>
-                <strong>
-                  {balancesConnected
-                    ? "Balances connected"
-                    : "Interface preview"}
-                </strong>{" "}
-                —{" "}
-                {fundingEnabled
-                  ? model.transferEnabled
-                    ? "deposits, withdrawals, reviewed conversions and transfers are simulated. Destinations are inspect-only."
-                    : model.conversionEnabled
-                      ? "deposits, withdrawals and reviewed conversions are simulated. Transfers are not connected."
-                      : "deposits and withdrawals are simulated. Conversion and transfers are not connected."
-                  : balancesConnected
-                    ? "money operations and history are not connected."
-                    : "operations are not connected."}{" "}
-                No real funds move.
-              </p>
             </div>
             <OperationWorkspace
               operation={operation}
@@ -434,105 +491,176 @@ export function WalletDashboard({ model }: { model: WalletOverview }) {
               onOpenChange={setOperationOpen}
               returnFocusRef={operationTriggerRef}
             />
-            <div className="wallet-dashboard-grid">
+            <div
+              className={`wallet-dashboard-grid${historyPage ? " wallet-history-page" : ""}`}
+            >
               <div className="wallet-column">
-                <Card
-                  className="wallet-panel wallet-total-panel"
-                  aria-labelledby="total-heading"
-                >
-                  <CardHeader className="wallet-card-header wallet-section-head">
-                    <CardTitle>
-                      <h2 id="total-heading" className="wallet-panel-title">
-                        <CircleDollarSign aria-hidden="true" />
-                        Approximate total
-                      </h2>
-                    </CardTitle>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="wallet-privacy-button"
-                      aria-label="Hide monetary amounts"
-                      aria-pressed={hidden}
-                      disabled={!hydrated}
-                      onClick={() => setHidden((value) => !value)}
-                    >
-                      {hidden ? (
-                        <EyeOff aria-hidden="true" />
-                      ) : (
-                        <Eye aria-hidden="true" />
-                      )}
-                      <span>{hidden ? "Show" : "Hide"}</span>
-                    </Button>
-                  </CardHeader>
-                  <CardContent className="wallet-card-content">
-                    <div className="wallet-total">
-                      <span
-                        className={`wallet-total-value${totalLabel === null && !hidden ? " wallet-total-unavailable" : ""}`}
+                {!historyPage && (
+                  <Card
+                    className="wallet-panel wallet-total-panel"
+                    aria-labelledby="total-heading"
+                  >
+                    <CardHeader className="wallet-card-header wallet-section-head">
+                      <CardTitle>
+                        <h2 id="total-heading" className="wallet-panel-title">
+                          <CircleDollarSign aria-hidden="true" />
+                          Approximate total
+                        </h2>
+                      </CardTitle>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="wallet-privacy-button"
+                        aria-label="Hide monetary amounts"
+                        aria-pressed={hidden}
+                        disabled={!hydrated}
+                        onClick={() => setHidden((value) => !value)}
                       >
                         {hidden ? (
-                          <span aria-label="Amount hidden">••••</span>
+                          <EyeOff aria-hidden="true" />
                         ) : (
-                          (totalLabel ?? "Unavailable")
+                          <Eye aria-hidden="true" />
                         )}
-                      </span>
-                      {totalLabel !== null && (
-                        <span className="wallet-total-unit">USD</span>
-                      )}
-                    </div>
-                    <p className="wallet-total-note">
-                      {!account
-                        ? "No account balances supplied."
-                        : !isMain
-                          ? wallets.length > 0
-                            ? balancesConnected
-                              ? "Inspect-only destination · Journal-derived balances"
-                              : "Inspect-only destination · Presentation balances"
-                            : "No destination balances supplied."
-                          : balancesConnected && totalLabel !== null
-                            ? "Journal-derived balances · No FX applied"
-                            : zeroTotal
-                              ? "Presentation only · Not a stored balance"
-                              : "A combined total needs connected exchange rates."}
-                    </p>
-                    <BalanceHistory
-                      series={balanceHistory}
-                      accountId={account?.id}
-                      hidden={hidden}
-                    />
-                    <div
-                      className="wallet-quick-actions"
-                      aria-label="Quick actions"
-                    >
-                      {ACTIONS.map(
-                        ({ operation: action, label, icon: Icon }) => (
+                        <span>{hidden ? "Show" : "Hide"}</span>
+                      </Button>
+                    </CardHeader>
+                    <CardContent className="wallet-card-content">
+                      <div className="wallet-balance-overview">
+                        <div className="wallet-total-copy">
+                          <div className="wallet-total">
+                            <span
+                              className={`wallet-total-value${totalLabel === null && !hidden ? " wallet-total-unavailable" : ""}`}
+                            >
+                              {hidden ? (
+                                <span aria-label="Amount hidden">••••</span>
+                              ) : (
+                                (totalLabel ??
+                                (portfolio.pending
+                                  ? "Updating…"
+                                  : "Unavailable"))
+                              )}
+                            </span>
+                            {totalLabel !== null && (
+                              <span className="wallet-total-unit">USD</span>
+                            )}
+                          </div>
+                          {valuationRates.length > 0 && !hidden ? (
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <Button
+                                  variant="ghost"
+                                  className="wallet-total-note wallet-rate-info"
+                                >
+                                  {portfolio.view?.total.status ===
+                                    "available" &&
+                                  portfolio.view.total.source === "cached"
+                                    ? "Cached"
+                                    : "Fresh"}{" "}
+                                  Frankfurter rates
+                                  <Info aria-hidden="true" />
+                                </Button>
+                              </TooltipTrigger>
+                              <TooltipContent
+                                side="bottom"
+                                className="max-w-80 space-y-3"
+                              >
+                                {valuationRates.map((rate) => (
+                                  <p key={rate.base}>
+                                    1 {rate.base} = {rate.rate} USD ·{" "}
+                                    {rate.source}
+                                    <br />
+                                    Source date {rate.date}
+                                    <br />
+                                    Fetched {rate.fetchedAt}
+                                  </p>
+                                ))}
+                              </TooltipContent>
+                            </Tooltip>
+                          ) : (
+                            <p className="wallet-total-note">
+                              {hidden
+                                ? "Amounts are hidden."
+                                : fundingEnabled
+                                  ? portfolio.pending
+                                    ? "Updating USD total…"
+                                    : portfolio.view?.total.status ===
+                                        "available"
+                                      ? portfolio.view.total.source ===
+                                        "balances"
+                                        ? "USD balances · No FX needed"
+                                        : `${portfolio.view.total.source === "cached" ? "Cached" : "Fresh"} Frankfurter reference rates`
+                                      : "USD total unavailable · Your wallet balances are unchanged."
+                                  : !account
+                                    ? "No account balances supplied."
+                                    : !isMain
+                                      ? wallets.length > 0
+                                        ? balancesConnected
+                                          ? "Inspect-only destination · Journal-derived balances"
+                                          : "Inspect-only destination · Presentation balances"
+                                        : "No destination balances supplied."
+                                      : balancesConnected && totalLabel !== null
+                                        ? "Journal-derived balances · No FX applied"
+                                        : zeroTotal
+                                          ? "Presentation only · Not a stored balance"
+                                          : "A combined total needs connected exchange rates."}
+                            </p>
+                          )}
+                        </div>
+                        <BalanceHistory
+                          series={balanceHistory}
+                          accountId={account?.id}
+                          hidden={hidden}
+                          compact
+                        />
+                      </div>
+                      {fundingEnabled &&
+                        !hidden &&
+                        (portfolio.failed ||
+                          portfolio.view?.total.status === "unavailable") && (
                           <Button
-                            variant="secondary"
-                            key={action}
-                            className="wallet-quick-action"
-                            data-operation={action}
-                            disabled={!isMain || !hydrated}
-                            onClick={(event) =>
-                              openOperation(action, event.currentTarget)
-                            }
-                            aria-haspopup="dialog"
-                            aria-controls="operations"
-                            aria-expanded={
-                              operationOpen && operation === action
-                            }
+                            variant="ghost"
+                            size="sm"
+                            onClick={portfolio.retry}
                           >
-                            <Icon aria-hidden="true" />
-                            {label}
+                            Retry USD total
                           </Button>
-                        ),
+                        )}
+                      <div
+                        className="wallet-quick-actions"
+                        aria-label="Quick actions"
+                      >
+                        {ACTIONS.map(
+                          ({ operation: action, label, icon: Icon }) => (
+                            <Button
+                              variant="secondary"
+                              key={action}
+                              className="wallet-quick-action"
+                              data-operation={action}
+                              disabled={!isMain || !hydrated}
+                              onClick={(event) =>
+                                openOperation(action, event.currentTarget)
+                              }
+                              aria-haspopup="dialog"
+                              aria-controls="operations"
+                              aria-expanded={
+                                operationOpen && operation === action
+                              }
+                            >
+                              <Icon aria-hidden="true" />
+                              {label}
+                            </Button>
+                          ),
+                        )}
+                      </div>
+                      {account?.role === "destination" && (
+                        <p className="wallet-inspect-hint">
+                          Money actions are available from the main account
+                          only.
+                        </p>
                       )}
-                    </div>
-                    {account?.role === "destination" && (
-                      <p className="wallet-inspect-hint">
-                        Money actions are available from the main account only.
-                      </p>
-                    )}
-                  </CardContent>
-                </Card>
+                    </CardContent>
+                  </Card>
+                )}
                 <Card
                   className="wallet-panel wallet-history-panel"
                   id="history"
@@ -542,12 +670,12 @@ export function WalletDashboard({ model }: { model: WalletOverview }) {
                     <CardTitle>
                       <h2 id="history-heading" className="wallet-panel-title">
                         <History aria-hidden="true" />
-                        {historyOpen
-                          ? "Transaction history"
+                        {historyPage
+                          ? "Completed transactions"
                           : "Recent transactions"}
                       </h2>
                     </CardTitle>
-                    {!historyOpen && (
+                    {!historyPage && (
                       <Select
                         value={historyFilter}
                         onValueChange={setHistoryFilter}
@@ -569,25 +697,17 @@ export function WalletDashboard({ model }: { model: WalletOverview }) {
                       </Select>
                     )}
                   </CardHeader>
-                  {fundingEnabled && !historyOpen && (
-                    <p className="mb-4 text-sm text-muted-foreground">
-                      {model.transferEnabled
-                        ? "Latest 50 matching completed operations for this account. Browse full history for currency/day filters, numbered pages and recorded details. Balance-history valuations remain separate."
-                        : "Latest 50 completed deposits, withdrawals and conversions. Other transaction history and balance-history valuations are not connected."}
-                    </p>
-                  )}
-                  {historyOpen && account ? (
+                  {historyPage && account ? (
                     <CardContent className="wallet-card-content">
                       <HistoryWorkspace
                         key={account.id}
                         accountId={account.id}
                         hidden={hidden}
                         revision={model}
+                        initialTransactionId={selectedTransaction}
                         onClose={() => {
-                          setHistoryOpen(false);
-                          requestAnimationFrame(() =>
-                            historyTrigger.current?.focus(),
-                          );
+                          setActiveSection("overview");
+                          router.push("/");
                         }}
                       />
                     </CardContent>
@@ -607,24 +727,11 @@ export function WalletDashboard({ model }: { model: WalletOverview }) {
                         hidden={hidden}
                         revision={model}
                         onClear={() => setHistoryFilter("all")}
-                      />
-                      <Button
-                        ref={historyTrigger}
-                        variant="outline"
-                        className="mt-5"
-                        disabled={!hydrated}
-                        onClick={() => {
-                          setHistoryOpen(true);
-                          requestAnimationFrame(() =>
-                            document
-                              .getElementById("history")
-                              ?.querySelector<HTMLHeadingElement>("h3")
-                              ?.focus(),
-                          );
+                        onOpenTransaction={(id) => {
+                          setSelectedTransaction(id);
+                          router.push("/history");
                         }}
-                      >
-                        Browse full history
-                      </Button>
+                      />
                     </CardContent>
                   ) : fundingEnabled && recentFunding.length > 0 ? (
                     <CardContent className="wallet-card-content">
@@ -661,82 +768,88 @@ export function WalletDashboard({ model }: { model: WalletOverview }) {
                   )}
                 </Card>
               </div>
-              <Card
-                className="wallet-panel wallet-currencies-panel"
-                id="wallets"
-                aria-labelledby="currencies-heading"
-              >
-                <CardHeader className="wallet-card-header">
-                  <div className="wallet-section-head">
-                    <CardTitle>
-                      <h2
-                        id="currencies-heading"
-                        className="wallet-panel-title"
-                      >
-                        <Wallet aria-hidden="true" />
-                        Currency wallets
-                      </h2>
-                    </CardTitle>
-                    <Badge variant="secondary" className="wallet-count-badge">
-                      {wallets.length}{" "}
-                      {wallets.length === 1 ? "wallet" : "wallets"}
-                    </Badge>
-                  </div>
-                  <CardDescription className="wallet-currencies-description">
-                    Default currency ·{" "}
-                    {account?.defaultCurrency ?? "Unavailable"}
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="wallet-card-content">
-                  {wallets.length > 0 ? (
-                    <ul className="wallet-currency-list">
-                      {wallets.map((wallet) => (
-                        <li className="wallet-currency-row" key={wallet.id}>
-                          <div className="wallet-currency-identity">
-                            <span
-                              className="wallet-currency-token"
-                              aria-hidden="true"
-                            >
-                              <CurrencyFlag currency={wallet.currency} />
-                            </span>
-                            <div>
-                              <p className="wallet-currency-code">
-                                {wallet.currency}
-                              </p>
-                              <p className="wallet-currency-name">
-                                {wallet.name}
-                              </p>
-                            </div>
-                          </div>
-                          <p className="wallet-currency-amount">
-                            {hidden ? (
-                              <span aria-label="Amount hidden">••••</span>
-                            ) : (
-                              displayBalance(wallet)
-                            )}
-                            <span>{wallet.currency}</span>
-                          </p>
-                        </li>
-                      ))}
-                    </ul>
-                  ) : (
-                    <div className="wallet-currencies-empty">
-                      <Wallet aria-hidden="true" />
-                      <h3>
-                        {isMain
-                          ? "No currency wallets yet."
-                          : "Balances not connected."}
-                      </h3>
-                      <p>
-                        {isMain
-                          ? "Currency wallets will appear when the account service is connected."
-                          : "No balances were supplied for this destination. They are not inferred from the main account."}
-                      </p>
+              {!historyPage && (
+                <Card
+                  className="wallet-panel wallet-currencies-panel"
+                  id="wallets"
+                  aria-labelledby="currencies-heading"
+                >
+                  <CardHeader className="wallet-card-header">
+                    <div className="wallet-section-head">
+                      <CardTitle>
+                        <h2
+                          id="currencies-heading"
+                          className="wallet-panel-title"
+                        >
+                          <Wallet aria-hidden="true" />
+                          Currency wallets
+                        </h2>
+                      </CardTitle>
+                      <Badge variant="secondary" className="wallet-count-badge">
+                        {wallets.length}{" "}
+                        {wallets.length === 1 ? "wallet" : "wallets"}
+                      </Badge>
                     </div>
-                  )}
-                </CardContent>
-              </Card>
+                    <CardDescription className="wallet-currencies-description">
+                      Default currency ·{" "}
+                      {account?.defaultCurrency ?? "Unavailable"}
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="wallet-card-content">
+                    {wallets.length > 0 ? (
+                      <ul className="wallet-currency-list">
+                        {wallets.map((wallet) => (
+                          <li className="wallet-currency-row" key={wallet.id}>
+                            <div className="wallet-currency-identity">
+                              <span
+                                className="wallet-currency-token"
+                                aria-hidden="true"
+                              >
+                                <CurrencyFlag currency={wallet.currency} />
+                              </span>
+                              <div>
+                                <p className="wallet-currency-code">
+                                  {wallet.currency}
+                                </p>
+                                <p className="wallet-currency-name">
+                                  {wallet.name}
+                                </p>
+                              </div>
+                            </div>
+                            <p className="wallet-currency-amount">
+                              {hidden ? (
+                                <span aria-label="Amount hidden">••••</span>
+                              ) : (
+                                displayBalance(wallet)
+                              )}
+                              <span>{wallet.currency}</span>
+                            </p>
+                          </li>
+                        ))}
+                      </ul>
+                    ) : (
+                      <div className="wallet-currencies-empty">
+                        <Wallet aria-hidden="true" />
+                        <h3>
+                          {isMain
+                            ? "No currency wallets yet."
+                            : "Balances not connected."}
+                        </h3>
+                        <p>
+                          {isMain
+                            ? "Currency wallets will appear when the account service is connected."
+                            : "No balances were supplied for this destination. They are not inferred from the main account."}
+                        </p>
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+              )}
             </div>
+            <p className="wallet-prototype-note">
+              Prototype · Local ledger only. No real funds move.
+            </p>
+            {children}
           </main>
         </div>
       </div>

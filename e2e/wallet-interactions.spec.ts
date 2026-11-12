@@ -31,14 +31,10 @@ test("the overview has two columns and no permanent form or conflicting conversi
           getComputedStyle(element).gridTemplateColumns.split(" ").length,
       ),
   ).toBe(2);
-  await expect(
-    page.getByText(
-      "deposits, withdrawals, reviewed conversions and transfers are simulated.",
-      {
-        exact: false,
-      },
-    ),
-  ).toBeVisible();
+  await expect(page.locator(".wallet-preview-notice")).toHaveCount(0);
+  await expect(page.locator(".wallet-prototype-note")).toHaveText(
+    "Prototype · Local ledger only. No real funds move.",
+  );
   await expect(
     page.getByRole("heading", { name: "Currency wallets", exact: true }),
   ).toBeVisible();

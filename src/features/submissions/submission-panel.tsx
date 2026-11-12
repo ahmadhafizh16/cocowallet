@@ -6,6 +6,7 @@ import { DialogFooter } from "@/components/ui/dialog";
 import { displayAmount } from "../wallet/presentation";
 import { PROVIDERS } from "../wallet/operation-model";
 import type { useSubmission } from "./use-submission";
+import { Check } from "lucide-react";
 
 export function SubmissionPanel({
   funding,
@@ -33,28 +34,106 @@ export function SubmissionPanel({
   const intent = funding.intent;
   const conversion = receipt?.type === "conversion" ? receipt : undefined;
   const transfer = receipt?.type === "transfer" ? receipt : undefined;
-  const movement = conversion ?? transfer;
   const fundingReceipt =
     receipt && (receipt.type === "deposit" || receipt.type === "withdrawal")
       ? receipt
       : undefined;
+  if (receipt) {
+    const title =
+      receipt.type === "transfer"
+        ? "Transfer complete"
+        : receipt.type === "deposit"
+          ? "Deposit complete"
+          : receipt.type === "withdrawal"
+            ? "Withdrawal complete"
+            : "Conversion complete";
+    return (
+      <div className="wallet-submission-success">
+        <span className="wallet-success-check" aria-hidden="true">
+          <Check strokeWidth={2.5} />
+        </span>
+        <h3 ref={heading} tabIndex={-1}>
+          {title}
+        </h3>
+        <p className="wallet-success-summary" role="status">
+          {hidden ? (
+            "Your transaction is complete. Show amounts to view the confirmation."
+          ) : transfer ? (
+            <>
+              Sent{" "}
+              <strong>
+                {transfer.source.amount} {transfer.source.currency}
+              </strong>{" "}
+              to <bdi>{transfer.target.accountId}</bdi>.
+              {transfer.source.currency !== transfer.target.currency && (
+                <>
+                  {" "}
+                  They received{" "}
+                  <strong>
+                    {transfer.target.amount} {transfer.target.currency}
+                  </strong>
+                  .
+                </>
+              )}
+            </>
+          ) : conversion ? (
+            <>
+              Converted{" "}
+              <strong>
+                {conversion.source.amount} {conversion.source.currency}
+              </strong>{" "}
+              to{" "}
+              <strong>
+                {conversion.target.amount} {conversion.target.currency}
+              </strong>
+              .
+            </>
+          ) : fundingReceipt ? (
+            <>
+              {fundingReceipt.type === "deposit" ? "Added" : "Withdrew"}{" "}
+              <strong>
+                {displayAmount(
+                  BigInt(fundingReceipt.amountMinor),
+                  fundingReceipt.exponent,
+                )}{" "}
+                {fundingReceipt.currency}
+              </strong>{" "}
+              {fundingReceipt.type === "deposit" ? "to" : "from"} your{" "}
+              {fundingReceipt.currency} wallet.
+            </>
+          ) : (
+            "Your wallet has been updated."
+          )}
+        </p>
+        {funding.message && (
+          <p className="text-sm text-muted-foreground" role="status">
+            {funding.message}
+          </p>
+        )}
+        <Button className="w-full" onClick={onClose}>
+          Done
+        </Button>
+        {!funding.storageBlocked && (
+          <Button variant="ghost" onClick={onAnother}>
+            Start another operation
+          </Button>
+        )}
+      </div>
+    );
+  }
   return (
     <div className="wallet-dialog-review space-y-5" aria-busy={funding.pending}>
       <h3 ref={heading} tabIndex={-1} className="text-lg font-semibold">
-        {receipt
-          ? `Simulated ${receipt.type} completed`
-          : problem
-            ? "Submission not completed"
-            : funding.pending
-              ? "Confirming submission…"
-              : "Submission needs recovery"}
+        {problem
+          ? "Submission not completed"
+          : funding.pending
+            ? "Confirming submission…"
+            : "Submission needs recovery"}
       </h3>
       <p className="text-sm text-muted-foreground" role="status">
         {problem?.detail ??
           funding.message ??
-          (receipt
-            ? "Recorded in your simulated wallet. No real funds moved."
-            : "Keep this request unchanged while the server confirms its result.")}
+          "Keep this request unchanged while the server confirms its result."}
       </p>
       {problem && funding.message && (
         <p className="text-sm text-muted-foreground" role="status">
@@ -74,13 +153,7 @@ export function SubmissionPanel({
           <div className="flex justify-between gap-4">
             <dt>Amount</dt>
             <dd className="min-w-0 text-right wrap-anywhere">
-              {hidden
-                ? "Amount hidden"
-                : movement
-                  ? `${movement.source.amount} ${movement.source.currency} → ${movement.target.amount} ${movement.target.currency}`
-                  : fundingReceipt
-                    ? `${displayAmount(BigInt(fundingReceipt.amountMinor), fundingReceipt.exponent)} ${fundingReceipt.currency}`
-                    : intent.request.amount}
+              {hidden ? "Amount hidden" : intent.request.amount}
             </dd>
           </div>
           {(intent.kind === "deposit" || intent.kind === "withdrawal") && (
@@ -114,27 +187,13 @@ export function SubmissionPanel({
               <div className="flex justify-between gap-4">
                 <dt>Destination default</dt>
                 <dd>
-                  {transfer?.recipient.defaultCurrency ??
-                    intent.request.recipientDefaultCurrency ??
-                    "Stored default"}
+                  {intent.request.recipientDefaultCurrency ?? "Stored default"}
                 </dd>
               </div>
-              {transfer && (
-                <div className="flex justify-between gap-4">
-                  <dt>Destination context</dt>
-                  <dd className="min-w-0 text-right wrap-anywhere">
-                    {transfer.recipient.created
-                      ? "New destination created · inspect only"
-                      : "Stored destination · inspect only"}
-                    {!transfer.rate && " · Same currency, no FX rate"}
-                  </dd>
-                </div>
-              )}
               <div className="flex justify-between gap-4">
                 <dt>Receive currency</dt>
                 <dd>
-                  {transfer?.target.currency ??
-                    intent.request.targetCurrency ??
+                  {intent.request.targetCurrency ??
                     intent.request.recipientDefaultCurrency ??
                     "Stored default"}
                 </dd>
@@ -145,74 +204,6 @@ export function SubmissionPanel({
             <dt>Retry key</dt>
             <dd className="min-w-0 text-right wrap-anywhere">{intent.key}</dd>
           </div>
-          {receipt && (
-            <>
-              <div className="flex justify-between gap-4">
-                <dt>Transaction ID</dt>
-                <dd className="min-w-0 text-right wrap-anywhere">
-                  {receipt.transactionId}
-                </dd>
-              </div>
-              <div className="flex justify-between gap-4">
-                <dt>
-                  {movement
-                    ? "Balances after this operation"
-                    : "Balance after this operation"}
-                </dt>
-                <dd className="min-w-0 text-right wrap-anywhere">
-                  {hidden ? (
-                    "Amount hidden"
-                  ) : movement ? (
-                    <>
-                      {displayAmount(
-                        BigInt(movement.source.balanceMinor),
-                        movement.source.exponent,
-                      )}{" "}
-                      {movement.source.currency}
-                      <br />
-                      {displayAmount(
-                        BigInt(movement.target.balanceMinor),
-                        movement.target.exponent,
-                      )}{" "}
-                      {movement.target.currency}
-                    </>
-                  ) : fundingReceipt ? (
-                    `${displayAmount(BigInt(fundingReceipt.balanceMinor), fundingReceipt.exponent)} ${fundingReceipt.currency}`
-                  ) : (
-                    "Unavailable"
-                  )}
-                </dd>
-              </div>
-              {movement?.rate && !hidden && (
-                <>
-                  <div className="flex justify-between gap-4">
-                    <dt>Reference rate</dt>
-                    <dd className="min-w-0 text-right wrap-anywhere">
-                      1 {movement.source.currency} = {movement.rate.value}{" "}
-                      {movement.target.currency}
-                    </dd>
-                  </div>
-                  <div className="flex justify-between gap-4">
-                    <dt>Rate source date</dt>
-                    <dd>
-                      {movement.rate.date} ·{" "}
-                      {movement.rate.source === "cached" ? "Cached" : "Fresh"}
-                    </dd>
-                  </div>
-                </>
-              )}
-              {!hidden && (
-                <div className="flex justify-between gap-4">
-                  <dt>Recorded at (UTC)</dt>
-                  <dd className="min-w-0 text-right wrap-anywhere">
-                    <time dateTime={receipt.createdAt}>
-                      {receipt.createdAt}
-                    </time>
-                  </dd>
-                </div>
-              )}
-            </>
-          )}
         </dl>
       )}
       {!funding.result && intent && (
@@ -231,7 +222,7 @@ export function SubmissionPanel({
             disabled={funding.storageBlocked}
             onClick={onAnother}
           >
-            {receipt ? "Start another operation" : "Edit for a new attempt"}
+            Edit for a new attempt
           </Button>
         )}
         <Button variant="outline" onClick={onClose}>

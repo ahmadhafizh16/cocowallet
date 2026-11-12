@@ -21,7 +21,7 @@ export function TransactionFacts({
   const facts = [
     ["Transaction ID", t.transactionId],
     ["Type", historyTypeLabel(t)],
-    ["Status", "Completed simulation"],
+    ["Status", "Completed"],
     ...(["source", "target"] as const).flatMap((key) => {
       const side = t[key];
       if (!side) return [];
@@ -61,7 +61,7 @@ export function TransactionFacts({
         : []),
   ];
   return (
-    <dl className="space-y-4 text-sm wrap-anywhere">
+    <dl className="grid gap-x-10 gap-y-5 text-sm wrap-anywhere sm:grid-cols-2">
       {facts.map(([label, value]) => (
         <div key={label} className="grid gap-1">
           <dt className="text-muted-foreground">{label}</dt>

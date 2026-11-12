@@ -92,7 +92,7 @@ async function confirm(page: Page) {
     .click();
   await expect(
     page.getByRole("heading", {
-      name: "Simulated transfer completed",
+      name: "Transfer complete",
       exact: true,
     }),
   ).toBeFocused();
@@ -134,7 +134,7 @@ test("reviewed USD→GBP creates a destination once, refreshes balances and expo
     });
   await expect(
     page.getByRole("heading", {
-      name: "Simulated transfer completed",
+      name: "Transfer complete",
       exact: true,
     }),
   ).toBeFocused();
@@ -142,18 +142,16 @@ test("reviewed USD→GBP creates a destination once, refreshes balances and expo
   await expect
     .poll(async () => BigInt((await main(request)).source.balanceMinor))
     .toBe(BigInt(before.source.balanceMinor) - 100n);
-  await page
-    .getByRole("button", { name: "Back to overview", exact: true })
-    .click();
+  await page.getByRole("button", { name: "Done", exact: true }).click();
   await inspect(page, id);
   await expect(
     page.locator(".wallet-currency-row").filter({ hasText: "GBP" }),
   ).toContainText("0.80");
   await expect(
-    page.getByRole("list", { name: "Completed simulated activity" }),
-  ).toContainText("Incoming transfer · 1.00 USD → 0.80 GBP");
+    page.getByRole("list", { name: "Recent completed activity" }),
+  ).toContainText("+0.80 GBP");
   await expect(
-    page.getByRole("list", { name: "Completed simulated activity" }),
+    page.getByRole("list", { name: "Recent completed activity" }),
   ).not.toContainText("Deposit");
   for (const action of await page.locator(".wallet-quick-actions button").all())
     await expect(action).toBeDisabled();
@@ -162,20 +160,14 @@ test("reviewed USD→GBP creates a destination once, refreshes balances and expo
       exact: true,
     }),
   ).toBeVisible();
-  await page
-    .locator("summary")
-    .filter({ hasText: "Incoming transfer" })
-    .click();
-  await expect(
-    page.getByRole("list", { name: "Completed simulated activity" }),
-  ).toContainText("1 USD = 0.8 GBP");
-  await expect(page.locator(".wallet-total-value")).toHaveText("Unavailable");
+  await expect(page.locator(".wallet-total-value")).toHaveText("$1.00");
+  await page.getByRole("button", { name: /^View incoming transfer/ }).click();
+  await expect(page).toHaveURL(/\/history$/u);
+  await expect(page.locator("#history")).toContainText("1 USD = 0.8 GBP");
   await page
     .getByRole("button", { name: "Hide monetary amounts", exact: true })
     .click();
-  await expect(
-    page.getByRole("list", { name: "Completed simulated activity" }),
-  ).toHaveCount(0);
+  await expect(page.locator("#history dl")).toHaveCount(0);
   await expect(page.locator("#history time")).toHaveCount(0);
   await expect(page.locator("#history")).not.toContainText("0.80 GBP");
 });
@@ -256,9 +248,7 @@ test("existing destination defaults stay immutable while an explicit target over
   });
   expect(own.status()).toBe(409);
   expect(await own.json()).toMatchObject({ code: "INSPECT_ONLY" });
-  await page
-    .getByRole("button", { name: "Back to overview", exact: true })
-    .click();
+  await page.getByRole("button", { name: "Done", exact: true }).click();
   await page.reload();
   await review(page, id);
   await expect(page.getByRole("dialog")).toContainText("0.80 GBP");
@@ -328,7 +318,7 @@ test("lost committed transfer survives reload and blocks funding/conversion repl
     .click();
   await expect(
     page.getByRole("heading", {
-      name: "Simulated transfer completed",
+      name: "Transfer complete",
       exact: true,
     }),
   ).toBeVisible();
@@ -550,14 +540,15 @@ test("privacy blocks hidden transfer review and removes monetary receipt details
   await open(page);
   await expect(dialog).toContainText("1.00 USD");
   await confirm(page);
-  await page
-    .getByRole("button", { name: "Back to overview", exact: true })
-    .click();
+  await page.getByRole("button", { name: "Close dialog", exact: true }).click();
   await page
     .getByRole("button", { name: "Hide monetary amounts", exact: true })
     .click();
   await open(page);
-  await expect(dialog).toContainText("Amount hidden");
+  await expect(dialog).toContainText("Show amounts to view the confirmation");
+  await expect(
+    page.getByRole("heading", { name: "Transfer complete", exact: true }),
+  ).toBeVisible();
   await expect(dialog).not.toContainText("1.00 USD");
   await expect(dialog.locator("time")).toHaveCount(0);
 });
@@ -605,16 +596,14 @@ for (const width of [320, 1440])
       await page.keyboard.press("Enter");
       await expect(
         page.getByRole("heading", {
-          name: "Simulated transfer completed",
+          name: "Transfer complete",
           exact: true,
         }),
       ).toBeFocused();
       await page.screenshot({
         path: `.impeccable/review/transfer-flow/receipt-${width}-${theme}.png`,
       });
-      await page
-        .getByRole("button", { name: "Back to overview", exact: true })
-        .click();
+      await page.getByRole("button", { name: "Done", exact: true }).click();
       await expect(
         page
           .locator(".wallet-quick-actions")
@@ -622,7 +611,7 @@ for (const width of [320, 1440])
       ).toBeFocused();
       await inspect(page, id);
       await expect(
-        page.getByRole("list", { name: "Completed simulated activity" }),
+        page.getByRole("list", { name: "Recent completed activity" }),
       ).toContainText("Incoming transfer");
       await page.screenshot({
         path: `.impeccable/review/transfer-flow/incoming-${width}-${theme}.png`,

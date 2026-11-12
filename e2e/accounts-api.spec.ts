@@ -32,11 +32,9 @@ test("the overview uses persistent account IDs and journal-derived API balances 
     ),
   ).toBe(true);
   await page.goto("/");
-  await expect(
-    page.getByText("Balances connected", { exact: true }),
-  ).toBeVisible();
+  await expect(page.locator(".wallet-preview-notice")).toHaveCount(0);
   await expect(page.locator(".wallet-total-note")).toContainText(
-    "Journal-derived balances",
+    "USD balances · No FX needed",
   );
   await page
     .getByRole("button", { name: "Account being inspected", exact: true })

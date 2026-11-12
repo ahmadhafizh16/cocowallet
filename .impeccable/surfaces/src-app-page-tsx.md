@@ -1,11 +1,46 @@
 ---
 version: 1
 slug: "src-app-page-tsx"
-primary_target: "src/app/page.tsx"
+primary_target: "src/app/(wallet)/layout.tsx"
 related_targets: ["src/features/wallet/dashboard.tsx","src/features/wallet/wallet.css","src/features/wallet/operation-workspace.tsx","src/features/submissions/submission-panel.tsx","src/features/conversions/quote-review.tsx","src/features/transfers/transfer-review.tsx","src/features/history/recent-transactions.tsx","src/features/history/workspace.tsx","src/features/history/use-history.ts","src/features/history/transaction-facts.tsx","src/features/funding/recent-funding.tsx","src/app/loading.tsx","src/app/error.tsx"]
 ---
 
 # Wallet overview surface
+
+## Current user refinement — D-035 / D-036
+
+The user resumed visual feedback and supplied reference screenshots. This is a
+code-led, user-pinned refinement of the same frosted world, not an identity round.
+Their new instructions supersede the historical in-panel/no-route choice below:
+
+- Recent rows: income/outgoing/conversion icons, name/time, green positive credits,
+  red negative debits, completed status; both exact conversion legs. Five recent
+  records, with scoped detail navigation. No invented merchants or mini price charts.
+- Full History is `/history`, reached from the existing left/bottom menu. No Browse
+  full history button in recent activity. One persistent route-group shell preserves
+  account, privacy and money drafts/recovery across these pages.
+- No demo badge/large connection alert. One discreet prototype/no-real-funds footer.
+  Successful money submissions show a large green check and concise exact summary,
+  not retry keys or technical balance tables. Recovery safeguards remain internal
+  and are still explained for actual uncertainty/errors.
+- Compact recorded USD-total sparkline beside the total, actions below. No large
+  empty chart region or grid behind placeholder copy. Real account-scoped snapshots
+  only; exact values are available on opening the sparkline. Fresh/cached Frankfurter
+  provenance is reachable by keyboard without another permanent card row.
+- Tighter wallet rows retain flags, names and exact amounts. Read-only destination
+  USD totals are explicitly approved. Missing FX makes the whole total unavailable,
+  never partial; no old FX-valued observations are fabricated or backfilled.
+
+The palette, typography, logo/flags, material, two-column overview and existing
+interaction motion remain authority. Local spacing/composition changes implement
+the user's references. See `artifact/PRESENTATION_REFINEMENT.md` for the complete
+scope, data/recording contract and operational evidence. The independent reviewer
+scored all four material corrections resolved, `ship` at fix-list scope. The user
+approved refreshing affected DESIGN.md/sidecar sections while preserving core
+tokens. T11-08/T03-03 are complete; the historical contract below is not current
+authority for chart placement, History navigation or destination valuation.
+
+## Historical surface contract
 
 **Mode:** Operate. **Target:** `src/app/page.tsx`; related targets: the wallet
 feature, root layout/loading/error boundaries, and shared UI/theme components.

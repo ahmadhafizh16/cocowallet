@@ -1,11 +1,13 @@
 # Handover
 
-**Status:** Twenty-seven of 36 tasks are closed. T09-02's user-approved in-panel
-history filters/numbered pages/inline detail are implemented and verified.
-The board has 7 To do, 2 In progress (remaining funding/withdrawal Swagger
-acceptance), and 27 Done. Existing visual design, accounting, account isolation,
-privacy and original-key recovery are preserved. Valuation, wallet/default
-management and Swagger remain separate. See [HISTORY.md](HISTORY.md).
+**Status:** D-035/D-036 presentation and portfolio work is complete:
+29 of 37 tasks closed, 6 To do / 2 In progress / 29 Done. Compact signed activity,
+checkmark successes, dedicated shared-shell History, direct Frankfurter USD totals
+and actual recorded observations are implemented. Destination money remains
+disabled; accounting, privacy and original-key recovery are preserved. Final review,
+normal-wallet migration/restoration and closure evidence are recorded in
+[PRESENTATION_REFINEMENT.md](PRESENTATION_REFINEMENT.md). Wallet/default management
+and Swagger remain separate work.
 
 ## Implemented modules and commands
 
@@ -28,18 +30,21 @@ management and Swagger remain separate. See [HISTORY.md](HISTORY.md).
 | `src/lib/contracts.ts`, `src/lib/problem-details.ts`, `src/server/http/schema-parts.ts` | Shared runtime guards/published structural schemas, safe Problem Details and common response/schema parts; domain money/precision/quote validation stays feature-owned. |
 | `src/server/http/request-input.ts`, `responses.ts`, `funding-handler.ts`, `conversion-handler.ts` | Bounded fatal-UTF-8 JSON, direct-origin/media policy, lossless plain JSON/no-store/replay responses and thin monetary adapters. Post-commit serialization failure keeps original-key recovery. |
 | `src/test/json-contract.ts` | Reusable test-only assertion for the document's explicit schema subset; not a standards-compliant validator, generator or shipping client dependency. |
-| `src/features/history/`, `src/app/api/transactions/`, `src/server/http/history-*` | Account-scoped completed facts, inclusive UTC days, numbered pages/counts in one snapshot, scoped detail 404, exact stored amounts/rates, maintained OpenAPI and in-panel browsing/detail. No current balances/keys/valuation. |
+| `src/features/history/`, `src/app/api/transactions/`, `src/server/http/history-*` | Account-scoped completed facts, inclusive UTC days, numbered pages/counts, scoped detail 404, exact stored amounts/rates and maintained OpenAPI. No current balances/keys/valuation in transaction-history facts. |
 | `e2e/zzzzz-history.spec.ts` | Guarded disposable-server API checks for confirmed facts, either conversion currency, UTC filters, numbered pages, errors, GET-only registration and unchanged balances after reads. |
 | `src/app/api/transfers/`, `src/server/http/transfer*` | Thin same-origin/bounded-JSON adapter over the existing atomic service, shared strict schemas, retained definitive outcomes and safe original-key uncertainty. |
 | `src/features/transfers/transfer-review.tsx`, `src/features/submissions/` | Exact arbitrary recipient/default/target review; no-FX same-currency or validated expiring FX terms; transfer routing/receipt validation in the unchanged historical recovery slot alongside old funding/conversions. |
-| `src/features/history/recent-transactions.tsx`, `preview.ts` | Compact first 50 matching completed facts plus shared recent/full/detail guards; validated scoped facts, exact arithmetic/filter/count/order checks and incoming direction without reciprocal FX or valuation. |
+| `src/features/history/recent-transactions.tsx`, `preview.ts` | Five compact signed matching recent rows from the bounded 50-record read, shared recent/full/detail guards and scoped detail navigation. Exact account/direction/arithmetic/filter/count/order checks; no invented merchant or net conversion amount. |
 | `e2e/zzzzzz-transfers.spec.ts` | Guarded production transfer confirmation/recovery, recipient/default/target behavior, incoming inspection/read-only permissions, expiry/funds/self-ID/storage errors and light/dark 320/1440 captures. |
-| `src/features/history/workspace.tsx`, `use-history.ts`, `transaction-facts.tsx` | In-panel staged/applied filters, numbered paging, GET-bound exact detail, safe missing/error/retry/privacy, focus/back navigation and scoped cancellation. No new route/storage or monetary write. |
+| `src/features/history/workspace.tsx`, `use-history.ts`, `transaction-facts.tsx` | Dedicated History workspace with staged/applied filters, numbered paging, GET-bound exact detail, safe retry/privacy, focus/back navigation and scoped cancellation. No persistent browsing storage or monetary write. |
 | `e2e/zzzzzzz-history-ui.spec.ts` | Guarded >50-record browsing, all operation details, UTC/either-currency filters, account switching, errors/missing/privacy, unchanged monetary recovery and 320/1440 light/dark captures. |
 | `src/features/funding/`, `src/app/api/deposits/`, `src/app/api/withdrawals/` | Exact simulated funding, immutable durable original results, same-key retries, per-tab recovery, receipts and bounded completed-funding visibility. |
 | `drizzle/0003_funding_results.sql` | Retained technical outcome table and immutable update/delete triggers; no seeded funds or transactions. |
 | `src/features/rates/`, `src/app/api/currencies/`, `src/app/api/rates/` | Server-only fixed-origin Frankfurter catalog and exact CSV pair observations; fresh-first validation, bounded timeout/size and original-time eligible fallback. No binding quote or monetary change. |
 | `drizzle/0004_reference_rate_cache.sql`, `scripts/smoke-rates.ts` | Mutable technical caches separate from financial records; optional guarded live check uses only an isolated disposable database. |
+| `src/features/portfolio/`, `src/app/api/portfolio/`, `src/server/http/portfolio-openapi.ts` | Scoped full USD valuation: direct fresh-first rates, half-up per-wallet cents, bigint sum, complete unavailable states, exact client context/provenance guards and cancellable private reads. |
+| `drizzle/0008_portfolio_snapshots.sql`, `src/server/portfolio-observation.ts` | Immutable account/revision observations; committed balances captured before yielding and FX scheduled after response, outside monetary commit/replay. No repricing/backfill or replay duplicates; crash recovery can record only current observations. |
+| `scripts/smoke-portfolio.ts`, `e2e/zzzzzzzz-presentation.spec.ts` | Explicit new-path isolated live diagnostic and ten guarded presentation/valuation journeys; never target the normal wallet for money fixtures. |
 | `src/features/quotes/`, `src/app/api/quotes/`, `drizzle/0005_immutable_fx_quotes.sql` | Immutable exact-input/recipient-bound full-minute previews/readback; no reservation, internal confirmation checks and scoped atomic single-success consumption. No monetary submission endpoint. |
 | `scripts/e2e-reference-provider.mjs`, `e2e/zzz-quotes.spec.ts` | Guarded deterministic provider preload only for the disposable production server; no-money preview and disabled-submission browser checks. |
 | `src/features/conversions/`, `src/app/api/conversions/`, `drizzle/0006_conversion_results.sql` | Atomic target creation/debit/credit/use/results, strict documented POST, quote review/expiry/reconfirmation, eligible target selection and completed-conversion reads. Mutual triggers/services enforce global money-key ownership. |
@@ -47,14 +52,14 @@ management and Swagger remain separate. See [HISTORY.md](HISTORY.md).
 | `src/features/submissions/` | Shared funding/conversion recovery hook and result panel; original-key/input/quote retries in one backward-compatible per-tab slot, verified before sending and cleared only on known results. |
 | `e2e/zzzz-conversions.spec.ts` | Guarded isolated conversion review/confirmation, missing wallet, expiry, unavailable terms, lost-response recovery, storage, theme/viewport/focus/privacy journeys. |
 | `scripts/start-funding-e2e.ts`, `e2e/zz-funding.spec.ts` | Refuse ordinary runtime target; successful monetary browser writes use only the disposable isolated server/database. |
-| `src/server/wallet-overview.ts` | Dynamic-page adapter, prototype-safe account totals, exact rate-free main USD totals, unavailable FX/destination valuation, no dropped unsupported currencies. |
+| `src/server/wallet-overview.ts` | Exact dynamic initial account/wallet snapshot; connected portfolio reads subsequently value the selected account without trusting browser drafts or silently dropping unsupported balances. |
 | `components.json`, `postcss.config.mjs`, `src/lib/utils.ts` | shadcn/Lucide/Tailwind configuration and tested class helper used by the local UI components. |
 | `src/components/ui/` | Registry-derived shadcn Button/Card/Dialog/DropdownMenu/Tooltip/Field/Label/Badge/Separator/Input/Select/Skeleton with frosted semantic tokens, keyboard/focus handling, and retained upstream MIT notice. |
 | `src/components/brand/`, `public/brand/`, `src/app/icon.svg` | Approved CocoWallet inline vector logo, theme-aware wordmark, unchanged downloadable variants, and matching favicon. |
 | `src/features/theme/`, `src/app/globals.css` | Approved frosted tokens, light/dark/system preference, pre-paint theme bootstrap, storage fallback, and reduced-motion styles. |
-| `src/app/page.tsx`, `layout.tsx`, `loading.tsx`, `error.tsx`, `not-found.tsx` | Dynamic Node stored-balance overview, styles/metadata, skip link, loading/error boundaries and branded 404. No build-time DB read/seed. |
-| `src/features/wallet/` | Existing overview, snapshots, local drafts, reviewed simulated funding/conversion/transfers, privacy and matching skeleton. Compact recent activity and inline full-history workspace; destinations inspect-only. Preview factory is test-only. |
-| `src/features/wallet/balance-history.tsx`, `currency-flag.tsx` | Validated account-scoped recorded-USD chart and exact-value disclosure; honest disconnected/private states; deterministic local currency vectors. No history source or valuation service is connected. |
+| `src/app/(wallet)/`, root `src/app/layout.tsx`, `loading.tsx`, `error.tsx`, `not-found.tsx` | Persistent dynamic shared shell for `/` and `/history`, preserving account/privacy/money drafts/recovery across soft navigation; root styles/metadata, skip/loading/error/404. No build-time DB read/seed. |
+| `src/features/wallet/`, `src/features/submissions/submission-panel.tsx` | Compact total/sparkline/actions, tighter wallet rows, signed recent activity, concise confirmed-success checkmarks and full recovery/error safeguards. Done clears safely completed presentation, X retains it. One discreet prototype footer. |
+| `src/features/wallet/balance-history.tsx`, `currency-flag.tsx` | Validated actual account-scoped USD observations, compact min/max sparkline and expanded zero-baseline chart/exact-value disclosure; honest empty/private states and local currency vectors. |
 | `DESIGN.md`, `.impeccable/design.json` | Extracted light/dark visual tokens, canonical design guidance, and version-2 component-preview extensions; actual application styles remain in source CSS. |
 | `scripts/check-artifacts.mjs` | Checks Markdown links, decision/task references, board status alignment, and task dependency cycles. |
 
@@ -74,7 +79,28 @@ Stop the dev compiler before `docker compose run --rm app npm run check`, then u
 
 Application DB: `/app/data/wallet.sqlite` in Compose's `wallet-data` volume. Tests use isolated temporary SQLite files. Normal shutdown is `docker compose down` without deleting volumes. Before applying journal migrations, the stopped app's database was backed up with SQLite's backup API to `/app/data/wallet.sqlite.pre-journal-1794390597589.bak`. Backup creation is verified; a full restore drill is not claimed.
 
-Current history interface: final full Docker check/build passes **1,455 Jest tests
+Current presentation/portfolio verification passes the full Docker check/build:
+**1,507 Jest tests in 67 suites**, formatting/lint/TypeScript and **58 artifact
+documents / 37 tasks**; all **99 production Chromium checks** pass on a newly
+recreated isolated server. The independent reviewer scored all four corrections
+resolved, `ship` at fix-list scope; affected design docs were refreshed with the
+user's approval while core tokens remained unchanged. See
+[DESIGN_REVIEW.md](DESIGN_REVIEW.md) for the bounded findings and verdict scope.
+
+Normal-wallet backup `/app/data/wallet.sqlite.pre-presentation-1794463420155.bak`
+was verified before changes. Migration 0008 added only technical observation
+storage and one migration row; all 13 other preexisting tables were unchanged
+immediately after migration. Restored development retains
+`.next/dev.pre-presentation-1794466974003` and passed **300 stable frames**, actual
+two-record History, exact portfolio total, privacy/draft navigation and one genuine
+current observation (no past backfill), with zero extra navigation/page/console
+errors or monetary/quote POSTs. All 11 prior non-cache/non-migration tables remain
+row-identical: **1 account / 3 wallets / 2 funding attempts / 2 transactions /
+2 journal entries**. Only the ninth migration, one catalog/rate cache and one
+snapshot differ legitimately. Integrity `ok`, foreign-key violations zero.
+No normal seed, money test, dependency change, restore drill or push ran.
+
+Historical T09-02 interface checkpoint (superseded placement): full Docker check/build passes **1,455 Jest tests
 in 61 suites**, formatting/lint/TypeScript and artifact checks (57 documents/36
 tasks). All **89 production Chromium checks** pass on a fresh guarded disposable
 server, including 11 history journeys. User-selected same-panel browsing adds

@@ -55,11 +55,14 @@ test("explicit deposit/withdrawal confirmations update balances and show persist
     .click();
   await expect(
     page.getByRole("heading", {
-      name: "Simulated deposit completed",
+      name: "Deposit complete",
       exact: true,
     }),
   ).toBeFocused();
-  await expect(page.getByRole("dialog")).toContainText("No real funds moved");
+  await expect(page.getByRole("dialog")).toContainText(
+    "Added 100.00 USD to your USD wallet.",
+  );
+  await expect(page.getByRole("dialog")).not.toContainText("Retry key");
   await expect
     .poll(async () => (await wallet(request)).balanceMinor)
     .toBe((BigInt(before.balanceMinor) + 10000n).toString());
@@ -80,19 +83,17 @@ test("explicit deposit/withdrawal confirmations update balances and show persist
     .click();
   await expect(
     page.getByRole("heading", {
-      name: "Simulated withdrawal completed",
+      name: "Withdrawal complete",
       exact: true,
     }),
   ).toBeVisible();
-  await page
-    .getByRole("button", { name: "Back to overview", exact: true })
-    .click();
+  await page.getByRole("button", { name: "Done", exact: true }).click();
   await page.reload();
   await expect(
-    page.getByRole("list", { name: "Completed simulated activity" }),
+    page.getByRole("list", { name: "Recent completed activity" }),
   ).toContainText("25.50 USD");
   await expect(
-    page.getByRole("list", { name: "Completed simulated activity" }),
+    page.getByRole("list", { name: "Recent completed activity" }),
   ).toContainText("100.00 USD");
   expect((await wallet(request)).balanceMinor).toBe(
     (BigInt(before.balanceMinor) + 7450n).toString(),
@@ -146,16 +147,14 @@ test("lost committed response survives reload; explicit recovery reuses original
   expect((await response).headers()["idempotency-replayed"]).toBe("true");
   await expect(
     page.getByRole("heading", {
-      name: "Simulated deposit completed",
+      name: "Deposit complete",
       exact: true,
     }),
   ).toBeVisible();
   expect((await wallet(request)).balanceMinor).toBe(
     (BigInt(before.balanceMinor) + 725n).toString(),
   );
-  await page
-    .getByRole("button", { name: "Back to overview", exact: true })
-    .click();
+  await page.getByRole("button", { name: "Close dialog", exact: true }).click();
   await page
     .getByRole("button", { name: "Hide monetary amounts", exact: true })
     .click();
@@ -165,7 +164,7 @@ test("lost committed response survives reload; explicit recovery reuses original
   await expect(page.getByRole("dialog")).not.toContainText("7.25");
   await expect(page.getByRole("dialog").locator("time")).toHaveCount(0);
   await expect(
-    page.getByRole("list", { name: "Completed simulated activity" }),
+    page.getByRole("list", { name: "Recent completed activity" }),
   ).toHaveCount(0);
 });
 
@@ -254,7 +253,7 @@ for (const theme of ["light", "dark"] as const) {
       await page.keyboard.press("Enter");
       await expect(
         page.getByRole("heading", {
-          name: "Simulated deposit completed",
+          name: "Deposit complete",
           exact: true,
         }),
       ).toBeFocused();
@@ -269,9 +268,7 @@ for (const theme of ["light", "dark"] as const) {
         path: `.impeccable/review/funding-${theme}-${width}.png`,
         fullPage: true,
       });
-      await page
-        .getByRole("button", { name: "Back to overview", exact: true })
-        .click();
+      await page.getByRole("button", { name: "Done", exact: true }).click();
       await expect(
         page
           .locator(".wallet-quick-actions")

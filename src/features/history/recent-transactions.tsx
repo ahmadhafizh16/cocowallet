@@ -3,8 +3,13 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { confirmedRecentHistory } from "./preview";
 import type { HistoryPage, TransactionType } from "./contracts";
-import { PROVIDERS } from "../wallet/operation-model";
-import { ArrowDownLeft } from "lucide-react";
+import {
+  ArrowDownLeft,
+  ArrowUpRight,
+  ArrowRightLeft,
+  Check,
+} from "lucide-react";
+import { historyTypeLabel } from "./transaction-facts";
 
 export function RecentTransactions({
   accountId,
@@ -12,12 +17,14 @@ export function RecentTransactions({
   hidden,
   revision,
   onClear,
+  onOpenTransaction,
 }: {
   accountId: string;
   type?: TransactionType;
   hidden: boolean;
   revision: object;
   onClear: () => void;
+  onOpenTransaction?: (id: string) => void;
 }) {
   const [attempt, setAttempt] = useState(0);
   const [state, setState] = useState<{
@@ -107,10 +114,7 @@ export function RecentTransactions({
         </span>
         <div>
           <h3>No matching completed activity</h3>
-          <p>
-            Completed simulations for this account will appear here. Rejected
-            attempts are not transactions.
-          </p>
+          <p>Your completed transactions will appear here.</p>
           {type && (
             <Button
               variant="ghost"
@@ -125,103 +129,64 @@ export function RecentTransactions({
       </div>
     );
   return (
-    <ul className="space-y-4" aria-label="Completed simulated activity">
-      {records.map((t) => (
-        <li
-          key={t.transactionId}
-          className="min-w-0 border-b border-border pb-4 last:border-0"
-        >
-          <details>
-            <summary className="cursor-pointer min-h-11 py-2 text-sm wrap-anywhere">
-              {t.type === "transfer"
-                ? `${t.direction === "incoming" ? "Incoming" : "Outgoing"} transfer`
-                : t.type === "conversion"
-                  ? "Conversion"
-                  : t.type === "deposit"
-                    ? "Deposit"
-                    : "Withdrawal"}{" "}
-              ·{" "}
-              {t.source
-                ? `${t.source.amount} ${t.source.currency}`
-                : `${t.target!.amount} ${t.target!.currency}`}
-              {t.source &&
-                t.target &&
-                ` → ${t.target.amount} ${t.target.currency}`}
-            </summary>
-            <dl className="space-y-2 text-sm wrap-anywhere">
-              <div>
-                <dt className="text-muted-foreground">Transaction ID</dt>
-                <dd>{t.transactionId}</dd>
-              </div>
-              <div>
-                <dt className="text-muted-foreground">Recorded at (UTC)</dt>
-                <dd>
-                  <time dateTime={t.createdAt}>{t.createdAt}</time>
-                </dd>
-              </div>
-              <div>
-                <dt className="text-muted-foreground">Status</dt>
-                <dd>Completed simulation</dd>
-              </div>
-              {t.type === "transfer" && (
-                <>
-                  <div>
-                    <dt className="text-muted-foreground">From account</dt>
-                    <dd>
-                      <bdi>{t.source!.accountId}</bdi>
-                    </dd>
-                  </div>
-                  <div>
-                    <dt className="text-muted-foreground">
-                      To inspect-only destination
-                    </dt>
-                    <dd>
-                      <bdi>{t.target!.accountId}</bdi>
-                    </dd>
-                  </div>
-                </>
-              )}
-              {t.provider && (
-                <div>
-                  <dt className="text-muted-foreground">Fictional provider</dt>
-                  <dd>{PROVIDERS.find((p) => p.code === t.provider)?.label}</dd>
-                </div>
-              )}
-              {t.rate ? (
-                <>
-                  <div>
-                    <dt className="text-muted-foreground">Reference rate</dt>
-                    <dd>
-                      1 {t.source!.currency} = {t.rate.value}{" "}
-                      {t.target!.currency}
-                    </dd>
-                  </div>
-                  <div>
-                    <dt className="text-muted-foreground">Rate source date</dt>
-                    <dd>
-                      {t.rate.date} ·{" "}
-                      {t.rate.source === "cached" ? "Cached" : "Fresh"}
-                    </dd>
-                  </div>
-                  <div>
-                    <dt className="text-muted-foreground">
-                      Rate fetched at (UTC)
-                    </dt>
-                    <dd>{t.rate.fetchedAt}</dd>
-                  </div>
-                </>
-              ) : (
-                t.type === "transfer" && (
-                  <div>
-                    <dt className="text-muted-foreground">FX</dt>
-                    <dd>Same currency · no FX rate</dd>
-                  </div>
-                )
-              )}
-            </dl>
-          </details>
-        </li>
-      ))}
+    <ul className="wallet-recent-list" aria-label="Recent completed activity">
+      {records.slice(0, 5).map((t) => {
+        const incoming = t.direction === "incoming";
+        const Icon =
+          t.type === "conversion"
+            ? ArrowRightLeft
+            : incoming
+              ? ArrowDownLeft
+              : ArrowUpRight;
+        const side = incoming ? t.target! : t.source!;
+        const time = new Intl.DateTimeFormat("en", {
+          month: "short",
+          day: "numeric",
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: true,
+          timeZone: "UTC",
+        }).format(new Date(t.createdAt));
+        return (
+          <li key={t.transactionId} className="wallet-recent-row">
+            <Button
+              type="button"
+              variant="ghost"
+              className="wallet-recent-button"
+              onClick={() => onOpenTransaction?.(t.transactionId)}
+              aria-label={`View ${historyTypeLabel(t).toLowerCase()} · ${side.amount} ${side.currency}${t.type === "conversion" ? ` to ${t.target!.amount} ${t.target!.currency}` : ""} · ${t.createdAt} · Completed · ${t.transactionId}`}
+            >
+              <span
+                className={`wallet-transaction-icon ${incoming ? "is-credit" : t.type === "conversion" ? "is-conversion" : "is-debit"}`}
+                aria-hidden="true"
+              >
+                <Icon />
+              </span>
+              <span className="wallet-transaction-identity">
+                <span className="wallet-transaction-title">
+                  {historyTypeLabel(t)}
+                </span>
+                <time dateTime={t.createdAt}>{time} UTC</time>
+              </span>
+              <span className="wallet-transaction-amounts">
+                <span className={incoming ? "wallet-credit" : "wallet-debit"}>
+                  {incoming ? "+" : "−"}
+                  {side.amount} <span>{side.currency}</span>
+                </span>
+                {t.type === "conversion" && (
+                  <span className="wallet-credit">
+                    +{t.target!.amount} {t.target!.currency}
+                  </span>
+                )}
+              </span>
+              <span className="wallet-transaction-status" title="Completed">
+                <Check aria-hidden="true" />
+                <span className="wallet-status-label">Completed</span>
+              </span>
+            </Button>
+          </li>
+        );
+      })}
     </ul>
   );
 }

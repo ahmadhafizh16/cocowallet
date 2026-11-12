@@ -127,6 +127,8 @@ export function OperationWorkspace({
     fundingEnabled && (operation === "deposit" || operation === "withdraw");
   const fundingPanel =
     fundingEnabled && (funding.intent || funding.storageBlocked);
+  const submissionSucceeded =
+    !!funding.result && "transactionId" in funding.result;
   const wallets = walletsForAccount(suppliedWallets, account?.id);
   const prefix = useId();
   const formRef = useRef<HTMLFormElement>(null);
@@ -429,27 +431,41 @@ export function OperationWorkspace({
             }
           }}
         >
-          <DialogHeader>
+          <DialogHeader className={submissionSucceeded ? "sr-only" : undefined}>
             <DialogTitle>
-              {fundingPanel ? "Money submission" : title}
+              {submissionSucceeded
+                ? "Transaction complete"
+                : fundingPanel
+                  ? "Money submission"
+                  : title}
             </DialogTitle>
             <DialogDescription>
-              {fundingPanel
-                ? "Inspect or recover the original simulated submission. Keep its retry key and quote unchanged while the outcome is unresolved."
-                : canTransfer
-                  ? "Review a simulated destination and exact receiving amount, then explicitly confirm. No real funds move; destinations remain inspect-only."
-                  : canConvert
-                    ? "Review an exact one-minute reference-rate quote, then explicitly confirm a simulated conversion. No real funds move."
-                    : canFund
-                      ? "Review and confirm a simulated wallet operation. Providers are fictional; no real funds move."
-                      : DESCRIPTIONS[operation]}
+              {submissionSucceeded
+                ? "Your wallet has been updated."
+                : fundingPanel
+                  ? "Inspect or recover the original simulated submission. Keep its retry key and quote unchanged while the outcome is unresolved."
+                  : canTransfer
+                    ? "Review a simulated destination and exact receiving amount, then explicitly confirm. No real funds move; destinations remain inspect-only."
+                    : canConvert
+                      ? "Review an exact one-minute reference-rate quote, then explicitly confirm a simulated conversion. No real funds move."
+                      : canFund
+                        ? "Review and confirm a simulated wallet operation. Providers are fictional; no real funds move."
+                        : DESCRIPTIONS[operation]}
             </DialogDescription>
           </DialogHeader>
           {fundingPanel ? (
             <SubmissionPanel
               funding={funding}
               hidden={hidden}
-              onClose={closeWorkspace}
+              onClose={() => {
+                if (submissionSucceeded && !funding.storageBlocked) {
+                  funding.startAnother();
+                  quote.invalidate();
+                  transferQuote.invalidate();
+                  setReviews({});
+                }
+                closeWorkspace();
+              }}
               onAnother={() => {
                 funding.startAnother();
                 quote.invalidate();

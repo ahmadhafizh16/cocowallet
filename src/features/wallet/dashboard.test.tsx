@@ -4,7 +4,8 @@ import { act } from "react";
 import { createRoot, type Root } from "react-dom/client";
 import { WalletDashboard } from "./dashboard";
 jest.mock("next/navigation", () => ({
-  useRouter: () => ({ refresh: jest.fn() }),
+  useRouter: () => ({ refresh: jest.fn(), push: jest.fn() }),
+  usePathname: () => "/",
 }));
 import {
   createPreviewOverview,
@@ -61,6 +62,26 @@ describe("wallet presentation interactions", () => {
   const render = async (model: WalletOverview) => {
     await act(() => root.render(<WalletDashboard model={model} />));
   };
+  const recordedText = async () => {
+    await act(() =>
+      host
+        .querySelector<HTMLButtonElement>(
+          '[aria-label="View recorded USD balance history"]',
+        )!
+        .click(),
+    );
+    const text = document.querySelector(
+      ".wallet-history-dialog table",
+    )?.textContent;
+    await act(() =>
+      document
+        .querySelector<HTMLButtonElement>(
+          '.wallet-history-dialog [aria-label="Close dialog"]',
+        )!
+        .click(),
+    );
+    return text;
+  };
 
   it("switches account-scoped balances and makes destinations inspect-only", async () => {
     const base = createPreviewOverview();
@@ -94,9 +115,7 @@ describe("wallet presentation interactions", () => {
     expect(host.querySelector(".wallet-currency-list")?.textContent).toContain(
       "123.45",
     );
-    expect(
-      host.querySelector(".wallet-balance-history table")?.textContent,
-    ).toContain("123.45");
+    expect(await recordedText()).toContain("123.45");
     const selector = host.querySelector<HTMLButtonElement>(
       'button[aria-label="Account being inspected"]',
     )!;
@@ -113,12 +132,9 @@ describe("wallet presentation interactions", () => {
     expect(balances.textContent).toContain("42.50");
     expect(balances.textContent).not.toContain("123.45");
     expect(balances.querySelectorAll("li")).toHaveLength(1);
-    expect(
-      host.querySelector(".wallet-balance-history table")?.textContent,
-    ).toContain("42.50");
-    expect(
-      host.querySelector(".wallet-balance-history table")?.textContent,
-    ).not.toContain("123.45");
+    const historyText = await recordedText();
+    expect(historyText).toContain("42.50");
+    expect(historyText).not.toContain("123.45");
     expect(host.querySelector(".wallet-inspect-hint")?.textContent).toContain(
       "main account only",
     );
@@ -154,8 +170,8 @@ describe("wallet presentation interactions", () => {
     );
     expect(host.querySelector(".wallet-balance-history svg")).toBeNull();
     expect(
-      host.querySelector(".wallet-balance-history")?.textContent,
-    ).toContain("History not connected");
+      host.querySelector(".wallet-balance-history-compact")?.textContent,
+    ).toContain("No history yet");
   });
 
   it("hides every balance and restores values without changing the model", async () => {
@@ -176,8 +192,8 @@ describe("wallet presentation interactions", () => {
       host.querySelector(".wallet-total-value")?.textContent,
     ).not.toContain("0.00");
     expect(host.querySelector('input[name="amount"]')).toBeNull();
-    const history = host.querySelector(".wallet-balance-history")!;
-    expect(history.textContent).toContain("Balance history hidden");
+    const history = host.querySelector(".wallet-balance-history-compact")!;
+    expect(history.textContent).toContain("History hidden");
     expect(history.querySelector("svg, table, details, time")).toBeNull();
     expect(history.innerHTML).not.toMatch(/9,988\.77|998877|2026-10/);
     await act(() => button.click());
@@ -187,9 +203,7 @@ describe("wallet presentation interactions", () => {
     expect(model.wallets.every((wallet) => wallet.balanceMinor === "0")).toBe(
       true,
     );
-    expect(
-      host.querySelector(".wallet-balance-history table")?.textContent,
-    ).toContain("9,988.77");
+    expect(await recordedText()).toContain("9,988.77");
   });
 
   it("does not invent preview history or choose an ambiguous duplicate series", async () => {
@@ -202,7 +216,9 @@ describe("wallet presentation interactions", () => {
     expect(host.querySelector(".wallet-balance-history svg")).toBeNull();
     expect(host.querySelector(".wallet-balance-history table")).toBeNull();
     expect(
-      host.querySelector(".wallet-balance-history")?.getAttribute("data-state"),
+      host
+        .querySelector(".wallet-balance-history-compact")
+        ?.getAttribute("data-state"),
     ).toBe("invalid");
   });
 
@@ -220,11 +236,9 @@ describe("wallet presentation interactions", () => {
     expect(host.querySelector(".wallet-total-note")?.textContent).toContain(
       "Journal-derived balances",
     );
-    expect(host.querySelector(".wallet-preview-notice")?.textContent).toContain(
-      "Balances connected",
-    );
-    expect(host.querySelector(".wallet-preview-notice")?.textContent).toContain(
-      "money operations and history are not connected",
+    expect(host.querySelector(".wallet-preview-notice")).toBeNull();
+    expect(host.querySelector(".wallet-prototype-note")?.textContent).toContain(
+      "No real funds move",
     );
     expect(host.querySelector(".wallet-history-empty")?.textContent).toContain(
       "Transaction history not connected",

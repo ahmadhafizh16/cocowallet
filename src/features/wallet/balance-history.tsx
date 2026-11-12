@@ -1,4 +1,12 @@
-import { useId } from "react";
+import { useId, type ReactNode } from "react";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { assertBalanceMinor } from "../money/money";
 import { displayAmount } from "./presentation";
 import type { BalanceHistorySeries } from "./types";
@@ -7,6 +15,7 @@ type BalanceHistoryProps = {
   series?: BalanceHistorySeries | null;
   accountId?: string;
   hidden: boolean;
+  compact?: boolean;
 };
 
 type RecordedBalance = {
@@ -91,6 +100,7 @@ export function BalanceHistory({
   series,
   accountId,
   hidden,
+  compact = false,
 }: BalanceHistoryProps) {
   const id = useId();
   // Privacy takes precedence: do not validate or render any supplied records.
@@ -107,6 +117,7 @@ export function BalanceHistory({
           : "ready";
 
   let content;
+  let chart: ReactNode;
   if (state !== "ready" || !records?.length) {
     const message = {
       hidden: "Balance history hidden",
@@ -132,6 +143,13 @@ export function BalanceHistory({
       (max, record) => (record.balance > max ? record.balance : max),
       0n,
     );
+    const minimum = compact
+      ? records.reduce(
+          (min, r) => (r.balance < min ? r.balance : min),
+          first.balance,
+        )
+      : 0n;
+    const range = maximum - minimum;
     const points = records.map((record) => ({
       ...record,
       x:
@@ -141,45 +159,75 @@ export function BalanceHistory({
             plotRatio(record.timestamp - first.timestamp, duration) *
               (PLOT.right - PLOT.left),
       y:
-        PLOT.bottom -
-        plotRatio(record.balance, maximum) * (PLOT.bottom - PLOT.top),
+        compact && range === 0n
+          ? (PLOT.top + PLOT.bottom) / 2
+          : PLOT.bottom -
+            plotRatio(record.balance - minimum, range) *
+              (PLOT.bottom - PLOT.top),
     }));
+    // Dense markers can erase a continuous trace. Keep every segment and table
+    // record, but show only endpoint markers when the observations are crowded.
+    const markers =
+      compact && points.length > 1
+        ? []
+        : points.length > 24
+          ? [points[0]!, points[points.length - 1]!]
+          : points;
     const includeTime =
       first.recordedAt.slice(0, 10) === last.recordedAt.slice(0, 10);
+    chart = (
+      <svg
+        className={`wallet-balance-history-plot${compact ? " wallet-sparkline" : ""}`}
+        viewBox="0 0 600 112"
+        preserveAspectRatio="none"
+        width="100%"
+        role="img"
+        aria-label="Recorded balance history in USD"
+        aria-describedby={`${id}-description`}
+      >
+        <desc id={`${id}-description`}>
+          Each point is a recorded balance snapshot, not continuous tracking.
+          Straight lines connect recorded snapshots, not continuous tracking.
+          {compact
+            ? "The vertical scale spans the recorded minimum and maximum. Open for exact values."
+            : "The vertical scale starts at zero. Exact balances and times are available below."}
+        </desc>
+        {compact && points.length > 1 && (
+          <>
+            <defs>
+              <linearGradient id={`${id}-fill`} x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="currentColor" stopOpacity="0.22" />
+                <stop offset="100%" stopColor="currentColor" stopOpacity="0" />
+              </linearGradient>
+            </defs>
+            <polygon
+              points={`${points[0]!.x},112 ${points.map(({ x, y }) => `${x},${y}`).join(" ")} ${points[points.length - 1]!.x},112`}
+              fill={`url(#${id}-fill)`}
+            />
+          </>
+        )}
+        {points.length > 1 && (
+          <polyline
+            className="wallet-balance-history-line"
+            points={points.map(({ x, y }) => `${x},${y}`).join(" ")}
+            fill="none"
+            vectorEffect="non-scaling-stroke"
+          />
+        )}
+        {markers.map(({ recordedAt, x, y }) => (
+          <circle
+            key={recordedAt}
+            className="wallet-balance-history-point"
+            cx={x}
+            cy={y}
+            r="3"
+          />
+        ))}
+      </svg>
+    );
     content = (
       <>
-        <svg
-          className="wallet-balance-history-plot"
-          viewBox="0 0 600 112"
-          preserveAspectRatio="none"
-          width="100%"
-          role="img"
-          aria-label="Recorded balance history in USD"
-          aria-describedby={`${id}-description`}
-        >
-          <desc id={`${id}-description`}>
-            Each point is a recorded balance snapshot, not continuous tracking.
-            Straight lines connect recorded snapshots. The vertical scale starts
-            at zero. Exact balances and times are available below.
-          </desc>
-          {points.length > 1 && (
-            <polyline
-              className="wallet-balance-history-line"
-              points={points.map(({ x, y }) => `${x},${y}`).join(" ")}
-              fill="none"
-              vectorEffect="non-scaling-stroke"
-            />
-          )}
-          {points.map(({ recordedAt, x, y }) => (
-            <circle
-              key={recordedAt}
-              className="wallet-balance-history-point"
-              cx={x}
-              cy={y}
-              r="3"
-            />
-          ))}
-        </svg>
+        {chart}
         <div className="wallet-balance-history-axis">
           <time dateTime={first.recordedAt}>
             {endpointLabel(first.recordedAt, includeTime)}
@@ -215,6 +263,51 @@ export function BalanceHistory({
       </>
     );
   }
+
+  if (compact)
+    return (
+      <section
+        className="wallet-balance-history-compact"
+        data-state={state}
+        aria-label="Balance history"
+      >
+        {state === "ready" ? (
+          <Dialog>
+            <DialogTrigger asChild>
+              <button
+                type="button"
+                className="wallet-sparkline-button"
+                aria-label="View recorded USD balance history"
+              >
+                {chart}
+              </button>
+            </DialogTrigger>
+            <DialogContent className="wallet-history-dialog">
+              <DialogHeader>
+                <DialogTitle>USD balance history</DialogTitle>
+                <DialogDescription>
+                  Recorded portfolio totals, valued when observed. Missing
+                  valuations are not invented or backfilled.
+                </DialogDescription>
+              </DialogHeader>
+              <BalanceHistory
+                series={series}
+                accountId={accountId}
+                hidden={hidden}
+              />
+            </DialogContent>
+          </Dialog>
+        ) : (
+          <p className="wallet-sparkline-empty">
+            {hidden
+              ? "History hidden"
+              : state === "invalid"
+                ? "History unavailable"
+                : "No history yet"}
+          </p>
+        )}
+      </section>
+    );
 
   return (
     <section

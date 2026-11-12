@@ -85,7 +85,8 @@ describe("recent history loading and account isolation", () => {
   let host: HTMLDivElement, root: Root;
   const network = jest.fn(),
     revision = {},
-    clear = jest.fn();
+    clear = jest.fn(),
+    open = jest.fn();
   beforeEach(() => {
     (
       globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }
@@ -113,6 +114,7 @@ describe("recent history loading and account isolation", () => {
           hidden={hidden}
           revision={token}
           onClear={clear}
+          onOpenTransaction={open}
         />,
       ),
     );
@@ -124,10 +126,16 @@ describe("recent history loading and account isolation", () => {
     network.mockResolvedValue(response());
     await render();
     expect(network.mock.calls[0][0]).toContain("accountId=recipient");
-    expect(host.textContent).toContain(
-      "Incoming transfer · 1.00 USD → 0.80 GBP",
+    expect(host.textContent).toContain("Incoming transfer");
+    expect(host.querySelector(".wallet-credit")?.textContent).toBe("+0.80 GBP");
+    const row = host.querySelector<HTMLButtonElement>(".wallet-recent-button")!;
+    expect(row.getAttribute("aria-label")).toContain(
+      page.transactions[0]!.createdAt,
     );
-    expect(host.textContent).toContain("Cached");
+    expect(row.getAttribute("aria-label")).toContain("Completed");
+    expect(row.querySelector(".wallet-transaction-status svg")).not.toBeNull();
+    await act(() => row.click());
+    expect(open).toHaveBeenCalledWith("transaction");
     expect(host.textContent).not.toContain("Retry key");
     await render("recipient", true);
     expect(host.textContent).toBe("Transaction amounts hidden.");

@@ -45,11 +45,13 @@ export function HistoryWorkspace({
   hidden,
   revision,
   onClose,
+  initialTransactionId,
 }: {
   accountId: string;
   hidden: boolean;
   revision: object;
   onClose: () => void;
+  initialTransactionId?: string;
 }) {
   const [draft, setDraft] = useState<FilterDraft>(EMPTY);
   const [query, setQuery] = useState<HistoryQuery>({
@@ -58,7 +60,7 @@ export function HistoryWorkspace({
     pageSize: 50,
   });
   const [errors, setErrors] = useState<Errors>({});
-  const [transactionId, setTransaction] = useState<string>();
+  const [transactionId, setTransaction] = useState(initialTransactionId);
   const [lookup, setLookup] = useState("");
   const [lookupError, setLookupError] = useState<string>();
   const [pageDraft, setPageDraft] = useState("1"),
@@ -192,7 +194,7 @@ export function HistoryWorkspace({
           browsing context stays in memory.
         </p>
         <Button variant="outline" onClick={onClose}>
-          Back to recent activity
+          Back to overview
         </Button>
       </div>
     );
@@ -231,8 +233,8 @@ export function HistoryWorkspace({
             <>
               <TransactionFacts transaction={read.result.detail.transaction} />
               <p className="text-sm text-muted-foreground">
-                Recorded simulation facts, not current balances or today’s rate.
-                No real funds moved.
+                Recorded transaction facts, not current balances or today’s
+                rate.
               </p>
             </>
           )
@@ -247,7 +249,7 @@ export function HistoryWorkspace({
         </h3>
         <Button variant="ghost" onClick={onClose}>
           <ArrowLeft aria-hidden="true" />
-          Recent activity
+          Back to overview
         </Button>
       </div>
       <p className="text-sm text-muted-foreground wrap-anywhere">
@@ -261,7 +263,7 @@ export function HistoryWorkspace({
         className="space-y-4"
         aria-label="History filters"
       >
-        <div className="grid min-w-0 gap-4 sm:grid-cols-2">
+        <div className="grid min-w-0 gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <Field>
             <FieldLabel htmlFor={id("type")}>History type</FieldLabel>
             <Select

@@ -212,6 +212,29 @@ introduce a separate page or modal. Inherit the existing visual world and preser
 money drafts/recovery, account isolation and privacy. This does not resolve
 destination valuation, wallet/default management or Swagger. See [HISTORY.md](HISTORY.md).
 
+### D-035
+
+**Presentation refinement:** The user resumed visual feedback with screenshots:
+compact signed/color-coded recent rows and income/outgoing icons, no demo badge or
+large connection banner, concise green-check successes without technical keys,
+tighter currency rows, and full History as a dedicated navigation page. This
+**supersedes D-034's in-panel placement**, not its scoped filtering/detail contract.
+Keep the existing frosted identity, truthful discreet prototype disclosure,
+privacy, account isolation and internal monetary recovery. See
+[PRESENTATION_REFINEMENT.md](PRESENTATION_REFINEMENT.md).
+
+### D-036
+
+**Recorded USD portfolio totals:** The user requested recalculated total-USD
+time-series observations and a compact sparkline, plus Frankfurter integration.
+They explicitly selected **Yes, read-only totals** for inspected destinations.
+Value every nonzero wallet using direct eligible foreign→USD reference rates,
+round each wallet half-up to cents, then sum exactly. Missing FX makes the entire
+total unavailable; do not silently drop balances or revalue/fabricate old history.
+Record actual account-scoped observations independently of successful monetary
+commit/replay. The main-default/missing-wallet question remains open. See
+[PRESENTATION_REFINEMENT.md](PRESENTATION_REFINEMENT.md).
+
 ## Questions and resolutions
 
 ### O-001
@@ -243,8 +266,9 @@ open in [API_DESIGN.md](API_DESIGN.md). Swagger UI is not implemented.
 **Account and display details:** Confirm whether the USD total also appears for an inspected destination account; define date-filter time-zone boundaries and behavior when changing a main-account default to a currency without a wallet.
 
 The history date-filter portion is resolved by D-033: inclusive UTC calendar days,
-not browser-local boundaries. Destination valuation/default-wallet behavior remains
-open and is not changed by the history backend.
+not browser-local boundaries. D-036 subsequently approves independent read-only USD
+totals and recorded observations for inspected destinations. Main-default behavior
+when no matching wallet exists remains open.
 
 ### O-005
 

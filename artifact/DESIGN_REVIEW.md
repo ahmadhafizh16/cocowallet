@@ -1,5 +1,58 @@
 # Wallet shell design review
 
+## T11-08 / T03-03 — presentation and portfolio finish review
+
+The newest pinned brief D-035/D-036 supersedes the historical in-panel History
+placement below. A fresh independent child reviewed the compact overview and
+dedicated History, signed rows, confirmed-success summaries and portfolio/read-only
+boundaries, using current graph/source and all 20 supplied captures. Original
+inline screenshots were represented by their pinned transcription, not a generated
+comp. The textual interview-ready Operate quality bar applied; no separate quality
+card or new visual world/raster was introduced.
+
+**Initial disposition: `fix`.** Type/material/ground, composition, tighter currency
+rows, actual History navigation, success presentation and sampled read-only/truth
+boundaries matched or were accepted adaptations. Four material findings:
+
+1. Positive foreign balances rounding to zero cents incorrectly inherited the
+   monetary converter's zero-credit rejection. Portfolio-only handling must accept
+   zero without relaxing any payment validation.
+2. Expanded plot sizing missed the portal, and dense markers obscured the trace.
+3. Mobile CSS removed completion status instead of providing a compact indication.
+4. DESIGN.md retained superseded chart/spacing/navigation/destination descriptions.
+
+The correction batch adds a narrow zero-rounding valuation wrapper with regression
+coverage, portal-aware plot sizing and endpoint-only markers for dense series
+(all segments/table records retained), and a visible mobile completion check with
+an accessible label. The user approved refreshing only affected design sections.
+**Verdict pass: `ship`; all 4/4 material fixes resolved.** The same reviewer
+inspected the corrected source/tests and all 33 refreshed/supplementary captures,
+scoring zero-cent portfolio valuation, continuous portal/dense chart, visible
+mobile completion and affected design documentation resolved. No fix-batch
+regressions were observed. This is approval of the four listed fixes, not a new
+whole-surface or exhaustive financial/security/accessibility audit. Reported suite
+passes and normal-wallet verification are parent evidence, not tests rerun by the
+reviewer. Full corrected Docker check/build passes **1,507 Jest tests in 67 suites**;
+all **99 production Chromium checks** pass on a fresh isolated server.
+The first packet visually covered History details, not its results/filter layout;
+the correction packet additionally captures that layout at 320/820/1440 in both
+themes, with native first-viewport supplements. The 320-dark keyboard claim in
+the first inspection was not exercised; the fresh inspection now actually covers
+keyboard disclosure in all three recorded branches, with 112px portal plots,
+endpoint-only dense markers, zero page/console errors and zero financial POSTs.
+
+The user approved **Refresh affected sections** of DESIGN.md. The documenter
+updated that file and `.impeccable/design.json`; parent checks confirm byte-identical
+normative frontmatter, unchanged color ramps/card roles/shadows/motion/breakpoints,
+valid v2 JSON and all ten previews retained. Source-led affected examples/narrative
+are not new tokens or connected financial seed data. Unrelated old illustrative
+review/input copy was intentionally left outside scope. No shipping raster changed.
+
+The single changed-target detector found 25 advisory inventory findings and zero
+primary findings; the 6px status radius subsequently became the existing 4px role.
+No repeated detector pass, exhaustive financial/security review, WCAG/screen-reader
+certification or large-scale performance claim is made.
+
 ## T09-02 — in-panel history review
 
 The user selected **Expand existing panel** (D-034). Compact recent activity,

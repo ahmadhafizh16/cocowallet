@@ -1,13 +1,36 @@
 # Architecture and flow diagrams
 
-**Status:** Persistent reads/funding/conversion, fresh-first reference metadata and immutable quotes are implemented. Conversion has reviewed fixed terms, expiry/reconfirmation, documented submission and shared original-key recovery. Transfers, full history/valuation and Swagger remain future features. The [decision register](DECISIONS.md) is authoritative when a diagram and an open question conflict.
+**Status:** Persistent reads, reviewed funding/conversion/transfers, fresh-first metadata/quotes, scoped History and USD portfolio observations are implemented. Wallet/default management and Swagger remain separate work. The [decision register](DECISIONS.md) is authoritative; historical interface-first diagrams below retain their original scope.
 
 T07-01 also implements the internal atomic conversion service: global
 funding/conversion key ownership, retained original results and atomic target
 creation/journal/quote use. T07-02 connects the conversion endpoint and confirmation
 UI. T08-02 now connects reviewed transfers/recovery and scoped incoming recent
 activity; see [TRANSFERS.md](TRANSFERS.md). T09-02 adds user-approved in-panel full
-history browsing/details through the existing scoped GETs (D-034).
+history browsing/details through scoped GETs (D-034); D-035 subsequently moves it
+to `/history` in a persistent shell. D-036 adds independent account-scoped valuation.
+
+## Connected presentation and observation boundary
+
+```mermaid
+flowchart LR
+    Shell[Shared Overview / History shell] --> Overview[Journal wallet snapshot]
+    Shell --> History[Scoped completed-history GETs]
+    Overview --> Portfolio[GET portfolio: explicit account]
+    Portfolio --> Rates[Direct Frankfurter foreign to USD rates]
+    Rates --> Total[Half-up per wallet, exact cents sum or unavailable]
+    Total --> Points[Immutable account and revision observations]
+    Points --> Sparkline[Compact actual USD series and exact disclosure]
+    Money[Explicit monetary confirmation] --> Commit[Atomic journal and retained outcome]
+    Commit --> Response[Known original response, unchanged by FX]
+    Commit --> Capture[Capture committed balances before yielding]
+    Capture --> After[Best-effort post-response valuation]
+    After --> Rates
+```
+
+History reads never revalue facts. Portfolio recording never changes money,
+accounts/wallets or retained results. Destination totals are read-only, observations
+are not repriced/backfilled, and original monetary replay schedules no new point.
 
 ## Implemented foundation flow
 

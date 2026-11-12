@@ -172,3 +172,35 @@ EU star coordinates preserve that verdict after a development hydration warning
 was corrected. No recorded history or financial service is fabricated/connected.
 Source-matched design notes, 49-document/36-task validation and a 300-frame
 interactive development probe with zero reloads/browser/console errors pass.
+
+### T11-08
+
+**Interview-ready wallet presentation and History page**
+
+**Status:** Done. Requested presentation, review corrections, affected design documentation and restored-development verification are complete.
+
+**Decisions:** [D-035](../DECISIONS.md#d-035), [D-036](../DECISIONS.md#d-036).
+
+**Depends on:** [T09-02](TASKS-09.md#t09-02), [T11-07](#t11-07).
+
+**Implementation:** Follow the user's screenshot-led
+[presentation brief](../PRESENTATION_REFINEMENT.md): signed green-credit/red-debit
+recent rows, concise checkmark successes without technical keys, discreet prototype
+disclosure, persistent-shell `/history` navigation, compact recorded-USD sparkline
+and tighter wallet rows. Preserve account isolation, exact money, drafts/recovery,
+privacy, themes, motion and accessible controls.
+
+**Acceptance and tests:** Verify each requested state at mobile/intermediate/wide
+sizes and both themes, all transaction types, successful/recovery/privacy flows,
+History routing/back/focus and draft preservation. Run Docker/Jest/isolated browser
+checks, inspect current captures, obtain the finish review, update documentation,
+preserve user financial data and restore healthy development before closure.
+
+**Verified:** Full Docker check/build passes 1,507 Jest / 99 isolated production
+Chromium checks. The same independent reviewer scored all four material fixes
+resolved, `ship` at fix-list scope; see [DESIGN_REVIEW.md](../DESIGN_REVIEW.md).
+The user approved affected-section DESIGN.md/sidecar refresh, preserving core
+tokens. Normal development passed 300 stable frames with exact actual total,
+two-record History, privacy/draft navigation and no financial POSTs or errors;
+existing user financial data remains unchanged. See
+[PRESENTATION_REFINEMENT.md](../PRESENTATION_REFINEMENT.md) for limits and evidence.

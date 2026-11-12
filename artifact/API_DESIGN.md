@@ -1,6 +1,6 @@
 # HTTP API design: draft
 
-**Status:** Account/wallet/history reads, simulated funding/conversion/transfer POSTs, fresh-first reference metadata and immutable quotes are implemented with maintained OpenAPI contracts. T09-02 now connects full-history filters/paging/inline detail through the existing scoped GETs; no new endpoint or response shape. Full generation and Swagger UI remain future work. See [HISTORY.md](HISTORY.md), [TRANSFERS.md](TRANSFERS.md) and [HTTP.md](HTTP.md).
+**Status:** Account/wallet/history reads, monetary POSTs, reference metadata, immutable quotes and USD portfolio observations are implemented with maintained OpenAPI contracts. D-035 moves full History to a dedicated shared-shell page; its scoped GET contract is unchanged. D-036 adds `GET /api/portfolio`. Full generation and Swagger UI remain separate work. See [PRESENTATION_REFINEMENT.md](PRESENTATION_REFINEMENT.md), [HISTORY.md](HISTORY.md) and [HTTP.md](HTTP.md).
 
 T07-01's atomic service now backs `POST /api/conversions` under T07-02.
 Funding/conversion retry keys share ownership, including recorded failures;
@@ -28,6 +28,8 @@ no general generator or Swagger UI is selected/implemented by this stage.
 | Method | Route | Result |
 | --- | --- | --- |
 | GET | `/` | Stored-account/journal overview with reviewed funding/conversion/transfers and bounded selected-account recent history. |
+| GET | `/history` | Dedicated scoped history filters/paging/details within the persistent account/privacy/draft shell. |
+| GET | `/api/portfolio?accountId=…` | Complete USD valuation and up to 240 actual recorded observations; may append immutable technical metadata, never money/accounts/wallets. |
 | GET | `/api/health` | 200 JSON liveness response with `Cache-Control: no-store`. |
 | GET | `/api/ready` | 200 JSON when the migrated metadata table is readable; otherwise 503 Problem Details with `DATABASE_NOT_READY`. |
 | GET | `/api/accounts` | Persistent main account and destinations; role/default/creation time/inspect-only metadata. |

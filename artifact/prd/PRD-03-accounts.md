@@ -1,6 +1,6 @@
 # PRD-03 — Accounts, wallets, and balances
 
-**Status:** Persistent main-account setup and account/wallet read integration are implemented under [D-029](../DECISIONS.md#d-029), with verification recorded in [BACKEND_READS.md](../BACKEND_READS.md). Wallet/default management and reference-rate valuation remain future work.
+**Status:** Persistent account/wallet reads and [D-036](../DECISIONS.md#d-036) Frankfurter-backed USD valuation/recorded observations are implemented; final refinement verification is recorded in [PRESENTATION_REFINEMENT.md](../PRESENTATION_REFINEMENT.md). Wallet/default management remains separate work. The original D-029 read checkpoint below is historical.
 **Decisions:** [D-003](../DECISIONS.md#d-003), [D-004](../DECISIONS.md#d-004), [D-011](../DECISIONS.md#d-011), [D-018](../DECISIONS.md#d-018).  
 **Tasks:** [T03-01–T03-03](../tasks/TASKS-03.md).  
 **Diagram:** [Logical data relationships](../DIAGRAMS.md#logical-data-relationships).
@@ -17,6 +17,7 @@
 3. Permit changing the main account's default currency. A destination account's default is chosen when created and cannot be edited from its inspection view.
 4. Show the main and created destination accounts in an account switcher. Destination data is read-only at the server boundary as well as the interface.
 5. Display journal-derived per-currency balances and an approximate USD total. If a rate required for the total is unavailable under the agreed FX policy, show the total as unavailable rather than excluding a balance silently.
+6. D-036 includes independent read-only destination totals. Use direct foreign→USD reference rates, half-up per-wallet cents and exact summation. Record actual account/revision observations for the compact sparkline after completed activity; do not reprice, backfill or duplicate prior points on replay/reload. FX failure cannot change monetary outcomes.
 
 ## Acceptance criteria
 
@@ -27,7 +28,7 @@
 
 ## Edge cases and open items
 
-- [O-004](../DECISIONS.md#o-004): whether destination inspection includes a USD total, and what happens when a new main default currency does not have a wallet.
+- [O-004](../DECISIONS.md#o-004): behavior when a new main default has no wallet remains open. D-036 resolves destination valuation: independent read-only USD totals.
 - [O-005](../DECISIONS.md#o-005): behavior when Frankfurter's currency catalog is unavailable. Unsupported conversion pairs must be handled even when both fiat codes exist in the catalog.
 - Test duplicate-wallet races, account-switching state, missing accounts, zero-balance totals, persistence, and direct API attempts against read-only destinations.
 

@@ -65,13 +65,15 @@ test("currency flags and the gradient retain contrast, hierarchy and honest hist
         ),
       ).toContain("linear-gradient(118deg");
       await expect(
-        card.getByText("History not connected", { exact: true }),
-      ).toBeVisible();
+        card.locator(".wallet-balance-history-compact"),
+      ).toHaveAttribute("data-state", "ready");
       await expect(
-        card.locator(
-          ".wallet-balance-history svg, .wallet-balance-history table",
-        ),
-      ).toHaveCount(0);
+        card.getByRole("img", {
+          name: "Recorded balance history in USD",
+          exact: true,
+        }),
+      ).toBeVisible();
+      await expect(card.locator(".wallet-balance-history-line")).toHaveCount(0);
       for (const currency of ["USD", "EUR", "GBP"]) {
         const flag = page.locator(
           `.wallet-currency-flag[data-currency="${currency}"]`,
@@ -138,11 +140,11 @@ test("currency flags and the gradient retain contrast, hierarchy and honest hist
     await expect(privacy).toHaveCSS("outline-color", "rgb(121, 223, 207)");
     await privacy.click();
     await expect(
-      card.getByText("Balance history hidden", { exact: true }),
+      card.getByText("History hidden", { exact: true }),
     ).toBeVisible();
     await expect(
       card.locator(
-        ".wallet-balance-history svg, .wallet-balance-history table",
+        ".wallet-balance-history-compact svg, .wallet-balance-history-compact table",
       ),
     ).toHaveCount(0);
     await privacy.click();
@@ -251,10 +253,13 @@ test("recorded-history fixtures render an accessible chart, never become preview
     await expect(page.locator("svg")).toHaveCount(0);
   }
   await page.goto("/");
+  await expect(page.locator(".wallet-balance-history-compact")).toHaveAttribute(
+    "data-state",
+    "ready",
+  );
   await expect(
-    page.getByText("History not connected", { exact: true }),
-  ).toBeVisible();
-  await expect(page.locator(".wallet-balance-history svg")).toHaveCount(0);
+    page.locator(".wallet-balance-history-compact"),
+  ).not.toContainText("578.50");
 });
 
 test("forced colors preserves balance labels, focus and currency markers without a gradient", async ({
@@ -267,7 +272,10 @@ test("forced colors preserves balance labels, focus and currency markers without
     "none",
   );
   await expect(
-    page.getByText("History not connected", { exact: true }),
+    page.getByRole("img", {
+      name: "Recorded balance history in USD",
+      exact: true,
+    }),
   ).toBeVisible();
   await expect(page.locator(".wallet-currency-flag")).toHaveCount(3);
   await expect(page.locator(".wallet-currency-flag").first()).toHaveCSS(

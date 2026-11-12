@@ -337,4 +337,18 @@ describe("BalanceHistory", () => {
     expect(() => render(supplied, { hidden: true })).not.toThrow();
     expect(JSON.stringify(supplied)).toBe(before);
   });
+  it("keeps every dense-series segment and exact record without markers obscuring the line", () => {
+    const points = Array.from({ length: 240 }, (_, i) => ({
+      recordedAt: new Date(Date.parse(START) + i * 1000).toISOString(),
+      balanceMinor: String(i + 1),
+    }));
+    const markup = render(series(points));
+    expect(coordinates(markup)).toHaveLength(2);
+    expect(markup.match(/<polyline\b/gu)).toHaveLength(1);
+    expect(markup.match(/<tbody><tr>|<\/tr><tr>/gu)).toHaveLength(240);
+    const segments = markup
+      .match(/<polyline[^>]*points="([^"]+)"/u)![1]!
+      .split(" ");
+    expect(segments).toHaveLength(240);
+  });
 });

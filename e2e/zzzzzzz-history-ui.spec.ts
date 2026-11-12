@@ -96,9 +96,7 @@ async function facts(request: APIRequestContext) {
   };
 }
 async function browse(page: Page) {
-  await page
-    .getByRole("button", { name: "Browse full history", exact: true })
-    .click();
+  await page.getByRole("link", { name: "History", exact: true }).click();
   await expect(
     page.getByRole("heading", {
       name: "Browse completed activity",
@@ -200,7 +198,7 @@ test("numbered pages and exact detail/back navigation preserve the applied filte
   await expect(page.locator("#history")).toContainText(
     `${record.target.amount} USD`,
   );
-  await expect(page.locator("#history")).toContainText("Demo Bank");
+  await expect(page.locator("#history")).toContainText("Bank account");
   await expect(page.locator("#history")).toContainText(record.createdAt);
   await expect(page.locator("#history")).not.toContainText("Retry key");
   await page
@@ -339,7 +337,7 @@ test("every completed operation has recorded details; rejected attempts never be
       referenceReads++;
   });
   for (const [receipt, text] of [
-    [data.deposit, "Demo Bank"],
+    [data.deposit, "Bank account"],
     [data.withdrawal, "Community Bank"],
     [data.conversion, "1 USD = 0.8 GBP"],
     [data.transfer, "Outgoing transfer"],
@@ -526,8 +524,17 @@ test("privacy removes all history records, counts and timestamps; reload clears 
   await expect(page.locator("#history")).toContainText("0.80 GBP");
   await page.reload();
   await expect(
-    page.getByRole("heading", { name: "Recent transactions", exact: true }),
+    page.getByRole("heading", {
+      name: "Browse completed activity",
+      exact: true,
+    }),
   ).toBeVisible();
+  await expect(
+    page.getByRole("combobox", { name: "History type", exact: true }),
+  ).toContainText("All activity");
+  await expect(
+    page.getByRole("heading", { name: "Transaction details", exact: true }),
+  ).toHaveCount(0);
   expect(
     await page.evaluate(() =>
       sessionStorage.getItem("cocowallet.pending-funding.v1"),
@@ -580,7 +587,7 @@ test("history browsing cannot submit money or replace unresolved monetary recove
   ).toEqual(intent);
   expect(monetaryPosts).toBe(0);
   await page
-    .locator(".wallet-quick-actions")
+    .locator(".wallet-desktop-actions")
     .getByRole("button", { name: "Deposit", exact: true })
     .click();
   await expect(
@@ -638,9 +645,7 @@ for (const width of [320, 1440])
       await page.keyboard.press("Enter");
       await expect(row).toBeFocused();
       await page
-        .getByRole("button", { name: "Recent activity", exact: true })
+        .getByRole("button", { name: "Back to overview", exact: true })
         .click();
-      await expect(
-        page.getByRole("button", { name: "Browse full history", exact: true }),
-      ).toBeFocused();
+      await expect(page.locator(".wallet-page-heading")).toBeFocused();
     });
