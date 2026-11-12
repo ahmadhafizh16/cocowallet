@@ -5,6 +5,7 @@ import {
   type Page,
 } from "@playwright/test";
 import { randomUUID } from "node:crypto";
+import { chooseRecipient } from "./helpers";
 import { mkdirSync } from "node:fs";
 
 test.beforeEach(({ baseURL }) =>
@@ -52,21 +53,12 @@ async function enter(
   target?: string,
 ) {
   await open(page);
-  await page
-    .getByLabel("Simulated recipient account ID", { exact: true })
-    .fill(id);
-  if (defaultCurrency) {
-    await page
-      .getByLabel("New destination default currency", { exact: true })
-      .click();
-    await page
-      .getByRole("option", { name: defaultCurrency, exact: true })
-      .click();
-  }
+  await chooseRecipient(page, id);
   await page.getByLabel("You send", { exact: true }).fill("1.00");
-  if (target) {
+  const receive = target ?? defaultCurrency;
+  if (receive) {
     await page.getByLabel("Receive currency", { exact: true }).click();
-    await page.getByRole("option", { name: target, exact: true }).click();
+    await page.getByRole("option", { name: receive, exact: true }).click();
   }
 }
 async function review(
@@ -81,14 +73,14 @@ async function review(
     .click();
   await expect(
     page.getByRole("button", {
-      name: "Confirm simulated transfer",
+      name: "Confirm transfer",
       exact: true,
     }),
   ).toBeEnabled();
 }
 async function confirm(page: Page) {
   await page
-    .getByRole("button", { name: "Confirm simulated transfer", exact: true })
+    .getByRole("button", { name: "Confirm transfer", exact: true })
     .click();
   await expect(
     page.getByRole("heading", {
@@ -120,14 +112,14 @@ test("reviewed USD→GBP creates a destination once, refreshes balances and expo
   await review(page, id, "GBP");
   const dialog = page.getByRole("dialog");
   await expect(dialog).toContainText("0.80 GBP");
-  await expect(dialog).toContainText("New destination");
+  await expect(dialog).toContainText("New address");
   expect((await main(request)).wallets).toEqual(before.wallets);
   expect(
     (await main(request)).accounts.some((a: { id: string }) => a.id === id),
   ).toBe(false);
   expect(submissions).toBe(0);
   await page
-    .getByRole("button", { name: "Confirm simulated transfer", exact: true })
+    .getByRole("button", { name: "Confirm transfer", exact: true })
     .evaluate((button) => {
       (button as HTMLButtonElement).click();
       (button as HTMLButtonElement).click();
@@ -224,7 +216,7 @@ test("existing destination defaults stay immutable while an explicit target over
   await expect(page.getByLabel("New destination default currency")).toHaveCount(
     0,
   );
-  await expect(page.getByRole("dialog")).toContainText("default GBP");
+  await expect(page.getByRole("dialog")).toContainText("default currency GBP");
   await page
     .getByRole("button", { name: "Review transfer", exact: true })
     .click();
@@ -295,7 +287,7 @@ test("lost committed transfer survives reload and blocks funding/conversion repl
   });
   await review(page, id, "GBP");
   await page
-    .getByRole("button", { name: "Confirm simulated transfer", exact: true })
+    .getByRole("button", { name: "Confirm transfer", exact: true })
     .click();
   await expect(
     page.getByRole("heading", {
@@ -354,7 +346,7 @@ test("blocked recovery storage prevents any transfer and retains the input draft
     }),
   );
   await page
-    .getByRole("button", { name: "Confirm simulated transfer", exact: true })
+    .getByRole("button", { name: "Confirm transfer", exact: true })
     .click();
   await expect(page.getByRole("dialog")).toContainText("Nothing new was sent");
   expect(calls).toBe(0);
@@ -387,14 +379,14 @@ test("expired FX terms require an explicit fresh quote and a separate confirmati
   await page.evaluate(() => window.dispatchEvent(new Event("focus")));
   await expect(
     page.getByRole("button", {
-      name: "Confirm simulated transfer",
+      name: "Confirm transfer",
       exact: true,
     }),
   ).toBeEnabled();
   await page.clock.fastForward(61000);
   await expect(
     page.getByRole("button", {
-      name: "Confirm simulated transfer",
+      name: "Confirm transfer",
       exact: true,
     }),
   ).toBeDisabled();
@@ -406,7 +398,7 @@ test("expired FX terms require an explicit fresh quote and a separate confirmati
       r.request().method() === "POST",
   );
   await page
-    .getByRole("button", { name: "Request fresh quote", exact: true })
+    .getByRole("button", { name: "Get a new quote", exact: true })
     .click();
   const next = await (await nextResponse).json();
   expect(next.quote.quoteId).not.toBe(first.quote.quoteId);
@@ -414,7 +406,7 @@ test("expired FX terms require an explicit fresh quote and a separate confirmati
   await page.evaluate(() => window.dispatchEvent(new Event("focus")));
   await expect(
     page.getByRole("button", {
-      name: "Confirm simulated transfer",
+      name: "Confirm transfer",
       exact: true,
     }),
   ).toBeEnabled();
@@ -430,11 +422,9 @@ test("self-ID validation and unavailable quotes preserve drafts without creating
   await page
     .getByRole("button", { name: "Review transfer", exact: true })
     .click();
-  await expect(
-    page.getByLabel("Simulated recipient account ID", { exact: true }),
-  ).toBeFocused();
+  await expect(page.getByLabel("New address", { exact: true })).toBeFocused();
   await expect(page.getByRole("dialog")).toContainText(
-    "not this account’s own ID",
+    "Choose a recipient other than your own account.",
   );
   await page.keyboard.press("Escape");
   const id = recipient();
@@ -454,14 +444,12 @@ test("self-ID validation and unavailable quotes preserve drafts without creating
   );
   await expect(
     page.getByRole("button", {
-      name: "Confirm simulated transfer",
+      name: "Confirm transfer",
       exact: true,
     }),
   ).toBeDisabled();
   await page.getByRole("button", { name: "Edit details", exact: true }).click();
-  await expect(
-    page.getByLabel("Simulated recipient account ID", { exact: true }),
-  ).toHaveValue(id);
+  await expect(page.getByLabel("New address", { exact: true })).toHaveValue(id);
   await expect(page.getByLabel("You send", { exact: true })).toHaveValue(
     "1.00",
   );
@@ -488,7 +476,7 @@ test("stale funded review is definitively rejected without creating a destinatio
     ).status(),
   ).toBe(200);
   await page
-    .getByRole("button", { name: "Confirm simulated transfer", exact: true })
+    .getByRole("button", { name: "Confirm transfer", exact: true })
     .click();
   await expect(
     page.getByRole("heading", {
@@ -508,9 +496,7 @@ test("stale funded review is definitively rejected without creating a destinatio
   await page
     .getByRole("button", { name: "Edit for a new attempt", exact: true })
     .click();
-  await expect(
-    page.getByLabel("Simulated recipient account ID", { exact: true }),
-  ).toHaveValue(id);
+  await expect(page.getByLabel("New address", { exact: true })).toHaveValue(id);
 });
 
 test("privacy blocks hidden transfer review and removes monetary receipt details without losing the draft", async ({
@@ -529,7 +515,7 @@ test("privacy blocks hidden transfer review and removes monetary receipt details
   await expect(dialog).not.toContainText("1.00 USD");
   await expect(
     page.getByRole("button", {
-      name: "Confirm simulated transfer",
+      name: "Confirm transfer",
       exact: true,
     }),
   ).toBeDisabled();
@@ -545,10 +531,13 @@ test("privacy blocks hidden transfer review and removes monetary receipt details
     .getByRole("button", { name: "Hide monetary amounts", exact: true })
     .click();
   await open(page);
-  await expect(dialog).toContainText("Show amounts to view the confirmation");
+  await expect(page.getByLabel("You send", { exact: true })).toHaveAttribute(
+    "readonly",
+    "",
+  );
   await expect(
     page.getByRole("heading", { name: "Transfer complete", exact: true }),
-  ).toBeVisible();
+  ).toHaveCount(0);
   await expect(dialog).not.toContainText("1.00 USD");
   await expect(dialog.locator("time")).toHaveCount(0);
 });
@@ -573,7 +562,7 @@ for (const width of [320, 1440])
         .click();
       await expect(
         page.getByRole("button", {
-          name: "Confirm simulated transfer",
+          name: "Confirm transfer",
           exact: true,
         }),
       ).toBeEnabled();
@@ -589,7 +578,7 @@ for (const width of [320, 1440])
       });
       await page
         .getByRole("button", {
-          name: "Confirm simulated transfer",
+          name: "Confirm transfer",
           exact: true,
         })
         .focus();

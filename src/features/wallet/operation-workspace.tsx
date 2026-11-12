@@ -1,13 +1,19 @@
 "use client";
 
-import { useId, useRef, useState, type FormEvent, type RefObject } from "react";
-import { ArrowLeft, ArrowRight, LockKeyhole } from "lucide-react";
+import {
+  useEffect,
+  useId,
+  useRef,
+  useState,
+  type FormEvent,
+  type RefObject,
+} from "react";
+import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
@@ -41,7 +47,8 @@ import {
   captureMotionFrame,
   DIALOG_MOTION_SELECTOR,
 } from "@/lib/use-motion-open";
-import { MAX_AMOUNT_INPUT_LENGTH } from "../money/money";
+import { MoneyAmountInput } from "./money-amount-input";
+import { MoneyReview, ReviewWallet, ReviewProvider } from "./money-review";
 import {
   createDraft,
   OPERATION_LABELS,
@@ -63,13 +70,15 @@ import type { AccountView, WalletCurrency, WalletView } from "./types";
 
 const DESCRIPTIONS: Record<Operation, string> = {
   deposit:
-    "Choose a fictional provider and review a deposit draft. Submission is not connected.",
-  withdraw: "Withdrawals need a funded wallet. Submission is not connected.",
+    "Choose how much to add and where it comes from. You’ll review the details before confirming.",
+  withdraw:
+    "Choose an amount and where to withdraw it. Review the details before confirming.",
   convert:
-    "Conversion needs a funded balance and an exchange-rate quote. Exchange-rate quotes and submission are not connected.",
+    "Choose your currencies and amount. Review the exchange rate before confirming.",
   transfer:
-    "Explore a simulated transfer. This preview cannot send funds, verify recipients, or create accounts.",
+    "Choose a saved recipient or add a new address, then enter the amount to send.",
 };
+const SEND_CURRENCIES = ["USD", "GBP", "EUR"];
 
 /** Keep this component mounted while its dialog closes so drafts stay in memory. */
 export function OperationWorkspace({
@@ -113,16 +122,19 @@ export function OperationWorkspace({
       !funding.intent &&
       !funding.storageBlocked,
   );
-  const targetCurrencies = [
-    ...new Set([
-      ...(catalog.codes ?? suppliedWallets.map((wallet) => wallet.currency)),
-      ...(canTransfer
-        ? accounts
-            .filter((value) => value.role === "destination")
-            .map((value) => value.defaultCurrency)
-        : []),
-    ]),
-  ];
+  const targetCurrencies = canTransfer
+    ? SEND_CURRENCIES
+    : [
+        ...new Set([
+          ...(catalog.codes ??
+            suppliedWallets.map((wallet) => wallet.currency)),
+          ...(canTransfer
+            ? accounts
+                .filter((value) => value.role === "destination")
+                .map((value) => value.defaultCurrency)
+            : []),
+        ]),
+      ];
   const canFund =
     fundingEnabled && (operation === "deposit" || operation === "withdraw");
   const fundingPanel =
@@ -130,6 +142,12 @@ export function OperationWorkspace({
   const submissionSucceeded =
     !!funding.result && "transactionId" in funding.result;
   const wallets = walletsForAccount(suppliedWallets, account?.id);
+  const sourceWallets =
+    operation === "transfer"
+      ? SEND_CURRENCIES.flatMap((code) =>
+          wallets.filter((wallet) => wallet.currency === code),
+        )
+      : wallets;
   const prefix = useId();
   const formRef = useRef<HTMLFormElement>(null);
   const reviewRef = useRef<HTMLHeadingElement>(null);
@@ -143,7 +161,12 @@ export function OperationWorkspace({
         transfer: {
           ...draft,
           targetCurrency: "",
-          recipientDefaultCurrency: "",
+          recipientDefaultCurrency: "USD",
+          currency: wallets.some((wallet) => wallet.currency === "USD")
+            ? "USD"
+            : (wallets.find((wallet) =>
+                SEND_CURRENCIES.includes(wallet.currency),
+              )?.currency ?? "USD"),
         },
       };
     },
@@ -155,6 +178,8 @@ export function OperationWorkspace({
     Partial<Record<Operation, OperationReview>>
   >({});
   const [returningToEdit, setReturningToEdit] = useState(false);
+  const [newRecipient, setNewRecipient] = useState(false);
+  const previousDialog = useRef({ open, operation });
   const draft = drafts[operation];
   const recipient = accounts.find(
     (value) => value.id === draft.recipient && value.role === "destination",
@@ -190,8 +215,14 @@ export function OperationWorkspace({
       )
         next.targetCurrency = "";
       if (operation === "transfer" && field === "recipient") {
-        next.recipientDefaultCurrency = "";
-        next.targetCurrency = "";
+        next.recipientDefaultCurrency = "USD";
+        const saved = accounts.find(
+          (account) => account.role === "destination" && account.id === value,
+        );
+        next.targetCurrency =
+          saved && !SEND_CURRENCIES.includes(saved.defaultCurrency)
+            ? "USD"
+            : "";
       }
       return { ...current, [operation]: next };
     });
@@ -217,9 +248,11 @@ export function OperationWorkspace({
     if (reviewRef.current) reviewRef.current.focus();
     else
       formRef.current
-        ?.querySelector<HTMLInputElement>(
+        ?.querySelector<HTMLElement>(
           operation === "transfer"
-            ? 'input[name="recipient"]'
+            ? newRecipient
+              ? 'input[name="recipient"]'
+              : "[data-recipient-picker]"
             : 'input[name="amount"]',
         )
         ?.focus();
@@ -344,9 +377,28 @@ export function OperationWorkspace({
   }
 
   function closeWorkspace() {
+    resetCompleted();
     captureMotionFrame(DIALOG_MOTION_SELECTOR, false);
     onOpenChange(false);
   }
+
+  function resetCompleted() {
+    if (!submissionSucceeded || funding.storageBlocked) return;
+    funding.startAnother();
+    quote.invalidate();
+    transferQuote.invalidate();
+    setReviews({});
+  }
+
+  // A confirmed result may arrive after a pending dialog was dismissed. A later
+  // explicit operation opens its own form, never a stale success. Unknown results
+  // and failed recovery-storage cleanup remain protected by the shared hook.
+  useEffect(() => {
+    const previous = previousDialog.current;
+    previousDialog.current = { open, operation };
+    if (open && (!previous.open || previous.operation !== operation))
+      resetCompleted();
+  }, [open, operation]);
 
   function confirmTransfer() {
     if (!canTransfer || !review || hidden || review.accountId !== account?.id)
@@ -415,7 +467,7 @@ export function OperationWorkspace({
       )}
       <Dialog
         open={open && account?.role === "main"}
-        onOpenChange={onOpenChange}
+        onOpenChange={(next) => (next ? onOpenChange(true) : closeWorkspace())}
       >
         <DialogContent
           id="operations"
@@ -436,36 +488,22 @@ export function OperationWorkspace({
               {submissionSucceeded
                 ? "Transaction complete"
                 : fundingPanel
-                  ? "Money submission"
+                  ? "Transaction status"
                   : title}
             </DialogTitle>
             <DialogDescription>
               {submissionSucceeded
                 ? "Your wallet has been updated."
                 : fundingPanel
-                  ? "Inspect or recover the original simulated submission. Keep its retry key and quote unchanged while the outcome is unresolved."
-                  : canTransfer
-                    ? "Review a simulated destination and exact receiving amount, then explicitly confirm. No real funds move; destinations remain inspect-only."
-                    : canConvert
-                      ? "Review an exact one-minute reference-rate quote, then explicitly confirm a simulated conversion. No real funds move."
-                      : canFund
-                        ? "Review and confirm a simulated wallet operation. Providers are fictional; no real funds move."
-                        : DESCRIPTIONS[operation]}
+                  ? "Check the original request and its status. If the result is unknown, retry that request rather than starting another."
+                  : DESCRIPTIONS[operation]}
             </DialogDescription>
           </DialogHeader>
           {fundingPanel ? (
             <SubmissionPanel
               funding={funding}
               hidden={hidden}
-              onClose={() => {
-                if (submissionSucceeded && !funding.storageBlocked) {
-                  funding.startAnother();
-                  quote.invalidate();
-                  transferQuote.invalidate();
-                  setReviews({});
-                }
-                closeWorkspace();
-              }}
+              onClose={closeWorkspace}
               onAnother={() => {
                 funding.startAnother();
                 quote.invalidate();
@@ -491,6 +529,7 @@ export function OperationWorkspace({
           ) : review && canConvert ? (
             <>
               <ConversionQuoteReview
+                review={review}
                 preview={quote}
                 hidden={hidden}
                 ready={funding.ready}
@@ -503,114 +542,55 @@ export function OperationWorkspace({
               {errors.form && <FieldError>{errors.form}</FieldError>}
             </>
           ) : review ? (
-            <div className="wallet-dialog-review space-y-5">
-              <h3
-                ref={reviewRef}
-                tabIndex={-1}
-                className="text-lg font-semibold"
-              >
-                Review {OPERATION_NOUNS[operation]}
-              </h3>
-              <p className="text-sm text-muted-foreground">
-                These details have not been submitted.
-              </p>
-              <dl className="wallet-dialog-facts space-y-3 text-sm">
-                <div className="flex justify-between gap-4">
-                  <dt className="text-muted-foreground">From account</dt>
-                  <dd className="min-w-0 text-right wrap-anywhere">
-                    {review.accountId}
-                  </dd>
-                </div>
-                <div className="flex justify-between gap-4">
-                  <dt className="text-muted-foreground">Amount</dt>
-                  <dd className="min-w-0 text-right wrap-anywhere">
-                    {hidden
-                      ? "Amount hidden"
-                      : `${displayAmount(review.minor, review.wallet.exponent)} ${review.wallet.currency}`}
-                  </dd>
-                </div>
-                {(operation === "deposit" || operation === "withdraw") && (
-                  <div className="flex justify-between gap-4">
-                    <dt className="text-muted-foreground">
-                      Fictional provider
-                    </dt>
-                    <dd>
-                      {
-                        PROVIDERS.find(
-                          (provider) => provider.code === review.provider,
-                        )?.label
-                      }
-                    </dd>
-                  </div>
-                )}
-                {operation === "transfer" && (
-                  <div className="flex justify-between gap-4">
-                    <dt className="text-muted-foreground">
-                      Simulated recipient
-                    </dt>
-                    <dd className="min-w-0 text-right wrap-anywhere">
-                      {review.recipient}
-                      <span className="block text-muted-foreground">
-                        Not verified; no account created.
-                      </span>
-                    </dd>
-                  </div>
-                )}
-                {operation === "convert" && (
-                  <>
-                    <div className="flex justify-between gap-4">
-                      <dt className="text-muted-foreground">
-                        Receive currency
-                      </dt>
-                      <dd>{review.targetCurrency}</dd>
-                    </div>
-                    <div className="flex justify-between gap-4">
-                      <dt className="text-muted-foreground">
-                        Rate and receive amount
-                      </dt>
-                      <dd>Not available</dd>
-                    </div>
-                  </>
-                )}
-              </dl>
-              <p
-                id={fieldId("connection")}
-                className="flex items-start gap-2 text-sm text-muted-foreground"
-              >
-                <LockKeyhole
-                  className="mt-0.5 size-4 shrink-0"
-                  aria-hidden="true"
-                />
-                {canFund
-                  ? "Confirmation records this simulation once. Uncertain results must be retried with the original request."
-                  : "Service not connected. Final submission is unavailable."}
-              </p>
-              <Button
-                className="w-full"
-                disabled={!canFund || !funding.ready || hidden}
-                onClick={confirmFunding}
-                aria-describedby={fieldId("connection")}
-              >
-                {canFund
-                  ? `Confirm simulated ${operation === "deposit" ? "deposit" : "withdrawal"}`
-                  : `${OPERATION_LABELS[operation]} unavailable`}
-              </Button>
-              {hidden && canFund && (
-                <p className="text-sm text-muted-foreground">
-                  Show amounts before confirming.
-                </p>
+            <MoneyReview
+              title={`Review ${OPERATION_NOUNS[operation]}`}
+              heading={reviewRef}
+              amount={displayAmount(review.minor, review.wallet.exponent)}
+              currency={review.wallet.currency}
+              hidden={hidden}
+              disabled={!canFund || !funding.ready}
+              confirmLabel={`Confirm ${OPERATION_NOUNS[operation]}`}
+              onConfirm={confirmFunding}
+              onEdit={editReview}
+              onCancel={closeWorkspace}
+              sourceLabel={operation === "deposit" ? "From" : "From wallet"}
+              targetLabel={operation === "deposit" ? "To wallet" : "Recipient"}
+              source={
+                operation === "deposit" ? (
+                  <ReviewProvider
+                    label={
+                      PROVIDERS.find((p) => p.code === review.provider)
+                        ?.label ?? "Bank account"
+                    }
+                  />
+                ) : (
+                  <ReviewWallet
+                    currency={review.wallet.currency}
+                    id={review.wallet.id}
+                  />
+                )
+              }
+              target={
+                operation === "deposit" ? (
+                  <ReviewWallet
+                    currency={review.wallet.currency}
+                    id={review.wallet.id}
+                  />
+                ) : (
+                  <ReviewProvider
+                    label={
+                      PROVIDERS.find((p) => p.code === review.provider)
+                        ?.label ?? "Bank account"
+                    }
+                  />
+                )
+              }
+            >
+              {!canFund && (
+                <p role="status">This operation is not available yet.</p>
               )}
               {errors.form && <FieldError>{errors.form}</FieldError>}
-              <DialogFooter>
-                <Button variant="ghost" onClick={editReview}>
-                  <ArrowLeft aria-hidden="true" />
-                  Edit details
-                </Button>
-                <Button variant="outline" onClick={closeWorkspace}>
-                  Back to overview
-                </Button>
-              </DialogFooter>
-            </div>
+            </MoneyReview>
           ) : (
             <form
               ref={formRef}
@@ -628,29 +608,80 @@ export function OperationWorkspace({
                   {operation === "transfer" && (
                     <Field data-invalid={!!errors.recipient}>
                       <FieldLabel htmlFor={fieldId("recipient")}>
-                        Simulated recipient account ID
+                        Recipient
                       </FieldLabel>
-                      <Input
-                        id={fieldId("recipient")}
-                        name="recipient"
-                        value={draft.recipient}
-                        onChange={(event) =>
-                          updateDraft("recipient", event.target.value)
+                      <Select
+                        value={
+                          newRecipient
+                            ? "new"
+                            : recipient
+                              ? `saved:${encodeURIComponent(recipient.id)}`
+                              : ""
                         }
-                        placeholder="Enter an account ID"
-                        autoComplete="off"
-                        autoCapitalize="none"
-                        spellCheck={false}
-                        maxLength={8192}
-                        aria-invalid={!!errors.recipient}
-                        aria-describedby={`${fieldId("recipient-hint")}${errors.recipient ? ` ${fieldId("recipient-error")}` : ""}`}
-                      />
+                        onValueChange={(value) => {
+                          setNewRecipient(value === "new");
+                          updateDraft(
+                            "recipient",
+                            value === "new"
+                              ? ""
+                              : decodeURIComponent(value.slice(6)),
+                          );
+                        }}
+                        disabled={!hydrated}
+                      >
+                        <SelectTrigger
+                          data-recipient-picker
+                          id={fieldId("recipient")}
+                          aria-invalid={!!errors.recipient && !newRecipient}
+                        >
+                          <SelectValue placeholder="Select an available address" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {accounts
+                            .filter((a) => a.role === "destination")
+                            .map((a) => (
+                              <SelectItem
+                                key={a.id}
+                                value={`saved:${encodeURIComponent(a.id)}`}
+                              >
+                                <bdi className="wallet-recipient-option">
+                                  {a.id}
+                                </bdi>
+                              </SelectItem>
+                            ))}
+                          <SelectItem value="new">
+                            Create new address
+                          </SelectItem>
+                        </SelectContent>
+                      </Select>
+                      {newRecipient && (
+                        <>
+                          <FieldLabel htmlFor={fieldId("new-recipient")}>
+                            New address
+                          </FieldLabel>
+                          <Input
+                            id={fieldId("new-recipient")}
+                            name="recipient"
+                            value={draft.recipient}
+                            onChange={(event) =>
+                              updateDraft("recipient", event.target.value)
+                            }
+                            placeholder="Enter a recipient address"
+                            autoComplete="off"
+                            autoCapitalize="none"
+                            spellCheck={false}
+                            maxLength={8192}
+                            aria-invalid={!!errors.recipient}
+                            aria-describedby={`${fieldId("recipient-hint")}${errors.recipient ? ` ${fieldId("recipient-error")}` : ""}`}
+                          />
+                        </>
+                      )}
                       <FieldDescription id={fieldId("recipient-hint")}>
-                        {canTransfer
-                          ? recipient
-                            ? `Stored simulated destination · default ${recipient.defaultCurrency}. IDs are exact, including spaces and case; no real identity is verified.`
-                            : "Enter any exact nonblank ID. A new inspect-only destination is created only after successful confirmation."
-                          : "IDs are not verified or saved in this preview."}
+                        {recipient
+                          ? `Saved address · default currency ${recipient.defaultCurrency}.`
+                          : newRecipient
+                            ? "New addresses use USD by default and are saved when the transfer completes."
+                            : "Choose someone you’ve sent to, or create a new address."}
                       </FieldDescription>
                       {errors.recipient && (
                         <FieldError id={fieldId("recipient-error")}>
@@ -659,52 +690,12 @@ export function OperationWorkspace({
                       )}
                     </Field>
                   )}
-                  {canTransfer && !recipient && (
-                    <Field data-invalid={!!errors.recipientDefaultCurrency}>
-                      <FieldLabel htmlFor={fieldId("recipient-default")}>
-                        New destination default currency
-                      </FieldLabel>
-                      <Select
-                        value={draft.recipientDefaultCurrency ?? ""}
-                        onValueChange={(value) =>
-                          updateDraft("recipientDefaultCurrency", value)
-                        }
-                        disabled={!hydrated}
-                      >
-                        <SelectTrigger
-                          id={fieldId("recipient-default")}
-                          aria-invalid={!!errors.recipientDefaultCurrency}
-                          aria-describedby={
-                            errors.recipientDefaultCurrency
-                              ? fieldId("recipient-default-error")
-                              : fieldId("recipient-default-hint")
-                          }
-                        >
-                          <SelectValue placeholder="Choose a default currency" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {targetCurrencies.map((code) => (
-                            <SelectItem key={code} value={code}>
-                              {code}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                      <FieldDescription id={fieldId("recipient-default-hint")}>
-                        Only for a new destination; an existing default is never
-                        overwritten.
-                      </FieldDescription>
-                      {errors.recipientDefaultCurrency && (
-                        <FieldError id={fieldId("recipient-default-error")}>
-                          {errors.recipientDefaultCurrency}
-                        </FieldError>
-                      )}
-                    </Field>
-                  )}
                   {(operation === "deposit" || operation === "withdraw") && (
                     <Field data-invalid={!!errors.provider}>
                       <FieldLabel htmlFor={fieldId("provider")}>
-                        Fictional provider
+                        {operation === "deposit"
+                          ? "Deposit from"
+                          : "Withdraw to"}
                       </FieldLabel>
                       <Select
                         name="provider"
@@ -754,7 +745,7 @@ export function OperationWorkspace({
                         onValueChange={(value) =>
                           updateDraft("currency", value as WalletCurrency)
                         }
-                        disabled={!hydrated || wallets.length === 0}
+                        disabled={!hydrated || sourceWallets.length === 0}
                       >
                         <SelectTrigger
                           aria-label="Source currency"
@@ -769,7 +760,7 @@ export function OperationWorkspace({
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
-                          {wallets.map((wallet) => (
+                          {sourceWallets.map((wallet) => (
                             <SelectItem key={wallet.id} value={wallet.currency}>
                               {wallet.currency}
                             </SelectItem>
@@ -782,36 +773,20 @@ export function OperationWorkspace({
                         {errors.currency}
                       </FieldError>
                     )}
-                    <div className="relative">
-                      <span
-                        aria-hidden="true"
-                        className="pointer-events-none absolute top-1/2 left-3.5 -translate-y-1/2 text-xl text-muted-foreground"
-                      >
-                        {CURRENCY_SYMBOLS[draft.currency] ?? "¤"}
-                      </span>
-                      <Input
-                        className="h-14 pl-10 text-2xl font-medium tracking-tight md:text-2xl"
-                        id={fieldId("amount")}
-                        name="amount"
-                        type="text"
-                        readOnly={hidden}
-                        inputMode="decimal"
-                        value={hidden ? "" : draft.amount}
-                        onChange={(event) =>
-                          updateDraft("amount", event.target.value)
-                        }
-                        placeholder={hidden ? "Hidden" : "0.00"}
-                        maxLength={MAX_AMOUNT_INPUT_LENGTH}
-                        autoComplete="off"
-                        aria-invalid={!!errors.amount}
-                        aria-describedby={`${fieldId("available")}${errors.amount ? ` ${fieldId("amount-error")}` : ""}`}
-                      />
-                    </div>
+                    <MoneyAmountInput
+                      symbol={CURRENCY_SYMBOLS[draft.currency] ?? "¤"}
+                      hidden={hidden}
+                      id={fieldId("amount")}
+                      value={draft.amount}
+                      onValueChange={(value) => updateDraft("amount", value)}
+                      aria-invalid={!!errors.amount}
+                      aria-describedby={`${fieldId("available")}${errors.amount ? ` ${fieldId("amount-error")}` : ""}`}
+                    />
                     <FieldDescription id={fieldId("available")}>
                       {sourceWallet
                         ? hidden
                           ? "Balance hidden"
-                          : `${displayBalance(sourceWallet)} ${sourceWallet.currency} · ${balancesConnected ? "Journal-derived balance" : "Preview balance"}`
+                          : `Available balance: ${displayBalance(sourceWallet)} ${sourceWallet.currency}`
                         : "Balance unavailable"}
                     </FieldDescription>
                     {errors.amount && (
@@ -861,15 +836,19 @@ export function OperationWorkspace({
                           <SelectValue placeholder="Choose a receiving currency" />
                         </SelectTrigger>
                         <SelectContent>
-                          {canTransfer && (
-                            <SelectItem value="recipient-default">
-                              Destination default
-                              {(recipient?.defaultCurrency ??
-                              draft.recipientDefaultCurrency)
-                                ? ` · ${recipient?.defaultCurrency ?? draft.recipientDefaultCurrency}`
-                                : ""}
-                            </SelectItem>
-                          )}
+                          {canTransfer &&
+                            (!recipient ||
+                              SEND_CURRENCIES.includes(
+                                recipient.defaultCurrency,
+                              )) && (
+                              <SelectItem value="recipient-default">
+                                Address default
+                                {(recipient?.defaultCurrency ??
+                                draft.recipientDefaultCurrency)
+                                  ? ` · ${recipient?.defaultCurrency ?? draft.recipientDefaultCurrency}`
+                                  : ""}
+                              </SelectItem>
+                            )}
                           {(canConvert || canTransfer
                             ? targetCurrencies
                             : wallets.map((wallet) => wallet.currency)
@@ -904,17 +883,7 @@ export function OperationWorkspace({
                     Review {OPERATION_NOUNS[operation]}
                     <ArrowRight aria-hidden="true" />
                   </Button>
-                  <Button
-                    variant="ghost"
-                    className="w-full"
-                    onClick={closeWorkspace}
-                  >
-                    Back to overview
-                  </Button>
                 </div>
-                <FieldDescription className="mt-3 text-center">
-                  Closing keeps this draft. Reloading clears it.
-                </FieldDescription>
               </FieldSet>
             </form>
           )}

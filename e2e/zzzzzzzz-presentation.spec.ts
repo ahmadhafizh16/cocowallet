@@ -5,6 +5,7 @@ import {
   type Page,
 } from "@playwright/test";
 import { randomUUID } from "node:crypto";
+import { chooseRecipient } from "./helpers";
 import { mkdirSync } from "node:fs";
 import { convertMinorUnits } from "../src/features/money/money";
 
@@ -169,7 +170,7 @@ test("success is a focused green-check summary without technical keys; incoming 
     .getByRole("button", { name: "Review deposit", exact: true })
     .click();
   await page
-    .getByRole("button", { name: "Confirm simulated deposit", exact: true })
+    .getByRole("button", { name: "Confirm deposit", exact: true })
     .click();
   const dialog = page.getByRole("dialog");
   await expect(
@@ -180,28 +181,19 @@ test("success is a focused green-check summary without technical keys; incoming 
   await expect(dialog.locator("dl,time")).toHaveCount(0);
   await expect(dialog).not.toContainText("Retry key");
   await capture(page, "deposit-success");
-  await page
-    .getByRole("button", { name: "Start another operation", exact: true })
-    .click();
-  await page.keyboard.press("Escape");
+  await page.getByRole("button", { name: "Done", exact: true }).click();
   const recipient = `presentation-${randomUUID()}`;
   await page
     .locator(".wallet-quick-actions")
     .getByRole("button", { name: "Send money", exact: true })
     .click();
-  await page
-    .getByLabel("Simulated recipient account ID", { exact: true })
-    .fill(recipient);
-  await page
-    .getByLabel("New destination default currency", { exact: true })
-    .click();
-  await page.getByRole("option", { name: "USD", exact: true }).click();
+  await chooseRecipient(page, recipient);
   await page.getByLabel("You send", { exact: true }).fill("0.10");
   await page
     .getByRole("button", { name: "Review transfer", exact: true })
     .click();
   await page
-    .getByRole("button", { name: "Confirm simulated transfer", exact: true })
+    .getByRole("button", { name: "Confirm transfer", exact: true })
     .click();
   await expect(
     page.getByRole("heading", { name: "Transfer complete", exact: true }),
@@ -336,7 +328,7 @@ for (const width of [320, 820, 1440])
       await page.keyboard.press("Enter");
       await expect(page.getByRole("table")).toBeVisible();
       await expect(page.getByRole("table").locator("tbody tr")).toHaveCount(
-        count,
+        Math.min(6, count),
       );
       await page
         .getByRole("button", { name: "Close dialog", exact: true })

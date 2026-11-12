@@ -74,9 +74,8 @@ typography:
     fontWeight: 500
     lineHeight: "20px"
   amount:
-    fontSize: "24px"
+    fontSize: "clamp(32px, 6vw, 48px)"
     fontWeight: 500
-    lineHeight: "32px"
     letterSpacing: "-0.025em"
   currency-amount:
     fontSize: "23px"
@@ -118,6 +117,15 @@ components:
   button-primary-dark:
     backgroundColor: "{colors.dark-navy}"
     textColor: "{colors.dark-on-navy}"
+  button-success:
+    backgroundColor: "{colors.positive}"
+    textColor: "{colors.solid}"
+    typography: "{typography.button}"
+    rounded: "{rounded.control}"
+    padding: "8px 16px"
+  button-success-dark:
+    backgroundColor: "{colors.dark-positive}"
+    textColor: "{colors.dark-solid}"
   button-secondary:
     backgroundColor: "{colors.inner}"
     textColor: "{colors.ink}"
@@ -166,6 +174,14 @@ components:
     rounded: "{rounded.control}"
     padding: "8px 12px"
     height: "44px"
+    width: "100%"
+  money-amount-input:
+    backgroundColor: "transparent"
+    textColor: "{colors.ink}"
+    typography: "{typography.amount}"
+    rounded: "0"
+    padding: "12px 0 12px 36px"
+    height: "100px"
     width: "100%"
   select:
     backgroundColor: "{colors.control-surface}"
@@ -260,6 +276,14 @@ totals are independently valued from journal balances with fresh/cached Frankfur
 reference rates. One discreet prototype footer replaces the demo badge and large
 connection banner. Missing valuations never fabricate or backfill a trend.
 
+The [workflow refinement](artifact/WORKFLOW_REFINEMENT.md) (D-037) composes the
+existing panels into amount-first entry/review, with a square bottom-border amount
+editor, green confirmation controls and honest request-loading feedback. Confirmed
+success has Done only; safe dismissal clears its result/review, never unresolved
+intent or blocked recovery cleanup. Readable UTC dates, centered recent empty
+states, six-record balance-table pages and saved/new recipient selection refine
+task clarity without changing the frosted identity or financial capabilities.
+
 **Key Characteristics:**
 
 - Icy-blue glass and a diffuse navy backdrop.
@@ -268,7 +292,7 @@ connection banner. Missing valuations never fabricate or backfill a trend.
 - Named desktop icons with real tooltips, visible mobile labels, and clear focus.
 - Equivalent light/dark roles and honest unavailable states.
 
-This affected-section refresh preserves the approved identity and records current [global styles](src/app/globals.css), [wallet styles](src/features/wallet/wallet.css), [shared controls](src/components/ui/), [dashboard](src/features/wallet/dashboard.tsx), [recorded balance history](src/features/wallet/balance-history.tsx), [recent rows](src/features/history/recent-transactions.tsx), and [submission presentation](src/features/submissions/submission-panel.tsx). The approved [CocoWallet vector](src/components/brand/cocowallet-logo.tsx) and [branding/motion extension](artifact/MOTION.md) build on that world. Page strategy belongs in the newest section of the [canonical surface brief](.impeccable/surfaces/src-app-page-tsx.md) and [presentation refinement](artifact/PRESENTATION_REFINEMENT.md), superseding older chart/History arrangements; product capabilities belong in [PRODUCT.md](PRODUCT.md). The direction was explicitly user-pinned; no new visual-world roll was required or performed.
+This affected-section refresh preserves the approved identity and records current [global styles](src/app/globals.css), [wallet styles](src/features/wallet/wallet.css), [shared controls](src/components/ui/), [dashboard](src/features/wallet/dashboard.tsx), [amount editor](src/features/wallet/money-amount-input.tsx), [shared review](src/features/wallet/money-review.tsx), [recorded balance history](src/features/wallet/balance-history.tsx), [recent rows](src/features/history/recent-transactions.tsx), and [submission presentation](src/features/submissions/submission-panel.tsx). The approved [CocoWallet vector](src/components/brand/cocowallet-logo.tsx) and [branding/motion extension](artifact/MOTION.md) build on that world. Page strategy belongs in the newest section of the [canonical surface brief](.impeccable/surfaces/src-app-page-tsx.md) and [workflow refinement](artifact/WORKFLOW_REFINEMENT.md), superseding conflicting older workflow copy; product capabilities belong in [PRODUCT.md](PRODUCT.md). The direction was explicitly user-pinned; no new visual-world or quality-bar roll was required or performed.
 
 The [sidecar](.impeccable/design.json) extends the frontmatter with shadows, motion, breakpoints, narrative, and standalone visual examples. Its eight-step OKLCH ramps are **non-normative previews**, not an application palette: they derive hue/chroma from the underlying source RGB, ignore alpha, and reduce chroma toward white and black. Examples depict appearance, not functioning Radix widgets or connected financial services. Existing [review captures](.impeccable/review/) are non-shipping evidence, not product assets; this documentation pass generated no raster.
 
@@ -286,7 +310,7 @@ Icy neutrals support one muted navy accent; dark mode changes values, not jobs. 
 
 - **Ground** (`ground`): full-page base. Dark ground stays distinct from panel and field levels.
 - **Frosted glass** (`glass`): outer wallet panels and selected utility treatments.
-- **Inner glass** (`inner`): the base quick-action treatment, secondary surfaces, highlighted menu options, and local notices. The balance card overrides its actions locally; currency flags fill their circular markers. Money inputs use the separate opaque control surface; the overview no longer carries a large preview notice.
+- **Inner glass** (`inner`): the base quick-action treatment, secondary surfaces, highlighted menu options, and local notices. The balance card overrides its actions locally; currency flags fill their circular markers. Ordinary fields use the separate opaque control surface; the amount editor alone is transparent. The overview no longer carries a large preview notice.
 - **Solid surface** (`solid`): dialogs, portaled menus, active desktop navigation, and the fixed mobile bar. Reduced transparency replaces both glass roles with this value.
 - **Light-catching edge / quiet divider** (`edge`, `line`): outer panel/raised-control edges versus row separators and menu boundaries. Neither substitutes for the stronger field boundary.
 - **Control surface / boundary** (`control-surface`, `control-border`): opaque, theme-aware input, Select, and outline-button treatments.
@@ -295,7 +319,7 @@ Icy neutrals support one muted navy accent; dark mode changes values, not jobs. 
 ### Semantic states
 
 - **Danger** (`danger`, `danger-ground`): invalid borders/rings, associated error copy, and the available destructive Button. Explain errors in text, not color alone.
-- **Positive** (`positive`, `positive-ground`): signed recent credits, completed-status checks, and confirmed-success checks. These existing roles are not evidence by themselves of completion: a success summary requires a validated definitive server result; neither color nor local review can imply success. Recent debits pair the danger role with an explicit minus sign.
+- **Positive** (`positive`, `positive-ground`): signed recent credits, completed-status checks, and confirmed-success checks. The shared success Button uses positive ink as its fill with solid-surface text: dark mode therefore pairs pale mint with dark ink. These existing roles are not evidence by themselves of completion: a success summary requires a validated definitive server result; neither color nor local review can imply success. Recent debits pair the danger role with an explicit minus sign.
 
 The dialog scrim is a local translucent treatment (`rgb(13 28 45 / 40%)`), not a new reusable palette primitive. Shadow colors likewise belong to elevation rather than extra color swatches.
 
@@ -318,8 +342,8 @@ These extracted roles and captures are not a claim of WCAG conformance.
 - **Title:** the global title foundation remains (18px), weight (600). Wallet-card headings use a local clarity override of (22px), weight (600), line height (1.4), reducing to (20px) on compact phones; do not promote this exception into the global scale. Panel subheadings, including balance history, use (16px), weight (600), line height (1.45). Currency codes use (15px), weight (600), line height (1.4).
 - **Body / supporting:** normal copy and form descriptions use the body role; secondary dashboard details use the supporting role. Empty-history text has line height (1.6) and a local maximum measure (54ch), not a universal paragraph width.
 - **Label / button:** fields use the label role; default shared actions use the button role. Mobile navigation uses (13px), weight (500), retaining the shared Button's unitless leading. Badge labels are (12px), weight (500); the wallet-count override is (13px), retaining the badge's unitless leading rather than a fixed (16px) line box.
-- **Amount / currency amount:** the editable amount is (24px) with line height (32px) inside a bounded field. Wallet-row figures use the separate currency-amount role; mobile reduces them to (22px), then (20px). Row markers are SVG flags, not enlarged currency glyphs; the form's inset currency symbol remains (20px).
-- **Dialog title:** a semibold (24px) title labels the active dialog. Review headings use (18px), weight (600), line height (28px).
+- **Amount / currency amount:** the shared editable amount uses the responsive `typography.amount` role in a (100px) bottom-border editor, with a separate (36px) symbol. It inherits shared Input leading rather than imposing the obsolete fixed (32px) line box. Wallet-row figures retain the separate currency-amount role; mobile reduces them to (22px), then (20px). Row markers remain SVG flags, not enlarged currency glyphs.
+- **Dialog title / review:** a semibold (24px) title labels the active dialog. Shared MoneyReview subheadings use local (20px), weight (600), text; its centered amount uses `clamp(28px, 6vw, 40px)`, weight (600), line height (1.25), and a (0.75em) currency label. Pending/recovery headings retain their (18px)/(28px) treatment. These review-local sizes are not new global type roles.
 
 The CocoWallet wordmark is font-independent vector geometry, not a new UI typeface. The standalone error heading still uses (25px), weight (550), and line height (1.3). Local values and responsive exceptions are not extra global scale steps.
 
@@ -337,10 +361,10 @@ Full transaction History uses `/history` and a single-column completed-activity 
 
 - **Compact desktop (maximum 1190px):** shell side padding (24px), rail gap (20px), panel gap (18px), panel padding (22px), and quick actions in two columns.
 - **Stacked content (maximum 1023px):** panels become one column; quick actions return to four columns while the desktop rail remains.
-- **Mobile shell (maximum 760px):** side padding (20px), panels retain (22px) padding and use the mobile panel radius. Quick actions form a **2×2 grid**. Currency rows tighten to minimum height (70px), vertical padding (12px), and a final-row minimum (64px). The balance privacy control hides only its visible Show/Hide text, retaining the icon, accessible name/pressed state, and (44px) target so the larger card heading remains readable. The bottom bar has four labelled destinations/actions, minimum item height (60px), and safe-area padding. Workspace bottom clearance is `calc(116px + env(safe-area-inset-bottom))`; focused controls retain matching scroll clearance.
+- **Mobile shell (maximum 760px):** side padding (20px), panels retain (22px) padding and use the mobile panel radius. Quick actions form a **2×2 grid**. Currency rows tighten to minimum height (70px), vertical padding (12px), and a final-row minimum (64px). The balance privacy control hides only its visible Show/Hide text, retaining the icon, accessible name/pressed state, and (44px) target so the larger card heading remains readable. The bottom bar has three labelled items—Overview, History, Actions—with minimum item height (60px) and safe-area padding. Workspace bottom clearance is `calc(116px + env(safe-area-inset-bottom))`; focused controls retain matching scroll clearance.
 - **Compact phone (maximum 420px):** side padding (16px), panel padding (20px), a full-width history filter below its heading, stacked history-empty content, and smaller currency markers/figures.
 - **Dialog/theme control (maximum 640px):** shared money-dialog width is `calc(100vw - 16px)`, maximum height `calc(100dvh - 16px)`, padding (24px 20px). The balance-history dialog has its own width/height limits in Components. Theme trigger hides its text/chevron but retains its accessible name and (44px) target. Recent completed status retains a visible check while its text becomes screen-reader-only; the row's accessible name also includes “Completed.” The account trigger becomes icon-sized at the separate (760px) shell boundary.
-- **Input text (minimum 48rem):** shared Input text changes from (16px) to (14px); the amount editor explicitly remains (24px).
+- **Input text (minimum 48rem):** shared Input text changes from (16px) to (14px); the amount editor overrides size with its responsive amount role at every width.
 
 Dialogs are independently bounded and scroll internally; do not make a form fit by clipping its fields or close control. Portaled menus also have available-height/viewport limits. Preserve safe-area clearance and test long content rather than assuming the preview's short labels establish a maximum.
 
@@ -372,13 +396,17 @@ The approved motion thesis is protected focus and continuity: a money dialog set
 - **Menus / tooltips:** fresh DropdownMenu and Select arrivals use (180ms), opacity (0 → 1), scale (0.98 → 1), and vertical offset (-4px → 0), reversed to (+4px → 0) above the trigger. Use the actual Radix transform origin. Menu exit is (120ms), fading from captured opacity to (0), keeping captured translation and multiplying captured scale by (0.985); tooltips fade from their current opacity over (120ms). Closing overlay/menu surfaces do not intercept pointer events during their exit.
 - **Local review / edit:** review enters over (180ms) from opacity (0.6), horizontal translate (+8px); returning edit uses (-8px). The form's `data-entry="back"` gates the return transition; initial form entry does not add a duplicate step animation. Focus and preserved drafts remain authoritative.
 
-These spatial/opacity effects and color transitions run only when motion is permitted. Reduced motion removes animations/transitions and smooth scrolling immediately without dropping state, focus, labels, or errors. Existing loading skeletons retain their (1.8s) breathing cycle, opacity (0.45) halfway through, and stop under reduced motion; this extension adds no decorative loop. Do not tween money, rates, or outcomes, fade privacy masking, animate blur/full-page filters, add page-load choreography, or retain `will-change`. Section scrolling remains smooth only when permitted. Static sidecar examples demonstrate control feedback, not fake portal/open-close behavior or an automatic page entrance.
+These spatial/opacity effects and color transitions run only when motion is permitted. Reduced motion removes animations/transitions and smooth scrolling immediately without dropping state, focus, labels, or errors. Existing loading skeletons retain their (1.8s) breathing cycle, opacity (0.45) halfway through, and stop under reduced motion. Request-loading Buttons add a local LoaderCircle spin (900ms, linear, infinite while loading); reduced motion stops the icon without removing busy state or readable loading copy. Existing timing/easing tokens are unchanged; neither loop is decoration. Do not tween money, rates, or outcomes, fade privacy masking, animate blur/full-page filters, add page-load choreography, or retain `will-change`. Section scrolling remains smooth only when permitted. Static sidecar examples demonstrate control feedback, not fake portal/open-close behavior or an automatic page entrance.
 
-**Interrupted presence:** before a Radix open-state change, the small shared motion controller batches current opacity/translate/scale reads and stores them as element-local CSS variables. Closing during arrival continues from that frame, not an assumed fully open value; reopening a still-mounted exiting layer likewise begins from its current frame. CSS owns timing and unmount remains Radix Presence's responsibility. Controlled and default-open APIs are preserved; there is no per-frame JavaScript loop. Reduced motion skips the snapshot work. Explicit overview-dismiss buttons use the same capture boundary.
+**Interrupted presence:** before a Radix open-state change, the small shared motion controller batches current opacity/translate/scale reads and stores them as element-local CSS variables. Closing during arrival continues from that frame, not an assumed fully open value; reopening a still-mounted exiting layer likewise begins from its current frame. CSS owns timing and unmount remains Radix Presence's responsibility. Controlled and default-open APIs are preserved; there is no per-frame JavaScript loop. Reduced motion skips the snapshot work. Explicit task-dismiss buttons use the same capture boundary.
 
 ## Shapes
 
 Generously rounded panels contrast with tighter controls: wallet panels/dialogs use the panel radius, mobile wallet panels use the mobile radius, and shared Buttons, Inputs, Select triggers, menu shells, and tooltips use the control radius. Quick-action Buttons currently inherit that same control radius; their base raised material is a wallet-local override, replaced by flat mint/outline treatments on the balance card. The (14px) notice radius also appears on mobile navigation items and the history-filter skeleton; it is not the default Button radius.
+
+The amount editor is the deliberate component-scoped exception: square corners,
+transparent fill and a single bottom boundary, not another rounded input box or a
+thick accent border around a card. Ordinary Input/Select geometry stays unchanged.
 
 Full rounding is reserved for theme/badge pills, the optional circle variant, avatars, desktop rail controls, and currency markers. Shared menu options use small (4px) corners. The uncustomized Card's `rounded-xl` resolves to (12px); the wallet panel overrides it to (24px). Thin (1px) edges and quiet dividers distinguish rows without hard stacked offsets.
 
@@ -396,15 +424,17 @@ The source viewBox is (360 × 72), a (5:1) aspect ratio. Display size is (220 ×
 
 ### Buttons and quick actions
 
-Restrained, touch-sized controls with purposeful emphasis. `Button` supports `default`, `primary`, `secondary`, `outline`, `ghost`, `circle`, `destructive`, `danger`, and `link`; `default`/`primary` and `destructive`/`danger` are compatibility pairs. Its default variant remains `primary`. Sizes are `default`, `sm`, `lg`, and `icon`, with `asChild` for a real link/trigger element.
+Restrained, touch-sized controls with purposeful emphasis. `Button` supports `default`, `primary`, `success`, `secondary`, `outline`, `ghost`, `circle`, `destructive`, `danger`, and `link`; `default`/`primary` and `destructive`/`danger` are compatibility pairs. Its default variant remains `primary`. Sizes are `default`, `sm`, `lg`, and `icon`, with `asChild` for a real link/trigger element. `asChild` retains exactly one child; the component does not inject a spinner beside that child.
 
 - **Default / primary:** navy/on-navy, a small shadow, control-radius corners, minimum height (44px), padding (8px 16px), gap (8px). Hover uses primary at (90%) opacity, **not** `navy-hover`.
+- **Success:** positive fill with solid-surface text, the same small shadow/geometry and (90%) hover opacity. It is the green Confirm and original-submission retry treatment, not a completed-state assertion. Dark mode uses the existing pale-mint positive role with dark solid text; do not substitute white text or a new green palette.
 - **Secondary:** inner glass, quiet divider border, subtle shadow; hover uses the accent alias of inner glass. **Outline:** opaque control surface and stronger control border; hover uses inner glass and ink.
 - **Ghost:** ink on transparent ground; hover adds inner glass. **Link:** navy text with an underline on hover. Neither gets an invented lift transform.
 - **Circle:** fully rounded secondary treatment; it does not make every icon Button circular. `icon` size alone is (44px) square with padding (10px).
-- **Destructive / danger:** danger-ground with danger text; hover uses the same ground at (80%) opacity. This available API does not mean a destructive wallet action is shipped.
+- **Destructive / danger:** danger-ground with danger text; hover uses the same ground at (80%) opacity. Shared review uses it for Cancel, which dismisses the review without submitting; the color does not imply a financial reversal.
 - **Small / large:** minimum heights (40px)/(48px), padding (8px 12px)/(12px 24px); small remains (14px) text.
 - **Focus / disabled:** shared Button uses a (3px) navy ring at (30%) opacity; disabled opacity is (0.5), cursor not-allowed. This is not the old global (3px) outline with (4px) offset; that outline remains on ordinary focusable content such as account IDs and the brand link.
+- **Loading:** `loading` sets disabled and `aria-busy`, adding a decorative inline LoaderCircle to ordinary Buttons. Keep readable request/loading text; do not replace it with an icon-only state or invent a minimum request duration. The local spin and reduced-motion behavior are described above.
 - **Motion:** use the state/press feedback above; a press is a (1px) acknowledgement, not a hover lift. Select triggers and Inputs share state transitions but do not inherit the Button-only press rule.
 - **Wallet quick actions:** labelled Deposit, Withdraw, Convert, Send money Buttons; minimum height (48px), padding (10px 8px), gap (7px). The base treatment has an edge border and raised shadow, with solid/control-border hover/open feedback. The balance-card scope overrides that base: mint Deposit with dark ink; three transparent outlined actions with pale ink/boundaries; no action shadow. Deposit hover/open uses the lighter mint, while the other actions use the local blue hover fill and pale supporting-ink boundary. Icons inherit each action's ink. Disabled opacity remains (0.5); mobile retains two rows of two, not circular icon-only actions.
 - **Balance-card focus / selection:** card buttons, including the sparkline trigger, use a solid (3px) teal outline with (3px) offset and no focus shadow. The portaled history dialog uses the shared semantic focus treatment rather than inheriting card-local roles. The privacy action uses local supporting ink, becoming pale ink on the local hover fill. Text selection pairs mint fill with dark action ink. These specific card-scoped rules override shared semantic text, Button, and quick-action styling without changing other surfaces or adding motion.
@@ -421,11 +451,11 @@ Keep EU star centers as fixed vector coordinates, not runtime trigonometry; tiny
 
 ### Balance card and history
 
-The total remains an **approximate USD total**, independently calculated for the selected main or inspect-only destination account. Journal-derived balances are valued using direct foreign→USD Frankfurter reference pairs for nonzero foreign wallets, half-up to USD cents per wallet before exact summation. Fresh-first rates may fall back only to an eligible exact-pair cache less than 24 hours old; no reciprocal/cross-rate synthesis. A missing, invalid or expired required rate, overflow, or stale balance revision makes the whole current total unavailable, not partial; individual balances stay visible. A tiny portfolio contribution may validly round to zero USD cents without changing the stricter monetary-payment rules. “Fresh” or “Cached” rate provenance is a keyboard-focusable tooltip trigger beside the supporting copy, exposing pair, source date and original fetch time. USD-only/zero portfolios need no FX. The gradient does not imply real funds or financial completion. Main/supporting copy retains the local ink/muted roles.
+The total remains an **approximate USD total**, independently calculated for the selected main or inspect-only destination account. Journal-derived balances are valued using direct foreign→USD Frankfurter reference pairs for nonzero foreign wallets, half-up to USD cents per wallet before exact summation. Fresh-first rates may fall back only to an eligible exact-pair cache less than 24 hours old; no reciprocal/cross-rate synthesis. A missing, invalid or expired required rate, overflow, or stale balance revision makes the whole current total unavailable, not partial; individual balances stay visible. A tiny portfolio contribution may validly round to zero USD cents without changing the stricter monetary-payment rules. A keyboard-focusable **Currency rates** trigger beside the supporting copy exposes fresh/cached reference provenance, pair, source date and original fetch time in a tooltip. USD-only/zero portfolios need no FX. The gradient does not imply real funds or financial completion. Main/supporting copy retains the local ink/muted roles.
 
 The overview now places a compact sparkline **beside the amount, above the actions**, not in a separate chart section. Its plot is (72px) high, reducing to (60px) at maximum width (640px), inside a keyboard-operable trigger with minimum height (80px). Multiple points use straight teal segments and a subtle local-color area wash; the compact vertical range spans only recorded minimum/maximum values and has no background grid. One point is a marker, not a trend. Missing/empty history says “No history yet”; rejected data says “History unavailable”; privacy says “History hidden.” None receives a placeholder line, date range, percentage, zero history, or large empty chart region.
 
-Opening a ready sparkline uses the shared portaled Dialog for **USD balance history**, width `min(640px, calc(100vw - 32px))`, maximum height `calc(100dvh - 48px)`, with internal scrolling. The expanded plot is (112px) high even outside the app subtree, uses a zero baseline and true timestamp spacing, and remaps chart/ink/divider roles to the surrounding theme's positive/solid/ink/line roles. Its neutral grid is context, not recorded data. Straight segments retain the (2.5px) non-scaling stroke; markers use a (1.5px) boundary stroke. Above 24 expanded points, only endpoint markers remain, but **every polyline vertex and exact table record is retained**. Multi-point compact plots omit markers, not observations. A keyboard-reachable details table retains exact USD amounts and canonical UTC timestamps; its summary has a minimum (44px) target. Dialog labelling, Escape, focus trapping and trigger-focus return use the shared foundation.
+Opening a ready sparkline uses the shared portaled Dialog for **USD balance history**, width `min(640px, calc(100vw - 32px))`, maximum height `calc(100dvh - 48px)`, with internal scrolling. The expanded plot is (112px) high even outside the app subtree, uses a zero baseline and true timestamp spacing, and remaps chart/ink/divider roles to the surrounding theme's positive/solid/ink/line roles. Its neutral grid is context, not recorded data. Straight segments retain the (2.5px) non-scaling stroke; markers use a (1.5px) boundary stroke. Above 24 expanded points, only endpoint markers remain, but **every polyline vertex and exact table record is retained**. Multi-point compact plots omit markers, not observations. A keyboard-reachable details table shows **six exact USD records per page**, with readable UTC times and canonical `dateTime` values. Previous/Next and polite page status appear when needed, wrap with an (8px) gap, disable at the bounds and move focus to the table caption after paging. Paging never slices the graph. The details summary retains its minimum (44px) target. Dialog labelling, Escape, focus trapping and trigger-focus return use the shared foundation.
 
 The series remains account-scoped, already-valued USD, exponent 2, exact minor-unit strings and strictly increasing canonical UTC timestamps. The connected portfolio service supplies actual immutable observations, not a reconstruction from today's FX or local drafts. Current valuation can refresh without rewriting a recorded observation; missed past observations are not backfilled. Empty, invalid, unsupported, wrong-account or ambiguous duplicate series never become fabricated figures or another account's history. A currently unavailable total does not invalidate otherwise verified recorded observations. See [the current valuation/presentation contract](artifact/PRESENTATION_REFINEMENT.md), which supersedes the old disconnected chart arrangement in [BALANCE_CARD.md](artifact/BALANCE_CARD.md).
 
@@ -435,15 +465,26 @@ Privacy immediately removes the compact trigger/plot and any open history dialog
 
 Input and Radix Select use opaque control fill, visible control border, control-radius corners, height (44px), padding (8px 12px), and a subtle shadow. Focus changes the border to navy and adds a (3px) ring at (20%) opacity. Invalid fields use danger border/ring at (15%) opacity plus an associated error. Disabled opacity is (0.5).
 
-`Field`, `FieldLabel`, `FieldDescription`, and `FieldError` keep labels, guidance, and alert copy together. The amount remains decimal **text**, enlarged to height (56px), with a separate inset symbol and source-currency Select. Privacy blanks/read-only masks the editor without destroying its draft; never replace the field with a password input or a bare decorative number.
+`Field`, `FieldLabel`, `FieldDescription`, and `FieldError` keep labels, guidance, and alert copy together. `MoneyAmountInput` reuses shared Input as decimal **text** with `inputMode="decimal"`, not floating-point number input. Its component tokens define the (100px) height, responsive amount type, transparent fill, square corners and symbol inset. A (2px) control-border bottom edge becomes (3px) navy on visible focus, without a box/ring/shadow; invalid input changes that edge to danger and retains explanatory copy. The symbol is decorative and separate from the input value. Source currency remains a labelled Select beside the amount label.
+
+Thousands grouping is an exact string presentation with caret preservation; raw draft/API amounts remain ungrouped decimal strings. Invalid characters/paste are rejected with a readable hint, never parsed through floating point, silently rounded or precision-truncated. Privacy blanks/read-only masks the editor without destroying its draft; never replace the field with a password input or a bare decorative number.
 
 Select menus are portaled, collision-aware solid surfaces with (4px) menu inset, (44px) minimum option height, checkmarked selection, scrolling controls, keyboard/typeahead support, and focus restoration. History uses the same Select foundation as forms, not a native select. Local history trigger width is (176px), becoming full width on compact phones.
 
+Send money uses that same Radix Select for saved destination addresses and
+**Create new address**, revealing a labelled text Input only for new entry. New
+addresses default to USD and are saved only with a successful transfer, not by
+selection or review. Both send/receive currency choices in this UI are limited to
+USD/GBP/EUR (source choices also require an existing wallet). Existing recipient
+defaults remain stored facts; an unsupported saved default gets a USD receiving
+selection without rewriting it. Other currency balances remain visible, and this
+picker scope does not restrict backend or conversion capabilities.
+
 ### Navigation, tooltips, and utility menus
 
-Desktop rail controls are named (48px) circles: resting icons are quiet on transparent ground; hover introduces glass/edge; current or open actions use navy, solid fill, and raised depth. Overview links to `/`, Wallets to `/#wallets`, and History to the real `/history` page; History uses the page-current state rather than an overview-section anchor. Deposit, Withdraw, Convert, Send money open dialogs. Real Radix tooltips appear on hover/focus with a (200ms) provider delay, not browser `title` text as the sole explanation.
+Desktop rail controls are named (48px) circles: resting icons are quiet on transparent ground; hover introduces glass/edge; current or open actions use navy, solid fill, and raised depth. Overview links to `/` and History to the real `/history` page; History uses the page-current state rather than an overview-section anchor. The unused Wallets navigation item is hidden, not the visible currency-balance panel. Deposit, Withdraw, Convert, Send money open dialogs. Real Radix tooltips appear on hover/focus with a (200ms) provider delay, not browser `title` text as the sole explanation.
 
-Mobile keeps visible Overview, Wallets, History, **Actions** labels. Actions opens a named menu of all four money operations; selecting one opens its dialog and returns focus to the stable Actions trigger when closed. Do not link it to a removed inline workspace or relabel all operations as Transfer. Task labels on quick actions remain visible at every size.
+Mobile keeps three visible labels: Overview, History, **Actions**. Actions opens a named menu of all four money operations; selecting one opens its dialog and returns focus to the stable Actions trigger when closed. Do not link it to a removed inline workspace or relabel all operations as Transfer. Task labels on quick actions remain visible at every size.
 
 Theme and account utilities use themed DropdownMenu radio groups; history uses Select. System/Light/Dark follows the system when requested and persists only the theme preference. If storage fails, an in-memory preference still applies for the visit and a status note explains it. Account inspection is not authentication; destination accounts disable money actions. The account ID wraps and can be selected manually. Copy feedback stays inside the open account menu as a status; failure gives a manual-copy fallback. Copy status, account selection, filters, privacy, and drafts are in-memory UI state, not durable financial state. The persistent shell preserves account/privacy/money drafts across Overview/History navigation; this is not a guarantee that full-history filters persist after leaving their page.
 
@@ -455,22 +496,56 @@ Badge supports `default`, `secondary`, and `outline` pill variants. Wallet count
 
 Recent activity shows at most **five** newest matching completed records from the selected account's bounded recent read. Each wrapping, full-row action combines an income/outgoing/conversion Lucide icon, name, UTC time, exact signed amount and completed check. Credits use positive ink with `+`; debits use danger ink with `−`. Conversions show both exact legs, never a fabricated net. Desktop status pairs the check with “Completed”; at maximum width (640px), the check remains visible and the label is screen-reader-only, with “Completed” also retained in the row's accessible name. Color is not the only sign or status cue. No invented merchants, logos, per-record sparklines or transactions.
 
+The recent empty state centers its content on both axes in a minimum (260px)
+region with (32px) vertical padding and (16px) gaps. A (64px) circular container
+holds a decorative (32px) icon, followed by the bold (16px), weight (600), title
+**No matching completed activity** and normal (14px) sentence **Your completed
+transactions will appear here.** Clear filter remains available when applicable;
+empty is not an error or invented activity.
+
 Selecting a recent row opens its account-scoped details on `/history`; there is no Browse full history action in the recent panel. History's completed list, type/currency/inclusive-UTC-day filters, numbered pages, lookup and record details reuse the existing shared controls. Account changes reset its scoped browsing context; stale reads cannot replace current facts. Returning from details preserves the mounted list's filters/page and restores focus; leaving the page does not promise persistence of those filters. Privacy removes rows, counts, timestamps and detailed facts, not just visible amounts.
+
+Presentation dates use the shared en-US UTC helpers across recent/full history,
+chart endpoints/table, quote expiry and rate provenance. Use readable month names,
+12-hour times and an explicit UTC suffix for timestamps, including accessible row
+names, instead of reading out raw ISO strings. Canonical API/storage values and
+existing machine-readable `time`/`dateTime` attributes remain unchanged. Distinguish
+rate source date, fetch time and expiry. The overview trigger says **Currency
+rates**; describe reference rates, never live or streaming prices.
 
 ### Money dialogs and review
 
 All four money forms use the shared Radix Dialog. Content uses solid surface, ambient depth, a labelled title/description, accessible close Button, and the bounded width in frontmatter. Desktop maximum height is `calc(100dvh - 48px)` with internal vertical overflow; the mobile exception is in Layout. Escape dismisses, focus is trapped while open, and closing restores the invoking control. Initial focus goes to recipient for Send money, otherwise amount, or to the preserved review heading when reopening a review.
 
-The always-mounted workspace preserves separate drafts/errors/reviews across close/reopen; reload clears ordinary drafts. Validation focuses the first invalid control, valid review focuses its heading, and editing returns to amount. Conversion source changes clear an identical receiving currency; conversion disables same-currency targets, while transfers permit them. Review facts wrap. Reviewing never moves funds. Every connected money action explicitly confirms a simulation and requires visible amounts plus verified shared recovery storage. Transfer entry accepts exact arbitrary IDs, requires a new destination default and allows target overrides without changing stored defaults. Same-currency review uses identical minor units without a rate/quote. Conversion and FX-transfer reviews request server-owned terms; missing or expired quotes disable confirmation and require explicit fresh terms plus renewed review. See [the connected transfer contract](artifact/TRANSFERS.md).
+The always-mounted workspace preserves separate ordinary drafts/errors/reviews across close/reopen; safely completed results/reviews are the exception below. Reload clears ordinary drafts. Validation focuses the first invalid control, valid review focuses its heading, and editing returns to amount. Conversion source changes clear an identical receiving currency; conversion disables same-currency targets, while transfers permit them. Review facts wrap. Reviewing never moves funds. Confirmation requires visible amounts and verified shared recovery storage; the single prototype footer supplies the simulation boundary without repeated provider/demo jargon in every form. Transfer entry retains exact arbitrary address IDs, saved defaults and permitted target overrides through the picker described above. Same-currency review uses identical minor units without a rate/quote. Conversion and FX-transfer reviews request server-owned terms; missing or expired quotes disable confirmation and require explicit fresh terms plus renewed review. See [the connected transfer contract](artifact/TRANSFERS.md).
+
+All four reviews share `MoneyReview`: a wrapping heading row with **Edit details**
+at the top; a source identity panel; a large centered exact amount/currency; then a
+recipient/provider identity panel. Deposit correctly places the provider first and
+the destination wallet last. Identity panels use existing quiet borders,
+control-radius corners and (14px 16px) padding. Bottom actions use danger **Cancel**
+and green success **Confirm**, in (1:1.5) flexible columns with a (12px) gap and
+(48px) minimum height. Cancel closes without submitting; Edit returns to the draft.
+Quote details remain between identities and final actions, retaining explicit
+expiry/reconfirmation. This screenshot-led composition reuses existing materials,
+not a new global card or type system. No Back to overview or draft-retention footer
+copy is mounted in the money modal.
 
 Confirmed results now use a centered, concise success view: an (88px) positive-ground
 circle with a (48px) green check, the appropriate “Deposit complete,” “Withdrawal
 complete,” “Conversion complete,” or “Transfer complete” heading, an exact wrapping
-summary, and Done. A safe explicit “Start another operation” action may follow.
+summary, and **Done only**.
 No retry key, quote ID, timestamp or technical balance/debug table belongs in this
 success presentation. Privacy replaces its monetary summary with confirmation-only
 copy. Only a validated definitive server receipt selects this view, never a local
 review, loading state or valuation outcome.
+
+Done, X, outside click and Escape all clear a safely confirmed result plus its
+review/quotes so the next explicit operation opens its intended form. A confirmed
+result arriving after dismissal is likewise reset on the next explicit open.
+Neither path discards an unknown outcome or bypasses blocked recovery-storage
+cleanup; those safeguards outrank presentation reset. Ordinary draft preservation
+is not permission to reopen a stale completed review.
 
 Pending/recovery/error views retain the existing dialog/fact-list composition and
 original-key protections. Step headings take focus; closing restores the invoking
@@ -487,7 +562,7 @@ must not relabel, delay or roll back a confirmed monetary outcome.
 
 ### Loading and error states
 
-The real dashboard skeleton reserves the current two-column/stacked geometry, top utilities, rail/bottom labels, actions, recent transactions and tighter currency rows. The balance card reserves a compact (72px) sparkline shape beside its total, not the former separate (112px) chart or a connection banner. Section-heading placeholders remain (30px) high; no separate balance-history heading is mounted in the overview skeleton. Balance-card shapes use its local divider role. Shapes are decorative; the busy main region supplies one “Loading wallet overview” status. No minimum loading delay or fake progress is introduced. Standalone errors retain the frosted world, offer retry/navigation, and do not expose exceptions or claim a known financial outcome. This source-led documentation refresh is not a refreshed-capture, full-accessibility or connected-feature certification; see [the scoped review](artifact/DESIGN_REVIEW.md) and [presentation evidence](artifact/PRESENTATION_REFINEMENT.md).
+The real dashboard skeleton reserves the current two-column/stacked geometry, top utilities, rail/bottom labels, actions, recent transactions and tighter currency rows. The balance card reserves a compact (72px) sparkline shape beside its total, not the former separate (112px) chart or a connection banner. Section-heading placeholders remain (30px) high; no separate balance-history heading is mounted in the overview skeleton. Balance-card shapes use its local divider role. Shapes are decorative; the busy main region supplies one “Loading wallet overview” status. No minimum loading delay or fake progress is introduced. Standalone errors retain the frosted world, offer retry/navigation, and do not expose exceptions or claim a known financial outcome. This affected-section documentation refresh is not a new visual review, full-accessibility or connected-feature certification; see [the scoped review](artifact/DESIGN_REVIEW.md), [presentation evidence](artifact/PRESENTATION_REFINEMENT.md) and [workflow evidence](artifact/WORKFLOW_REFINEMENT.md).
 
 ## Do's and Don'ts
 

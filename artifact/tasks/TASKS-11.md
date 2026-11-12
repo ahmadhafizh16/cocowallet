@@ -204,3 +204,35 @@ tokens. Normal development passed 300 stable frames with exact actual total,
 two-record History, privacy/draft navigation and no financial POSTs or errors;
 existing user financial data remains unchanged. See
 [PRESENTATION_REFINEMENT.md](../PRESENTATION_REFINEMENT.md) for limits and evidence.
+
+### T11-09
+
+**Money workflow usability and review refinement**
+
+**Status:** Done.
+
+**Decisions:** [D-037](../DECISIONS.md#d-037).
+**Depends on:** [T11-08](#t11-08).
+
+**Implementation:** Follow [WORKFLOW_REFINEMENT.md](../WORKFLOW_REFINEMENT.md):
+safe completed-result dismissal, Done-only success, screenshot-led review facts,
+large bottom-border exact grouped amounts, saved/new recipient selection with
+USD/GBP/EUR choices, human dates/copy, green/loading controls, centered empty
+activity, six-row observation paging and hidden unused wallet navigation.
+
+**Acceptance and tests:** Preserve recovery/expiry/accounting/privacy and existing
+data; verify dismissal-to-next-action, exact masked input/caret/paste, old/new
+recipient cases, quote/rejection/loading states, human UTC dates and six-row paging.
+Inspect mobile/intermediate/wide light/dark captures, Docker/Jest and isolated
+Chromium; obtain the scoped finish verdict, refresh approved affected design docs,
+restore normal development and commit locally without push.
+
+**Verification:** Final Docker check/build passes **1,529 Jest tests / 70 suites**,
+formatting/lint/types and **59 artifact documents / 38 tasks**. All **109 Chromium**
+journeys pass on a fresh isolated server. The fresh independent full finish review
+returned **ship**, no material fixes, at D-037 scope; the approved affected design
+refresh preserves identity/core tokens. Normal development is healthy, **300 stable
+frames** and existing three-record activity verified without monetary/quote POSTs.
+All 13 non-cache normal-wallet tables remain row-identical to backup; only reference
+caches refreshed. See [WORKFLOW_REFINEMENT.md](../WORKFLOW_REFINEMENT.md) and
+[DESIGN_REVIEW.md](../DESIGN_REVIEW.md) for evidence and limits. No push.

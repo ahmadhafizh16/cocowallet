@@ -1,10 +1,11 @@
 "use client";
 import { useEffect, type RefObject } from "react";
-import { Button } from "@/components/ui/button";
-import { DialogFooter } from "@/components/ui/dialog";
+import { Send } from "lucide-react";
 import type { useConversionQuote } from "../conversions/use-quote";
 import type { OperationReview } from "../wallet/operation-model";
-import { formatAmount } from "../money/money";
+import { MoneyReview, ReviewWallet } from "../wallet/money-review";
+import { displayAmount } from "../wallet/presentation";
+import { QuoteDetails } from "../conversions/quote-details";
 
 export function TransferReview({
   review,
@@ -25,123 +26,66 @@ export function TransferReview({
   onEdit: () => void;
   onClose: () => void;
 }) {
-  const fx = review.wallet.currency !== review.targetCurrency;
-  const quote = fx ? preview.quote : undefined;
+  const fx = review.wallet.currency !== review.targetCurrency,
+    quote = fx ? preview.quote : undefined;
   useEffect(() => {
     heading.current?.focus();
   }, [heading, preview.pending, quote, preview.message]);
-  const facts = [
-    ["From account", review.accountId],
-    ["Simulated recipient", review.recipient],
-    [
-      "Recipient context",
-      (quote?.recipient?.existed ?? review.recipientExisted)
-        ? "Stored destination · inspect only"
-        : "New destination · created only on success",
-    ],
-    [
-      "Destination default",
-      quote?.recipient?.defaultCurrency ?? review.recipientDefaultCurrency,
-    ],
-    [
-      "You send",
-      `${formatAmount(review.minor, review.wallet.exponent)} ${review.wallet.currency}`,
-    ],
-    [
-      "Recipient receives",
-      fx
-        ? quote
-          ? `${quote.target.amount} ${quote.target.currency}`
-          : "Awaiting validated quote"
-        : `${formatAmount(review.minor, review.wallet.exponent)} ${review.targetCurrency}`,
-    ],
-    ...(quote
-      ? [
-          [
-            "Reference rate",
-            `1 ${quote.source.currency} = ${quote.rate.value} ${quote.target.currency}`,
-          ],
-          ["Rate source date", quote.rate.date],
-          ["Rate fetched at (UTC)", quote.rate.fetchedAt],
-          [
-            "Reference data",
-            quote.rate.source === "cached"
-              ? "Cached · original retrieval time"
-              : "Fresh · latest available reference",
-          ],
-          ["Quote expires at (UTC)", quote.expiresAt],
-        ]
-      : []),
-  ];
+  const receives = hidden
+    ? "Amount hidden"
+    : fx
+      ? quote
+        ? `${displayAmount(BigInt(quote.target.amountMinor), quote.target.exponent)} ${quote.target.currency}`
+        : "Waiting for a rate"
+      : `${displayAmount(review.minor, review.wallet.exponent)} ${review.targetCurrency}`;
   return (
-    <div
-      className="wallet-dialog-review space-y-5"
-      aria-busy={fx && preview.pending}
+    <MoneyReview
+      title="Review transfer"
+      heading={heading}
+      amount={displayAmount(review.minor, review.wallet.exponent)}
+      currency={review.wallet.currency}
+      hidden={hidden}
+      disabled={
+        !ready || (fx && (!quote || preview.pending || preview.expired))
+      }
+      confirmLabel="Confirm transfer"
+      onConfirm={onConfirm}
+      onEdit={onEdit}
+      onCancel={onClose}
+      source={
+        <ReviewWallet currency={review.wallet.currency} id={review.wallet.id} />
+      }
+      target={
+        <div className="wallet-review-recipient">
+          <div className="wallet-review-identity">
+            <Send aria-hidden="true" />
+            <bdi>{review.recipient}</bdi>
+            <span className="wallet-review-id">
+              {review.recipientExisted ? "Saved address" : "New address"}
+            </span>
+          </div>
+          <p>
+            Recipient receives <strong>{receives}</strong>
+          </p>
+          <p className="text-sm text-muted-foreground">
+            Default currency: {review.recipientDefaultCurrency}
+            {!review.recipientExisted &&
+              " · Saved when the transfer completes."}
+          </p>
+        </div>
+      }
     >
-      <h3 ref={heading} tabIndex={-1} className="text-lg font-semibold">
-        Review transfer
-      </h3>
-      <p role="status" className="text-sm text-muted-foreground">
-        {!fx
-          ? "Same currency: identical minor units, no FX rate or quote. Nothing is reserved. The server rechecks funds and destination context on confirmation."
-          : preview.pending
-            ? "Requesting fixed server terms. No funds are moved or reserved; no destination is created."
-            : (preview.message ??
-              (preview.expired
-                ? "This quote expired or the device clock changed. Request fresh terms and review them before confirming."
-                : "No funds are reserved. Confirm these fixed terms before expiry; the server rechecks funds and destination context."))}
-      </p>
-      {!hidden ? (
-        <dl className="wallet-dialog-facts space-y-3 text-sm">
-          {facts.map(([label, value]) => (
-            <div className="flex justify-between gap-4" key={label}>
-              <dt className="text-muted-foreground">{label}</dt>
-              <dd className="min-w-0 text-right wrap-anywhere">
-                <bdi>{value}</bdi>
-              </dd>
-            </div>
-          ))}
-        </dl>
+      {fx ? (
+        <QuoteDetails
+          preview={preview}
+          accountId={review.accountId}
+          hidden={hidden}
+        />
       ) : (
         <p className="text-sm text-muted-foreground">
-          Amounts and quote details hidden. Show amounts before confirming.
+          Same currency · No exchange needed.
         </p>
       )}
-      <p className="text-sm text-muted-foreground">
-        Local simulation only, not identity verification or a real payment.
-        Existing destination defaults are never changed.
-      </p>
-      <Button
-        className="w-full"
-        disabled={
-          !ready ||
-          hidden ||
-          (fx && (!quote || preview.pending || preview.expired))
-        }
-        onClick={onConfirm}
-      >
-        Confirm simulated transfer
-      </Button>
-      {fx && !preview.pending && (!quote || preview.expired) && (
-        <Button
-          className="w-full"
-          variant="outline"
-          onClick={() => {
-            if (preview.request)
-              void preview.load(preview.request, review.accountId);
-          }}
-        >
-          Request fresh quote
-        </Button>
-      )}
-      <DialogFooter>
-        <Button variant="ghost" onClick={onEdit}>
-          Edit details
-        </Button>
-        <Button variant="outline" onClick={onClose}>
-          Back to overview
-        </Button>
-      </DialogFooter>
-    </div>
+    </MoneyReview>
   );
 }

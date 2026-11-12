@@ -275,16 +275,13 @@ describe("wallet presentation interactions", () => {
     ];
     await render(model);
     expect(
-      host.querySelector('[aria-label="Completed simulated activity"]')
-        ?.textContent,
+      host.querySelector('[aria-label="Completed activity"]')?.textContent,
     ).toContain("25.50 USD");
     const hide = host.querySelector<HTMLButtonElement>(
       '[aria-label="Hide monetary amounts"]',
     )!;
     await act(() => hide.click());
-    expect(
-      host.querySelector('[aria-label="Completed simulated activity"]'),
-    ).toBeNull();
+    expect(host.querySelector('[aria-label="Completed activity"]')).toBeNull();
     expect(host.textContent).not.toContain("receipt-id");
     expect(host.textContent).not.toContain("2026-11-11T");
   });

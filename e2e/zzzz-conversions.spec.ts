@@ -52,7 +52,7 @@ async function review(page: Page, target = "GBP", amount = "1.00") {
     .click();
   await expect(
     page.getByRole("button", {
-      name: "Confirm simulated conversion",
+      name: "Confirm conversion",
       exact: true,
     }),
   ).toBeEnabled();
@@ -70,14 +70,12 @@ test("review moves no funds; explicit confirmation records exact balances and pe
   await review(page);
   await expect(page.getByRole("dialog")).toContainText("1.00 USD");
   await expect(page.getByRole("dialog")).toContainText("0.80 GBP");
-  await expect(page.getByRole("dialog")).toContainText("Rate source date");
-  await expect(page.getByRole("dialog")).toContainText(
-    "Quote expires at (UTC)",
-  );
+  await expect(page.getByRole("dialog")).toContainText("Rate date");
+  await expect(page.getByRole("dialog")).toContainText("Valid until");
   expect((await main(request)).wallets).toEqual(before.wallets);
   expect(submissions).toBe(0);
   await page
-    .getByRole("button", { name: "Confirm simulated conversion", exact: true })
+    .getByRole("button", { name: "Confirm conversion", exact: true })
     .evaluate((button) => {
       (button as HTMLButtonElement).click();
       (button as HTMLButtonElement).click();
@@ -128,7 +126,7 @@ test("an eligible missing currency wallet appears only after successful reviewed
     ),
   ).toBeUndefined();
   await page
-    .getByRole("button", { name: "Confirm simulated conversion", exact: true })
+    .getByRole("button", { name: "Confirm conversion", exact: true })
     .click();
   await expect(
     page.getByRole("heading", { name: "Conversion complete" }),
@@ -175,14 +173,14 @@ test("expiry never auto-submits: fresh terms need an explicit request and a sepa
   await page.evaluate(() => window.dispatchEvent(new Event("focus")));
   await expect(
     page.getByRole("button", {
-      name: "Confirm simulated conversion",
+      name: "Confirm conversion",
       exact: true,
     }),
   ).toBeEnabled();
   await page.clock.fastForward(61000);
   await expect(
     page.getByRole("button", {
-      name: "Confirm simulated conversion",
+      name: "Confirm conversion",
       exact: true,
     }),
   ).toBeDisabled();
@@ -192,7 +190,7 @@ test("expiry never auto-submits: fresh terms need an explicit request and a sepa
     (r) => r.url().endsWith("/api/quotes") && r.request().method() === "POST",
   );
   await page
-    .getByRole("button", { name: "Request fresh quote", exact: true })
+    .getByRole("button", { name: "Get a new quote", exact: true })
     .click();
   const next = await (await nextResponse).json();
   await page.clock.setSystemTime(new Date(Date.parse(next.quote.issuedAt) + 1));
@@ -200,7 +198,7 @@ test("expiry never auto-submits: fresh terms need an explicit request and a sepa
   expect(next.quote.quoteId).not.toBe(first.quote.quoteId);
   await expect(
     page.getByRole("button", {
-      name: "Confirm simulated conversion",
+      name: "Confirm conversion",
       exact: true,
     }),
   ).toBeEnabled();
@@ -232,7 +230,7 @@ test("unavailable quote cannot move money and editing preserves the exact draft"
   );
   await expect(
     page.getByRole("button", {
-      name: "Confirm simulated conversion",
+      name: "Confirm conversion",
       exact: true,
     }),
   ).toBeDisabled();
@@ -274,7 +272,7 @@ test("lost committed conversion survives reload, blocks new funding and recovers
   });
   await review(page);
   await page
-    .getByRole("button", { name: "Confirm simulated conversion", exact: true })
+    .getByRole("button", { name: "Confirm conversion", exact: true })
     .click();
   await expect(
     page.getByRole("heading", {
@@ -333,7 +331,7 @@ test("blocked recovery storage sends no conversion and keeps the draft", async (
   });
   await review(page);
   await page
-    .getByRole("button", { name: "Confirm simulated conversion", exact: true })
+    .getByRole("button", { name: "Confirm conversion", exact: true })
     .click();
   await expect(page.getByRole("dialog")).toContainText("Nothing new was sent");
   expect(submissions).toBe(0);
@@ -362,7 +360,7 @@ for (const width of [320, 1440])
       });
       await page
         .getByRole("button", {
-          name: "Confirm simulated conversion",
+          name: "Confirm conversion",
           exact: true,
         })
         .focus();
@@ -391,12 +389,12 @@ for (const width of [320, 1440])
         .locator(".wallet-quick-actions")
         .getByRole("button", { name: "Convert", exact: true })
         .click();
-      await expect(dialog).toContainText(
-        "Show amounts to view the confirmation",
-      );
+      await expect(
+        page.getByLabel("You convert", { exact: true }),
+      ).toHaveAttribute("readonly", "");
       await expect(
         page.getByRole("heading", { name: "Conversion complete", exact: true }),
-      ).toBeVisible();
+      ).toHaveCount(0);
       await expect(dialog).not.toContainText("0.80 GBP");
       await expect(dialog.locator("time")).toHaveCount(0);
     });

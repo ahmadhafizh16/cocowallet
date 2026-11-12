@@ -1,5 +1,45 @@
 # Wallet shell design review
 
+## T11-09 — money workflow finish review
+
+**Disposition: `ship` at the bounded D-037 workflow-refinement scope.** A fresh,
+independent read-only child reviewed the current scope, source, graph handoff and
+render evidence. All **78 required originals** exist, decode and have expected
+dimensions; the reviewer inspected all **13 six-viewport sheets** and originals
+covering every family and all **320/820/1440 light/dark** combinations. Bounded
+overlay captures and top-origin full-document empty states were valid. The original
+inline user image was unavailable to the child; the pinned screenshot transcription
+was authoritative. No comp, quality-bar card, new visual world or raster was invented.
+
+The five-section review accepted the incumbent type/material/ground, amount-first
+reviews, responsive Edit/action wrapping, numeric grouped entry, centered empty
+activity, Done-only safe dismissal, saved/new address workflow, human UTC dates,
+reference-rate truth, disabled loading/original-key recovery and six-row disclosure.
+**Material fixes: none.** Preserve exact strings, immutable stored defaults,
+quote expiry/provenance, privacy removal and uncertain-outcome recovery.
+
+The sole primary detector warning concerns the explicitly requested bottom-border
+focus treatment on a **square input**, not a rounded card. Font/radius advisories
+are local inventory, not demonstrated UX defects; no blanket suppressions were
+added and the detector was not rerun. The approved affected design-document refresh
+is the post-review handoff, not permission to change the identity or unrelated rules.
+
+The parent subsequently verified the complete **109/109 Chromium** fresh-server
+run and final full Docker check: **1,529 Jest tests / 70 suites**, formatting,
+lint, types, production build and **59 artifact documents / 38 tasks**. These are
+parent-run results, not tests executed by the reviewer. This review is not an
+exhaustive backend/security/performance, screen-reader or WCAG certification.
+See [WORKFLOW_REFINEMENT.md](WORKFLOW_REFINEMENT.md) for implementation and
+normal-wallet restoration evidence.
+
+The approved documenter refreshed only affected `DESIGN.md`/v2-sidecar sections:
+amount and success component tokens, actual review/input/nav examples, readable
+dates, empty state and disclosure behavior. All ten original previews remain,
+with two new previews. Core palette/ramps/card roles, unrelated type/spacing/radius
+primitives, shadows, motion tokens and breakpoints remain unchanged; the balance
+history disclosure description alone now reflects six-row paging. Documentation
+was checked by the parent, not represented as another full visual review.
+
 ## T11-08 / T03-03 — presentation and portfolio finish review
 
 The newest pinned brief D-035/D-036 supersedes the historical in-panel History

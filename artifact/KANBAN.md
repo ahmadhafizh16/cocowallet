@@ -2,7 +2,7 @@
 
 **Last updated:** T03-03 and T11-08 are complete: direct Frankfurter-backed USD totals and immutable actual observations, compact sparkline/signed recent rows/checkmark successes, dedicated persistent-shell History and tighter wallet rows. Full Docker check/build passes 1,507 Jest / 99 production Chromium checks. Independent verdict: all four material fixes resolved, `ship` at fix-list scope; user-approved affected design documentation refreshed. The normal wallet's two deposits and all prior financial/account/wallet rows are unchanged; migration 0008 and legitimate valuation metadata only. Restored development passed 300 stable frames with no errors, extra reloads or monetary submissions. Wallet/default management and Swagger remain separate work.
 
-**Scope:** 37 implementation tasks: **6 to do**, **2 in progress**, **0 blocked**, **29 done**. Planning activities completed below do not count as implemented features.
+**Scope:** 38 implementation tasks: **6 to do**, **2 in progress**, **0 blocked**, **30 done**. Planning activities completed below do not count as implemented features.
 
 Each task links to its detailed description, source PRD, decision IDs, dependencies, and acceptance tests. The Angular-style, one-intention-per-commit rule and local Git workflow in [D-021](DECISIONS.md#d-021) and [D-022](DECISIONS.md#d-022) apply to every task. A task moves to **Done** only when its acceptance criteria are verified and the PRD, decisions, diagrams, API documentation, and handover are updated as needed.
 
@@ -72,6 +72,7 @@ _No task is currently blocked by an explicit unresolved decision or external blo
 
 ## Done — implementation tasks
 
+- [x] [T11-09](tasks/TASKS-11.md#t11-09) — Done-only safe success dismissal, screenshot-led reviews, exact grouped amounts, saved/new addresses, readable UTC copy, loading controls and six-row balance paging; 1,529 Jest / 109 Chromium, scoped ship review, approved design refresh and preserved/restored normal wallet.
 - [x] [T03-03](tasks/TASKS-03.md#t03-03) — Exact complete approximate USD valuation, direct fresh-first Frankfurter rates and immutable real observations for main/read-only destinations; unavailable/rounding/race/privacy/replay boundaries verified.
 - [x] [T11-08](tasks/TASKS-11.md#t11-08) — Compact signed activity/sparkline/checkmark successes, persistent-shell History and tighter wallet rows; four reviewed fixes resolved, affected design docs refreshed and normal wallet preserved/restored.
 - [x] [T00-01](tasks/TASKS-00.md#t00-01) — Local Git initialized on `main`; targeted ignores verified.

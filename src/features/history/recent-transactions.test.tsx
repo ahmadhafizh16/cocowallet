@@ -130,7 +130,7 @@ describe("recent history loading and account isolation", () => {
     expect(host.querySelector(".wallet-credit")?.textContent).toBe("+0.80 GBP");
     const row = host.querySelector<HTMLButtonElement>(".wallet-recent-button")!;
     expect(row.getAttribute("aria-label")).toContain(
-      page.transactions[0]!.createdAt,
+      "Nov 12, 2026, 12:00:00 PM UTC",
     );
     expect(row.getAttribute("aria-label")).toContain("Completed");
     expect(row.querySelector(".wallet-transaction-status svg")).not.toBeNull();

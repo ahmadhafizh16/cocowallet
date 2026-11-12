@@ -1,5 +1,6 @@
 import type { HistoryTransaction } from "./contracts";
 import { PROVIDERS } from "../wallet/operation-model";
+import { readableDate, readableTime } from "@/lib/date-presentation";
 
 export function historyTypeLabel(t: HistoryTransaction): string {
   return t.type === "transfer"
@@ -34,12 +35,7 @@ export function TransactionFacts({
       ];
     }),
     ...(t.provider
-      ? [
-          [
-            "Fictional provider",
-            PROVIDERS.find((p) => p.code === t.provider)!.label,
-          ],
-        ]
+      ? [["Provider", PROVIDERS.find((p) => p.code === t.provider)!.label]]
       : []),
     ...(t.rate
       ? [
@@ -47,8 +43,8 @@ export function TransactionFacts({
             "Applied reference rate",
             `1 ${t.source!.currency} = ${t.rate.value} ${t.target!.currency}`,
           ],
-          ["Rate source date", t.rate.date],
-          ["Rate fetched at (UTC)", t.rate.fetchedAt],
+          ["Rate date", readableDate(t.rate.date)],
+          ["Updated", readableTime(t.rate.fetchedAt)],
           [
             "Reference data",
             t.rate.source === "cached"
@@ -73,7 +69,7 @@ export function TransactionFacts({
       <div className="grid gap-1">
         <dt className="text-muted-foreground">Recorded at (UTC)</dt>
         <dd>
-          <time dateTime={t.createdAt}>{t.createdAt}</time>
+          <time dateTime={t.createdAt}>{readableTime(t.createdAt)}</time>
         </dd>
       </div>
     </dl>

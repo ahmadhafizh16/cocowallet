@@ -51,7 +51,7 @@ test("explicit deposit/withdrawal confirmations update balances and show persist
   const before = await wallet(request);
   await review(page, "Deposit", "100.00");
   await page
-    .getByRole("button", { name: "Confirm simulated deposit", exact: true })
+    .getByRole("button", { name: "Confirm deposit", exact: true })
     .click();
   await expect(
     page.getByRole("heading", {
@@ -71,15 +71,10 @@ test("explicit deposit/withdrawal confirmations update balances and show persist
       sessionStorage.getItem("cocowallet.pending-funding.v1"),
     ),
   ).resolves.toBeNull();
-  await page
-    .getByRole("button", { name: "Start another operation", exact: true })
-    .click();
-  await page
-    .getByRole("button", { name: "Back to overview", exact: true })
-    .click();
+  await page.getByRole("button", { name: "Done", exact: true }).click();
   await review(page, "Withdraw", "25.50");
   await page
-    .getByRole("button", { name: "Confirm simulated withdrawal", exact: true })
+    .getByRole("button", { name: "Confirm withdrawal", exact: true })
     .click();
   await expect(
     page.getByRole("heading", {
@@ -117,7 +112,7 @@ test("lost committed response survives reload; explicit recovery reuses original
   );
   await review(page, "Deposit", "7.25");
   await page
-    .getByRole("button", { name: "Confirm simulated deposit", exact: true })
+    .getByRole("button", { name: "Confirm deposit", exact: true })
     .click();
   await expect(
     page.getByRole("button", {
@@ -155,11 +150,15 @@ test("lost committed response survives reload; explicit recovery reuses original
     (BigInt(before.balanceMinor) + 725n).toString(),
   );
   await page.getByRole("button", { name: "Close dialog", exact: true }).click();
+  await expect(
+    page.getByRole("button", { name: "Review submission", exact: true }),
+  ).toHaveCount(0);
   await page
     .getByRole("button", { name: "Hide monetary amounts", exact: true })
     .click();
   await page
-    .getByRole("button", { name: "Review submission", exact: true })
+    .locator(".wallet-quick-actions")
+    .getByRole("button", { name: "Deposit", exact: true })
     .click();
   await expect(page.getByRole("dialog")).not.toContainText("7.25");
   await expect(page.getByRole("dialog").locator("time")).toHaveCount(0);
@@ -184,7 +183,7 @@ test("blocked recovery storage prevents any submission and keeps the draft", asy
   });
   await review(page, "Deposit", "3.50");
   await page
-    .getByRole("button", { name: "Confirm simulated deposit", exact: true })
+    .getByRole("button", { name: "Confirm deposit", exact: true })
     .click();
   await expect(page.getByRole("dialog")).toContainText("Nothing new was sent");
   expect(writes).toBe(0);
@@ -216,7 +215,7 @@ test("a stale withdrawal review receives a definitive server rejection without a
   });
   expect(drain.status()).toBe(200);
   await page
-    .getByRole("button", { name: "Confirm simulated withdrawal", exact: true })
+    .getByRole("button", { name: "Confirm withdrawal", exact: true })
     .click();
   await expect(
     page.getByRole("heading", {
@@ -248,7 +247,7 @@ for (const theme of ["light", "dark"] as const) {
       await page.reload();
       await review(page, "Deposit", "0.01");
       await page
-        .getByRole("button", { name: "Confirm simulated deposit", exact: true })
+        .getByRole("button", { name: "Confirm deposit", exact: true })
         .focus();
       await page.keyboard.press("Enter");
       await expect(

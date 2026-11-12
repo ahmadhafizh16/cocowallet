@@ -2,6 +2,17 @@
 
 <!-- impeccable:product-schema 1 -->
 
+The latest workflow feedback is pinned in
+[WORKFLOW_REFINEMENT.md](artifact/WORKFLOW_REFINEMENT.md) (D-037): amount-first
+review, grouped numeric bottom-border entry, Done-only success and safe reset on
+every confirmed-result dismissal, human-readable UTC dates/copy, green/loading
+API controls, centered recent empty states, six-row observation paging and hidden
+Wallets navigation. Send money offers saved/new addresses, USD defaults for new
+addresses and USD/GBP/EUR for both currency choices; existing metadata, other
+balances, backend/conversion capabilities and uncertain-outcome recovery remain.
+The user selected **Currency rates**, not a streaming-rate claim, and approved
+refreshing affected design documentation. Older success-dismissal copy is superseded.
+
 ## Platform
 
 web

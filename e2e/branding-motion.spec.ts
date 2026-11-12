@@ -1,6 +1,6 @@
 import { expect, test, type Page } from "@playwright/test";
 import { mkdirSync, writeFileSync } from "node:fs";
-import { chooseTheme, openMoneyForm } from "./helpers";
+import { chooseTheme, openMoneyForm, chooseRecipient } from "./helpers";
 
 async function recordMotion(page: Page) {
   await page.addInitScript(() => {
@@ -178,7 +178,7 @@ test("dismissing actively progressing dialog, scrim and menu arrivals preserves 
 
   await openMoneyForm(page, "Deposit");
   await page
-    .getByRole("combobox", { name: "Fictional provider", exact: true })
+    .getByRole("combobox", { name: "Deposit from", exact: true })
     .click();
   const beforeSelect = await pauseEntrance(
     page,
@@ -189,7 +189,7 @@ test("dismissing actively progressing dialog, scrim and menu arrivals preserves 
   await finishExits(page);
   await expect(page.locator('[data-slot="select-content"]')).toHaveCount(0);
   await expect(
-    page.getByRole("combobox", { name: "Fictional provider", exact: true }),
+    page.getByRole("combobox", { name: "Deposit from", exact: true }),
   ).toBeFocused();
   writeFileSync(
     ".impeccable/review/motion-interruption.json",
@@ -215,7 +215,7 @@ test("applies the approved CocoWallet vectors, title and favicon at narrow width
 }) => {
   await page.emulateMedia({ colorScheme: "dark" });
   await page.goto("/");
-  await expect(page).toHaveTitle("CocoWallet · Multi-currency simulation");
+  await expect(page).toHaveTitle("CocoWallet · Your multi-currency wallet");
   const brand = page.getByRole("link", {
     name: "CocoWallet overview",
     exact: true,
@@ -298,7 +298,7 @@ test("real dialog, review, edit, menu and select motion completes without retain
     "25.00",
   );
   await page
-    .getByRole("combobox", { name: "Fictional provider", exact: true })
+    .getByRole("combobox", { name: "Deposit from", exact: true })
     .click();
   await expectMotion(page, "wallet-menu-in");
   await page
@@ -351,19 +351,20 @@ test("interrupted arrivals and mobile menu-to-dialog handoffs preserve focus and
       .getByRole("menuitem", { name: "Send money", exact: true })
       .click();
     await expect(
-      page.getByLabel("Simulated recipient account ID", { exact: true }),
+      repeat === 0
+        ? page.getByRole("combobox", { name: "Recipient", exact: true })
+        : page.getByLabel("New address", { exact: true }),
     ).toBeFocused();
-    await page
-      .getByLabel("Simulated recipient account ID", { exact: true })
-      .fill("demo-recipient");
+    await chooseRecipient(page, "demo-recipient");
     await page.keyboard.press("Escape");
     await expect(page.getByRole("dialog")).toHaveCount(0);
+    await expect(page.locator('[data-slot="dialog-content"]')).toHaveCount(0);
     await expect(actions).toBeFocused();
   }
   await trigger.click();
-  await expect(
-    page.getByLabel("Simulated recipient account ID", { exact: true }),
-  ).toHaveValue("demo-recipient");
+  await expect(page.getByLabel("New address", { exact: true })).toHaveValue(
+    "demo-recipient",
+  );
 });
 
 test("reduced motion removes spatial choreography while forms, menus and focus remain usable", async ({

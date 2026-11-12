@@ -82,7 +82,7 @@ test("browser-created server quotes bind exact terms without moving or reserving
     .click();
   await expect(
     page.getByRole("button", {
-      name: "Confirm simulated conversion",
+      name: "Confirm conversion",
       exact: true,
     }),
   ).toBeEnabled();

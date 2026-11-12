@@ -40,7 +40,7 @@ export function WalletDashboardSkeleton() {
         <div className="wallet-workspace">
           <div className="wallet-rail wallet-skeleton-rail">
             <div className="wallet-rail-group">
-              {Array.from({ length: 3 }, (_, index) => (
+              {Array.from({ length: 2 }, (_, index) => (
                 <div className="wallet-skeleton-nav-item" key={index}>
                   <Skeleton className="wallet-skeleton-nav" />
                   <Skeleton className="wallet-skeleton-nav-label" />

@@ -113,11 +113,6 @@ export function SubmissionPanel({
         <Button className="w-full" onClick={onClose}>
           Done
         </Button>
-        {!funding.storageBlocked && (
-          <Button variant="ghost" onClick={onAnother}>
-            Start another operation
-          </Button>
-        )}
       </div>
     );
   }
@@ -158,7 +153,7 @@ export function SubmissionPanel({
           </div>
           {(intent.kind === "deposit" || intent.kind === "withdrawal") && (
             <div className="flex justify-between gap-4">
-              <dt>Fictional provider</dt>
+              <dt>Provider</dt>
               <dd>
                 {
                   PROVIDERS.find((p) => p.code === intent.request.provider)
@@ -179,7 +174,7 @@ export function SubmissionPanel({
           {intent.kind === "transfer" && (
             <>
               <div className="flex justify-between gap-4">
-                <dt>Simulated recipient</dt>
+                <dt>Recipient</dt>
                 <dd className="min-w-0 text-right wrap-anywhere">
                   <bdi>{intent.request.recipientAccountId}</bdi>
                 </dd>
@@ -209,6 +204,8 @@ export function SubmissionPanel({
       {!funding.result && intent && (
         <Button
           className="w-full"
+          variant="success"
+          loading={funding.pending}
           disabled={funding.pending || funding.storageBlocked}
           onClick={() => void funding.send()}
         >
@@ -226,7 +223,7 @@ export function SubmissionPanel({
           </Button>
         )}
         <Button variant="outline" onClick={onClose}>
-          Back to overview
+          Close
         </Button>
       </DialogFooter>
     </div>

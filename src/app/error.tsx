@@ -31,7 +31,9 @@ export default function WalletError({
           available.
         </p>
       </section>
-      <p className="error-simulation">Local simulation · No real funds move</p>
+      <p className="error-simulation">
+        Prototype · Local ledger only. No real funds move.
+      </p>
     </main>
   );
 }

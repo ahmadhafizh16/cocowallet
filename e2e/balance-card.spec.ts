@@ -217,7 +217,7 @@ test("recorded-history fixtures render an accessible chart, never become preview
     await expect(page.getByRole("table")).toBeVisible();
     await expect(page.getByRole("table")).toContainText("578.50");
     await expect(page.getByRole("table")).toContainText(
-      "2026-10-07T09:00:00.000Z",
+      "Oct 7, 2026, 9:00:00 AM UTC",
     );
     expect(
       await page.evaluate(

@@ -66,6 +66,6 @@ it("keeps exact visible amounts, currencies and recorded time in each history ro
     />,
   );
   expect(html).toContain(
-    `aria-label="View outgoing transfer record · 1.00 USD → 0.80 GBP · Recorded at (UTC) ${createdAt}"`,
+    'aria-label="View outgoing transfer record · 1.00 USD → 0.80 GBP · Nov 12, 2026, 12:00:00 PM UTC"',
   );
 });

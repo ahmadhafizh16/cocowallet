@@ -1,6 +1,7 @@
 import { expect, test } from "@playwright/test";
 import {
   chooseOption,
+  chooseRecipient,
   chooseTheme,
   closeMoneyForm,
   openMoneyForm,
@@ -81,7 +82,8 @@ test("the desktop Send money rail has a real tooltip, focus trap, and Escape rec
   );
   await page.keyboard.press("Enter");
   const dialog = page.getByRole("dialog", { name: "Send money", exact: true });
-  const recipient = page.getByLabel("Simulated recipient account ID", {
+  const recipient = page.getByRole("combobox", {
+    name: "Recipient",
     exact: true,
   });
   await expect(recipient).toBeFocused();
@@ -112,7 +114,7 @@ test("reviews a deposit without submitting money or losing draft input", async (
       mutations.push(request.url());
   });
   await openMoneyForm(page, "Deposit");
-  await chooseOption(page, "Fictional provider", "Community Bank");
+  await chooseOption(page, "Deposit from", "Community Bank");
   await page.getByLabel("You add", { exact: true }).fill("25.00");
   await page
     .getByRole("button", { name: "Review deposit", exact: true })
@@ -124,7 +126,7 @@ test("reviews a deposit without submitting money or losing draft input", async (
   await expect(page.getByRole("dialog")).toContainText("Community Bank");
   await expect(
     page.getByRole("button", {
-      name: "Confirm simulated deposit",
+      name: "Confirm deposit",
       exact: true,
     }),
   ).toBeEnabled();
@@ -139,7 +141,7 @@ test("reviews a deposit without submitting money or losing draft input", async (
     "25.00",
   );
   await expect(
-    page.getByRole("combobox", { name: "Fictional provider", exact: true }),
+    page.getByRole("combobox", { name: "Deposit from", exact: true }),
   ).toContainText("Community Bank");
   await closeMoneyForm(page);
   await expect(page.locator(".wallet-total-value")).toHaveText("$0.00");
@@ -229,7 +231,7 @@ test("zero balances cannot be withdrawn or converted and service guidance preced
     await expect(
       page.getByRole("dialog").locator('[data-slot="dialog-description"]'),
     ).toContainText(
-      /not connected|simulated wallet operation|simulated conversion/,
+      /Review the details before confirming|Review the exchange rate before confirming/,
     );
     await page.getByLabel(label, { exact: true }).fill("1.00");
     await page.getByRole("button", { name: review, exact: true }).click();
@@ -247,23 +249,18 @@ test("self-transfer is rejected without creating a destination or claiming succe
 }) => {
   const { accounts } = await (await request.get("/api/accounts")).json();
   await openMoneyForm(page, "Send money");
-  await page
-    .getByLabel("Simulated recipient account ID", { exact: true })
-    .fill(
-      accounts.find((account: { role: string }) => account.role === "main").id,
-    );
+  await chooseRecipient(
+    page,
+    accounts.find((account: { role: string }) => account.role === "main").id,
+  );
   await page.getByLabel("You send", { exact: true }).fill("1.00");
   await page
     .getByRole("button", { name: "Review transfer", exact: true })
     .click();
   await expect(
-    page.getByText(
-      "Enter a different simulated account ID, not this account’s own ID.",
-    ),
+    page.getByText("Choose a recipient other than your own account."),
   ).toBeVisible();
-  await expect(
-    page.getByLabel("Simulated recipient account ID", { exact: true }),
-  ).toBeFocused();
+  await expect(page.getByLabel("New address", { exact: true })).toBeFocused();
   await closeMoneyForm(page);
   await page
     .getByRole("button", { name: "Account being inspected", exact: true })
@@ -365,16 +362,14 @@ test("mobile labelled Actions opens Send money and restores focus to its stable 
   await expect(
     page.getByRole("dialog", { name: "Send money", exact: true }),
   ).toBeVisible();
-  await page
-    .getByLabel("Simulated recipient account ID", { exact: true })
-    .fill("demo-recipient");
+  await chooseRecipient(page, "demo-recipient");
   await closeMoneyForm(page);
   await expect(trigger).toBeFocused();
   await trigger.click();
   await page.getByRole("menuitem", { name: "Send money", exact: true }).click();
-  await expect(
-    page.getByLabel("Simulated recipient account ID", { exact: true }),
-  ).toHaveValue("demo-recipient");
+  await expect(page.getByLabel("New address", { exact: true })).toHaveValue(
+    "demo-recipient",
+  );
 });
 
 test("popup currency selection is keyboard-operable and stays above the dialog", async ({
@@ -400,7 +395,7 @@ test("popup currency selection is keyboard-operable and stays above the dialog",
   await expect(amount).toHaveAttribute("data-slot", "input");
   expect(
     await amount.evaluate((element) => element.getBoundingClientRect().height),
-  ).toBe(56);
+  ).toBe(100);
 });
 
 test("menus and dialogs fit narrow viewports in both themes", async ({
@@ -415,7 +410,7 @@ test("menus and dialogs fit narrow viewports in both themes", async ({
     await chooseTheme(page, theme);
     await openMoneyForm(page, "Deposit");
     await page
-      .getByRole("combobox", { name: "Fictional provider", exact: true })
+      .getByRole("combobox", { name: "Deposit from", exact: true })
       .click();
     const menu = page.getByRole("listbox");
     await expect(menu).toBeVisible();

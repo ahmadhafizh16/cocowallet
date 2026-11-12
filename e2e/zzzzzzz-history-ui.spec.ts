@@ -5,6 +5,7 @@ import {
   type Page,
 } from "@playwright/test";
 import { randomUUID } from "node:crypto";
+import { readableTime } from "../src/lib/date-presentation";
 import { mkdirSync, writeFileSync } from "node:fs";
 
 test.use({ timezoneId: "Pacific/Honolulu" });
@@ -146,7 +147,7 @@ function fxHistoryName(
   direction: "incoming" | "outgoing",
   receipt: { transactionId: string; createdAt: string },
 ) {
-  return `View ${direction} transfer ${receipt.transactionId} · 1.00 USD → 0.80 GBP · Recorded at (UTC) ${receipt.createdAt}`;
+  return `View ${direction} transfer ${receipt.transactionId} · 1.00 USD → 0.80 GBP · ${readableTime(receipt.createdAt)}`;
 }
 
 test("numbered pages and exact detail/back navigation preserve the applied filters and focused row", async ({
@@ -199,7 +200,9 @@ test("numbered pages and exact detail/back navigation preserve the applied filte
     `${record.target.amount} USD`,
   );
   await expect(page.locator("#history")).toContainText("Bank account");
-  await expect(page.locator("#history")).toContainText(record.createdAt);
+  await expect(page.locator("#history")).toContainText(
+    readableTime(record.createdAt),
+  );
   await expect(page.locator("#history")).not.toContainText("Retry key");
   await page
     .getByRole("button", { name: "Back to results", exact: true })
@@ -208,7 +211,7 @@ test("numbered pages and exact detail/back navigation preserve the applied filte
   const restoredRow = rows.locator(`button[data-transaction-id="${id}"]`);
   await expect(restoredRow).toBeFocused();
   await expect(restoredRow).toHaveAccessibleName(
-    `View deposit ${id} · ${record.target.amount} ${record.target.currency} · Recorded at (UTC) ${record.createdAt}`,
+    `View deposit ${id} · ${record.target.amount} ${record.target.currency} · ${readableTime(record.createdAt)}`,
   );
   await expect(
     page.getByRole("combobox", { name: "History type", exact: true }),
@@ -345,7 +348,9 @@ test("every completed operation has recorded details; rejected attempts never be
   ]) {
     await lookup(page, receipt.transactionId);
     await expect(page.locator("#history")).toContainText(text);
-    await expect(page.locator("#history")).toContainText(receipt.createdAt);
+    await expect(page.locator("#history")).toContainText(
+      readableTime(receipt.createdAt),
+    );
     await expect(page.locator("#history")).not.toContainText(
       "Balances after this operation",
     );

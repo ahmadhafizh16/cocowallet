@@ -1,13 +1,14 @@
 # Handover
 
-**Status:** D-035/D-036 presentation and portfolio work is complete:
-29 of 37 tasks closed, 6 To do / 2 In progress / 29 Done. Compact signed activity,
-checkmark successes, dedicated shared-shell History, direct Frankfurter USD totals
-and actual recorded observations are implemented. Destination money remains
-disabled; accounting, privacy and original-key recovery are preserved. Final review,
-normal-wallet migration/restoration and closure evidence are recorded in
-[PRESENTATION_REFINEMENT.md](PRESENTATION_REFINEMENT.md). Wallet/default management
-and Swagger remain separate work.
+**Status:** D-037 workflow refinement is complete: **30 of 38 tasks closed,
+6 To do / 2 In progress / 30 Done**. Done-only safe success dismissal, exact grouped
+bottom-border amounts, shared amount-first reviews, saved/new recipient selection,
+readable UTC dates/copy, green/loading controls and six-row balance paging refine
+the existing shared-shell wallet. Destination money remains disabled; accounting,
+privacy, stored defaults and original-key recovery are preserved. Final review,
+design refresh and normal-wallet restoration evidence are recorded in
+[WORKFLOW_REFINEMENT.md](WORKFLOW_REFINEMENT.md). Wallet/default management and
+Swagger remain separate work.
 
 ## Implemented modules and commands
 
@@ -58,7 +59,8 @@ and Swagger remain separate work.
 | `src/components/brand/`, `public/brand/`, `src/app/icon.svg` | Approved CocoWallet inline vector logo, theme-aware wordmark, unchanged downloadable variants, and matching favicon. |
 | `src/features/theme/`, `src/app/globals.css` | Approved frosted tokens, light/dark/system preference, pre-paint theme bootstrap, storage fallback, and reduced-motion styles. |
 | `src/app/(wallet)/`, root `src/app/layout.tsx`, `loading.tsx`, `error.tsx`, `not-found.tsx` | Persistent dynamic shared shell for `/` and `/history`, preserving account/privacy/money drafts/recovery across soft navigation; root styles/metadata, skip/loading/error/404. No build-time DB read/seed. |
-| `src/features/wallet/`, `src/features/submissions/submission-panel.tsx` | Compact total/sparkline/actions, tighter wallet rows, signed recent activity, concise confirmed-success checkmarks and full recovery/error safeguards. Done clears safely completed presentation, X retains it. One discreet prototype footer. |
+| `src/features/wallet/`, `src/features/submissions/submission-panel.tsx` | Compact total/sparkline/actions, tighter wallet rows, signed recent activity and Done-only successes. Every safe completed-result dismissal resets presentation; unknown/blocked recovery remains. One discreet prototype footer. |
+| `src/features/wallet/money-amount-input.tsx`, `amount-entry.ts`, `money-review.tsx`, `src/lib/date-presentation.ts` | Exact string grouping/caret, large bottom-border amount field, shared screenshot-led reviews and deterministic human UTC date/time presentation without changing canonical API/storage facts. |
 | `src/features/wallet/balance-history.tsx`, `currency-flag.tsx` | Validated actual account-scoped USD observations, compact min/max sparkline and expanded zero-baseline chart/exact-value disclosure; honest empty/private states and local currency vectors. |
 | `DESIGN.md`, `.impeccable/design.json` | Extracted light/dark visual tokens, canonical design guidance, and version-2 component-preview extensions; actual application styles remain in source CSS. |
 | `scripts/check-artifacts.mjs` | Checks Markdown links, decision/task references, board status alignment, and task dependency cycles. |
@@ -79,7 +81,28 @@ Stop the dev compiler before `docker compose run --rm app npm run check`, then u
 
 Application DB: `/app/data/wallet.sqlite` in Compose's `wallet-data` volume. Tests use isolated temporary SQLite files. Normal shutdown is `docker compose down` without deleting volumes. Before applying journal migrations, the stopped app's database was backed up with SQLite's backup API to `/app/data/wallet.sqlite.pre-journal-1794390597589.bak`. Backup creation is verified; a full restore drill is not claimed.
 
-Current presentation/portfolio verification passes the full Docker check/build:
+Current workflow verification passes the full Docker check/build: **1,529 Jest
+tests in 70 suites**, formatting/lint/types and **59 artifact documents / 38 tasks**;
+all **109 production Chromium checks** pass on a newly recreated isolated server.
+The independent full finish review returned **ship**, no material fixes, at the
+bounded D-037 scope. Approved affected DESIGN.md/sidecar changes document the new
+patterns while preserving palette/core identity and unrelated primitives.
+
+The normal-wallet backup is
+`/app/data/wallet.sqlite.pre-workflow-1794469981334.bak`. All 15 tables were
+row-identical before restoring development. Afterwards **13 non-cache tables remain
+identical**, including migrations/attempts/quotes/use/observations and financial
+records; only catalog/rate caches refreshed. The actual existing user activity is
+**2 accounts / 4 wallets / 2 funding attempts / 1 transfer attempt / 3 transactions /
+4 journal entries / 3 observations**, plus **2 quotes / 1 quote use**. Integrity
+`ok`, no foreign-key violations. The healthy development service retains
+`.next/dev.pre-workflow-1794471830280`; a read-only Chromium check passed **300
+stable frames**, actual three-record activity, exact total, grouped draft/History
+navigation and privacy, with zero extra document navigations, page/console errors
+or monetary/quote POSTs. No normal seed/money test, migration, dependency change,
+restore drill or push ran. See [WORKFLOW_REFINEMENT.md](WORKFLOW_REFINEMENT.md).
+
+Historical D-035/D-036 presentation/portfolio verification passed the full Docker check/build:
 **1,507 Jest tests in 67 suites**, formatting/lint/TypeScript and **58 artifact
 documents / 37 tasks**; all **99 production Chromium checks** pass on a newly
 recreated isolated server. The independent reviewer scored all four corrections

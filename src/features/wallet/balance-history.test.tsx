@@ -240,7 +240,7 @@ describe("BalanceHistory", () => {
     expect(markup).toContain("2.00 USD");
     expect(markup.match(/<tbody><tr>|<\/tr><tr>/gu)).toHaveLength(3);
     expect(markup).toContain(
-      'dateTime="2026-01-02T00:00:00.000Z">2026-01-02T00:00:00.000Z</time>',
+      'dateTime="2026-01-02T00:00:00.000Z">Jan 2, 2026, 12:00:00 AM UTC</time>',
     );
     expect(markup).not.toMatch(/NaN|Infinity|return|Last 7|Last 30/u);
     expect(markup).not.toMatch(/>[^<]*%/u);
@@ -296,15 +296,16 @@ describe("BalanceHistory", () => {
     }
   });
 
-  it("labels real same-day endpoints with deterministic UTC times, including milliseconds", () => {
+  it("labels same-day endpoints with human UTC times while preserving exact machine timestamps", () => {
     const markup = render(
       series([
         { recordedAt: "2026-01-01T12:34:56.001Z", balanceMinor: "1" },
         { recordedAt: "2026-01-01T12:34:56.002Z", balanceMinor: "2" },
       ]),
     );
-    expect(markup).toContain("2026-01-01 12:34:56.001 UTC");
-    expect(markup).toContain("2026-01-01 12:34:56.002 UTC");
+    expect(markup).toContain("Jan 1, 2026, 12:34:56 PM UTC");
+    expect(markup).toContain('dateTime="2026-01-01T12:34:56.001Z"');
+    expect(markup).toContain('dateTime="2026-01-01T12:34:56.002Z"');
     expect(coordinates(markup)).toEqual([
       { x: 6, y: 55 },
       { x: 594, y: 6 },
@@ -323,8 +324,8 @@ describe("BalanceHistory", () => {
       { x: 6, y: 55 },
       { x: 594, y: 6 },
     ]);
-    expect(markup).toContain("0000-01-01 UTC");
-    expect(markup).toContain("9999-12-31 UTC");
+    expect(markup).toContain('dateTime="0000-01-01T00:00:00.000Z"');
+    expect(markup).toContain("Dec 31, 9999 UTC");
   });
 
   it("does not mutate supplied metadata, records, or their ordering", () => {
@@ -345,7 +346,8 @@ describe("BalanceHistory", () => {
     const markup = render(series(points));
     expect(coordinates(markup)).toHaveLength(2);
     expect(markup.match(/<polyline\b/gu)).toHaveLength(1);
-    expect(markup.match(/<tbody><tr>|<\/tr><tr>/gu)).toHaveLength(240);
+    expect(markup.match(/<tbody><tr>|<\/tr><tr>/gu)).toHaveLength(6);
+    expect(markup).toContain("Page 1 of 40");
     const segments = markup
       .match(/<polyline[^>]*points="([^"]+)"/u)![1]!
       .split(" ");

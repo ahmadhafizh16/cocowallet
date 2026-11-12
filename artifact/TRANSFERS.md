@@ -1,5 +1,14 @@
 # Atomic simulated-transfer backend
 
+**Latest interface refinement:** [D-037](DECISIONS.md#d-037) replaces free-entry-
+only selection with saved addresses or Create new address. New addresses default
+to USD; both Send money currency choices are limited to USD/GBP/EUR in this UI,
+without changing the backend contract or existing recipient defaults. Address
+creation still occurs only in the successful atomic transfer, never selection or
+review. Shared reviews, exact grouped amount entry, readable UTC dates and safe
+Done-only success dismissal are described in
+[WORKFLOW_REFINEMENT.md](WORKFLOW_REFINEMENT.md); unknown-outcome recovery is unchanged.
+
 **Status:** T08-01's atomic service is verified. T08-02 now connects a documented
 transfer endpoint, reviewed same/FX confirmation, shared original-key recovery and
 inspect-only destination balances/incoming recent history, verified under T08-02.

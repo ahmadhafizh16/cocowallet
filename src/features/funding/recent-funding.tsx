@@ -2,6 +2,7 @@ import { displayAmount } from "../wallet/presentation";
 import { PROVIDERS } from "../wallet/operation-model";
 import type { FundingReceipt } from "./contracts";
 import type { ConversionReceipt } from "../conversions/contracts";
+import { readableDate, readableTime } from "@/lib/date-presentation";
 
 export function RecentFunding({
   receipts,
@@ -17,7 +18,7 @@ export function RecentFunding({
       </p>
     );
   return (
-    <ul className="space-y-4" aria-label="Completed simulated activity">
+    <ul className="space-y-4" aria-label="Completed activity">
       {receipts.map((receipt) => (
         <li
           key={receipt.transactionId}
@@ -43,16 +44,18 @@ export function RecentFunding({
               <div>
                 <dt className="text-muted-foreground">Recorded at (UTC)</dt>
                 <dd>
-                  <time dateTime={receipt.createdAt}>{receipt.createdAt}</time>
+                  <time dateTime={receipt.createdAt}>
+                    {readableTime(receipt.createdAt)}
+                  </time>
                 </dd>
               </div>
               <div>
                 <dt className="text-muted-foreground">Status</dt>
-                <dd>Completed simulation</dd>
+                <dd>Completed</dd>
               </div>
               {receipt.type !== "conversion" ? (
                 <div>
-                  <dt className="text-muted-foreground">Fictional provider</dt>
+                  <dt className="text-muted-foreground">Provider</dt>
                   <dd>
                     {PROVIDERS.find((p) => p.code === receipt.provider)?.label}
                   </dd>
@@ -69,7 +72,7 @@ export function RecentFunding({
                   <div>
                     <dt className="text-muted-foreground">Rate source date</dt>
                     <dd>
-                      {receipt.rate.date} ·{" "}
+                      {readableDate(receipt.rate.date)} ·{" "}
                       {receipt.rate.source === "cached" ? "Cached" : "Fresh"}
                     </dd>
                   </div>
@@ -77,7 +80,7 @@ export function RecentFunding({
                     <dt className="text-muted-foreground">
                       Rate fetched at (UTC)
                     </dt>
-                    <dd>{receipt.rate.fetchedAt}</dd>
+                    <dd>{readableTime(receipt.rate.fetchedAt)}</dd>
                   </div>
                   <div>
                     <dt className="text-muted-foreground">Quote ID</dt>

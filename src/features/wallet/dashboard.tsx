@@ -56,6 +56,7 @@ import {
 } from "@/components/ui/tooltip";
 import { ThemeMenu } from "@/features/theme/theme-menu";
 import { useHydrated } from "@/lib/use-hydrated";
+import { readableDate, readableTime } from "@/lib/date-presentation";
 import { RecentFunding } from "../funding/recent-funding";
 import { RecentTransactions } from "../history/recent-transactions";
 import { HistoryWorkspace } from "../history/workspace";
@@ -75,7 +76,6 @@ import type { WalletOverview } from "./types";
 
 const NAVIGATION = [
   { id: "overview", label: "Overview", icon: House },
-  { id: "wallets", label: "Wallets", icon: Wallet },
   { id: "history", label: "History", icon: History },
 ] as const;
 
@@ -551,12 +551,7 @@ export function WalletDashboard({
                                   variant="ghost"
                                   className="wallet-total-note wallet-rate-info"
                                 >
-                                  {portfolio.view?.total.status ===
-                                    "available" &&
-                                  portfolio.view.total.source === "cached"
-                                    ? "Cached"
-                                    : "Fresh"}{" "}
-                                  Frankfurter rates
+                                  Currency rates
                                   <Info aria-hidden="true" />
                                 </Button>
                               </TooltipTrigger>
@@ -569,9 +564,9 @@ export function WalletDashboard({
                                     1 {rate.base} = {rate.rate} USD ·{" "}
                                     {rate.source}
                                     <br />
-                                    Source date {rate.date}
+                                    Rate date {readableDate(rate.date)}
                                     <br />
-                                    Fetched {rate.fetchedAt}
+                                    Updated {readableTime(rate.fetchedAt)}
                                   </p>
                                 ))}
                               </TooltipContent>
@@ -747,7 +742,7 @@ export function WalletDashboard({
                         <p>
                           {isMain
                             ? fundingEnabled
-                              ? "Completed simulated deposits, withdrawals and conversions will appear here; rejected attempts are not transactions."
+                              ? "Your completed transactions will appear here."
                               : balancesConnected
                                 ? "Completed transactions will appear when the history service is connected."
                                 : "Transactions will appear here when wallet services are connected."

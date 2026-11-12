@@ -1,4 +1,7 @@
-import { useId, type ReactNode } from "react";
+import { useId, useRef, useState, type ReactNode } from "react";
+import { Button } from "@/components/ui/button";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { readableDate, readableTime } from "@/lib/date-presentation";
 import {
   Dialog,
   DialogContent,
@@ -93,7 +96,9 @@ function plotRatio(value: bigint, maximum: bigint): number {
 }
 
 function endpointLabel(recordedAt: string, includeTime: boolean): string {
-  return `${recordedAt.slice(0, 10)}${includeTime ? ` ${recordedAt.slice(11, 23)}` : ""} UTC`;
+  return includeTime
+    ? readableTime(recordedAt)
+    : `${readableDate(recordedAt.slice(0, 10))} UTC`;
 }
 
 export function BalanceHistory({
@@ -103,6 +108,8 @@ export function BalanceHistory({
   compact = false,
 }: BalanceHistoryProps) {
   const id = useId();
+  const [page, setPage] = useState(1);
+  const tableHeading = useRef<HTMLTableCaptionElement>(null);
   // Privacy takes precedence: do not validate or render any supplied records.
   const records =
     hidden || series === undefined ? null : verifySeries(series, accountId);
@@ -115,6 +122,12 @@ export function BalanceHistory({
         : records.length === 0
           ? "empty"
           : "ready";
+  const pages = Math.ceil((records?.length ?? 0) / 6);
+  const visiblePage = Math.max(1, Math.min(page, pages));
+  function changePage(next: number) {
+    setPage(next);
+    requestAnimationFrame(() => tableHeading.current?.focus());
+  }
 
   let content;
   let chart: ReactNode;
@@ -241,7 +254,9 @@ export function BalanceHistory({
         <details className="wallet-balance-history-details">
           <summary>View recorded balances</summary>
           <table>
-            <caption>Recorded balance snapshots in USD</caption>
+            <caption ref={tableHeading} tabIndex={-1}>
+              Recorded balance snapshots in USD
+            </caption>
             <thead>
               <tr>
                 <th scope="col">Recorded at (UTC)</th>
@@ -249,16 +264,48 @@ export function BalanceHistory({
               </tr>
             </thead>
             <tbody>
-              {records.map(({ recordedAt, balance }) => (
-                <tr key={recordedAt}>
-                  <td>
-                    <time dateTime={recordedAt}>{recordedAt}</time>
-                  </td>
-                  <td>{displayAmount(balance, 2)} USD</td>
-                </tr>
-              ))}
+              {records
+                .slice((visiblePage - 1) * 6, visiblePage * 6)
+                .map(({ recordedAt, balance }) => (
+                  <tr key={recordedAt}>
+                    <td>
+                      <time dateTime={recordedAt}>
+                        {readableTime(recordedAt)}
+                      </time>
+                    </td>
+                    <td>{displayAmount(balance, 2)} USD</td>
+                  </tr>
+                ))}
             </tbody>
           </table>
+          {pages > 1 && (
+            <nav
+              className="wallet-balance-pages"
+              aria-label="Recorded balance pages"
+            >
+              <Button
+                variant="outline"
+                size="sm"
+                disabled={visiblePage === 1}
+                onClick={() => changePage(visiblePage - 1)}
+              >
+                <ChevronLeft aria-hidden="true" />
+                Previous
+              </Button>
+              <p aria-live="polite">
+                Page {visiblePage} of {pages}
+              </p>
+              <Button
+                variant="outline"
+                size="sm"
+                disabled={visiblePage === pages}
+                onClick={() => changePage(visiblePage + 1)}
+              >
+                Next
+                <ChevronRight aria-hidden="true" />
+              </Button>
+            </nav>
+          )}
         </details>
       </>
     );

@@ -10,6 +10,7 @@ import {
   Check,
 } from "lucide-react";
 import { historyTypeLabel } from "./transaction-facts";
+import { readableTime } from "@/lib/date-presentation";
 
 export function RecentTransactions({
   accountId,
@@ -139,14 +140,7 @@ export function RecentTransactions({
               ? ArrowDownLeft
               : ArrowUpRight;
         const side = incoming ? t.target! : t.source!;
-        const time = new Intl.DateTimeFormat("en", {
-          month: "short",
-          day: "numeric",
-          hour: "2-digit",
-          minute: "2-digit",
-          hour12: true,
-          timeZone: "UTC",
-        }).format(new Date(t.createdAt));
+        const time = readableTime(t.createdAt, true);
         return (
           <li key={t.transactionId} className="wallet-recent-row">
             <Button
@@ -154,7 +148,7 @@ export function RecentTransactions({
               variant="ghost"
               className="wallet-recent-button"
               onClick={() => onOpenTransaction?.(t.transactionId)}
-              aria-label={`View ${historyTypeLabel(t).toLowerCase()} · ${side.amount} ${side.currency}${t.type === "conversion" ? ` to ${t.target!.amount} ${t.target!.currency}` : ""} · ${t.createdAt} · Completed · ${t.transactionId}`}
+              aria-label={`View ${historyTypeLabel(t).toLowerCase()} · ${side.amount} ${side.currency}${t.type === "conversion" ? ` to ${t.target!.amount} ${t.target!.currency}` : ""} · ${readableTime(t.createdAt)} · Completed · ${t.transactionId}`}
             >
               <span
                 className={`wallet-transaction-icon ${incoming ? "is-credit" : t.type === "conversion" ? "is-conversion" : "is-debit"}`}
@@ -166,7 +160,7 @@ export function RecentTransactions({
                 <span className="wallet-transaction-title">
                   {historyTypeLabel(t)}
                 </span>
-                <time dateTime={t.createdAt}>{time} UTC</time>
+                <time dateTime={t.createdAt}>{time}</time>
               </span>
               <span className="wallet-transaction-amounts">
                 <span className={incoming ? "wallet-credit" : "wallet-debit"}>

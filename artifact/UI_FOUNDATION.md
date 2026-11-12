@@ -1,5 +1,14 @@
 # Wallet interface foundation
 
+**Current refinement:** [D-037](DECISIONS.md#d-037) and
+[WORKFLOW_REFINEMENT.md](WORKFLOW_REFINEMENT.md) supersede the historical entry/
+success presentation below: grouped exact decimal bottom-border amounts,
+screenshot-led reviews, saved/new addresses (USD default, USD/GBP/EUR Send UI),
+Done-only safely dismissed successes, human UTC dates and six-row balance paging.
+The dedicated History route and valuation were already connected by D-035/D-036.
+Unknown outcomes, blocked storage, backend currency capabilities and existing
+recipient defaults remain protected; these changes do not introduce real payments.
+
 **Scope:** [T11-02](tasks/TASKS-11.md#t11-02) and [T11-04](tasks/TASKS-11.md#t11-04),
 following the [two-column redesign brief](WALLET_REDESIGN.md), the retained
 [frosted identity](DESIGN_REFERENCE.md), [surface brief](WALLET_SURFACE.md), and

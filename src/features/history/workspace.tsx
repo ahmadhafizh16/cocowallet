@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import { identifierContract } from "@/lib/contracts";
+import { readableDate, readableTime } from "@/lib/date-presentation";
 import { listAccountingCurrencies } from "../money/currency-precision";
 import {
   historyDateContract,
@@ -253,8 +254,8 @@ export function HistoryWorkspace({
         </Button>
       </div>
       <p className="text-sm text-muted-foreground wrap-anywhere">
-        Inspecting account <bdi>{accountId}</bdi>. Completed simulations only;
-        rejected attempts are not transactions.
+        Account <bdi>{accountId}</bdi>. Completed transactions only; rejected
+        attempts are not transactions.
       </p>
       <form
         ref={form}
@@ -374,8 +375,8 @@ export function HistoryWorkspace({
                 {TYPES.find(([type]) => type === query.type)?.[1] ??
                   "All activity"}{" "}
                 · {query.currency ?? "All currencies"} ·{" "}
-                {query.from ?? "No start day"} to {query.to ?? "No end day"}{" "}
-                (UTC)
+                {query.from ? readableDate(query.from) : "No start day"} to{" "}
+                {query.to ? readableDate(query.to) : "No end day"} (UTC)
               </p>
               <p className="text-sm text-muted-foreground">
                 Newest first · 50 per page. New activity between requests can
@@ -396,7 +397,7 @@ export function HistoryWorkspace({
                         variant="ghost"
                         className="h-auto min-h-11 w-full justify-start gap-3 px-0 py-3 text-left whitespace-normal"
                         data-transaction-id={t.transactionId}
-                        aria-label={`View ${historyTypeLabel(t).toLowerCase()} ${t.transactionId} · ${historyAmountLabel(t)} · Recorded at (UTC) ${t.createdAt}`}
+                        aria-label={`View ${historyTypeLabel(t).toLowerCase()} ${t.transactionId} · ${historyAmountLabel(t)} · ${readableTime(t.createdAt)}`}
                         onClick={() => setTransaction(t.transactionId)}
                       >
                         <span className="min-w-0 flex-1 wrap-anywhere">
@@ -407,7 +408,7 @@ export function HistoryWorkspace({
                             className="mt-1 block text-sm font-normal text-muted-foreground"
                             dateTime={t.createdAt}
                           >
-                            {t.createdAt}
+                            {readableTime(t.createdAt)}
                           </time>
                         </span>
                         <ArrowRight className="shrink-0" aria-hidden="true" />
@@ -425,7 +426,7 @@ export function HistoryWorkspace({
                   <p className="text-sm text-muted-foreground">
                     {result.pagination.totalItems
                       ? "Choose an earlier page or return to page 1."
-                      : "Try clearing the filters. Completed simulations will appear here; rejected attempts never do."}
+                      : "Try clearing the filters. Your completed transactions will appear here."}
                   </p>
                 </div>
               )}

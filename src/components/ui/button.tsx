@@ -2,6 +2,7 @@ import type { ComponentProps } from "react";
 import { Slot } from "radix-ui";
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
+import { LoaderCircle } from "lucide-react";
 
 // Registry-derived shadcn Button, with compatibility aliases and touch sizing.
 export const buttonVariants = cva(
@@ -23,6 +24,8 @@ export const buttonVariants = cva(
         destructive:
           "bg-danger-ground text-destructive hover:bg-danger-ground/80",
         danger: "bg-danger-ground text-destructive hover:bg-danger-ground/80",
+        success:
+          "bg-[var(--positive)] text-[var(--solid)] shadow-sm hover:opacity-90",
         link: "text-primary underline-offset-4 hover:underline",
       },
       size: {
@@ -42,9 +45,15 @@ export function Button({
   size,
   asChild = false,
   type = "button",
+  loading = false,
+  children,
+  disabled,
   ...props
 }: ComponentProps<"button"> &
-  VariantProps<typeof buttonVariants> & { asChild?: boolean }) {
+  VariantProps<typeof buttonVariants> & {
+    asChild?: boolean;
+    loading?: boolean;
+  }) {
   const Component = asChild ? Slot.Root : "button";
   return (
     <Component
@@ -52,8 +61,21 @@ export function Button({
       data-slot="button"
       data-variant={variant ?? "primary"}
       data-size={size ?? "default"}
+      disabled={disabled || loading}
+      aria-busy={loading || undefined}
       className={cn(buttonVariants({ variant, size, className }))}
       {...props}
-    />
+    >
+      {asChild ? (
+        children
+      ) : (
+        <>
+          {loading && (
+            <LoaderCircle className="wallet-loading-icon" aria-hidden="true" />
+          )}
+          {children}
+        </>
+      )}
+    </Component>
   );
 }

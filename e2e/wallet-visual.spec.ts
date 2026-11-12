@@ -117,7 +117,7 @@ test("captures the rendered overview at its shipping sizes and themes", async ({
   await capture("mobile-actions-dark");
   await page.getByRole("menuitem", { name: "Send money", exact: true }).click();
   await expect(
-    page.getByLabel("Simulated recipient account ID", { exact: true }),
+    page.getByRole("combobox", { name: "Recipient", exact: true }),
   ).toBeFocused();
   await capture("send-mobile-dark");
   await closeMoneyForm(page);

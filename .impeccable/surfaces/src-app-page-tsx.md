@@ -7,7 +7,26 @@ related_targets: ["src/features/wallet/dashboard.tsx","src/features/wallet/walle
 
 # Wallet overview surface
 
-## Current user refinement — D-035 / D-036
+## Current workflow refinement — D-037
+
+The user's next screenshot pins amount-first review: wallet identity, large exact
+amount, recipient/provider, top Edit details and bottom Cancel/green Confirm.
+Numeric decimal entry uses exact string grouping and a large bottom-border field.
+Confirmed success has Done only; every safe dismissal clears its presentation so
+the next operation opens its own form. Never clear unknown outcomes or blocked
+recovery storage. Hide the unused Wallets navigation, not currency balances.
+Recent empty activity is centered with a large icon, bold title and normal copy.
+Human-readable UTC dates replace raw displayed timestamps; machine/API/storage
+values stay canonical. The user selected **Currency rates** as the honest label.
+Expanded recorded-balance tables have six records per page while retaining the
+whole graph. Send money selects saved recipients or a new address (saved only on
+successful transfer), new defaults USD, both send/receive restricted to USD/GBP/EUR
+in this interface, never by rewriting old metadata or restricting backend/conversion.
+The user approved refreshing affected design docs after review. See
+`artifact/WORKFLOW_REFINEMENT.md`; this supersedes conflicting older copy and
+X-retains-success presentation below, not accounting/recovery safeguards.
+
+## Prior user refinement — D-035 / D-036
 
 The user resumed visual feedback and supplied reference screenshots. This is a
 code-led, user-pinned refinement of the same frosted world, not an identity round.

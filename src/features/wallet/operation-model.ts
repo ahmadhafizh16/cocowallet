@@ -132,7 +132,7 @@ export function validateOperation({
       errors.amount =
         balance === 0n
           ? balancesConnected
-            ? "Insufficient funds. Add simulated funds before sending, converting or withdrawing."
+            ? "Insufficient funds. Add money before sending, converting or withdrawing."
             : "Insufficient preview balance. This wallet has no funds, and deposit submission is not connected."
           : balancesConnected
             ? "This amount exceeds the available balance. Enter a smaller amount."
@@ -151,15 +151,14 @@ export function validateOperation({
     (operation === "deposit" || operation === "withdraw") &&
     !PROVIDERS.some((provider) => provider.code === draft.provider)
   ) {
-    errors.provider = "Choose one of the fictional providers.";
+    errors.provider = "Choose a funding method.";
   }
   if (operation === "transfer") {
     if (!identifierContract.is(draft.recipient)) {
       errors.recipient =
-        "Enter a nonblank simulated account ID, up to 8,192 characters, without NUL characters. IDs are kept exactly as entered.";
+        "Enter a recipient address, up to 8,192 characters. Addresses are kept exactly as entered.";
     } else if (draft.recipient === account.id) {
-      errors.recipient =
-        "Enter a different simulated account ID, not this account’s own ID.";
+      errors.recipient = "Choose a recipient other than your own account.";
     }
   }
   const recipient = transferAccounts?.find(
@@ -170,14 +169,13 @@ export function validateOperation({
   const transferTarget = draft.targetCurrency || recipientDefault;
   if (operation === "transfer" && transferAccounts) {
     if (recipient && recipient.role !== "destination" && !errors.recipient)
-      errors.recipient =
-        "Choose a simulated destination, not the main account.";
+      errors.recipient = "Choose a recipient address, not your main account.";
     if (
       !recipientDefault ||
       (!recipient && !targetCurrencies?.includes(recipientDefault))
     )
       errors.recipientDefaultCurrency =
-        "Choose a default currency for this new simulated destination.";
+        "Choose a default currency for the new address.";
     if (
       !transferTarget ||
       !(

@@ -235,6 +235,19 @@ Record actual account-scoped observations independently of successful monetary
 commit/replay. The main-default/missing-wallet question remains open. See
 [PRESENTATION_REFINEMENT.md](PRESENTATION_REFINEMENT.md).
 
+### D-037
+
+**Money workflow refinement:** The user's next screenshot/feedback requests
+Done-only success and safe reset on every completed-result dismissal, centered
+recent empty states, readable dates and clearer copy, grouped numeric bottom-border
+amount entry, green/loading API controls, six-row balance-history paging, hidden
+Wallets navigation and saved/new recipient selection. The user chose **Currency
+rates**, **USD/GBP/EUR for both Send money currency choices**, and **refresh affected
+design documentation**. New addresses default to USD; existing defaults/accounting
+remain unchanged. Confirmed-dismissal cleanup supersedes D-035's X-retains-success
+presentation choice, never unknown-outcome recovery. See
+[WORKFLOW_REFINEMENT.md](WORKFLOW_REFINEMENT.md).
+
 ## Questions and resolutions
 
 ### O-001
