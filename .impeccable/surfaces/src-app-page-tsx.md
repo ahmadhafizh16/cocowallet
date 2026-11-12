@@ -7,7 +7,19 @@ related_targets: ["src/features/wallet/dashboard.tsx","src/features/wallet/walle
 
 # Wallet overview surface
 
-## Current transaction experience — D-040
+## Current History and navigation follow-up — D-041
+
+Remove History's About these results and page-level Show/Hide action, not the
+Overview privacy setting or its cross-route masking. Use Apply Filter / Reset
+Filter. Center the empty icon/title and the exact bold clearing guidance. Add
+purpose-specific decorative modal-title icons, neutral status icon for recovery.
+Only committed Overview/History content changes animate with bounded bidirectional
+incoming motion; stable shell/recovery remain mounted. No initial-load animation,
+retained old monetary DOM, request/focus delay or effect during privacy/reduced
+motion. Preserve all D-040 search/calendar/detail/accounting behavior. Affected
+design refresh approved, unchanged core tokens; see `artifact/NAVIGATION_POLISH.md`.
+
+## Prior transaction experience — D-040
 
 Use the supplied dark transaction-detail image: one sheet, Back to results,
 Transaction details/Completed/direction, prominent signed summary, compact divided

@@ -1377,8 +1377,7 @@
   margin-top: 16px;
 }
 .wallet-history-summary,
-.wallet-history-footer,
-.wallet-history-notes {
+.wallet-history-footer {
   font-size: 13px;
 }
 .wallet-history-list {
@@ -1435,21 +1434,6 @@
 }
 .wallet-history-page-jump > [data-slot="field-error"] {
   max-width: 28ch;
-}
-.wallet-history-notes {
-  color: var(--secondary);
-}
-.wallet-history-notes summary {
-  width: fit-content;
-  min-height: 44px;
-  padding-block: 12px;
-  cursor: pointer;
-}
-.wallet-history-notes > div {
-  display: grid;
-  gap: 8px;
-  max-width: 75ch;
-  padding-bottom: 4px;
 }
 @media (max-width: 1023px) {
   .wallet-history-filter-grid {
@@ -2485,4 +2469,26 @@
 .wallet-history-panel .wallet-history-empty p {
   font-size: 14px;
   font-weight: 400;
+}
+.wallet-history-filter-empty h4 {
+  font-size: 16px;
+  line-height: 1.5;
+}
+.wallet-history-filter-empty p {
+  max-width: 54ch;
+  color: var(--ink);
+}
+.wallet-history-filter-empty strong {
+  font-weight: 600;
+}
+.wallet-operation-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.wallet-operation-title > svg {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  color: var(--navy);
 }

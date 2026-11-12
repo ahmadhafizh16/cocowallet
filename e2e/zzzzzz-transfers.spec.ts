@@ -156,9 +156,14 @@ test("reviewed USD→GBP creates a destination once, refreshes balances and expo
   await page.getByRole("button", { name: /^View incoming transfer/ }).click();
   await expect(page).toHaveURL(/\/history$/u);
   await expect(page.locator("#history")).toContainText("1 USD = 0.8 GBP");
+  await expect(
+    page.getByRole("button", { name: "Hide monetary amounts", exact: true }),
+  ).toHaveCount(0);
+  await page.getByRole("link", { name: "Overview", exact: true }).click();
   await page
     .getByRole("button", { name: "Hide monetary amounts", exact: true })
     .click();
+  await page.getByRole("link", { name: "History", exact: true }).click();
   await expect(page.locator("#history dl")).toHaveCount(0);
   await expect(page.locator("#history time")).toHaveCount(0);
   await expect(page.locator("#history")).not.toContainText("0.80 GBP");

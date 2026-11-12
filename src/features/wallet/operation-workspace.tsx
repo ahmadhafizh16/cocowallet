@@ -8,7 +8,14 @@ import {
   type FormEvent,
   type RefObject,
 } from "react";
-import { ArrowRight } from "lucide-react";
+import {
+  ArrowRight,
+  Plus,
+  ArrowUpRight,
+  ArrowRightLeft,
+  Send,
+  Info,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -508,7 +515,19 @@ export function OperationWorkspace({
           }}
         >
           <DialogHeader className={submissionSucceeded ? "sr-only" : undefined}>
-            <DialogTitle>
+            <DialogTitle className="wallet-operation-title">
+              {!submissionSucceeded &&
+                (fundingPanel ? (
+                  <Info aria-hidden="true" />
+                ) : operation === "deposit" ? (
+                  <Plus aria-hidden="true" />
+                ) : operation === "withdraw" ? (
+                  <ArrowUpRight aria-hidden="true" />
+                ) : operation === "convert" ? (
+                  <ArrowRightLeft aria-hidden="true" />
+                ) : (
+                  <Send aria-hidden="true" />
+                ))}
               {submissionSucceeded
                 ? "Transaction complete"
                 : fundingPanel

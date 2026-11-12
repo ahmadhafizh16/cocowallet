@@ -74,4 +74,44 @@ it("keeps exact visible amounts, currencies and recorded time in each history ro
   expect(html).toContain('title="Completed"');
   expect(html).toContain('placeholder="Search by transaction ID…"');
   expect(html).not.toContain("Browse completed activity");
+  expect(html).toContain("Apply Filter");
+  expect(html).toContain("Reset Filter");
+  expect(html).not.toContain("About these results");
+});
+
+it("centers honest zero-match information with a large decorative icon and the exact bold guidance", () => {
+  jest.mocked(useHistoryRead).mockReturnValue({
+    result: {
+      kind: "list",
+      page: {
+        account: {
+          id: "main",
+          role: "main",
+          defaultCurrency: "USD",
+          inspectOnly: false,
+          createdAt: "2026-11-12T12:00:00.000Z",
+        },
+        pagination: { page: 1, pageSize: 50, totalItems: 0, totalPages: 0 },
+        transactions: [],
+      },
+    },
+    pending: false,
+    failure: undefined,
+    retry: jest.fn(),
+  });
+  const html = renderToStaticMarkup(
+    <HistoryWorkspace
+      accountId="main"
+      hidden={false}
+      revision={{}}
+      onClose={() => {}}
+    />,
+  );
+  expect(html).toContain("wallet-history-empty wallet-history-filter-empty");
+  expect(html).toContain('class="wallet-empty-symbol" aria-hidden="true"');
+  expect(html).toContain("No matching completed activity");
+  expect(html).toContain(
+    "<strong>Try clearing the search or filters. Your completed transactions will appear here.</strong>",
+  );
+  expect(html).not.toContain("About these results");
 });

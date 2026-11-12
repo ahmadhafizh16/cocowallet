@@ -1,16 +1,17 @@
 # Handover
 
-**Status:** D-040 transaction experience passes **1,547 Jest / 122 Chromium**
-checks: screenshot-led immutable detail/copy, account-scoped in-list exact-ID
-search, shadcn UTC range calendar and nonblocking one-second backend confirmation
-pacing for all four money operations. Fresh independent review returns **`ship`**,
-no material fixes. Approved affected design guidance/examples are refreshed with
-core tokens unchanged. Normal development is restored; all current financial data
-is preserved. T11-12 is complete: **33 of 41 tasks closed, 6 To do / 2 In progress /
-33 Done**. See [TRANSACTION_EXPERIENCE.md](TRANSACTION_EXPERIENCE.md). D-038
-zero-on-reopen, exact Edit, protected task motion, USD/GBP/EUR Convert UI and
-immutable recovery remain intact. Wallet/default management and Swagger remain
-separate work.
+**Status:** D-041 History/navigation polish passes **1,549 Jest / 124 Chromium**
+checks: simplified History controls, centered exact bold empty guidance,
+purpose-specific modal-header icons and bounded Overview/History content motion.
+Fresh independent review returns **`ship`**, no material fixes. Approved affected
+design guidance/examples retain core tokens and all incumbent previews. Normal
+development is restored; all current financial data is preserved. T11-13 is
+complete: **34 of 42 tasks closed, 6 To do / 2 In progress / 34 Done**. See
+[NAVIGATION_POLISH.md](NAVIGATION_POLISH.md). D-040 exact-ID list search, UTC
+calendar, immutable details/copy and one-second backend pacing remain intact,
+alongside zero-on-reopen and protected monetary recovery. Overview still owns
+privacy; History has no Show/Hide action. Wallet/default management and Swagger
+remain separate work.
 
 ## Implemented modules and commands
 
@@ -67,6 +68,7 @@ separate work.
 | `src/features/wallet/`, `src/features/submissions/submission-panel.tsx` | Compact total/sparkline/actions, tighter wallet rows, signed recent activity and Done-only successes. Every safe completed-result dismissal resets presentation; unknown/blocked recovery remains. One discreet prototype footer. |
 | `src/features/wallet/money-amount-input.tsx`, `amount-entry.ts`, `money-review.tsx`, `src/lib/date-presentation.ts` | Exact string grouping/caret, large bottom-border amount field, shared screenshot-led reviews and deterministic human UTC date/time presentation without changing canonical API/storage facts. |
 | `src/features/wallet/use-money-step-motion.ts`, `operation-workspace.tsx` | Explicit-open ordinary reset boundary, protected recovery gates, three-currency exchange UI and one bounded interruptible dialog-height resize with immediate privacy/reduced-motion cancellation; shared directional/pending/verified-success stages. |
+| `src/features/wallet/use-route-content-motion.ts`, `e2e/zzzzzzzzzzzzz-navigation-polish.spec.ts` | Incoming-only 240ms sibling-route continuity, persistent shell/focus, no old monetary DOM or initial-load replay, cancellation for privacy/reduced motion/resize; simplified History/empty and all four modal-header icons. |
 | `src/features/wallet/balance-history.tsx`, `currency-flag.tsx` | Validated actual account-scoped USD observations, compact min/max sparkline and expanded zero-baseline chart/exact-value disclosure; honest empty/private states and local currency vectors. |
 | `DESIGN.md`, `.impeccable/design.json` | Extracted light/dark visual tokens, canonical design guidance, and version-2 component-preview extensions; actual application styles remain in source CSS. |
 | `scripts/check-artifacts.mjs` | Checks Markdown links, decision/task references, board status alignment, and task dependency cycles. |
@@ -87,7 +89,34 @@ Stop the dev compiler before `docker compose run --rm app npm run check`, then u
 
 Application DB: `/app/data/wallet.sqlite` in Compose's `wallet-data` volume. Tests use isolated temporary SQLite files. Normal shutdown is `docker compose down` without deleting volumes. Before applying journal migrations, the stopped app's database was backed up with SQLite's backup API to `/app/data/wallet.sqlite.pre-journal-1794390597589.bak`. Backup creation is verified; a full restore drill is not claimed.
 
-Current D-040 verification passes the full Docker check/build: **1,547 Jest tests
+Current D-041 verification passes the full Docker check/build: **1,549 Jest tests
+in 75 suites**, formatting/lint/types and **63 artifact documents / 42 tasks**;
+all **124 production Chromium checks** pass. The initial 123/124 result exposed
+only an outdated helper expecting visible History in private mode; the corrected
+focused and full fresh-server runs pass without app/render changes. Fresh scoped
+review returns **ship**, no material fixes, after opening 36 originals/four sheets.
+Approved design refresh preserves byte-identical normative frontmatter and all
+core values, including motion names/values. All 15 incumbent preview names/order/
+keys remain; 12 entries are unchanged, three are refreshed and one inert empty
+example is added. Parent documentation validation passes 16 affected variants
+without overflow/scripts/errors/network requests; see [DESIGN_REVIEW.md](DESIGN_REVIEW.md).
+
+The current backup is
+`/app/data/wallet.sqlite.pre-navigation-polish-1794488971762.bak`: all 15 tables
+matched before development restart and **13 non-cache tables remain row-identical**
+afterwards. Only catalog/rate caches refreshed. Preserved activity is **3 accounts /
+5 wallets / 9 funding attempts / 1 conversion attempt / 2 transfer attempts / 12
+transactions / 15 journal entries / 13 observations**, plus **5 quotes / 3 uses**.
+Integrity `ok`, no FK violations. Healthy development retains
+`.next/dev.pre-navigation-polish-1794490669056` and passes **300 stable read-only
+frames**, actual twelve-record History/five recent rows, exact available total,
+changed controls/empty copy/modal icon, search/detail/back focus, calendar,
+Overview-owned privacy and zero-on-reopen. One document navigation, zero page/
+console errors and API writes. Both disposable previews are stopped; no dependency
+change, normal seed/money test, migration, restore drill or push ran. See
+[NAVIGATION_POLISH.md](NAVIGATION_POLISH.md).
+
+Historical D-040 verification passes the full Docker check/build: **1,547 Jest tests
 in 74 suites**, formatting/lint/types and **62 artifact documents / 41 tasks**;
 all **122 production Chromium checks** pass on the isolated server. Fresh bounded
 independent review returns **ship**, no material fixes, after opening 50 originals
@@ -97,7 +126,7 @@ are unchanged, History is refreshed and two inert examples are added (15 total).
 Parent documentation validation checks 12 affected width/theme variants without
 overflow, errors, scripts or external requests. See [DESIGN_REVIEW.md](DESIGN_REVIEW.md).
 
-The current backup is
+The historical D-040 backup is
 `/app/data/wallet.sqlite.pre-details-calendar-1794481464103.bak`: all 15 tables
 were row-identical before restoring development, and all **13 non-cache tables
 remain identical** afterwards. Only catalog/rate caches refreshed. Preserved user

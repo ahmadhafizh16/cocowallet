@@ -268,7 +268,7 @@ for (const timezoneId of ["America/Los_Angeles", "Pacific/Auckland"])
         );
       });
       await page
-        .getByRole("button", { name: "Apply history filters", exact: true })
+        .getByRole("button", { name: "Apply Filter", exact: true })
         .click();
       await filtered;
       await trigger.click();
@@ -287,7 +287,7 @@ for (const timezoneId of ["America/Los_Angeles", "Pacific/Auckland"])
         );
       });
       await page
-        .getByRole("button", { name: "Apply history filters", exact: true })
+        .getByRole("button", { name: "Apply Filter", exact: true })
         .click();
       await same;
       await trigger.click();

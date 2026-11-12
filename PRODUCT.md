@@ -2,7 +2,15 @@
 
 <!-- impeccable:product-schema 1 -->
 
-The latest transaction-experience feedback is pinned in
+The latest UI follow-up is pinned in
+[NAVIGATION_POLISH.md](artifact/NAVIGATION_POLISH.md) (D-041): simplify History
+controls, center the exact empty-state message with a large icon and bold guidance,
+remove its page-level Show/Hide action (Overview privacy still applies), and add
+purpose-specific modal-header icons plus bounded Overview/History content motion.
+Preserve reduced-motion/privacy, immediate focus and shared monetary recovery.
+Affected design refresh is approved with core identity/tokens unchanged.
+
+The prior transaction-experience feedback is pinned in
 [TRANSACTION_EXPERIENCE.md](artifact/TRANSACTION_EXPERIENCE.md) (D-040): use the
 detail screenshot, filter exact-ID matches in the History list, use a shadcn UTC
 range calendar and add a nonblocking one-second server confirmation pause for all

@@ -26,7 +26,7 @@ import {
 } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import { identifierContract } from "@/lib/contracts";
-import { readableDate, readableTime } from "@/lib/date-presentation";
+import { readableTime } from "@/lib/date-presentation";
 import { listAccountingCurrencies } from "../money/currency-precision";
 import {
   historyDateContract,
@@ -399,9 +399,9 @@ export function HistoryWorkspace({
               timezone. Leave either day empty for no boundary.
             </p>
             <div className="wallet-history-filter-actions">
-              <Button type="submit">Apply history filters</Button>
+              <Button type="submit">Apply Filter</Button>
               <Button variant="outline" onClick={clear}>
-                Clear history filters
+                Reset Filter
               </Button>
             </div>
           </form>
@@ -511,16 +511,21 @@ export function HistoryWorkspace({
                     ))}
                   </ul>
                 ) : (
-                  <div className="space-y-2">
+                  <div className="wallet-history-empty wallet-history-filter-empty">
+                    <span className="wallet-empty-symbol" aria-hidden="true">
+                      <History />
+                    </span>
                     <h4 className="font-semibold">
                       {result.pagination.totalItems
                         ? "No records on this page"
                         : "No matching completed activity"}
                     </h4>
-                    <p className="text-sm text-muted-foreground">
-                      {result.pagination.totalItems
-                        ? "Choose an earlier page or return to page 1."
-                        : "Try clearing the search or filters. Your completed transactions will appear here."}
+                    <p>
+                      <strong>
+                        {result.pagination.totalItems
+                          ? "Choose an earlier page or return to page 1."
+                          : "Try clearing the search or filters. Your completed transactions will appear here."}
+                      </strong>
                     </p>
                   </div>
                 )}
@@ -589,36 +594,6 @@ export function HistoryWorkspace({
                     )}
                   </nav>
                 </div>
-                <details className="wallet-history-notes">
-                  <summary>About these results</summary>
-                  <div>
-                    <p>
-                      Applied:{" "}
-                      {TYPES.find(([type]) => type === query.type)?.[1] ??
-                        "All activity"}{" "}
-                      · {query.currency ?? "All currencies"} ·{" "}
-                      {query.from ? readableDate(query.from) : "No start day"}{" "}
-                      to {query.to ? readableDate(query.to) : "No end day"}{" "}
-                      (UTC)
-                      {query.transactionId && (
-                        <>
-                          {" "}
-                          · Exact ID: <bdi>{query.transactionId}</bdi>
-                        </>
-                      )}
-                    </p>
-                    <p>
-                      Completed transactions only; rejected attempts are not
-                      transactions. Currency matches either affected side,
-                      including historical codes. No current FX is requested.
-                    </p>
-                    <p>
-                      Days are inclusive in UTC. Leave either day empty for no
-                      boundary. Newest first · 50 per page. New activity between
-                      requests can shift numbered pages.
-                    </p>
-                  </div>
-                </details>
               </>
             )
           )}

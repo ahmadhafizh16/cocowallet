@@ -205,6 +205,34 @@ two-record History, privacy/draft navigation and no financial POSTs or errors;
 existing user financial data remains unchanged. See
 [PRESENTATION_REFINEMENT.md](../PRESENTATION_REFINEMENT.md) for limits and evidence.
 
+### T11-13
+
+**History simplification and navigation continuity**
+
+**Status:** Done.
+
+**Decisions:** [D-041](../DECISIONS.md#d-041).
+**Depends on:** [T11-12](#t11-12).
+
+**Implementation:** Follow [NAVIGATION_POLISH.md](../NAVIGATION_POLISH.md):
+remove History notes/privacy action, rename Apply/Reset, center exact empty-state
+copy, add modal-header icons and bounded Overview/History content continuity.
+**Acceptance and tests:** Preserve account/privacy, exact recorded facts, staged UTC search/filter behavior,
+focus, monetary recovery and reduced-motion interruption. Verify Docker/browser,
+shipping light/dark renders, independent review, approved affected design handoff
+and newest twelve-transaction wallet restoration; local commit, no push.
+
+**Verification:** Full Docker check passes **1,549 Jest / 75 suites**, formatting,
+lint/types, production build and **63 artifact documents / 42 tasks**; all **124
+Chromium checks** pass on the isolated server after correcting one outdated private
+browse-helper expectation. No app code changed after the scoped **ship** review
+of 36 originals/four sheets; no material fixes. Approved design refresh retains
+core tokens and all 15 incumbent previews, adding one inert empty example. Healthy
+development passes 300 stable read-only frames, actual 12-record History/five
+recent rows, unchanged 13 non-cache tables and zero page/console errors or writes.
+See [NAVIGATION_POLISH.md](../NAVIGATION_POLISH.md) and
+[the review](../DESIGN_REVIEW.md).
+
 ### T11-12
 
 **Transaction details, in-list search, date range and confirmation pacing**

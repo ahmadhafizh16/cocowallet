@@ -284,6 +284,18 @@ supersedes earlier no-artificial-request-delay presentation notes. The user
 approved affected design guidance/examples refresh with core identity/tokens
 unchanged. See [TRANSACTION_EXPERIENCE.md](TRANSACTION_EXPERIENCE.md).
 
+### D-041
+
+**History simplification and content continuity:** Remove full History's About
+these results disclosure and page-level Show/Hide button, retain Overview privacy
+and inherited masking, label actions Apply Filter / Reset Filter, and center a
+large-icon empty state with the user's exact bold guidance. Add purpose-specific
+icons before money-modal headings and bounded bidirectional incoming-content
+motion for Overview/History, without remounting shared recovery, old money
+snapshots, request/focus delays or reduced-motion/privacy regressions. Affected
+design guidance/examples refresh is user-approved, core tokens unchanged. See
+[NAVIGATION_POLISH.md](NAVIGATION_POLISH.md).
+
 ## Questions and resolutions
 
 ### O-001

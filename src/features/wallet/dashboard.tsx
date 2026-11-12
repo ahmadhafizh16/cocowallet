@@ -66,6 +66,7 @@ import type { TransactionType } from "../history/contracts";
 import { BalanceHistory } from "./balance-history";
 import { CurrencyFlag } from "./currency-flag";
 import { OperationWorkspace } from "./operation-workspace";
+import { useRouteContentMotion } from "./use-route-content-motion";
 import { type Operation } from "./operation-model";
 import {
   displayBalance,
@@ -124,6 +125,8 @@ export function WalletDashboard({
   const account =
     model.accounts.find((item) => item.id === activeAccountId) ??
     model.accounts[0];
+  const contentRef = useRef<HTMLElement>(null);
+  useRouteContentMotion(contentRef, historyPage, hidden, account?.id);
   const isMain = account?.role === "main";
   const wallets = walletsForAccount(model.wallets, account?.id);
   const zeroTotal = hasZeroTotal(wallets);
@@ -451,7 +454,12 @@ export function WalletDashboard({
               </DropdownMenu>
             </div>
           </nav>
-          <main id="main-content" className="wallet-main" tabIndex={-1}>
+          <main
+            ref={contentRef}
+            id="main-content"
+            className="wallet-main"
+            tabIndex={-1}
+          >
             <div className="wallet-page-heading" id="overview" tabIndex={-1}>
               <h1>
                 {historyPage
@@ -460,20 +468,6 @@ export function WalletDashboard({
               </h1>
               {historyPage && (
                 <>
-                  <Button
-                    variant="ghost"
-                    className="wallet-privacy-button"
-                    aria-label="Hide monetary amounts"
-                    aria-pressed={hidden}
-                    onClick={() => setHidden((value) => !value)}
-                  >
-                    {hidden ? (
-                      <EyeOff aria-hidden="true" />
-                    ) : (
-                      <Eye aria-hidden="true" />
-                    )}
-                    {hidden ? "Show" : "Hide"}
-                  </Button>
                   {!hidden && (
                     <Button
                       variant="ghost"

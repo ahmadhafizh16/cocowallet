@@ -1,5 +1,42 @@
 # Wallet shell design review
 
+## T11-13 — History and navigation polish finish review
+
+**Disposition: `ship` at the bounded D-041 refinement scope.** A fresh independent
+read-only child returned all five contract sections and opened all **36 required
+originals / four contact sheets**. No missing or malformed capture was found.
+The eight 120ms navigation midpoint images are intentional viewport samples,
+not settled full-page evidence. No new comp, quality card, raster or identity
+round applied to this code-led user-pinned Operate refinement.
+
+The reviewer accepted the exact Apply Filter / Reset Filter labels, removal of
+History notes/privacy controls, centered icon/title/bold guidance, all four
+purpose-specific modal-header icons and neutral recovery Info. Incoming-only
+bidirectional content motion preserves the stable shell, immediate focus, privacy
+and reduced-motion cancellation without retaining outgoing monetary DOM. Narrow
+stacking and viewport-fixed navigation are accepted responsive adaptations.
+Type/material/ground preserve the existing frosted identity. **Material fixes:
+none.** Preserve exact copy, cross-route masking and original monetary recovery.
+
+The inherited detector warning concerns the square amount editor's bottom edge,
+not a rounded-card accent. The 42 type/radius inventory advisories do not establish
+new material defects; no repeat scan or blanket suppression was added. The
+approved affected design-document handoff is complete. Parent snapshot validation
+confirms byte-identical normative frontmatter and unchanged core token/motion
+values. All 15 preview names/order/keys remain; 12 entries are unchanged, three
+affected examples are refreshed and one inert empty example is added (16 total).
+Parent browser validation of 16 affected preview variants has no overflow,
+scripts/errors/network requests; it is not another independent live-app review.
+
+Parent-run full Docker check passes **1,549 Jest / 75 suites**, formatting, lint,
+types, production build and **63 artifact documents / 42 tasks**. Two new browser
+journeys pass changed controls/empty/modal headers plus actual forward/back,
+interrupted/reduced-motion/privacy/focus continuity. The fresh full run now passes
+**124/124 Chromium tests** after correcting only an outdated private-navigation
+test helper; no app code or reviewed render changed. These are parent results, not browser
+tests executed by the reviewer; no exhaustive security/performance/screen-reader
+or WCAG certification is claimed. See [NAVIGATION_POLISH.md](NAVIGATION_POLISH.md).
+
 ## T11-12 — transaction-experience finish review
 
 **Disposition: `ship` at the bounded D-040 transaction-experience scope.** A fresh,

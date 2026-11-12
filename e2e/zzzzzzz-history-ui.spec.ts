@@ -270,9 +270,7 @@ test("numbered pages and exact detail/back navigation preserve the applied filte
   await page.goto("/");
   await browse(page);
   await choose(page, "History type", "Deposits");
-  await page
-    .getByRole("button", { name: "Apply history filters", exact: true })
-    .click();
+  await page.getByRole("button", { name: "Apply Filter", exact: true }).click();
   const rows = page.getByRole("list", {
     name: "Full transaction history",
     exact: true,
@@ -369,9 +367,7 @@ test("type/either-side currency and inclusive UTC days apply explicitly; validat
   const day = data.transfer.createdAt.slice(0, 10);
   await enterDays(page, day, day);
   expect(listReads).toBe(0);
-  await page
-    .getByRole("button", { name: "Apply history filters", exact: true })
-    .click();
+  await page.getByRole("button", { name: "Apply Filter", exact: true }).click();
   await expect(
     page.getByRole("button", {
       name: fxHistoryName("outgoing", data.transfer),
@@ -379,9 +375,7 @@ test("type/either-side currency and inclusive UTC days apply explicitly; validat
     }),
   ).toBeVisible();
   await choose(page, "History currency", "GBP");
-  await page
-    .getByRole("button", { name: "Apply history filters", exact: true })
-    .click();
+  await page.getByRole("button", { name: "Apply Filter", exact: true }).click();
   await expect(
     page.getByRole("button", {
       name: fxHistoryName("outgoing", data.transfer),
@@ -390,9 +384,7 @@ test("type/either-side currency and inclusive UTC days apply explicitly; validat
   ).toBeVisible();
   const before = listReads;
   await enterDays(page, "2026-02-30");
-  await page
-    .getByRole("button", { name: "Apply history filters", exact: true })
-    .click();
+  await page.getByRole("button", { name: "Apply Filter", exact: true }).click();
   await expect(
     page.getByLabel("Date range (UTC)", { exact: true }),
   ).toBeFocused();
@@ -400,17 +392,13 @@ test("type/either-side currency and inclusive UTC days apply explicitly; validat
   await captureState(page, "invalid-day");
   expect(listReads).toBe(before);
   await enterDays(page, "2030-01-01", "2020-01-01");
-  await page
-    .getByRole("button", { name: "Apply history filters", exact: true })
-    .click();
+  await page.getByRole("button", { name: "Apply Filter", exact: true }).click();
   await expect(
     page.getByLabel("Date range (UTC)", { exact: true }),
   ).toBeFocused();
   expect(listReads).toBe(before);
   await enterDays(page, "2000-01-01", "2000-01-01");
-  await page
-    .getByRole("button", { name: "Apply history filters", exact: true })
-    .click();
+  await page.getByRole("button", { name: "Apply Filter", exact: true }).click();
   await expect(
     page.getByRole("heading", {
       name: "No matching completed activity",
@@ -418,9 +406,7 @@ test("type/either-side currency and inclusive UTC days apply explicitly; validat
     }),
   ).toBeVisible();
   await captureState(page, "empty-filter");
-  await page
-    .getByRole("button", { name: "Clear history filters", exact: true })
-    .click();
+  await page.getByRole("button", { name: "Reset Filter", exact: true }).click();
   await expect(
     page.getByRole("list", { name: "Full transaction history", exact: true }),
   ).toBeVisible();
@@ -505,9 +491,7 @@ test("account switches discard open details/filters and show only inspect-only i
   await page.goto("/");
   await browse(page);
   await choose(page, "History type", "Withdrawals");
-  await page
-    .getByRole("button", { name: "Apply history filters", exact: true })
-    .click();
+  await page.getByRole("button", { name: "Apply Filter", exact: true }).click();
   await lookup(page, data.withdrawal.transactionId);
   await expect(page.locator("#history")).toContainText("Community Bank");
   await page
@@ -611,9 +595,7 @@ test("missing records, read failures and malformed responses offer safe read-onl
         })
       : route.continue();
   });
-  await page
-    .getByRole("button", { name: "Apply history filters", exact: true })
-    .click();
+  await page.getByRole("button", { name: "Apply Filter", exact: true }).click();
   await expect(page.locator("#history")).toContainText(
     "Loading this account’s history",
   );
@@ -663,9 +645,15 @@ test("privacy removes all history records, counts and timestamps; reload clears 
   await browse(page);
   await lookup(page, data.transfer.transactionId);
   await expect(page.locator("#history")).toContainText("0.80 GBP");
+  await expect(
+    page.getByRole("button", { name: "Hide monetary amounts", exact: true }),
+  ).toHaveCount(0);
+  await page.getByRole("link", { name: "Overview", exact: true }).click();
   await page
     .getByRole("button", { name: "Hide monetary amounts", exact: true })
     .click();
+  // The normal browse helper expects visible records; private History must not.
+  await page.getByRole("link", { name: "History", exact: true }).click();
   await expect(
     page.getByRole("heading", { name: "History hidden", exact: true }),
   ).toBeVisible();
@@ -674,8 +662,13 @@ test("privacy removes all history records, counts and timestamps; reload clears 
   await expect(page.locator("#history dl")).toHaveCount(0);
   await captureState(page, "hidden");
   await page
+    .getByRole("button", { name: "Back to overview", exact: true })
+    .click();
+  await page
     .getByRole("button", { name: "Hide monetary amounts", exact: true })
     .click();
+  await browse(page);
+  await lookup(page, data.transfer.transactionId);
   await expect(page.locator("#history")).toContainText("0.80 GBP");
   await page.reload();
   await expect(
@@ -769,7 +762,7 @@ for (const width of [320, 1440])
       await browse(page);
       await choose(page, "History type", "Transfers");
       await page
-        .getByRole("button", { name: "Apply history filters", exact: true })
+        .getByRole("button", { name: "Apply Filter", exact: true })
         .click();
       const card = page.locator("#history");
       expect(

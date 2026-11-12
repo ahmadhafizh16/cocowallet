@@ -1,8 +1,8 @@
 # Project kanban
 
-**Last updated:** T11-12 is complete: screenshot-led transaction details/copy, in-list exact-ID search, staged UTC library calendar and one-second backend confirmation pacing. Full Docker check/build passes 1,547 Jest / 122 production Chromium checks. Fresh independent review returns `ship`, no material fixes; approved affected design guidance/examples are refreshed without changing core tokens. Current normal-wallet activity (ten transactions) is preserved; restored development passes 300 stable read-only frames without errors, extra reloads or API writes. D-038 modal/recovery behavior remains intact. Wallet/default management and Swagger remain separate work.
+**Last updated:** T11-13 is complete: simplified History controls, centered exact bold empty guidance, purpose-specific modal-header icons and bounded Overview/History content continuity. Full Docker check/build passes 1,549 Jest / 124 production Chromium checks. Fresh independent review returns `ship`, no material fixes; approved affected design guidance/examples retain core tokens and all incumbent previews. Current normal-wallet activity (twelve transactions) is preserved; restored development passes 300 stable read-only frames without errors, extra reloads or API writes. Existing D-040 search/calendar/details/pacing and protected monetary recovery remain intact. Wallet/default management and Swagger remain separate work.
 
-**Scope:** 41 implementation tasks: **6 to do**, **2 in progress**, **0 blocked**, **33 done**. Planning activities completed below do not count as implemented features.
+**Scope:** 42 implementation tasks: **6 to do**, **2 in progress**, **0 blocked**, **34 done**. Planning activities completed below do not count as implemented features.
 
 Each task links to its detailed description, source PRD, decision IDs, dependencies, and acceptance tests. The Angular-style, one-intention-per-commit rule and local Git workflow in [D-021](DECISIONS.md#d-021) and [D-022](DECISIONS.md#d-022) apply to every task. A task moves to **Done** only when its acceptance criteria are verified and the PRD, decisions, diagrams, API documentation, and handover are updated as needed.
 
@@ -72,6 +72,7 @@ _No task is currently blocked by an explicit unresolved decision or external blo
 
 ## Done — implementation tasks
 
+- [x] [T11-13](tasks/TASKS-11.md#t11-13) — Simplified History controls, centered exact empty state, purpose-specific modal icons and bounded sibling-route content motion; 1,549 Jest / 124 Chromium, scoped ship review, approved design refresh and preserved/restored twelve-transaction normal wallet.
 - [x] [T11-12](tasks/TASKS-11.md#t11-12) — Screenshot-led immutable detail/copy, in-list exact-ID search, shadcn UTC range calendar and nonblocking backend confirmation pause; 1,547 Jest / 122 Chromium, scoped ship review, approved design refresh and preserved/restored ten-transaction normal wallet.
 - [x] [T11-11](tasks/TASKS-11.md#t11-11) — Screenshot-led History controls, compact signed rows and grouped paging; 1,530 Jest / 118 Chromium, sole reviewed fix resolved, approved History design refresh and preserved/restored current normal wallet.
 - [x] [T11-10](tasks/TASKS-11.md#t11-10) — Zero-on-reopen amounts, smooth protected task-step continuity and three-currency Convert UI; 1,530 Jest / 117 Chromium, scoped ship review, approved design refresh and preserved/restored current normal wallet.

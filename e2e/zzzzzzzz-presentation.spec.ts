@@ -134,9 +134,14 @@ test("History is a real menu page; account/privacy persist and reopening resets 
       exact: true,
     }),
   ).toBeFocused();
+  await expect(
+    page.getByRole("button", { name: "Hide monetary amounts", exact: true }),
+  ).toHaveCount(0);
+  await page.getByRole("link", { name: "Overview", exact: true }).click();
   await page
     .getByRole("button", { name: "Hide monetary amounts", exact: true })
     .click();
+  await page.getByRole("link", { name: "History", exact: true }).click();
   await expect(
     page.getByRole("heading", { name: "History hidden", exact: true }),
   ).toBeVisible();
