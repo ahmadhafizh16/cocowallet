@@ -190,6 +190,10 @@ function filters(input: HistoryQuery) {
       "(sw.account_id=? OR tw.account_id=?)",
     ],
     bindings: (string | bigint)[] = [input.accountId, input.accountId];
+  if (input.transactionId) {
+    clauses.push("t.id=?");
+    bindings.push(input.transactionId);
+  }
   if (input.type) {
     clauses.push("t.type=?");
     bindings.push(input.type);

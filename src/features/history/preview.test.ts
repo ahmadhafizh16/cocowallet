@@ -26,6 +26,23 @@ describe("full-history client response validation", () => {
     ])
       expect(confirmedHistoryPage(page(q), q)).toEqual(page(q));
   });
+  it("binds an exact-ID list response and rejects a different ID or impossible count", () => {
+    const q = { ...query, transactionId: "deposit-old" };
+    const value = page(q);
+    expect(confirmedHistoryPage(value, q)).toEqual(value);
+    expect(() =>
+      confirmedHistoryPage(value, { ...q, transactionId: "another" }),
+    ).toThrow();
+    expect(() =>
+      confirmedHistoryPage(
+        {
+          ...value,
+          pagination: { ...value.pagination, totalItems: 2, totalPages: 1 },
+        },
+        q,
+      ),
+    ).toThrow();
+  });
   it.each(["deposit", "withdrawal", "conversion", "transfer"] as const)(
     "accepts stored %s details in their explicit account",
     (type) => {

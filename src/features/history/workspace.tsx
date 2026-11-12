@@ -9,6 +9,8 @@ import {
   Check,
   History,
   Search,
+  X,
+  Info,
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
@@ -38,7 +40,11 @@ import {
   historyAmountLabel,
   historyTypeLabel,
   TransactionFacts,
+  TransactionSummary,
+  TransactionDirection,
+  CompletedStatus,
 } from "./transaction-facts";
+import { HistoryDateRange } from "./date-range";
 
 const CURRENCIES = listAccountingCurrencies();
 const TYPES = [
@@ -155,6 +161,7 @@ export function HistoryWorkspace({
       accountId,
       page: 1,
       pageSize: 50,
+      ...(query.transactionId ? { transactionId: query.transactionId } : {}),
       ...(draft.type !== "all" ? { type: draft.type as TransactionType } : {}),
       ...(draft.currency !== "all" ? { currency: draft.currency } : {}),
       ...(draft.from ? { from: draft.from } : {}),
@@ -164,6 +171,8 @@ export function HistoryWorkspace({
   function clear() {
     read.retry();
     setDraft(EMPTY);
+    setLookup("");
+    setLookupError(undefined);
     setErrors({});
     restore.current = "";
     setQuery({ accountId, page: 1, pageSize: 50 });
@@ -186,6 +195,10 @@ export function HistoryWorkspace({
   }
   function find(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (lookup === "") {
+      clearSearch();
+      return;
+    }
     if (!identifierContract.is(lookup)) {
       setLookupError(
         "Enter a nonblank transaction ID without NUL characters, up to 8,192 characters.",
@@ -194,7 +207,24 @@ export function HistoryWorkspace({
       return;
     }
     setLookupError(undefined);
-    setTransaction(lookup);
+    read.retry();
+    restore.current = "";
+    setPageDraft("1");
+    setPageError(undefined);
+    setQuery((current) => ({ ...current, page: 1, transactionId: lookup }));
+  }
+  function clearSearch() {
+    setLookup("");
+    setLookupError(undefined);
+    read.retry();
+    restore.current = "";
+    setPageDraft("1");
+    setPageError(undefined);
+    setQuery((current) => {
+      const next = { ...current, page: 1 };
+      delete next.transactionId;
+      return next;
+    });
   }
   if (hidden)
     return (
@@ -219,7 +249,7 @@ export function HistoryWorkspace({
   const result = read.result?.kind === "list" ? read.result.page : undefined;
   if (transactionId)
     return (
-      <div className="wallet-history-sheet space-y-5">
+      <div className="wallet-history-sheet wallet-detail-sheet">
         <Button
           variant="ghost"
           onClick={() => {
@@ -230,14 +260,29 @@ export function HistoryWorkspace({
           <ArrowLeft aria-hidden="true" />
           Back to results
         </Button>
-        <h3
-          id="history-heading"
-          ref={heading}
-          tabIndex={-1}
-          className="text-lg font-semibold"
-        >
-          Transaction details
-        </h3>
+        <div className="wallet-detail-header">
+          <div className="wallet-detail-title">
+            <h3
+              id="history-heading"
+              ref={heading}
+              tabIndex={-1}
+              className="wallet-detail-heading"
+            >
+              Transaction details
+            </h3>
+            {read.result?.kind === "detail" && (
+              <>
+                <CompletedStatus />
+                <TransactionDirection
+                  transaction={read.result.detail.transaction}
+                />
+              </>
+            )}
+          </div>
+          {read.result?.kind === "detail" && (
+            <TransactionSummary transaction={read.result.detail.transaction} />
+          )}
+        </div>
         {read.pending ? (
           <Loading label="Loading transaction details…" />
         ) : read.failure ? (
@@ -255,10 +300,11 @@ export function HistoryWorkspace({
           read.result?.kind === "detail" && (
             <>
               <TransactionFacts transaction={read.result.detail.transaction} />
-              <p className="text-sm text-muted-foreground">
+              <div className="wallet-detail-footer">
+                <Info aria-hidden="true" />
                 Recorded transaction facts, not current balances or today’s
                 rate.
-              </p>
+              </div>
             </>
           )
         )}
@@ -333,28 +379,16 @@ export function HistoryWorkspace({
                   </SelectContent>
                 </Select>
               </Field>
-              {(["from", "to"] as const).map((field) => (
-                <Field key={field} data-invalid={!!errors[field]}>
-                  <FieldLabel htmlFor={id(field)}>
-                    {field === "from" ? "From day (UTC)" : "To day (UTC)"}
-                  </FieldLabel>
-                  <Input
-                    id={id(field)}
-                    value={draft[field]}
-                    onChange={(event) => change(field, event.target.value)}
-                    placeholder="YYYY-MM-DD"
-                    maxLength={10}
-                    autoComplete="off"
-                    aria-invalid={!!errors[field]}
-                    aria-describedby={`${id("date-hint")}${errors[field] ? ` ${id(`${field}-error`)}` : ""}`}
-                  />
-                  {errors[field] && (
-                    <FieldError id={id(`${field}-error`)}>
-                      {errors[field]}
-                    </FieldError>
-                  )}
-                </Field>
-              ))}
+              <HistoryDateRange
+                id={id("dates")}
+                from={draft.from}
+                to={draft.to}
+                errors={errors}
+                onChange={(from, to) => {
+                  setDraft((current) => ({ ...current, from, to }));
+                  setErrors({});
+                }}
+              />
             </div>
             <p id={id("currency-hint")} className="sr-only">
               Currency matches either affected side, including historical
@@ -381,7 +415,10 @@ export function HistoryWorkspace({
               <FieldLabel htmlFor={id("lookup")} className="sr-only">
                 Transaction ID
               </FieldLabel>
-              <div className="wallet-history-search-control">
+              <div
+                className="wallet-history-search-control"
+                data-has-search={!!(lookup || query.transactionId) || undefined}
+              >
                 <Search aria-hidden="true" />
                 <Input
                   ref={lookupInput}
@@ -400,6 +437,18 @@ export function HistoryWorkspace({
                   aria-invalid={!!lookupError}
                   aria-describedby={`${id("lookup-hint")}${lookupError ? ` ${id("lookup-error")}` : ""}`}
                 />
+                {(lookup || query.transactionId) && (
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="wallet-history-clear-search"
+                    aria-label="Clear transaction search"
+                    title="Clear transaction search"
+                    onClick={clearSearch}
+                  >
+                    <X aria-hidden="true" />
+                  </Button>
+                )}
                 <Button
                   type="submit"
                   variant="ghost"
@@ -411,8 +460,8 @@ export function HistoryWorkspace({
                 </Button>
               </div>
               <p id={id("lookup-hint")} className="sr-only">
-                Enter an exact transaction ID to open its recorded details in
-                this account.
+                Enter an exact transaction ID to filter this account’s History
+                list. Select a result to view details.
               </p>
               {lookupError && (
                 <FieldError id={id("lookup-error")}>{lookupError}</FieldError>
@@ -471,7 +520,7 @@ export function HistoryWorkspace({
                     <p className="text-sm text-muted-foreground">
                       {result.pagination.totalItems
                         ? "Choose an earlier page or return to page 1."
-                        : "Try clearing the filters. Your completed transactions will appear here."}
+                        : "Try clearing the search or filters. Your completed transactions will appear here."}
                     </p>
                   </div>
                 )}
@@ -551,6 +600,12 @@ export function HistoryWorkspace({
                       {query.from ? readableDate(query.from) : "No start day"}{" "}
                       to {query.to ? readableDate(query.to) : "No end day"}{" "}
                       (UTC)
+                      {query.transactionId && (
+                        <>
+                          {" "}
+                          · Exact ID: <bdi>{query.transactionId}</bdi>
+                        </>
+                      )}
                     </p>
                     <p>
                       Completed transactions only; rejected attempts are not

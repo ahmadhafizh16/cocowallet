@@ -270,6 +270,20 @@ guidance/examples, with unchanged core tokens. See
 [HISTORY_REFERENCE.md](HISTORY_REFERENCE.md). Reference amounts/counts are not seed
 data; current user activity is preserved.
 
+### D-040
+
+**Transaction-experience follow-up:** Use the user's transaction-detail image for
+signed summary, compact fact columns, Completed/direction treatment and working ID
+copy. Exact-ID search filters the History list through an optional account-scoped
+read-only query; clicking a result opens details. Replace date text entry with a
+shadcn/React DayPicker range calendar while retaining inclusive staged UTC days.
+Valid confirmations for all four money operations explicitly await 1,000ms in the
+backend before database access/atomic work, without blocking a thread/holding a
+transaction or weakening original-key/expiry/unknown-outcome safeguards. This
+supersedes earlier no-artificial-request-delay presentation notes. The user
+approved affected design guidance/examples refresh with core identity/tokens
+unchanged. See [TRANSACTION_EXPERIENCE.md](TRANSACTION_EXPERIENCE.md).
+
 ## Questions and resolutions
 
 ### O-001

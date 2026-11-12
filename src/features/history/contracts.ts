@@ -50,6 +50,7 @@ export const historyDateContract = {
 export const historyQueryContract = objectContract(
   {
     accountId: identifierContract,
+    transactionId: identifierContract,
     type: transactionTypeContract,
     currency: currencyContract,
     from: historyDateContract,
@@ -57,10 +58,11 @@ export const historyQueryContract = objectContract(
     page: historyPageContract,
     pageSize: historyPageSizeContract,
   },
-  ["type", "currency", "from", "to", "page", "pageSize"],
+  ["transactionId", "type", "currency", "from", "to", "page", "pageSize"],
 );
 export type HistoryQuery = {
   accountId: string;
+  transactionId?: string;
   type?: TransactionType;
   currency?: string;
   from?: string;
@@ -106,7 +108,7 @@ export const historyFailures = {
   INVALID_HISTORY_QUERY: {
     status: 400,
     detail:
-      "Supply accountId and only single type/currency/from/to/page/pageSize filters. Dates are inclusive UTC days; page is a positive safe integer and pageSize is 1–100.",
+      "Supply accountId and only single transactionId/type/currency/from/to/page/pageSize filters. Dates are inclusive UTC days; page is a positive safe integer and pageSize is 1–100.",
   },
   INVALID_TRANSACTION_ID: {
     status: 400,

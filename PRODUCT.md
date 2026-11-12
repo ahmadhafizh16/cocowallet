@@ -2,7 +2,16 @@
 
 <!-- impeccable:product-schema 1 -->
 
-The latest History feedback is pinned in
+The latest transaction-experience feedback is pinned in
+[TRANSACTION_EXPERIENCE.md](artifact/TRANSACTION_EXPERIENCE.md) (D-040): use the
+detail screenshot, filter exact-ID matches in the History list, use a shadcn UTC
+range calendar and add a nonblocking one-second server confirmation pause for all
+four money operations. Preserve exact recorded facts, working copy/fallback,
+immutable recovery/expiry and the existing identity. Affected design refresh is
+approved; this supersedes prior immediate-request/no-delay and lookup-opens-detail
+guidance, not accounting guarantees or the simulation boundary.
+
+The previous History feedback is pinned in
 [HISTORY_REFERENCE.md](artifact/HISTORY_REFERENCE.md) (D-039): use the user's image
 for compact signed direction/status rows, top filters and visible exact-ID lookup,
 account context and grouped bottom paging. Preserve the frosted identity, actual

@@ -145,6 +145,7 @@ export function confirmedHistoryPage(
     p.pageSize !== query.pageSize ||
     !Number.isSafeInteger(p.totalItems) ||
     p.totalItems < 0 ||
+    (query.transactionId && p.totalItems > 1) ||
     p.totalPages !==
       Number(
         (BigInt(p.totalItems) + BigInt(p.pageSize) - 1n) / BigInt(p.pageSize),
@@ -167,6 +168,7 @@ export function confirmedHistoryPage(
     record(t, page.account);
     if (
       seen.has(t.transactionId) ||
+      (query.transactionId && t.transactionId !== query.transactionId) ||
       (query.type && t.type !== query.type) ||
       (query.currency &&
         t.source?.currency !== query.currency &&

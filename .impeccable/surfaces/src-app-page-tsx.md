@@ -7,7 +7,22 @@ related_targets: ["src/features/wallet/dashboard.tsx","src/features/wallet/walle
 
 # Wallet overview surface
 
-## Current History reference — D-039
+## Current transaction experience — D-040
+
+Use the supplied dark transaction-detail image: one sheet, Back to results,
+Transaction details/Completed/direction, prominent signed summary, compact divided
+two-column recorded facts with real ID copy and an information footer. Adapt every
+transaction type/precision/direction truthfully; no editing immutable facts. Exact-ID
+search now filters the History list; selecting a row opens details. Use shadcn
+Calendar/React DayPicker range selection in inclusive staged UTC, with accessible
+popover/keyboard/clear and compact-phone cells. All valid money confirmations await
+1,000ms server-side before DB/atomic work; no busy-wait/transaction lock, fake
+success, changed key/expiry or frontend-only substitute. This explicit request
+supersedes earlier no-delay presentation guidance. User approved affected design
+refresh with unchanged core tokens. See `artifact/TRANSACTION_EXPERIENCE.md` for
+the reference transcription, safeguards and newest ten-transaction baseline.
+
+## Prior History reference — D-039
 
 The user's 1024 × 629 History image is the visual reference. See
 `artifact/HISTORY_REFERENCE.md` for its authoritative transcription: Completed

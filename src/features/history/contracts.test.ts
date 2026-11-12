@@ -29,6 +29,10 @@ describe("history query contracts", () => {
       to: "2026-11-12",
     });
   });
+  it("accepts one exact transaction ID without changing its bytes", () =>
+    expect(
+      parse("accountId=main&transactionId=+legacy+%F0%9F%8C%8D+"),
+    ).toMatchObject({ transactionId: " legacy 🌍 " }));
   it.each(["2024-02-29", "2000-02-29", "0000-01-01", "9999-12-31"])(
     "accepts canonical UTC calendar day %s",
     (day) => expect(historyDateContract.is(day)).toBe(true),
@@ -53,6 +57,9 @@ describe("history query contracts", () => {
     "accountId=%00",
     "accountId=main&accountId=other",
     "accountId=main&type=deposit&type=withdrawal",
+    "accountId=main&transactionId=one&transactionId=two",
+    "accountId=main&transactionId=",
+    "accountId=main&transactionId=%00",
     "accountId=main&currency=usd",
     "accountId=main&currency=ZZZ",
     "accountId=main&type=DEPOSIT",

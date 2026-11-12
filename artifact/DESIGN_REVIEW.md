@@ -1,5 +1,43 @@
 # Wallet shell design review
 
+## T11-12 — transaction-experience finish review
+
+**Disposition: `ship` at the bounded D-040 transaction-experience scope.** A fresh,
+independent read-only child returned all five review-contract sections, opened all
+**50 originals and six contact sheets**, and sampled the implementation source.
+The original inline reference was unavailable to the child; its authoritative
+transcription traveled with the packet. No comp, quality-bar card, identity round
+or raster gate was required for this user-pinned Operate refinement.
+
+The reviewer accepted type/material/ground, screenshot-led detail composition,
+signed direction-correct summaries, immutable divided facts and bounded copy/flags.
+Narrow stacked facts and one/two-month UTC calendar layouts are accepted responsive
+adaptations. In-list exact-ID search, staged inclusive UTC selection, clear/manual
+fallback, copy-failure selection, privacy/read/error states and async server pacing
+match the requested behavior. **Material fixes: none.** Preserve exact decimals,
+both legs/rate provenance, account scope, focus/privacy and original-key recovery.
+
+The once-only detector's primary warning is not substantiated: the inherited amount
+editor has square corners and a bottom-only focus boundary, not a thick accent on
+a rounded card. The 41 type/radius inventory advisories do not establish material
+visual defects. No repeated scan, blanket suppression or unrelated drift repair was
+added. The approved DESIGN.md/sidecar refresh is complete: parent snapshot checks
+confirm byte-identical normative frontmatter and unchanged core metadata, ramps,
+shadows, motion and breakpoints. All 13 incumbent preview names/keys remain;
+12 entries are unchanged, Completed History sheet is refreshed, and two inert
+detail/calendar examples bring the total to 15. Parent browser validation covers
+12 affected preview variants without overflow/errors/scripts/network requests;
+this is documentation validation, not another independent live-app review.
+
+The parent-run full Docker check passes **1,547 Jest / 74 suites**, formatting,
+lint, types, production build and **62 artifact documents / 41 tasks**; the focused
+four-test Chromium run passes actual all-four pacing/replay, list/detail/copy and
+calendar selection in Los Angeles/Auckland. The parent subsequently received the
+complete **122/122 Chromium** pass against the reviewed build. These are parent-run
+results, not browser tests executed by the reviewer. The review is not an exhaustive
+backend, security, performance, screen-reader or WCAG certification. See
+[TRANSACTION_EXPERIENCE.md](TRANSACTION_EXPERIENCE.md).
+
 ## T11-11 — screenshot-led History finish review
 
 **Initial disposition: `fix` at the bounded D-039 History-reference scope.** A

@@ -63,6 +63,39 @@ describe("account-scoped completed transaction history", () => {
       list({ page: Number.MAX_SAFE_INTEGER, pageSize: 100 }).transactions,
     ).toEqual([]);
   });
+  it("filters an exact ID outside the current page, combines filters and never leaks another account's record", () => {
+    expect(ids({ pageSize: 1 })).not.toContain("deposit-old");
+    expect(ids({ transactionId: "deposit-old", pageSize: 1 })).toEqual([
+      "deposit-old",
+    ]);
+    expect(list({ transactionId: "deposit-old" }).pagination).toMatchObject({
+      totalItems: 1,
+      totalPages: 1,
+    });
+    for (const changes of [
+      { type: "transfer" },
+      { currency: "GBP" },
+      { from: "2026-11-12" },
+      { accountId: "recipient" },
+      { transactionId: "missing" },
+      { transactionId: "x' OR 1=1 --" },
+    ])
+      expect(ids({ transactionId: "deposit-old", ...changes })).toEqual([]);
+    expect(ids()).toHaveLength(9);
+  });
+  it("matches legacy Unicode and surrounding spaces literally without normalizing IDs", () => {
+    const id = "  🌍 <legacy> '  ";
+    fixture.add({
+      id,
+      type: "deposit",
+      createdAt: "2026-11-15T00:00:00.000Z",
+      targetWalletId: "main-usd",
+      credit: 1n,
+      provider: "demo_bank",
+    });
+    expect(ids({ transactionId: id })).toEqual([id]);
+    expect(ids({ transactionId: id.trim() })).toEqual([]);
+  });
   it("truthfully permits numbered-page shifts when new activity arrives between requests", () => {
     const first = ids({ page: 1, pageSize: 2 });
     fixture.add({

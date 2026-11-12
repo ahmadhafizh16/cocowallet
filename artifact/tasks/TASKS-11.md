@@ -205,6 +205,39 @@ two-record History, privacy/draft navigation and no financial POSTs or errors;
 existing user financial data remains unchanged. See
 [PRESENTATION_REFINEMENT.md](../PRESENTATION_REFINEMENT.md) for limits and evidence.
 
+### T11-12
+
+**Transaction details, in-list search, date range and confirmation pacing**
+
+**Status:** Done.
+
+**Decisions:** [D-040](../DECISIONS.md#d-040).
+**Depends on:** [T11-11](#t11-11).
+
+**Implementation:** Follow [TRANSACTION_EXPERIENCE.md](../TRANSACTION_EXPERIENCE.md):
+screenshot-led immutable detail/copy presentation, account-scoped in-list exact-ID
+search, shadcn UTC range calendar and a nonblocking one-second backend confirmation
+pause. Preserve exact money, recovery, quote expiry and the frosted identity.
+
+**Acceptance and tests:** All detail types/ID-copy/failure/privacy/focus, exact list
+search across pages and accounts, calendar range/clear/same-day/non-UTC browser
+selection, all-four server pacing with no locked database during sleep, original
+request/replay/expiry/error recovery, Docker/Jest/isolated browsers, responsive
+themes/render review, approved design handoff and current-data restoration. Commit
+locally; no migration, normal-wallet money test or push.
+
+**Verification:** Full Docker check/build passes **1,547 Jest / 74 suites**,
+formatting/lint/types and **62 artifact documents / 41 tasks**; all **122 Chromium**
+checks pass on the isolated production server. Fifty final originals and six
+contact sheets cover 320/820/1024/1440 light/dark, all detail directions/copy/states
+and the library calendar. The fresh independent review returns **ship**, no
+material fixes. Approved affected design docs retain core tokens and all 13
+incumbent previews, adding two inert examples. Normal development is healthy;
+the current ten-transaction wallet's 13 non-cache tables remain row-identical,
+only FX caches refresh, and 300 read-only frames pass without errors or writes.
+See [the implementation record](../TRANSACTION_EXPERIENCE.md) and
+[review](../DESIGN_REVIEW.md).
+
 ### T11-11
 
 **Screenshot-led History page refinement**

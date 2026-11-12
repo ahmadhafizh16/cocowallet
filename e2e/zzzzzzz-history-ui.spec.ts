@@ -117,9 +117,26 @@ async function lookup(page: Page, id: string) {
   await page
     .getByRole("button", { name: "Find transaction", exact: true })
     .click();
+  const row = page.locator(`button[data-transaction-id="${id}"]`);
+  await expect(row).toBeVisible();
+  await expect(
+    page.getByRole("heading", { name: "Transaction details", exact: true }),
+  ).toHaveCount(0);
+  await row.click();
   await expect(
     page.getByRole("heading", { name: "Transaction details", exact: true }),
   ).toBeFocused();
+}
+async function enterDays(page: Page, from?: string, to?: string) {
+  await page.getByLabel("Date range (UTC)", { exact: true }).click();
+  await page.getByText("Enter UTC days", { exact: true }).click();
+  if (from !== undefined)
+    await page.getByLabel("From day (UTC)", { exact: true }).fill(from);
+  if (to !== undefined)
+    await page.getByLabel("To day (UTC)", { exact: true }).fill(to);
+  await page
+    .getByRole("button", { name: "Done selecting dates", exact: true })
+    .click();
 }
 async function captureState(page: Page, name: string) {
   mkdirSync(".impeccable/review/history-flow", { recursive: true });
@@ -220,6 +237,11 @@ test("the supplied History reference has visible lookup, signed completion rows 
     .getAttribute("data-transaction-id");
   await page.getByLabel("Transaction ID", { exact: true }).fill(id!);
   await page.getByLabel("Transaction ID", { exact: true }).press("Enter");
+  await expect(rows).toHaveCount(1);
+  await expect(
+    page.getByRole("heading", { name: "Transaction details", exact: true }),
+  ).toHaveCount(0);
+  await rows.first().locator("button").click();
   await expect(
     page.getByRole("heading", { name: "Transaction details", exact: true }),
   ).toBeFocused();
@@ -234,12 +256,17 @@ test("numbered pages and exact detail/back navigation preserve the applied filte
   request,
 }) => {
   const { source } = await main(request);
-  for (let i = 0; i < 53; i++)
-    await post(request, "/api/deposits", {
-      walletId: source.id,
-      amount: "0.01",
-      provider: "demo_bank",
-    });
+  // Independent fixtures may await the real server pause concurrently; writes
+  // remain atomic and every receipt is checked. Do not bypass production pacing.
+  await Promise.all(
+    Array.from({ length: 53 }, () =>
+      post(request, "/api/deposits", {
+        walletId: source.id,
+        amount: "0.01",
+        provider: "demo_bank",
+      }),
+    ),
+  );
   await page.goto("/");
   await browse(page);
   await choose(page, "History type", "Deposits");
@@ -310,6 +337,20 @@ test("numbered pages and exact detail/back navigation preserve the applied filte
   ).toBeVisible();
   await page.getByRole("button", { name: "First page", exact: true }).click();
   await expect(rows.locator("button")).toHaveCount(50);
+  await page.getByLabel("Transaction ID", { exact: true }).fill(id);
+  await page.getByLabel("Transaction ID", { exact: true }).press("Enter");
+  await expect(rows.locator("button")).toHaveCount(1);
+  await expect(rows.locator("button")).toHaveAttribute(
+    "data-transaction-id",
+    id,
+  );
+  await expect(
+    page.getByRole("heading", { name: "Transaction details", exact: true }),
+  ).toHaveCount(0);
+  await page
+    .getByRole("button", { name: "Clear transaction search", exact: true })
+    .click();
+  await expect(rows.locator("button")).toHaveCount(50);
 });
 
 test("type/either-side currency and inclusive UTC days apply explicitly; validation and clearing preserve honest results", async ({
@@ -326,8 +367,7 @@ test("type/either-side currency and inclusive UTC days apply explicitly; validat
   await choose(page, "History type", "Transfers");
   await choose(page, "History currency", "USD");
   const day = data.transfer.createdAt.slice(0, 10);
-  await page.getByLabel("From day (UTC)", { exact: true }).fill(day);
-  await page.getByLabel("To day (UTC)", { exact: true }).fill(day);
+  await enterDays(page, day, day);
   expect(listReads).toBe(0);
   await page
     .getByRole("button", { name: "Apply history filters", exact: true })
@@ -349,25 +389,25 @@ test("type/either-side currency and inclusive UTC days apply explicitly; validat
     }),
   ).toBeVisible();
   const before = listReads;
-  await page.getByLabel("From day (UTC)", { exact: true }).fill("2026-02-30");
+  await enterDays(page, "2026-02-30");
   await page
     .getByRole("button", { name: "Apply history filters", exact: true })
     .click();
   await expect(
-    page.getByLabel("From day (UTC)", { exact: true }),
+    page.getByLabel("Date range (UTC)", { exact: true }),
   ).toBeFocused();
   await expect(page.locator("#history")).toContainText("Use a valid UTC day");
   await captureState(page, "invalid-day");
   expect(listReads).toBe(before);
-  await page.getByLabel("From day (UTC)", { exact: true }).fill("2030-01-01");
-  await page.getByLabel("To day (UTC)", { exact: true }).fill("2020-01-01");
+  await enterDays(page, "2030-01-01", "2020-01-01");
   await page
     .getByRole("button", { name: "Apply history filters", exact: true })
     .click();
-  await expect(page.getByLabel("To day (UTC)", { exact: true })).toBeFocused();
+  await expect(
+    page.getByLabel("Date range (UTC)", { exact: true }),
+  ).toBeFocused();
   expect(listReads).toBe(before);
-  await page.getByLabel("From day (UTC)", { exact: true }).fill("2000-01-01");
-  await page.getByLabel("To day (UTC)", { exact: true }).fill("2000-01-01");
+  await enterDays(page, "2000-01-01", "2000-01-01");
   await page
     .getByRole("button", { name: "Apply history filters", exact: true })
     .click();
@@ -384,9 +424,9 @@ test("type/either-side currency and inclusive UTC days apply explicitly; validat
   await expect(
     page.getByRole("list", { name: "Full transaction history", exact: true }),
   ).toBeVisible();
-  await expect(page.getByLabel("From day (UTC)", { exact: true })).toHaveValue(
-    "",
-  );
+  await expect(
+    page.getByLabel("Date range (UTC)", { exact: true }),
+  ).toContainText("All dates");
   await expect(
     page.getByRole("combobox", { name: "History type", exact: true }),
   ).toContainText("All activity");
@@ -441,10 +481,18 @@ test("every completed operation has recorded details; rejected attempts never be
     ).toBeVisible();
   }
   expect(referenceReads).toBe(0);
-  await lookup(page, error.requestKey);
-  await expect(page.locator("#history")).toContainText(
-    "Transaction not found in this account",
-  );
+  await page
+    .getByLabel("Transaction ID", { exact: true })
+    .fill(error.requestKey);
+  await page
+    .getByRole("button", { name: "Find transaction", exact: true })
+    .click();
+  await expect(
+    page.getByRole("heading", {
+      name: "No matching completed activity",
+      exact: true,
+    }),
+  ).toBeVisible();
   await captureState(page, "missing-record");
   await expect(page.locator("#history time")).toHaveCount(0);
 });
@@ -508,7 +556,29 @@ test("missing records, read failures and malformed responses offer safe read-onl
   const data = await facts(request);
   await page.goto("/");
   await browse(page);
-  await lookup(page, randomUUID());
+  await page.getByLabel("Transaction ID", { exact: true }).fill(randomUUID());
+  await page
+    .getByRole("button", { name: "Find transaction", exact: true })
+    .click();
+  await expect(
+    page.getByRole("heading", {
+      name: "No matching completed activity",
+      exact: true,
+    }),
+  ).toBeVisible();
+  await page
+    .getByRole("button", { name: "Clear transaction search", exact: true })
+    .click();
+  await page.route(
+    `**/api/transactions/${data.deposit.transactionId}?**`,
+    (route) =>
+      route.fulfill({
+        status: 404,
+        contentType: "application/problem+json",
+        body: "{}",
+      }),
+  );
+  await lookup(page, data.deposit.transactionId);
   await expect(page.locator("#history")).toContainText(
     "Transaction not found in this account",
   );
@@ -521,6 +591,7 @@ test("missing records, read failures and malformed responses offer safe read-onl
   await page
     .getByRole("button", { name: "Back to results", exact: true })
     .click();
+  await page.unroute(`**/api/transactions/${data.deposit.transactionId}?**`);
   await expect(
     page.getByRole("list", { name: "Full transaction history", exact: true }),
   ).toBeVisible();

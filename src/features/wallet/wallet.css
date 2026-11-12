@@ -966,6 +966,411 @@
   width: 44px;
   height: 44px;
 }
+.wallet-history-search-control[data-has-search="true"] input {
+  padding-inline-end: 92px;
+}
+.wallet-history-search-control > .wallet-history-clear-search {
+  inset-inline-end: 44px;
+}
+.wallet-history-search-control input::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+}
+.wallet-history-date-range {
+  grid-column: span 2;
+}
+.wallet-date-trigger {
+  width: 100%;
+  justify-content: flex-start;
+  font-weight: 400;
+}
+.wallet-date-trigger > span {
+  flex: 1;
+  min-width: 0;
+  text-align: start;
+  overflow-wrap: anywhere;
+}
+.ui-popover-content {
+  z-index: 90;
+  width: max-content;
+  max-width: calc(100vw - 16px);
+  max-height: min(
+    calc(100dvh - 24px),
+    var(--radix-popover-content-available-height)
+  );
+  overflow: auto;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-control);
+  background: var(--solid);
+  color: var(--ink);
+  box-shadow: var(--shadow);
+  outline: none;
+}
+.wallet-date-heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 16px 16px 0;
+  font-size: 14px;
+}
+.wallet-date-heading > span {
+  color: var(--secondary);
+  font-size: 12px;
+}
+.ui-calendar {
+  --calendar-cell: 44px;
+  width: fit-content;
+  padding: 12px;
+  font-family: var(--font-ui);
+  font-size: 14px;
+}
+.ui-calendar-months {
+  position: relative;
+  display: flex;
+  gap: 16px;
+}
+.ui-calendar-month {
+  width: calc(7 * var(--calendar-cell));
+}
+.ui-calendar-nav {
+  position: absolute;
+  inset-inline: 0;
+  top: 0;
+  z-index: 1;
+  display: flex;
+  justify-content: space-between;
+  pointer-events: none;
+}
+.ui-calendar-button-previous,
+.ui-calendar-button-next {
+  pointer-events: auto;
+  width: 44px;
+  height: 44px;
+  min-height: 44px;
+  padding: 0;
+}
+.ui-calendar-month-caption {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding-inline: 44px;
+  font-weight: 600;
+}
+.ui-calendar-month-grid {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+.ui-calendar-weekday {
+  height: 28px;
+  color: var(--secondary);
+  font-size: 12px;
+  font-weight: 400;
+  text-align: center;
+}
+.ui-calendar-day {
+  position: relative;
+  width: var(--calendar-cell);
+  height: var(--calendar-cell);
+  padding: 0;
+  text-align: center;
+}
+.ui-calendar .ui-calendar-day-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--calendar-cell);
+  height: var(--calendar-cell);
+  min-height: var(--calendar-cell);
+  padding: 0;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1;
+}
+.ui-calendar-range-middle {
+  background: var(--inner);
+}
+.ui-calendar-range-start {
+  border-radius: 8px 0 0 8px;
+  background: var(--inner);
+}
+.ui-calendar-range-end {
+  border-radius: 0 8px 8px 0;
+  background: var(--inner);
+}
+.ui-calendar
+  .ui-calendar-day-button:is(
+    [data-range-start="true"],
+    [data-range-end="true"]
+  ) {
+  background: var(--navy);
+  color: var(--on-navy);
+}
+.ui-calendar .ui-calendar-day-button[data-range-middle="true"] {
+  border-radius: 0;
+  background: var(--inner);
+}
+.ui-calendar-today:not([data-selected="true"]) .ui-calendar-day-button {
+  box-shadow: inset 0 0 0 1px var(--control-border);
+}
+.ui-calendar-hidden {
+  visibility: hidden;
+}
+.ui-calendar-disabled {
+  opacity: 0.5;
+}
+.ui-calendar-outside {
+  color: var(--secondary);
+}
+.wallet-date-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 8px 12px 12px;
+}
+.wallet-date-manual {
+  padding-inline: 12px;
+  font-size: 13px;
+  color: var(--secondary);
+}
+.wallet-date-manual summary {
+  width: fit-content;
+  min-height: 44px;
+  padding-block: 12px;
+  cursor: pointer;
+}
+.wallet-date-manual > div {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  padding-bottom: 8px;
+}
+.wallet-detail-sheet {
+  display: grid;
+  gap: 16px;
+}
+.wallet-detail-sheet > button {
+  justify-self: start;
+}
+.wallet-detail-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+}
+.wallet-detail-title {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+.wallet-detail-title .wallet-detail-heading {
+  font-size: 22px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+.wallet-detail-completed {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  width: fit-content;
+  padding: 3px 8px;
+  border: 1px solid var(--positive);
+  border-radius: 16px;
+  color: var(--positive);
+  background: var(--positive-ground);
+  font-size: 12px;
+  font-weight: 500;
+}
+.wallet-detail-completed svg {
+  width: 12px;
+  height: 12px;
+}
+.wallet-detail-direction {
+  display: inline-grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  color: var(--navy);
+  background: var(--line);
+}
+.wallet-detail-direction.is-credit {
+  color: var(--positive);
+  background: var(--positive-ground);
+}
+.wallet-detail-direction.is-debit {
+  color: var(--danger);
+  background: var(--danger-ground);
+}
+.wallet-detail-direction > svg {
+  width: 16px;
+  height: 16px;
+}
+.wallet-detail-summary {
+  display: grid;
+  justify-items: end;
+  gap: 4px;
+  max-width: 62%;
+  min-width: 0;
+  text-align: end;
+  overflow-wrap: anywhere;
+}
+.wallet-detail-summary > strong {
+  font-size: clamp(28px, 3.2vw, 36px);
+  font-weight: 600;
+  line-height: 1.2;
+  font-variant-numeric: tabular-nums;
+}
+.wallet-detail-summary > .wallet-detail-receiving {
+  font-size: clamp(24px, 2.8vw, 30px);
+}
+.wallet-detail-summary > span {
+  color: var(--secondary);
+  font-size: 16px;
+}
+.wallet-detail-facts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 24px;
+  min-width: 0;
+  font-size: 14px;
+}
+.wallet-detail-fact {
+  position: relative;
+  min-width: 0;
+  padding-block: 8px;
+  border-bottom: 1px solid var(--line);
+}
+.wallet-detail-fact dt {
+  color: var(--secondary);
+  font-size: 12px;
+  line-height: 1.4;
+}
+.wallet-detail-fact dd {
+  min-width: 0;
+  margin-top: 2px;
+  overflow-wrap: anywhere;
+  line-height: 1.5;
+}
+.wallet-detail-fact:has(.wallet-detail-copy) dd {
+  min-height: 28px;
+  padding-inline-end: 48px;
+}
+.wallet-detail-fact bdi {
+  user-select: text;
+}
+.wallet-detail-fact.is-amount dd {
+  font-size: 18px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+.wallet-detail-copy {
+  position: absolute;
+  inset-inline-end: 0;
+  bottom: 4px;
+  width: 44px;
+  height: 44px;
+}
+.wallet-detail-copy svg {
+  color: var(--secondary);
+}
+.wallet-detail-type,
+.wallet-detail-currency {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  max-width: 100%;
+}
+.wallet-detail-currency > span {
+  min-width: 0;
+}
+.wallet-detail-flag {
+  display: inline-flex;
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  overflow: hidden;
+  border-radius: 50%;
+}
+.wallet-detail-type .wallet-detail-direction {
+  width: 20px;
+  height: 20px;
+}
+.wallet-detail-type .wallet-detail-direction svg {
+  width: 12px;
+  height: 12px;
+}
+.wallet-detail-currency svg {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+}
+.wallet-detail-copy-feedback {
+  color: var(--secondary);
+  font-size: 13px;
+}
+.wallet-detail-footer {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 8px;
+  margin: 0 -20px -20px;
+  padding: 12px 20px;
+  border-top: 1px solid var(--line);
+  color: var(--secondary);
+  font-size: 13px;
+  text-align: center;
+}
+.wallet-detail-footer > svg {
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  margin-top: 1px;
+}
+@media (max-width: 640px) {
+  .ui-calendar {
+    --calendar-cell: 36px;
+  }
+  .wallet-history-date-range {
+    grid-column: 1 / -1;
+  }
+  .wallet-date-manual > div {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .wallet-detail-header {
+    flex-direction: column;
+    gap: 16px;
+  }
+  .wallet-detail-summary {
+    max-width: 100%;
+    justify-items: start;
+    text-align: start;
+  }
+  .wallet-detail-facts {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .wallet-detail-footer {
+    margin-inline: -16px;
+    margin-bottom: -16px;
+    padding-inline: 16px;
+  }
+}
+@media (forced-colors: active) {
+  .ui-calendar .ui-calendar-day-button[data-selected="true"] {
+    border: 2px solid Highlight;
+  }
+  .wallet-detail-completed {
+    border-color: CanvasText;
+  }
+}
 .wallet-history-results {
   display: grid;
   gap: 12px;

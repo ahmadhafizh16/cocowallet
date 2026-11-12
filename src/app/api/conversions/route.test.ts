@@ -5,6 +5,10 @@ import { getRuntimeDatabase } from "@/server/db/runtime";
 import { withJournalWrite } from "@/features/journal/write";
 import { createQuote } from "@/features/quotes/service";
 
+jest.mock("@/server/http/confirmation-delay", () => ({
+  waitForConfirmation: jest.fn(async () => {}),
+}));
+
 jest.mock("server-only", () => ({}));
 jest.mock("@/server/db/runtime", () => ({ getRuntimeDatabase: jest.fn() }));
 const NOW = Date.parse("2026-11-12T12:00:00.000Z");

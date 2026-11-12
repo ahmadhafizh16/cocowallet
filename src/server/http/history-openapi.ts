@@ -153,9 +153,16 @@ export const historyPaths = {
       operationId: "listCompletedTransactions",
       summary: "Read selected-account completed history with numbered pages",
       description:
-        "Exactly one accountId; optional single type/currency/from/to/page/pageSize only. Currency matches either affected side using known pinned precision, without today's provider eligibility/network. Inclusive UTC calendar days. Defaults page=1/pageSize=50, maximum pageSize=100. Newest first by createdAt DESC then transaction ID DESC. Count/account/page rows share one read snapshot, but new activity between requests can shift page boundaries: numbered pages are not cursor/snapshot pagination. Page beyond the end is empty, not 404; totalPages is 0 for no matches. Exact recorded amounts/rate provenance only, no current balances, retry keys, valuation, invented provider or FX recomputation.",
+        "Exactly one accountId; optional single transactionId/type/currency/from/to/page/pageSize only. transactionId is an exact account-scoped match combined with other filters, including records outside the current page; missing/foreign IDs return an empty list. Currency matches either affected side using known pinned precision, without today's provider eligibility/network. Inclusive UTC calendar days. Defaults page=1/pageSize=50, maximum pageSize=100. Newest first by createdAt DESC then transaction ID DESC. Count/account/page rows share one read snapshot, but new activity between requests can shift page boundaries: numbered pages are not cursor/snapshot pagination. Page beyond the end is empty, not 404; totalPages is 0 for no matches. Exact recorded amounts/rate provenance only, no current balances, retry keys, valuation, invented provider or FX recomputation.",
       parameters: [
         accountParameter,
+        {
+          name: "transactionId",
+          in: "query",
+          description:
+            "Exact selected-account transaction ID; combines with all other filters. Missing or foreign IDs yield no matching rows.",
+          schema: identifierContract.schema,
+        },
         { name: "type", in: "query", schema: transactionTypeContract.schema },
         {
           name: "currency",

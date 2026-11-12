@@ -1,5 +1,9 @@
 import { randomUUID } from "node:crypto";
 import { POST } from "./route";
+
+jest.mock("@/server/http/confirmation-delay", () => ({
+  waitForConfirmation: jest.fn(async () => {}),
+}));
 import { createJournalFixture } from "@/server/db/test-fixture";
 import { getRuntimeDatabase } from "@/server/db/runtime";
 import { withJournalWrite } from "@/features/journal/write";

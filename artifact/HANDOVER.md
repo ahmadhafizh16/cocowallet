@@ -1,15 +1,16 @@
 # Handover
 
-**Status:** D-039 screenshot-led History passes **1,530 Jest / 118 Chromium**
-checks. Compact signed/icon/status rows, top filters and visible exact-ID lookup,
-account context and grouped bottom paging follow the supplied image. The independent
-reviewer scored the sole 44px hit-target correction **resolved**, **`ship`** at
-fix-list scope. Approved History guidance/examples are refreshed with core tokens
-unchanged. Normal development is restored; all current financial data is preserved.
-T11-11 is complete: **32 of 40 tasks closed, 6 To do / 2 In progress / 32 Done**.
-See [HISTORY_REFERENCE.md](HISTORY_REFERENCE.md). D-038 zero-on-reopen, exact Edit,
-protected task motion, USD/GBP/EUR Convert UI and immutable recovery remain intact.
-Wallet/default management and Swagger remain separate work.
+**Status:** D-040 transaction experience passes **1,547 Jest / 122 Chromium**
+checks: screenshot-led immutable detail/copy, account-scoped in-list exact-ID
+search, shadcn UTC range calendar and nonblocking one-second backend confirmation
+pacing for all four money operations. Fresh independent review returns **`ship`**,
+no material fixes. Approved affected design guidance/examples are refreshed with
+core tokens unchanged. Normal development is restored; all current financial data
+is preserved. T11-12 is complete: **33 of 41 tasks closed, 6 To do / 2 In progress /
+33 Done**. See [TRANSACTION_EXPERIENCE.md](TRANSACTION_EXPERIENCE.md). D-038
+zero-on-reopen, exact Edit, protected task motion, USD/GBP/EUR Convert UI and
+immutable recovery remain intact. Wallet/default management and Swagger remain
+separate work.
 
 ## Implemented modules and commands
 
@@ -39,6 +40,9 @@ Wallet/default management and Swagger remain separate work.
 | `src/features/history/recent-transactions.tsx`, `preview.ts` | Five compact signed matching recent rows from the bounded 50-record read, shared recent/full/detail guards and scoped detail navigation. Exact account/direction/arithmetic/filter/count/order checks; no invented merchant or net conversion amount. |
 | `e2e/zzzzzz-transfers.spec.ts` | Guarded production transfer confirmation/recovery, recipient/default/target behavior, incoming inspection/read-only permissions, expiry/funds/self-ID/storage errors and light/dark 320/1440 captures. |
 | `src/features/history/workspace.tsx`, `use-history.ts`, `transaction-facts.tsx` | Screenshot-led single-sheet History: staged filters/visible exact-ID lookup, compact signed/icon/status rows, grouped paging, GET-bound exact detail, safe retry/privacy, focus/back navigation and scoped cancellation. No persistent browsing storage or monetary write. |
+| `src/features/history/date-range.tsx`, `src/components/ui/calendar.tsx`, `popover.tsx` | Pinned React DayPicker 10.0.2/shadcn UTC range selection, responsive one/two months, staged Apply, clear/same-day/manual fallback and Radix focus/collision handling. |
+| `src/server/http/confirmation-delay.ts`, `confirmation-delay.test.ts` | Async 1,000ms server pause after valid request parsing and before database/atomic work; fake-clock verification for deposit/withdrawal/conversion/transfer adapters. |
+| `e2e/zzzzzzzzzzzz-details.spec.ts` | Real all-four pacing/original-key replay, exact in-list search/detail/copy fallback and calendar selection in Los Angeles/Auckland. |
 | `e2e/zzzzzzz-history-ui.spec.ts` | Guarded >50-record browsing, all operation details, UTC/either-currency filters, account switching, errors/missing/privacy, unchanged monetary recovery and 320/1440 light/dark captures. |
 | `src/features/funding/`, `src/app/api/deposits/`, `src/app/api/withdrawals/` | Exact simulated funding, immutable durable original results, same-key retries, per-tab recovery, receipts and bounded completed-funding visibility. |
 | `drizzle/0003_funding_results.sql` | Retained technical outcome table and immutable update/delete triggers; no seeded funds or transactions. |
@@ -83,7 +87,34 @@ Stop the dev compiler before `docker compose run --rm app npm run check`, then u
 
 Application DB: `/app/data/wallet.sqlite` in Compose's `wallet-data` volume. Tests use isolated temporary SQLite files. Normal shutdown is `docker compose down` without deleting volumes. Before applying journal migrations, the stopped app's database was backed up with SQLite's backup API to `/app/data/wallet.sqlite.pre-journal-1794390597589.bak`. Backup creation is verified; a full restore drill is not claimed.
 
-Current D-039 verification passes the full Docker check/build: **1,530 Jest tests
+Current D-040 verification passes the full Docker check/build: **1,547 Jest tests
+in 74 suites**, formatting/lint/types and **62 artifact documents / 41 tasks**;
+all **122 production Chromium checks** pass on the isolated server. Fresh bounded
+independent review returns **ship**, no material fixes, after opening 50 originals
+and six sheets. Approved design refresh preserves byte-identical normative
+frontmatter, core metadata and all 13 incumbent preview names/keys; 12 previews
+are unchanged, History is refreshed and two inert examples are added (15 total).
+Parent documentation validation checks 12 affected width/theme variants without
+overflow, errors, scripts or external requests. See [DESIGN_REVIEW.md](DESIGN_REVIEW.md).
+
+The current backup is
+`/app/data/wallet.sqlite.pre-details-calendar-1794481464103.bak`: all 15 tables
+were row-identical before restoring development, and all **13 non-cache tables
+remain identical** afterwards. Only catalog/rate caches refreshed. Preserved user
+activity is **3 accounts / 5 wallets / 7 funding attempts / 1 conversion attempt /
+2 transfer attempts / 10 transactions / 13 journal entries / 11 observations**,
+plus **5 quotes / 3 quote uses**. Integrity `ok`, no FK violations. Healthy development
+retains `.next/dev.pre-details-calendar-1794483290728` and passes **300 stable
+read-only frames**, actual ten-record History/five recent rows, exact available
+total, in-list ID result before selecting details/back focus, calendar, privacy,
+soft navigation and zero-on-reopen, without extra document navigation, page/console
+errors or API writes. Both disposable previews are stopped; no normal seed/money
+test, migration, restore drill or push ran. React DayPicker is pinned at 10.0.2;
+production npm audit reports zero vulnerabilities (23 development-tree advisories
+were reported at installation, without unrelated upgrades). See
+[TRANSACTION_EXPERIENCE.md](TRANSACTION_EXPERIENCE.md).
+
+Historical D-039 verification passes the full Docker check/build: **1,530 Jest tests
 in 71 suites**, formatting/lint/types and **61 artifact documents / 40 tasks**;
 all **118 production Chromium checks** pass on the corrected isolated server.
 The independent review's one 40px lookup-target finding is resolved at 44px in all
@@ -93,7 +124,7 @@ History design refresh preserves byte-identical frontmatter, existing extensions
 and 12 previews, adding one inert History-sheet example; see
 [DESIGN_REVIEW.md](DESIGN_REVIEW.md).
 
-The current backup is
+The historical D-039 backup is
 `/app/data/wallet.sqlite.pre-history-reference-1794478402550.bak`: all 15 tables
 were row-identical before restoring development, and all **13 non-cache tables
 remain identical** afterwards. Only catalog/rate caches refreshed. Preserved user

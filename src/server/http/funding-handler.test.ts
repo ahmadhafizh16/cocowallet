@@ -5,6 +5,11 @@ import { createJournalFixture } from "../db/test-fixture";
 import { getRuntimeDatabase } from "../db/runtime";
 import * as fundingService from "@/features/funding/service";
 
+// Pacing is covered with fake time in confirmation-delay.test; keep DB cases fast.
+jest.mock("./confirmation-delay", () => ({
+  waitForConfirmation: jest.fn(async () => {}),
+}));
+
 jest.mock("../db/runtime", () => ({ getRuntimeDatabase: jest.fn() }));
 jest.mock("@/features/funding/service", () => {
   const actual = jest.requireActual("@/features/funding/service");

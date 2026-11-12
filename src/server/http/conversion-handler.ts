@@ -8,6 +8,7 @@ import { getRuntimeDatabase } from "../db/runtime";
 import { localJsonRequest, readValidatedJson } from "./request-input";
 import { monetaryResponse as respond } from "./responses";
 import { observeCompletedSubmission } from "../portfolio-observation";
+import { waitForConfirmation } from "./confirmation-delay";
 
 export async function handleConversion(request: Request) {
   const key = normalizeRequestKey(request.headers.get("Idempotency-Key"));
@@ -31,6 +32,7 @@ export async function handleConversion(request: Request) {
     return invalid();
   }
   try {
+    await waitForConfirmation();
     const database = getRuntimeDatabase();
     const result = submitConversion(database, key, input);
     observeCompletedSubmission(database, result);

@@ -9,6 +9,7 @@ import { getRuntimeDatabase } from "../db/runtime";
 import { jsonWriteIssue, readBoundedJson } from "./request-input";
 import { monetaryResponse as respond } from "./responses";
 import { observeCompletedSubmission } from "../portfolio-observation";
+import { waitForConfirmation } from "./confirmation-delay";
 
 export async function handleFunding(request: Request, kind: FundingKind) {
   const key = normalizeRequestKey(request.headers.get("Idempotency-Key"));
@@ -49,6 +50,7 @@ export async function handleFunding(request: Request, kind: FundingKind) {
       "Supply a UUID Idempotency-Key and exactly walletId, plain-decimal amount and supported provider strings.",
     );
   try {
+    await waitForConfirmation();
     const database = getRuntimeDatabase();
     const result = submitFunding(database, kind, key, input);
     observeCompletedSubmission(database, result);

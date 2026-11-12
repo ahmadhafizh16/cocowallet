@@ -302,6 +302,14 @@ direction/status rows and visible exact-ID lookup reuse recorded facts and share
 controls, not a new palette, financial capability or reference-image seed dataset.
 The History-only guidance below preserves D-038 modal continuity and recovery.
 
+The [transaction-experience follow-up](artifact/TRANSACTION_EXPERIENCE.md) (D-040)
+keeps this identity while refining the recorded-detail sheet, exact-ID list search
+and inclusive UTC range calendar. A selected result opens compact immutable facts
+with working ID copy; search itself never opens details. The explicitly approved
+one-second asynchronous server confirmation pause replaces earlier no-request-delay
+guidance for all four money operations, not the original quote, key or recovery
+contract. It is simulation pacing, never evidence of real payment processing.
+
 **Key Characteristics:**
 
 - Icy-blue glass and a diffuse navy backdrop.
@@ -382,12 +390,21 @@ wrapping account-ID tag **above one frosted sheet**. The outer route panel is
 transparent and unboxed; do not add a nested Browse heading or a second card around
 the sheet. The sheet locally uses (20px) padding and (24px) corners, becoming
 (16px)/(20px) at maximum width (640px), without changing shared panel primitives.
-Four labelled filters share one row from (1024px), two columns from (641–1023px)
-and one column at maximum width (640px). Desktop Apply/Clear sits below at left,
-with the visible exact-ID lookup at right; at maximum width (1023px) lookup stacks
+The four-column filter grid from (1024px) holds type, currency and a **Date range
+(UTC)** trigger spanning two columns. At (641–1023px), type/currency share a row
+and the range spans the next; at maximum width (640px), all three controls stack.
+Desktop Apply/Clear sits below at left,
+with visible exact-ID list search at right; at maximum width (1023px) search stacks
 below the actions. Results, one count/page/order summary, and the grouped bottom
 paging stay inside this same sheet. Let headings, IDs, rows and controls wrap on
 narrow screens without horizontal overflow or losing fixed-navigation clearance.
+
+Selected transaction details replace the results with one frosted sheet, not a
+dialog or nested cards. A wrapping title/status/direction group sits beside a
+right-aligned signed summary; compact facts use two equal columns with a (24px)
+gap and quiet horizontal dividers. At maximum width (640px), the header and facts
+stack and the summary aligns left. The range popup shows two months from (768px),
+one below; this is a component-local boundary, not a new shell breakpoint.
 
 ### Responsive behavior
 
@@ -413,7 +430,7 @@ Depth combines translucent tonal layers, light-catching borders, backdrop blur, 
 
 Frosted-panel blur is (22px); the opaque balance card alone uses `backdrop-filter: none` and `-webkit-backdrop-filter: none`. Scrim blur is (5px). Reduced transparency makes glass/inner roles solid, removes decorative washes and scrim blur; the balance card is already opaque. Forced colors removes washes and supplies system-color control/menu borders and the local balance-role replacements above.
 
-The stacking contract is mobile navigation (20), theme storage note (30), dialog overlay (50), dialog content (60), Select/DropdownMenu (70), Tooltip (80), and skip link (100). Keep menus above their owning dialog and the skip link reachable; do not flatten these into one overlay level.
+The stacking contract is mobile navigation (20), theme storage note (30), dialog overlay (50), dialog content (60), Select/DropdownMenu (70), Tooltip (80), range Popover (90), and skip link (100). Keep menus above their owning dialog and the skip link reachable; do not flatten these into one overlay level.
 
 **The Quiet Depth Rule.** Use ambient shadows for panels and paired soft offsets for raised controls; bounded task overlays may settle through transform/opacity, not ornamental hover lift or animated blur.
 
@@ -427,7 +444,7 @@ The approved motion thesis is protected focus and continuity: a money dialog set
 - **Dialogs:** a fresh scrim fades in over (240ms), out over (120ms). Fresh content arrives over (240ms): opacity (0 → 1), vertical translate (12px → 0), scale (0.985 → 1). Exit is (120ms), fading from the currently rendered opacity, moving (6px) farther down and multiplying the current scale by (0.99). Individual translate/scale leave the centered `transform` unchanged. Panel/scrim blur stays constant at the values above.
 - **Menus / tooltips:** fresh DropdownMenu and Select arrivals use (180ms), opacity (0 → 1), scale (0.98 → 1), and vertical offset (-4px → 0), reversed to (+4px → 0) above the trigger. Use the actual Radix transform origin. Menu exit is (120ms), fading from captured opacity to (0), keeping captured translation and multiplying captured scale by (0.985); tooltips fade from their current opacity over (120ms). Closing overlay/menu surfaces do not intercept pointer events during their exit.
 - **Local review / edit:** the shared `wallet-operation-stage` owns directional entry, reusing the existing review/edit keyframes over (180ms): opacity (0.6 → 1), horizontal translate (+8px → 0) for review and (-8px → 0) for Edit details. Its step/direction attributes replace nested form/review animation so only one content stage moves; fresh form entry adds no duplicate step animation. Edit preserves the exact amount within the same open modal.
-- **Pending / problem / recovery:** the same stage settles over (180ms) from opacity (0.75 → 1), vertical translate (6px → 0). This is immediate truthful feedback, not a progress simulation or request delay.
+- **Pending / problem / recovery:** the same stage settles over (180ms) from opacity (0.75 → 1), vertical translate (6px → 0). Feedback is immediate; this animation neither causes nor substitutes for D-040's separate server confirmation pause. No simulated progress is shown.
 - **Verified success:** only a definitive server receipt selects the success stage, settling over (240ms) from opacity (0.75 → 1), vertical translate (10px → 0) and scale (0.985 → 1). Focus and the actual result are not delayed for the effect.
 - **Dialog-height continuity:** one bounded WAAPI height animation connects measured layouts using the incumbent overlay duration (240ms) and settle easing. The hook converts either `240ms` or optimized `.24s` CSS serialization to milliseconds. An interrupted resize retargets from the currently rendered height after canceling the prior animation; close, privacy changes, viewport resize, unmount and a live reduced-motion change cancel resizing. No old monetary DOM snapshot, value tween, per-frame JavaScript loop, new dependency or animated blur is involved. Existing dialog opening/closing and menu motion remain unchanged.
 
@@ -469,7 +486,7 @@ Restrained, touch-sized controls with purposeful emphasis. `Button` supports `de
 - **Destructive / danger:** danger-ground with danger text; hover uses the same ground at (80%) opacity. Shared review uses it for Cancel, which dismisses the review without submitting; the color does not imply a financial reversal.
 - **Small / large:** minimum heights (40px)/(48px), padding (8px 12px)/(12px 24px); small remains (14px) text.
 - **Focus / disabled:** shared Button uses a (3px) navy ring at (30%) opacity; disabled opacity is (0.5), cursor not-allowed. This is not the old global (3px) outline with (4px) offset; that outline remains on ordinary focusable content such as account IDs and the brand link.
-- **Loading:** `loading` sets disabled and `aria-busy`, adding a decorative inline LoaderCircle to ordinary Buttons. Keep readable request/loading text; do not replace it with an icon-only state or invent a minimum request duration. The local spin and reduced-motion behavior are described above.
+- **Loading:** `loading` sets disabled and `aria-busy`, adding a decorative inline LoaderCircle to ordinary Buttons. Keep readable request/loading text; do not replace it with an icon-only state. D-040's explicit (1,000ms) server confirmation pause is the only approved pacing exception; do not add a frontend timer or minimum success-animation wait. The local spin and reduced-motion behavior are described above.
 - **Motion:** use the state/press feedback above; a press is a (1px) acknowledgement, not a hover lift. Select triggers and Inputs share state transitions but do not inherit the Button-only press rule.
 - **Wallet quick actions:** labelled Deposit, Withdraw, Convert, Send money Buttons; minimum height (48px), padding (10px 8px), gap (7px). The base treatment has an edge border and raised shadow, with solid/control-border hover/open feedback. The balance-card scope overrides that base: mint Deposit with dark ink; three transparent outlined actions with pale ink/boundaries; no action shadow. Deposit hover/open uses the lighter mint, while the other actions use the local blue hover fill and pale supporting-ink boundary. Icons inherit each action's ink. Disabled opacity remains (0.5); mobile retains two rows of two, not circular icon-only actions.
 - **Balance-card focus / selection:** card buttons, including the sparkline trigger, use a solid (3px) teal outline with (3px) offset and no focus shadow. The portaled history dialog uses the shared semantic focus treatment rather than inheriting card-local roles. The privacy action uses local supporting ink, becoming pale ink on the local hover fill. Text selection pairs mint fill with dark action ink. These specific card-scoped rules override shared semantic text, Button, and quick-action styling without changing other surfaces or adding motion.
@@ -545,21 +562,28 @@ holds a decorative (32px) icon, followed by the bold (16px), weight (600), title
 transactions will appear here.** Clear filter remains available when applicable;
 empty is not an error or invented activity.
 
-Selecting a recent row opens its account-scoped details on `/history`; there is no Browse full history action in the recent panel. History's completed list, type/currency/inclusive-UTC-day filters, numbered pages, lookup and record details reuse the existing shared controls. Account changes reset its scoped browsing context; stale reads cannot replace current facts. Returning from details preserves the mounted list's filters/page and restores focus; leaving the page does not promise persistence of those filters. Privacy removes rows, counts, timestamps and detailed facts, not just visible amounts.
+Selecting a recent row opens its account-scoped details on `/history`; there is no Browse full history action in the recent panel. History's completed list, type/currency/inclusive-UTC-day filters, numbered pages, exact-ID list search and record details reuse the existing shared controls. Account changes reset its scoped browsing context; stale reads cannot replace current facts. Returning from details preserves the mounted list's filters/search/page and restores focus; leaving the page does not promise persistence of those filters. Privacy removes rows, counts, timestamps and detailed facts, not just visible amounts.
 
-Full History follows the [D-039 reference](artifact/HISTORY_REFERENCE.md), adapting
+Full History follows the [D-039 reference](artifact/HISTORY_REFERENCE.md) and
+[D-040 follow-up](artifact/TRANSACTION_EXPERIENCE.md), adapting
 its composition to the existing app header, navigation, themes and accessible
 controls rather than reproducing a cropped screenshot frame:
 
-- **Filters and lookup:** History type, History currency, From day (UTC) and To day
-  (UTC) retain labels and shared (44px) controls. Filter edits are staged until
-  **Apply history filters**; Apply and **Clear history filters** reset to page 1.
-  The visible **Search by transaction ID…** field is a separate explicit exact-ID
-  lookup, submitted with Enter or the arrow Button to open this account's recorded
-  details—not a fuzzy filter or an as-you-type request. Its submit target is
-  (44 × 44px), aligned at zero top/trailing inset, with input padding (36px) leading
-  and (48px) trailing so neither icon covers text. Keep its accessible label,
-  exact-lookup hint, validation and missing/retry behavior.
+- **Filters and exact-ID search:** History type, History currency and **Date range
+  (UTC)** retain labels and shared (44px) controls. Filter edits are staged until
+  **Apply history filters**; Apply retains an applied exact ID and resets to page 1.
+  **Clear history filters** clears all filters/search and resets to page 1.
+  **Search by transaction ID…** submits explicitly with Enter or the arrow Button
+  as an exact account-scoped **list filter**, including records beyond the current
+  page. It combines with applied type/currency/dates, resets to page 1 and never
+  opens details until a result is selected. It is neither fuzzy nor as-you-type.
+  Empty submission or **Clear transaction search** removes only the ID filter,
+  keeping the other applied filters. Missing/foreign IDs produce the normal honest
+  empty list; read failure offers retry, never a foreign record or stale page.
+  The submit and clear targets are (44 × 44px), at zero top inset; submit is flush
+  trailing and clear sits (44px) before it. Input padding is (36px) leading and
+  (48px) trailing, becoming (92px) trailing when clear is present. Retain the
+  accessible label/hint, exact identifier validation and associated error.
 - **Compact rows:** one concise matching-count/page/**Newest first** line precedes
   quiet divided full-row actions. Use a (32px) circular direction icon, type and
   readable UTC time at left; exact signed currency amounts align right, followed
@@ -589,12 +613,85 @@ controls rather than reproducing a cropped screenshot frame:
   Associated screen-reader field hints remain even while that disclosure is closed.
   Detail/back returns focus to the originating row or visible heading; an account
   switch must not steal focus from the account menu. Privacy removes rows, amounts,
-  counts, timestamps and lookup immediately while retaining browsing context only
+  counts, timestamps and search immediately while retaining browsing context only
   in memory. Loading/error/empty/missing states never display an old page or another
   account's facts; retain truthful status, retry and back navigation. Existing
   account/query/revision/privacy and abort guards, read-only APIs, and unchanged
-  detail contracts remain authoritative; no durable filter storage or money-flow
-  change accompanies this presentation.
+  detail contracts remain authoritative. The optional read-only `transactionId`
+  list query is not durable filter storage or a financial submission.
+
+### UTC range calendar
+
+The labelled outline trigger reuses shared Button geometry with a decorative
+CalendarDays icon, wrapping selected-date text and chevron. Use the registry-derived
+[shadcn Calendar](src/components/ui/calendar.tsx) with pinned **React DayPicker 10.0.2**, `mode="range"` and
+`timeZone="UTC"`, inside the existing Radix Popover foundation—not a custom date
+grid or second design system. Selection uses canonical UTC days independent of the
+browser timezone, including same-day ranges and either unbounded endpoint. Both
+ends are inclusive. Selecting, **Clear dates**, and **Done selecting dates** only
+edit/close the draft; **Apply history filters** applies it to results.
+
+The popup is a solid themed surface with control-radius corners, quiet border and
+ambient panel shadow. Its (8px) trigger offset/collision padding, maximum width
+`calc(100vw - 16px)`, and maximum height bounded by both `calc(100dvh - 24px)` and
+Radix's available height keep it internally scrollable. Heading insets are
+(16px 16px 0); calendar inset is (12px), with a (16px) gap between months. Day
+buttons are (44 × 44px), locally (36 × 36px) **only at maximum width (640px)** to
+fit seven columns. Month navigation, disclosure and surrounding actions retain
+minimum (44px) targets; do not generalize the dense-day exception to copy or other
+controls. Range endpoints use navy/on-navy and (8px) local corners, the interior
+uses inner glass; forced colors gives selected days a system Highlight boundary.
+
+DayPicker owns calendar grid/keyboard/date behavior; Radix owns portaling,
+collision, Escape and trigger-focus return. Opening autofocuses the calendar.
+**Enter UTC days** discloses labelled From/To text fields with `YYYY-MM-DD` hints,
+two columns then stacked at maximum width (640px). Invalid or reversed manual
+dates show the associated error; Apply focuses the first invalid field. Do not
+silently normalize malformed days, apply on selection, or turn a local day into a
+different UTC date. Privacy unmounts the calendar/search/details with other history
+facts; no overlay may retain private records.
+
+### Recorded transaction details
+
+Follow the user-pinned dark detail reference and [recorded-fact components](src/features/history/transaction-facts.tsx) without introducing a new visual
+world. Keep the page title/privacy/**Back to overview** outside; inside **one
+sheet**, show **Back to results**, **Transaction details**, the green check plus
+**Completed** badge and a decorative direction marker. The title is locally
+(22px), weight (600), line height (1.4); the (28px) circular direction cue holds a
+(16px) Lucide icon. It is not an edit action. The right-hand summary uses exact
+signed tabular figures at `clamp(28px, 3.2vw, 36px)`, weight (600), line height
+(1.2), with type beneath in (16px) secondary text. Conversion adds its positive
+receiving leg at `clamp(24px, 2.8vw, 30px)`. Incoming summaries use the own receiving
+side; outgoing summaries use the source side. Full source/target facts remain
+below, including both legs of transfers, not a fabricated net.
+
+The two-column definition list uses (8px) vertical fact padding, quiet (1px)
+bottom dividers, (12px) secondary labels and (14px) wrapping values; recorded
+amount facts locally use (18px), weight (600). Show immutable transaction ID,
+type/direction, status, each stored side's amount/currency/name/account/wallet,
+applicable provider and readable recorded UTC time. Preserve original exact rate,
+source date, fetch time and fresh/cached provenance when present; same-currency
+transfer states **Same currency · no FX rate**. Never recompute from current FX or
+round the recorded decimal strings. Currency markers are bounded decorative
+(20px) flags with explicit code/name; unsupported flag mappings use the existing
+neutral currency marker, not an invented nationality.
+
+Transaction/account/wallet IDs have real (44 × 44px) copy Buttons; copy-bearing
+values reserve (48px) trailing space and remain selectable. Successful clipboard
+write reports the copied field; failure focuses/selects that ID and gives the
+device-Copy fallback in a (13px) status. Do not claim copy succeeded before it did.
+A divided (13px) information strip with decorative (16px) Info icon says
+**Recorded transaction facts, not current balances or today’s rate.** It bleeds to
+the sheet's inset edge with (12px) vertical padding. At maximum width (640px),
+header/summary/facts stack without clipping IDs or reducing copy targets.
+
+Detail loading, missing and error states retain the heading and Back action but
+never a previous record, invented amount or Completed badge without a validated
+detail result. Retry stays available. Detail entry focuses its heading; Back
+restores the originating row or visible heading with applied list context intact.
+Account switching must not steal menu focus. Privacy immediately removes details,
+IDs, copy feedback and monetary facts, not a blur or fade. These documented
+behaviors are not a screen-reader, WCAG or security certification.
 
 Presentation dates use the shared en-US UTC helpers across recent/full history,
 chart endpoints/table, quote expiry and rate provenance. Use readable month names,
@@ -639,6 +736,18 @@ expiry/reconfirmation. This screenshot-led composition reuses existing materials
 not a new global card or type system. No Back to overview or draft-retention footer
 copy is mounted in the money modal.
 
+All four valid confirmation submissions—Deposit, Withdraw, Convert and Send
+money—await an asynchronous **(1,000ms) server pause after request validation and
+before database access/atomic work**, using the shared [confirmation pause](src/server/http/confirmation-delay.ts). Malformed requests still fail fast. Do not
+busy-wait or hold a SQLite transaction across that pause. This explicitly approved
+D-040 exception supersedes earlier no-artificial-request-delay notes: it does not
+change motion tokens, add frontend waiting, simulate network/bank progress or
+permit optimistic success. Pending feedback is truthful and confirmation stays
+disabled while the request is busy. Original-key replay/recovery and atomic money
+facts remain unchanged; quote expiry is checked at actual submission after the
+pause and never extended. No animation or portfolio read delays a definitive
+receipt's presentation.
+
 Confirmed results now use a centered, concise success view: an (88px) positive-ground
 circle with a (48px) green check, the appropriate “Deposit complete,” “Withdrawal
 complete,” “Conversion complete,” or “Transfer complete” heading, an exact wrapping
@@ -670,7 +779,7 @@ must not relabel, delay or roll back a confirmed monetary outcome.
 
 ### Loading and error states
 
-The real dashboard skeleton reserves the current two-column/stacked geometry, top utilities, rail/bottom labels, actions, recent transactions and tighter currency rows. The balance card reserves a compact (72px) sparkline shape beside its total, not the former separate (112px) chart or a connection banner. Section-heading placeholders remain (30px) high; no separate balance-history heading is mounted in the overview skeleton. Balance-card shapes use its local divider role. Shapes are decorative; the busy main region supplies one “Loading wallet overview” status. No minimum loading delay or fake progress is introduced. Standalone errors retain the frosted world, offer retry/navigation, and do not expose exceptions or claim a known financial outcome. This affected-section documentation refresh is not a new visual review, full-accessibility or connected-feature certification; see [the scoped review](artifact/DESIGN_REVIEW.md), [presentation evidence](artifact/PRESENTATION_REFINEMENT.md), [workflow evidence](artifact/WORKFLOW_REFINEMENT.md) and [modal continuity evidence](artifact/MODAL_CONTINUITY.md). The continuity midpoint captures are intentionally paused at (50%), not settled-layout references.
+The real dashboard skeleton reserves the current two-column/stacked geometry, top utilities, rail/bottom labels, actions, recent transactions and tighter currency rows. The balance card reserves a compact (72px) sparkline shape beside its total, not the former separate (112px) chart or a connection banner. Section-heading placeholders remain (30px) high; no separate balance-history heading is mounted in the overview skeleton. Balance-card shapes use its local divider role. Shapes are decorative; the busy main region supplies one “Loading wallet overview” status. Dashboard/history reads have no minimum loading delay or fake progress; D-040's approved server confirmation pause applies only to money submissions. Standalone errors retain the frosted world, offer retry/navigation, and do not expose exceptions or claim a known financial outcome. This affected-section documentation refresh is not a new visual review, full-accessibility or connected-feature certification; see [the scoped review](artifact/DESIGN_REVIEW.md), [presentation evidence](artifact/PRESENTATION_REFINEMENT.md), [workflow evidence](artifact/WORKFLOW_REFINEMENT.md), [modal continuity evidence](artifact/MODAL_CONTINUITY.md) and [transaction-experience evidence](artifact/TRANSACTION_EXPERIENCE.md). The continuity midpoint captures are intentionally paused at (50%), not settled-layout references.
 
 ## Do's and Don'ts
 
@@ -688,7 +797,7 @@ The real dashboard skeleton reserves the current two-column/stacked geometry, to
 - **Do** keep simulation, preview, inspect-only, and unavailable states plain and visible.
 - **Do** keep the user-requested opaque balance gradient and its semantic roles local, consistent in both themes, with forced-colors replacements.
 - **Do** retain visible currency codes/names beside decorative vector flags and remove history values, timestamps, plot, and table immediately when privacy is enabled.
-- **Do** keep full History in one headed sheet with visible exact-ID lookup, explicit staged filters, compact signed recorded legs and one wrapping bottom paging group; retain exact facts and accessible completion in both themes.
+- **Do** keep full History in one headed sheet with explicit exact-ID list search, a staged inclusive UTC range calendar, compact signed recorded legs and one wrapping bottom paging group; selecting a result opens immutable details with real copy/fallback in both themes.
 
 ### Don't:
 
@@ -701,4 +810,4 @@ The real dashboard skeleton reserves the current two-column/stacked geometry, to
 - **Don't** depict disconnected services as completed money movement, stored preview balances, real payment cards, or live exchange rates.
 - **Don't** turn the wallet's surface-specific column arrangement into a global layout prohibition.
 - **Don't** invent history figures, dates, returns, or a flat/rising trend when future recorded data is absent, or promote card-local/flag colors into the global palette.
-- **Don't** seed the History reference's example rows/counts, imply fuzzy ID search, net stored transaction legs or replace historical facts with current FX.
+- **Don't** seed reference/example rows or IDs, imply fuzzy ID search or search-opens-detail, net stored transaction legs or replace historical facts with current FX; D-040's server pause never permits fake progress/success or changed quote expiry, key or recovery.
