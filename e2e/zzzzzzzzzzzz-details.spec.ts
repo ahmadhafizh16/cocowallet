@@ -154,9 +154,10 @@ test("search stays in the list; detail hero and real ID-copy fallback retain imm
       () => (window as typeof window & { copiedId?: string }).copiedId,
     ),
   ).toBe(record.transactionId);
-  await expect(page.getByRole("status")).toContainText(
-    "Transaction ID copied.",
-  );
+  await expect(
+    page.getByRole("tooltip", { name: "Copied!", exact: true }),
+  ).toBeVisible();
+  await expect(page.locator(".wallet-detail-copy-feedback")).toHaveCount(0);
   await page.evaluate(() => {
     Object.defineProperty(navigator, "clipboard", {
       configurable: true,
@@ -171,6 +172,9 @@ test("search stays in the list; detail hero and real ID-copy fallback retain imm
     .getByRole("button", { name: "Copy transaction id", exact: true })
     .click();
   await expect(page.getByRole("status")).toContainText("Copy unavailable");
+  await expect(
+    page.getByRole("tooltip", { name: "Copied!", exact: true }),
+  ).toHaveCount(0);
   expect(await page.evaluate(() => getSelection()?.toString())).toBe(
     record.transactionId,
   );

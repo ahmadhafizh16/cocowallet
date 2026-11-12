@@ -149,3 +149,24 @@ presentation tests and formatting pass. Captures and the once-only detector outp
 are in `.impeccable/review/recorded-at-divider/`. No accounting, data, motion, core
 token or design-file change accompanies this local polish; the full preceding
 1,549/124 results are not represented as a rerun of this follow-up.
+
+### Minor copy-tooltip follow-up
+
+Successful transaction/account/wallet-ID copy now opens **Copied!** on the clicked
+44px button through the existing shared Radix Tooltip, instead of adding a visible
+success sentence below the facts. Success opens only after clipboard completion,
+auto-dismisses after two seconds, closes on Escape/dismissal, and is also announced
+through a screen-reader-only status. Timer cleanup follows dismissal/unmount.
+Clipboard failure still selects/focuses the exact ID and keeps readable manual-copy
+guidance; it never shows a success tooltip. No global tooltip/control styling or
+financial behavior changes.
+
+All **1,549 Jest tests / 75 suites**, type checking and focused lint pass. Read-only
+live checks cover all three copy buttons across 320/820/1024/1440 light/dark,
+including touch, keyboard/Escape, timer expiry, held-pending clipboard and failure.
+Every tooltip stays anchored/in bounds, targets remain 44px, successful copy keeps
+the detail sheet's height unchanged, and page errors/API writes are zero. Eight
+success/two failure captures and inspection data are in
+`.impeccable/review/copy-tooltip/`; sampled readable originals were opened. The
+once-only changed-component detector is clean. No full production-build/124-test
+browser rerun or independent whole-surface review is claimed for this local polish.

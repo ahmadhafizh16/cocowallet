@@ -11,6 +11,18 @@ it("copies exact IDs and offers selected, readable text when clipboard access fa
   const host = document.createElement("div");
   document.body.append(host);
   const copied: string[] = [];
+  const resizeObserver = Object.getOwnPropertyDescriptor(
+    globalThis,
+    "ResizeObserver",
+  );
+  Object.defineProperty(globalThis, "ResizeObserver", {
+    configurable: true,
+    value: class {
+      observe = jest.fn();
+      unobserve = jest.fn();
+      disconnect = jest.fn();
+    },
+  });
   const root = createRoot(host),
     descriptor = Object.getOwnPropertyDescriptor(navigator, "clipboard"),
     writeText = jest.fn(async (value: string) => {
@@ -51,9 +63,11 @@ it("copies exact IDs and offers selected, readable text when clipboard access fa
     await act(async () => button.click());
     expect(writeText).toHaveBeenCalledWith(id);
     expect(copied).toEqual([id]);
-    expect(host.querySelector('[role="status"]')?.textContent).toBe(
-      "Transaction ID copied.",
+    expect(host.querySelector('[role="status"]')?.textContent).toBe("Copied!");
+    expect(document.querySelector('[role="tooltip"]')?.textContent).toBe(
+      "Copied!",
     );
+    expect(host.querySelector(".wallet-detail-copy-feedback")).toBeNull();
     writeText.mockRejectedValueOnce(new Error("blocked"));
     await act(async () => button.click());
     expect(host.querySelector('[role="status"]')?.textContent).toContain(
@@ -64,6 +78,9 @@ it("copies exact IDs and offers selected, readable text when clipboard access fa
   } finally {
     await act(() => root.unmount());
     host.remove();
+    if (resizeObserver)
+      Object.defineProperty(globalThis, "ResizeObserver", resizeObserver);
+    else delete (globalThis as { ResizeObserver?: unknown }).ResizeObserver;
     if (descriptor) Object.defineProperty(navigator, "clipboard", descriptor);
     else delete (navigator as { clipboard?: unknown }).clipboard;
     delete (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean })

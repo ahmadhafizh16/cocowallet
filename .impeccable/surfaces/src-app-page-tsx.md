@@ -11,6 +11,9 @@ related_targets: ["src/features/wallet/dashboard.tsx","src/features/wallet/walle
 
 Minor detail follow-up: remove only the bottom border on the final Recorded at
 (UTC) fact; retain the other fact dividers and the information footer's own edge.
+Successful ID copy now opens a short-lived **Copied!** tooltip on the clicked
+button, not a visible success sentence below the facts. Preserve screen-reader
+feedback and the selected-text/manual-copy fallback if clipboard access fails.
 
 Remove History's About these results and page-level Show/Hide action, not the
 Overview privacy setting or its cross-route masking. Use Apply Filter / Reset

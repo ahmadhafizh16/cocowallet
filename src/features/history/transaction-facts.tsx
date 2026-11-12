@@ -1,5 +1,5 @@
 "use client";
-import { useRef, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import {
   ArrowDownLeft,
   ArrowUpRight,
@@ -8,6 +8,12 @@ import {
   Copy,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { CurrencyFlag } from "../wallet/currency-flag";
 import type { HistoryTransaction } from "./contracts";
 import { PROVIDERS } from "../wallet/operation-model";
@@ -30,15 +36,22 @@ export function TransactionFacts({
 }: {
   transaction: HistoryTransaction;
 }) {
-  const [copyState, setCopy] = useState<string>(),
+  const [copyError, setCopyError] = useState<string>(),
+    [copied, setCopied] = useState<{ label: string }>(),
     [copying, setCopying] = useState<string>();
   const values = useRef<Record<string, HTMLElement | null>>({});
+  useEffect(() => {
+    if (!copied) return;
+    const timeout = window.setTimeout(() => setCopied(undefined), 2000);
+    return () => window.clearTimeout(timeout);
+  }, [copied]);
   async function copy(label: string, value: string) {
     setCopying(label);
-    setCopy(undefined);
+    setCopied(undefined);
+    setCopyError(undefined);
     try {
       await navigator.clipboard.writeText(value);
-      setCopy(`${label} copied.`);
+      setCopied({ label });
     } catch {
       const element = values.current[label];
       if (element) {
@@ -49,7 +62,7 @@ export function TransactionFacts({
         selection?.removeAllRanges();
         selection?.addRange(range);
       }
-      setCopy(
+      setCopyError(
         "Copy unavailable. The ID is selected; use your device’s Copy command.",
       );
     } finally {
@@ -121,7 +134,7 @@ export function TransactionFacts({
     ],
   ];
   return (
-    <>
+    <TooltipProvider delayDuration={0}>
       <dl className="wallet-detail-facts">
         {facts.map(([label, value, copyValue]) => (
           <div
@@ -139,28 +152,41 @@ export function TransactionFacts({
                 {value}
               </bdi>
               {copyValue && (
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="wallet-detail-copy"
-                  aria-label={`Copy ${label.toLowerCase()}`}
-                  title={`Copy ${label.toLowerCase()}`}
-                  loading={copying === label}
-                  onClick={() => void copy(label, copyValue)}
+                <Tooltip
+                  open={copied?.label === label}
+                  onOpenChange={(open) => {
+                    if (!open)
+                      setCopied((current) =>
+                        current?.label === label ? undefined : current,
+                      );
+                  }}
                 >
-                  <Copy aria-hidden="true" />
-                </Button>
+                  <TooltipTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="wallet-detail-copy"
+                      aria-label={`Copy ${label.toLowerCase()}`}
+                      loading={copying === label}
+                      onClick={() => void copy(label, copyValue)}
+                    >
+                      <Copy aria-hidden="true" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent side="top">Copied!</TooltipContent>
+                </Tooltip>
               )}
             </dd>
           </div>
         ))}
       </dl>
-      {copyState && (
-        <p className="wallet-detail-copy-feedback" role="status">
-          {copyState}
-        </p>
-      )}
-    </>
+      <p
+        className={copyError ? "wallet-detail-copy-feedback" : "sr-only"}
+        role="status"
+      >
+        {copyError ?? (copied ? "Copied!" : "")}
+      </p>
+    </TooltipProvider>
   );
 }
 
