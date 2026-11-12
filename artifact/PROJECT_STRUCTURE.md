@@ -1,0 +1,513 @@
+# Project file structure
+
+This snapshot covers 442 tracked project files and guide assets. Dependencies, local data, secrets, build output, and other ignored files are excluded. Run `node scripts/update-project-guide.mjs` to refresh the tree and offline bundle; see `TEST_CASES.md` to refresh test cases.
+
+## File tree
+
+- `.impeccable/` — Shared design context and surface decisions.
+  - `surfaces/` — surfaces files.
+    - `src-app-page-tsx.md` — Wallet surface design brief and current interaction decisions.
+  - `config.json` — Shared Impeccable design-tool settings.
+  - `design.json` — Machine-readable design tokens and component examples.
+- `.opencode/` — Project-local design skill, commands, and supporting tools.
+  - `commands/` — commands files.
+    - `impeccable.md` — OpenCode command definition for the Impeccable design skill.
+  - `skills/` — skills files.
+    - `impeccable/` — impeccable files.
+      - `reference/` — reference files.
+        - `degraded/` — degraded files.
+          - `asset-producer.md` — Impeccable design-tool reference: Impeccable Asset Producer.
+          - `documenter.md` — Impeccable design-tool reference: Impeccable Documenter.
+          - `finish-reviewer.md` — Impeccable design-tool reference: Impeccable Finish Reviewer.
+          - `manual-edit-applier.md` — Impeccable design-tool reference: Impeccable Manual Edit Applier.
+        - `adapt.md` — Impeccable design-tool reference: adapt.
+        - `adapt.native.md` — Impeccable design-tool reference: adapt.native.
+        - `android.md` — Impeccable design-tool reference: Android platform.
+        - `animate.md` — Impeccable design-tool reference: animate.
+        - `audit.md` — Impeccable design-tool reference: audit.
+        - `audit.native.md` — Impeccable design-tool reference: audit.native.
+        - `bolder.md` — Impeccable design-tool reference: bolder.
+        - `clarify.md` — Impeccable design-tool reference: clarify.
+        - `colorize.md` — Impeccable design-tool reference: colorize.
+        - `component-review.md` — Impeccable design-tool reference: Plan and asset review.
+        - `craft-floor.md` — Impeccable design-tool reference: Craft floor.
+        - `craft.md` — Impeccable design-tool reference: Craft (deprecated alias).
+        - `critique.md` — Impeccable design-tool reference: critique.
+        - `delight.md` — Impeccable design-tool reference: delight.
+        - `distill.md` — Impeccable design-tool reference: distill.
+        - `doctor.md` — Impeccable design-tool reference: doctor.
+        - `document.md` — Impeccable design-tool reference: Design System: [Project Title].
+        - `extract.md` — Impeccable design-tool reference: Extract Flow.
+        - `generate.md` — Impeccable design-tool reference: generate.
+        - `harden.md` — Impeccable design-tool reference: harden.
+        - `hooks.md` — Impeccable design-tool reference: /impeccable hooks.
+        - `init.md` — Impeccable design-tool reference: Init flow.
+        - `ios.md` — Impeccable design-tool reference: iOS platform.
+        - `layout.md` — Impeccable design-tool reference: layout.
+        - `live-setup.md` — Impeccable design-tool reference: live setup.
+        - `live.md` — Impeccable design-tool reference: live.
+        - `mode-operate.md` — Impeccable design-tool reference: Operate.
+        - `mode-persuade.md` — Impeccable design-tool reference: Persuade and Experience.
+        - `mode-read.md` — Impeccable design-tool reference: Read.
+        - `new-work.md` — Impeccable design-tool reference: New visual work.
+        - `onboard.md` — Impeccable design-tool reference: onboard.
+        - `operate.md` — Impeccable design-tool reference: Operate mode depth (and Read notes).
+        - `optimize.md` — Impeccable design-tool reference: optimize.
+        - `overdrive.md` — Impeccable design-tool reference: overdrive.
+        - `polish.md` — Impeccable design-tool reference: polish.
+        - `quieter.md` — Impeccable design-tool reference: quieter.
+        - `region-map.md` — Impeccable design-tool reference: Region map.
+        - `routing.md` — Impeccable design-tool reference: Command guidance.
+        - `shape.md` — Impeccable design-tool reference: Shape.
+        - `typeset.md` — Impeccable design-tool reference: typeset.
+        - `visualize.md` — Impeccable design-tool reference: Visualize: Direction Comps & Asset Production.
+      - `scripts/` — scripts files.
+        - `data/` — data files.
+          - `font-index-failures.json` — Design-tool data: font index failures.
+          - `font-index.json` — Design-tool data: font index.
+        - `command-metadata.json` — Impeccable tool support file: command metadata.
+        - `engine-checksums.txt` — Impeccable tool support file: engine checksums.
+        - `impeccable` — Impeccable tool support file: impeccable.
+        - `impeccable.cmd` — Impeccable tool support file: impeccable.cmd.
+        - `live-browser-dom.js` — Impeccable tool support file: live browser dom.
+        - `live-browser-ignores.js` — Impeccable tool support file: live browser ignores.
+        - `live-browser-session.js` — Impeccable tool support file: live browser session.
+        - `live-browser.js` — Impeccable tool support file: live browser.
+        - `modern-screenshot.umd.js` — Impeccable tool support file: modern screenshot.umd.
+        - `VERSION` — Impeccable tool support file: VERSION.
+      - `LICENSE` — License for the bundled Impeccable design skill.
+      - `SKILL.md` — Instructions for the project-local Impeccable design skill.
+- `artifact/` — Product records, feature documents, and this documentation site.
+  - `guide-screenshots/` — Playwright screenshots from an isolated simulated wallet.
+    - `01-overview.png` — Playwright capture: overview, using disposable example data.
+    - `02-deposit-entry.png` — Playwright capture: deposit entry, using disposable example data.
+    - `03-deposit-review.png` — Playwright capture: deposit review, using disposable example data.
+    - `04-deposit-success.png` — Playwright capture: deposit success, using disposable example data.
+    - `05-funded-overview.png` — Playwright capture: funded overview, using disposable example data.
+    - `06-withdraw-entry.png` — Playwright capture: withdraw entry, using disposable example data.
+    - `07-conversion-review.png` — Playwright capture: conversion review, using disposable example data.
+    - `08-transfer-entry.png` — Playwright capture: transfer entry, using disposable example data.
+    - `09-history.png` — Playwright capture: history, using disposable example data.
+    - `10-transaction-detail.png` — Playwright capture: transaction detail, using disposable example data.
+    - `11-mobile-overview.png` — Playwright capture: mobile overview, using disposable example data.
+    - `12-balance-history.png` — Playwright capture: balance history, using disposable example data.
+    - `13-account-menu.png` — Playwright capture: account menu, using disposable example data.
+    - `14-destination-overview.png` — Playwright capture: destination overview, using disposable example data.
+  - `prd/` — Feature-specific product requirements.
+    - `PRD-01-platform.md` — Project documentation: PRD-01 — Application platform and persistence.
+    - `PRD-02-journal.md` — Project documentation: PRD-02 — Journal, money, and atomicity.
+    - `PRD-03-accounts.md` — Project documentation: PRD-03 — Accounts, wallets, and balances.
+    - `PRD-04-deposits.md` — Project documentation: PRD-04 — Simulated deposits.
+    - `PRD-05-withdrawals.md` — Project documentation: PRD-05 — Simulated withdrawals.
+    - `PRD-06-rates.md` — Project documentation: PRD-06 — Reference rates, cache, and quotes.
+    - `PRD-07-conversion.md` — Project documentation: PRD-07 — Main-account currency conversion.
+    - `PRD-08-transfers.md` — Project documentation: PRD-08 — Transfers to simulated accounts.
+    - `PRD-09-history.md` — Project documentation: PRD-09 — Transaction history and details.
+    - `PRD-10-api.md` — Project documentation: PRD-10 — HTTP API and Swagger.
+    - `PRD-11-interface.md` — Project documentation: PRD-11 — Interface, design system, and accessibility.
+    - `PRD-12-quality.md` — Project documentation: PRD-12 — Verification and handover.
+  - `tasks/` — Task breakdowns grouped by milestone.
+    - `TASKS-00.md` — Project documentation: Tasks 00 — Git setup and planning baseline.
+    - `TASKS-01.md` — Project documentation: Tasks 01 — Platform and persistence.
+    - `TASKS-02.md` — Project documentation: Tasks 02 — Journal and money.
+    - `TASKS-03.md` — Project documentation: Tasks 03 — Accounts, wallets, and balances.
+    - `TASKS-04.md` — Project documentation: Tasks 04 — Simulated deposits.
+    - `TASKS-05.md` — Project documentation: Tasks 05 — Simulated withdrawals.
+    - `TASKS-06.md` — Project documentation: Tasks 06 — Reference rates and quotes.
+    - `TASKS-07.md` — Project documentation: Tasks 07 — Currency conversion.
+    - `TASKS-08.md` — Project documentation: Tasks 08 — Transfers.
+    - `TASKS-09.md` — Project documentation: Tasks 09 — Transaction history.
+    - `TASKS-10.md` — Project documentation: Tasks 10 — HTTP API and Swagger.
+    - `TASKS-11.md` — Project documentation: Tasks 11 — Interface and design workflow.
+    - `TASKS-12.md` — Project documentation: Tasks 12 — Verification and handover.
+  - `API_DESIGN.md` — Project documentation: HTTP API design: draft.
+  - `BACKEND_READS.md` — Project documentation: Persistent accounts and read integration.
+  - `BALANCE_CARD.md` — Project documentation: Balance card and currency flags.
+  - `BRANDING.md` — Project documentation: CocoWallet SVG logo.
+  - `CODING_GUIDE.md` — Project documentation: Coding guide: discussion draft.
+  - `CONVERSIONS.md` — Project documentation: Atomic conversion backend.
+  - `CURRENCY_METADATA.md` — Project documentation: Currency accounting precision.
+  - `DECISIONS.md` — Project documentation: Decision register.
+  - `DEPENDENCIES.md` — Project documentation: Verified foundation dependencies.
+  - `DESIGN_REFERENCE.md` — Project documentation: Reference-led wallet sketch.
+  - `DESIGN_REVIEW.md` — Project documentation: Wallet shell design review.
+  - `DIAGRAMS.md` — Project documentation: Architecture and flow diagrams.
+  - `FUNDING.md` — Project documentation: Simulated funding and durable recovery.
+  - `HANDOVER.md` — Project documentation: Handover.
+  - `HISTORY_REFERENCE.md` — Project documentation: History page reference refinement.
+  - `HISTORY.md` — Project documentation: Completed history queries, API and interface.
+  - `HTTP.md` — Project documentation: Shared HTTP contracts and boundaries.
+  - `IDEMPOTENCY.md` — Project documentation: Idempotency: failed-retry decision.
+  - `index.html` — Local documentation site entry point and navigation shell.
+  - `JOURNAL.md` — Project documentation: Journal persistence and atomic writes.
+  - `KANBAN.md` — Project documentation: Project kanban.
+  - `MODAL_CONTINUITY.md` — Project documentation: Money modal continuity.
+  - `MONEY.md` — Project documentation: Exact money contract.
+  - `MOTION.md` — Project documentation: CocoWallet branding and motion.
+  - `NAVIGATION_POLISH.md` — Project documentation: History controls and navigation continuity.
+  - `PLAN.md` — Project documentation: Proposed implementation plan.
+  - `PRD.md` — Project documentation: Product requirements: simulated multi-currency wallet.
+  - `PRESENTATION_REFINEMENT.md` — Project documentation: Interview presentation and recorded USD totals.
+  - `PROJECT_STRUCTURE.md` — Generated project-file tree with one description per file.
+  - `project-guide-data.js` — Generated Markdown snapshot used when opening the HTML directly from disk.
+  - `project-guide.css` — Responsive styling for the local documentation site.
+  - `project-guide.js` — Renders the Markdown documents, tree, test search, and navigation.
+  - `QUOTES.md` — Project documentation: Server-owned one-minute quotes.
+  - `RATES.md` — Project documentation: Fresh-first reference metadata.
+  - `READINESS.md` — Project documentation: Implementation readiness.
+  - `README.md` — Project documentation: Digital wallet planning.
+  - `TEST_CASES.md` — Generated catalogue of individual Jest and Playwright cases.
+  - `TOOLING.md` — Project documentation: Shared design tooling.
+  - `TRANSACTION_EXPERIENCE.md` — Project documentation: Transaction details, search, dates and confirmation pacing.
+  - `TRANSFERS.md` — Project documentation: Atomic simulated-transfer backend.
+  - `UI_FOUNDATION.md` — Project documentation: Wallet interface foundation.
+  - `USER_GUIDE.md` — Illustrated operating instructions and application workflow.
+  - `WALLET_REDESIGN.md` — Project documentation: Two-column wallet redesign.
+  - `WALLET_SURFACE.md` — Project documentation: Wallet overview surface.
+  - `WORKFLOW_REFINEMENT.md` — Project documentation: Money workflow refinement.
+- `drizzle/` — Reviewed SQLite migrations and Drizzle metadata.
+  - `meta/` — Generated Drizzle schema snapshots and migration journal.
+    - `_journal.json` — Drizzle's ordered migration journal.
+    - `0000_snapshot.json` — Drizzle schema snapshot for migration 0000.
+    - `0001_snapshot.json` — Drizzle schema snapshot for migration 0001.
+    - `0002_snapshot.json` — Drizzle schema snapshot for migration 0002.
+    - `0003_snapshot.json` — Drizzle schema snapshot for migration 0003.
+    - `0004_snapshot.json` — Drizzle schema snapshot for migration 0004.
+    - `0005_snapshot.json` — Drizzle schema snapshot for migration 0005.
+    - `0006_snapshot.json` — Drizzle schema snapshot for migration 0006.
+    - `0007_snapshot.json` — Drizzle schema snapshot for migration 0007.
+  - `0000_platform_metadata.sql` — Reviewed SQLite migration: platform metadata.
+  - `0001_wallet_journal.sql` — Reviewed SQLite migration: wallet journal.
+  - `0002_journal_invariants.sql` — Reviewed SQLite migration: journal invariants.
+  - `0003_funding_results.sql` — Reviewed SQLite migration: funding results.
+  - `0004_reference_rate_cache.sql` — Reviewed SQLite migration: reference rate cache.
+  - `0005_immutable_fx_quotes.sql` — Reviewed SQLite migration: immutable fx quotes.
+  - `0006_conversion_results.sql` — Reviewed SQLite migration: conversion results.
+  - `0007_transfer_results.sql` — Reviewed SQLite migration: transfer results.
+  - `0008_portfolio_snapshots.sql` — Reviewed SQLite migration: portfolio snapshots.
+- `e2e/` — Playwright browser and API end-to-end tests.
+  - `accounts-api.spec.ts` — Playwright end-to-end cases covering accounts api.
+  - `balance-card.spec.ts` — Playwright end-to-end cases covering balance card.
+  - `branding-motion.spec.ts` — Playwright end-to-end cases covering branding motion.
+  - `foundation.spec.ts` — Playwright end-to-end cases covering foundation.
+  - `helpers.ts` — Shared Playwright helpers for themes, forms, recipient selection, and dialog controls.
+  - `project-guide.spec.ts` — Playwright end-to-end cases covering project guide.
+  - `wallet-interactions.spec.ts` — Playwright end-to-end cases covering wallet interactions.
+  - `wallet-shell.spec.ts` — Playwright end-to-end cases covering wallet shell.
+  - `wallet-visual.spec.ts` — Playwright end-to-end cases covering wallet visual.
+  - `zz-funding.spec.ts` — Playwright end-to-end cases covering funding.
+  - `zzz-quotes.spec.ts` — Playwright end-to-end cases covering quotes.
+  - `zzzz-conversions.spec.ts` — Playwright end-to-end cases covering conversions.
+  - `zzzzz-history.spec.ts` — Playwright end-to-end cases covering history.
+  - `zzzzzz-transfers.spec.ts` — Playwright end-to-end cases covering transfers.
+  - `zzzzzzz-history-ui.spec.ts` — Playwright end-to-end cases covering history ui.
+  - `zzzzzzzz-presentation.spec.ts` — Playwright end-to-end cases covering presentation.
+  - `zzzzzzzzz-workflow.spec.ts` — Playwright end-to-end cases covering workflow.
+  - `zzzzzzzzzz-continuity.spec.ts` — Playwright end-to-end cases covering continuity.
+  - `zzzzzzzzzzzz-details.spec.ts` — Playwright end-to-end cases covering details.
+  - `zzzzzzzzzzzzz-navigation-polish.spec.ts` — Playwright end-to-end cases covering navigation polish.
+- `public/` — Static assets served by Next.js.
+  - `brand/` — CocoWallet vector logo assets.
+    - `cocowallet-icon.svg` — CocoWallet vector asset: cocowallet icon.
+    - `cocowallet-logo-inverse.svg` — CocoWallet vector asset: cocowallet logo inverse.
+    - `cocowallet-logo.svg` — CocoWallet vector asset: cocowallet logo.
+- `scripts/` — Setup, verification, diagnostic, and documentation scripts.
+  - `capture-project-guide.cjs` — Playwright capture script guarded for the disposable documentation server.
+  - `check-artifacts.mjs` — Checks consistency and links in project planning artifacts.
+  - `e2e-reference-provider.mjs` — Provides deterministic reference-rate responses to the isolated browser server.
+  - `migrate.ts` — Applies reviewed SQLite migrations to the configured database.
+  - `seed.ts` — Creates the initial main account and currency wallets without funding them.
+  - `setup-impeccable.sh` — Restores the checksum-verified Impeccable tooling.
+  - `smoke-portfolio.ts` — Opt-in, isolated live portfolio diagnostic.
+  - `smoke-rates.ts` — Opt-in, isolated live reference-rate diagnostic.
+  - `start-funding-e2e.ts` — Starts the guarded disposable monetary browser-test server.
+  - `update-project-guide.mjs` — Regenerates the file inventory, optional test catalogue, and offline Markdown bundle.
+- `src/` — Application source and colocated Jest tests.
+  - `app/` — Next.js routes, layouts, global styles, and API endpoints.
+    - `(wallet)/` — Shared wallet shell, overview, and history pages.
+      - `history/` — history files.
+        - `page.tsx` — Transaction history route entry point.
+      - `layout.tsx` — Persistent wallet shell shared by overview and history routes.
+      - `page.tsx` — Overview route entry point.
+    - `api/` — HTTP route handlers for the local wallet API.
+      - `accounts/` — accounts files.
+        - `[accountId]/` — [accountId] files.
+          - `wallets/` — wallets files.
+            - `route.test.ts` — Jest cases for route in app / api / accounts / [accountId] / wallets.
+            - `route.ts` — GET handler for /api/accounts/{accountId}/wallets.
+        - `route.test.ts` — Jest cases for route in app / api / accounts.
+        - `route.ts` — GET handler for /api/accounts.
+      - `conversions/` — conversions files.
+        - `route.test.ts` — Jest cases for route in app / api / conversions.
+        - `route.ts` — POST handler for /api/conversions.
+      - `currencies/` — currencies files.
+        - `route.ts` — GET handler for /api/currencies.
+      - `deposits/` — deposits files.
+        - `route.ts` — POST handler for /api/deposits.
+      - `health/` — health files.
+        - `route.test.ts` — Jest cases for route in app / api / health.
+        - `route.ts` — GET handler for /api/health.
+      - `openapi/` — openapi files.
+        - `route.test.ts` — Jest cases for route in app / api / openapi.
+        - `route.ts` — GET handler for /api/openapi.
+      - `portfolio/` — portfolio files.
+        - `route.test.ts` — Jest cases for route in app / api / portfolio.
+        - `route.ts` — GET handler for /api/portfolio.
+      - `quotes/` — quotes files.
+        - `[quoteId]/` — [quoteId] files.
+          - `route.ts` — GET handler for /api/quotes/{quoteId}.
+        - `route.ts` — POST handler for /api/quotes.
+      - `rates/` — rates files.
+        - `route.ts` — GET handler for /api/rates.
+      - `ready/` — ready files.
+        - `route.test.ts` — Jest cases for route in app / api / ready.
+        - `route.ts` — GET handler for /api/ready.
+      - `transactions/` — transactions files.
+        - `[transactionId]/` — [transactionId] files.
+          - `route.ts` — GET handler for /api/transactions/{transactionId}.
+        - `route.ts` — GET handler for /api/transactions.
+      - `transfers/` — transfers files.
+        - `route.test.ts` — Jest cases for route in app / api / transfers.
+        - `route.ts` — POST handler for /api/transfers.
+      - `withdrawals/` — withdrawals files.
+        - `route.ts` — POST handler for /api/withdrawals.
+    - `boundaries.test.tsx` — Jest cases for boundaries in app.
+    - `error.tsx` — Application error boundary and retry presentation.
+    - `globals.css` — Global theme tokens, base styles, and shared motion rules.
+    - `icon.svg` — CocoWallet favicon artwork.
+    - `layout.tsx` — Root Next.js document layout and metadata.
+    - `loading.tsx` — Wallet loading boundary and skeleton.
+    - `not-found.tsx` — Branded not-found page.
+  - `components/` — Shared visual components and branding.
+    - `brand/` — CocoWallet brand components.
+      - `cocowallet-logo.test.tsx` — Jest cases for cocowallet logo in components / brand.
+      - `cocowallet-logo.tsx` — Reusable inline CocoWallet logo and wordmark SVG.
+    - `ui/` — Reusable shadcn/Radix UI primitives.
+      - `badge.tsx` — Pill-style status and metadata component.
+      - `button.tsx` — Shared button variants, sizes, and loading states.
+      - `calendar.tsx` — Accessible calendar component for selecting dates.
+      - `card.tsx` — Composable card layout primitives.
+      - `dialog.tsx` — Accessible modal dialog primitives.
+      - `dropdown-menu.tsx` — Accessible dropdown menu primitives.
+      - `field.tsx` — Field labels, descriptions, and error presentation.
+      - `input.tsx` — Shared styled input control.
+      - `label.tsx` — Accessible form label primitive.
+      - `LICENSE.shadcn` — License notice for the copied shadcn/ui foundations.
+      - `popover.tsx` — Accessible anchored popover primitives.
+      - `primitives.test.tsx` — Jest cases for primitives in components / ui.
+      - `select.tsx` — Accessible selection controls and options.
+      - `separator.tsx` — Visual and semantic divider component.
+      - `skeleton.tsx` — Placeholder used during loading.
+      - `tooltip.tsx` — Accessible tooltip primitives.
+  - `features/` — Domain logic, user-interface features, and their tests.
+    - `accounts/` — accounts feature code and tests.
+      - `errors.ts` — Domain-specific error definitions for accounts.
+      - `read.test.ts` — Jest cases for read in features / accounts.
+      - `read.ts` — Read-side queries and data retrieval for accounts.
+      - `seed.test.ts` — Jest cases for seed in features / accounts.
+      - `seed.ts` — Creates the main account and initial currency wallets without adding funds.
+      - `types.ts` — Shared types and data shapes for accounts.
+    - `conversions/` — conversions feature code and tests.
+      - `concurrency.test.ts` — Jest cases for concurrency in features / conversions.
+      - `contracts.ts` — Shared data types and validation contracts for conversions.
+      - `quote-details.tsx` — Displays the rate, provenance, and expiry of conversion quote terms.
+      - `quote-review.tsx` — Renders conversion review and confirmation using server-owned quotes.
+      - `read.ts` — Read-side queries and data retrieval for conversions.
+      - `receipt.ts` — Confirmed operation receipt handling for conversions.
+      - `service.test.ts` — Jest cases for service in features / conversions.
+      - `service.ts` — Executes quote-bound currency conversions atomically and retains retry results.
+      - `use-currencies.ts` — React hook for currencies in conversions.
+      - `use-quote.test.tsx` — Jest cases for use quote in features / conversions.
+      - `use-quote.ts` — React hook for quote in conversions.
+    - `funding/` — funding feature code and tests.
+      - `concurrency.test.ts` — Jest cases for concurrency in features / funding.
+      - `contracts.ts` — Shared data types and validation contracts for funding.
+      - `read.test.ts` — Jest cases for read in features / funding.
+      - `read.ts` — Read-side queries and data retrieval for funding.
+      - `recent-funding.tsx` — Presents recent simulated funding activity.
+      - `recovery.ts` — Unresolved submission recovery logic for funding.
+      - `request-key.test.ts` — Jest cases for request key in features / funding.
+      - `request-key.ts` — Handles identifiers for safe funding request retries.
+      - `service.test.ts` — Jest cases for service in features / funding.
+      - `service.ts` — Executes simulated deposits and withdrawals with atomic journal writes and retry protection.
+      - `use-funding.test.tsx` — Jest cases for use funding in features / funding.
+    - `health/` — health feature code and tests.
+      - `service.test.ts` — Jest cases for service in features / health.
+      - `service.ts` — Business logic and domain operations for health.
+    - `history/` — history feature code and tests.
+      - `contracts.test.ts` — Jest cases for contracts in features / history.
+      - `contracts.ts` — Shared data types and validation contracts for history.
+      - `date-range.test.tsx` — Jest cases for date range in features / history.
+      - `date-range.tsx` — Accessible inclusive UTC date-range picker for history filters.
+      - `preview.test.ts` — Jest cases for preview in features / history.
+      - `preview.ts` — Preview data and presentation helpers for history.
+      - `read.test.ts` — Jest cases for read in features / history.
+      - `read.ts` — Read-side queries and data retrieval for history.
+      - `recent-transactions.test.tsx` — Jest cases for recent transactions in features / history.
+      - `recent-transactions.tsx` — Renders recent completed transactions for the selected account.
+      - `test-fixture.ts` — Shared fixture data for history tests.
+      - `transaction-copy.test.tsx` — Jest cases for transaction copy in features / history.
+      - `transaction-facts.test.tsx` — Jest cases for transaction facts in features / history.
+      - `transaction-facts.tsx` — Displays immutable transaction details and copyable identifiers.
+      - `use-history.test.tsx` — Jest cases for use history in features / history.
+      - `use-history.ts` — React hook for history in history.
+      - `workspace.test.tsx` — Jest cases for workspace in features / history.
+      - `workspace.tsx` — History page filters, transaction list, paging, and detail navigation.
+    - `journal/` — journal feature code and tests.
+      - `after-record.test.ts` — Jest cases for after record in features / journal.
+      - `balances.test.ts` — Jest cases for balances in features / journal.
+      - `balances.ts` — Calculates wallet balances from journal entries.
+      - `errors.ts` — Domain-specific error definitions for journal.
+      - `write.test.ts` — Jest cases for write in features / journal.
+      - `write.ts` — Serializes and commits atomic journal writes.
+    - `money/` — money feature code and tests.
+      - `currency-precision.json` — Pinned currency minor-unit precision metadata.
+      - `currency-precision.test.ts` — Jest cases for currency precision in features / money.
+      - `currency-precision.ts` — Looks up the pinned accounting precision for supported currencies.
+      - `LICENSE.currency-precision.txt` — License notice for the pinned currency precision data.
+      - `money.test.ts` — Jest cases for money in features / money.
+      - `money.ts` — Parses, validates, converts, and formats exact monetary amounts.
+    - `portfolio/` — portfolio feature code and tests.
+      - `contracts.ts` — Shared data types and validation contracts for portfolio.
+      - `preview.ts` — Preview data and presentation helpers for portfolio.
+      - `service.test.ts` — Jest cases for service in features / portfolio.
+      - `service.ts` — Calculates account portfolio totals and records eligible observations.
+      - `usd-value.test.ts` — Jest cases for usd value in features / portfolio.
+      - `usd-value.ts` — Values wallet balances in USD using exact reference-rate arithmetic.
+      - `use-portfolio.test.tsx` — Jest cases for use portfolio in features / portfolio.
+      - `use-portfolio.ts` — React hook for portfolio in portfolio.
+    - `quotes/` — quotes feature code and tests.
+      - `concurrency.test.ts` — Jest cases for concurrency in features / quotes.
+      - `context.ts` — Operation context and binding rules for quotes.
+      - `contracts.ts` — Shared data types and validation contracts for quotes.
+      - `errors.ts` — Domain-specific error definitions for quotes.
+      - `preview.ts` — Preview data and presentation helpers for quotes.
+      - `service.test.ts` — Jest cases for service in features / quotes.
+      - `service.ts` — Creates and validates immutable, expiring reference-rate quotes.
+      - `storage.ts` — Persistent storage and retrieval logic for quotes.
+    - `rates/` — rates feature code and tests.
+      - `contracts.ts` — Shared data types and validation contracts for rates.
+      - `frankfurter.test.ts` — Jest cases for frankfurter in features / rates.
+      - `frankfurter.ts` — Fetches reference currency and rate data from Frankfurter.
+      - `service.test.ts` — Jest cases for service in features / rates.
+      - `service.ts` — Coordinates fresh reference rates and bounded cached fallback.
+      - `validation.ts` — Input and stored-data validation rules for rates.
+    - `submissions/` — submissions feature code and tests.
+      - `contracts.ts` — Shared data types and validation contracts for submissions.
+      - `submission-panel.test.tsx` — Jest cases for submission panel in features / submissions.
+      - `submission-panel.tsx` — Shows pending, confirmed, failed, and recovery states for money submissions.
+      - `use-submission.ts` — Coordinates monetary submissions and original-request recovery.
+    - `theme/` — theme feature code and tests.
+      - `theme-menu.test.tsx` — Jest cases for theme menu in features / theme.
+      - `theme-menu.tsx` — Provides the System, Light, and Dark theme menu.
+      - `theme.test.ts` — Jest cases for theme in features / theme.
+      - `theme.ts` — Applies and persists the user's theme preference.
+    - `transfers/` — transfers feature code and tests.
+      - `concurrency.test.ts` — Jest cases for concurrency in features / transfers.
+      - `context.ts` — Operation context and binding rules for transfers.
+      - `contracts.ts` — Shared data types and validation contracts for transfers.
+      - `receipt.test.ts` — Jest cases for receipt in features / transfers.
+      - `receipt.ts` — Confirmed operation receipt handling for transfers.
+      - `service.test.ts` — Jest cases for service in features / transfers.
+      - `service.ts` — Atomically transfers simulated funds to a destination with durable retry protection.
+      - `transfer-review.tsx` — Displays recipient, amount, and applicable quote terms before a transfer.
+    - `wallet/` — wallet feature code and tests.
+      - `amount-entry.test.ts` — Jest cases for amount entry in features / wallet.
+      - `amount-entry.ts` — Handles exact decimal-text entry, grouping, and caret behavior.
+      - `balance-history-interactions.test.tsx` — Jest cases for balance history interactions in features / wallet.
+      - `balance-history.test.tsx` — Jest cases for balance history in features / wallet.
+      - `balance-history.tsx` — Displays recorded USD balance observations as a chart and paged table.
+      - `currency-flag.test.tsx` — Jest cases for currency flag in features / wallet.
+      - `currency-flag.tsx` — Renders decorative currency flags and a fallback currency marker.
+      - `dashboard-skeleton.tsx` — Loading skeleton that reserves the wallet dashboard layout.
+      - `dashboard.test.tsx` — Jest cases for dashboard in features / wallet.
+      - `dashboard.tsx` — Wallet shell and overview: accounts, balances, actions, privacy, and recent activity.
+      - `money-amount-input.tsx` — Accessible decimal-text amount field for money operations.
+      - `money-review.tsx` — Shared amount-first review layout and confirmation actions.
+      - `operation-model.test.ts` — Jest cases for operation model in features / wallet.
+      - `operation-model.ts` — Defines money-operation drafts, validation, and presentation state.
+      - `operation-workspace.tsx` — Connects the four money-operation dialogs to forms, review, and recovery.
+      - `presentation.test.ts` — Jest cases for presentation in features / wallet.
+      - `presentation.ts` — Formats wallet amounts, labels, and other display values.
+      - `types.test.ts` — Jest cases for types in features / wallet.
+      - `types.ts` — Shared types and data shapes for wallet.
+      - `use-money-step-motion.test.tsx` — Jest cases for use money step motion in features / wallet.
+      - `use-money-step-motion.ts` — React hook for money step motion in wallet.
+      - `use-route-content-motion.test.tsx` — Jest cases for use route content motion in features / wallet.
+      - `use-route-content-motion.ts` — React hook for route content motion in wallet.
+      - `wallet.css` — Wallet-specific layout, component, theme, and responsive styles.
+  - `lib/` — Shared contracts, presentation utilities, and React hooks.
+    - `contracts.test.ts` — Jest cases for contracts in lib.
+    - `contracts.ts` — Shared contracts utility.
+    - `date-presentation.test.ts` — Jest cases for date presentation in lib.
+    - `date-presentation.ts` — Shared date presentation utility.
+    - `problem-details.ts` — Shared problem details utility.
+    - `use-hydrated.ts` — Shared use hydrated utility / React hook.
+    - `use-motion-open.test.tsx` — Jest cases for use motion open in lib.
+    - `use-motion-open.ts` — Shared use motion open utility / React hook.
+    - `utils.test.ts` — Jest cases for utils in lib.
+    - `utils.ts` — Shared utils utility.
+  - `server/` — Server-side database, HTTP, and overview integration.
+    - `db/` — SQLite connection, migrations, schema, and fixtures.
+      - `columns.ts` — Database columns implementation.
+      - `connection.test.ts` — Jest cases for connection in server / db.
+      - `connection.ts` — Opens and configures SQLite connections for the application.
+      - `migrate.ts` — Applies the project's reviewed Drizzle migrations.
+      - `runtime.ts` — Provides the configured runtime database connection.
+      - `schema.test.ts` — Jest cases for schema in server / db.
+      - `schema.ts` — Drizzle definitions for the persistent SQLite schema.
+      - `test-fixture.ts` — Creates and cleans isolated SQLite fixtures for tests.
+    - `http/` — HTTP validation, handlers, responses, and OpenAPI schemas.
+      - `account-responses.ts` — HTTP response construction for account.
+      - `confirmation-delay.test.ts` — Jest cases for confirmation delay in server / http.
+      - `confirmation-delay.ts` — Applies the approved asynchronous pause before valid money confirmations.
+      - `conversion-handler.ts` — HTTP request handler for conversion operations.
+      - `conversions-openapi.ts` — OpenAPI schema definitions for conversions endpoints.
+      - `funding-handler.test.ts` — Jest cases for funding handler in server / http.
+      - `funding-handler.ts` — HTTP request handler for funding operations.
+      - `funding-openapi.ts` — OpenAPI schema definitions for funding endpoints.
+      - `history-handler.test.ts` — Jest cases for history handler in server / http.
+      - `history-handler.ts` — HTTP request handler for history operations.
+      - `history-openapi.ts` — OpenAPI schema definitions for history endpoints.
+      - `openapi.ts` — Assembles the wallet's published OpenAPI document.
+      - `portfolio-openapi.ts` — OpenAPI schema definitions for portfolio endpoints.
+      - `quote-responses.test.ts` — Jest cases for quote responses in server / http.
+      - `quote-responses.ts` — HTTP response construction for quote.
+      - `quotes-openapi.ts` — OpenAPI schema definitions for quotes endpoints.
+      - `rate-responses.test.ts` — Jest cases for rate responses in server / http.
+      - `rate-responses.ts` — HTTP response construction for rate.
+      - `rates-openapi.ts` — OpenAPI schema definitions for rates endpoints.
+      - `request-input.test.ts` — Jest cases for request input in server / http.
+      - `request-input.ts` — Validates local HTTP request origins, content types, and bounded JSON bodies.
+      - `responses.test.ts` — Jest cases for responses in server / http.
+      - `responses.ts` — Builds shared no-store JSON responses and safe HTTP errors.
+      - `schema-parts.ts` — Server HTTP schema parts implementation.
+      - `transfer-handler.ts` — HTTP request handler for transfer operations.
+      - `transfers-openapi.ts` — OpenAPI schema definitions for transfers endpoints.
+    - `portfolio-observation.test.ts` — Jest cases for portfolio observation in server.
+    - `portfolio-observation.ts` — Coordinates post-operation portfolio observation recording.
+    - `wallet-overview.test.ts` — Jest cases for wallet overview in server.
+    - `wallet-overview.ts` — Combines account and journal data into the server-rendered wallet overview.
+  - `test/` — Shared test utilities and contract checks.
+    - `json-contract.test.ts` — Jest cases for json contract in test.
+    - `json-contract.ts` — Shared assertions for exact JSON contract tests.
+- `.dockerignore` — Excludes local or generated files from the Docker build context.
+- `.env.example` — Example environment variables; not a live secrets file.
+- `.gitignore` — Excludes dependencies, build output, local databases, secrets, and design-tool runtime files.
+- `.npmrc` — npm installation and engine settings.
+- `.prettierignore` — Paths excluded from Prettier formatting.
+- `components.json` — shadcn/ui component generator configuration.
+- `compose.yaml` — Local app, test service, networking, and persistent volumes.
+- `DESIGN.md` — CocoWallet's visual system, components, behavior, and design guidance.
+- `Dockerfile` — Node development and Playwright browser-test container images.
+- `drizzle.config.ts` — Drizzle schema and SQLite migration configuration.
+- `eslint.config.mjs` — ESLint rules and project lint configuration.
+- `jest.config.cjs` — Jest setup, test matching, environment, and module aliases.
+- `next.config.ts` — Next.js configuration and allowed local development origin.
+- `package-lock.json` — Exact locked npm dependency tree for reproducible installs.
+- `package.json` — Application dependencies, Node requirements, and npm scripts.
+- `playwright.config.ts` — Playwright test directory, browser, base URL, and reporters.
+- `postcss.config.mjs` — PostCSS and Tailwind CSS processing configuration.
+- `PRODUCT.md` — Product purpose, audience, capabilities, and confirmed constraints.
+- `README.md` — Project setup, operation, verification, and safety notes.
+- `tsconfig.json` — TypeScript compiler settings and path aliases.

@@ -1,26 +1,51 @@
-# CocoWallet
+<div align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="public/brand/cocowallet-logo-inverse.svg" />
+    <img alt="CocoWallet" src="public/brand/cocowallet-logo.svg" width="320" />
+  </picture>
 
-A local-only multi-currency wallet simulation built with Next.js and Node 26. Product requirements, decisions, diagrams, and progress are in [`artifact/`](artifact/README.md).
+**A local multi-currency wallet, built for exploration.**
 
-**Current milestone:** Compact signed recent activity, green-check confirmations and a dedicated `/history` page preserve account selection, privacy and money drafts in a shared shell. Frankfurter-backed USD totals include every nonzero wallet; actual account-scoped observations power the small balance-card sparkline. Destinations have independent read-only totals, never money actions. Missing FX makes the whole total unavailable; old history is not invented or repriced. Wallet/default management and Swagger remain separate work. See [`artifact/PRESENTATION_REFINEMENT.md`](artifact/PRESENTATION_REFINEMENT.md) and [`artifact/HISTORY.md`](artifact/HISTORY.md).
+Simulate deposits, withdrawals, conversions, and transfers—then follow the results through an exact, journal-backed ledger.
 
-The internal atomic conversion service now supports exact quote-bound accounting,
-missing target currency/wallet creation and durable original-result replay. Retry
-keys cannot be reused across funding, conversion and internal transfers. `POST /api/conversions` and
-the existing Convert dialog now connect that service, with explicit expiry and
-reconfirmation; see [`artifact/CONVERSIONS.md`](artifact/CONVERSIONS.md).
+![Next.js 16](https://img.shields.io/badge/Next.js-16-223349?style=flat-square&logo=nextdotjs)
+![Node.js 26](https://img.shields.io/badge/Node.js-26-405e87?style=flat-square&logo=nodedotjs&logoColor=white)
+![SQLite](https://img.shields.io/badge/Database-SQLite-405e87?style=flat-square&logo=sqlite&logoColor=white)
+![Local simulation](https://img.shields.io/badge/Mode-Local%20simulation-27634f?style=flat-square)
 
-Shared HTTP groundwork now consolidates structural guards/published schemas,
-strict bounded JSON input, safe Problem Details and exact no-store/replay
-responses; see [`artifact/HTTP.md`](artifact/HTTP.md). T09-01 now adds read-only history
-endpoints; T08-02 adds reviewed transfer submission, but no Swagger UI. Existing accounting and
-retry rules are unchanged.
+[Quick start](#quick-start) · [Features](#features) · [Tech stack](#tech-stack) · [User guide](artifact/USER_GUIDE.md) · [Interactive guide](artifact/index.html)
+</div>
 
-## Development environment
+---
 
-Requirements: Docker Engine and Docker Compose. Host Node 26 is not required.
+> **CocoWallet is a simulation, not a financial service.** No real funds move. Provider names and destination accounts are simulated; there is no banking, blockchain, payment, or authentication integration. Run it locally and do not expose it publicly.
+
+<div align="center">
+  <img src="artifact/guide-screenshots/05-funded-overview.png" alt="CocoWallet overview showing simulated balances and activity" width="1100" />
+  <br />
+  <sub>Overview captured with Playwright using a disposable example database.</sub>
+</div>
+
+## Features
+
+- **Multi-currency overview** — inspect individual wallets, an approximate USD total, recorded balance history, and recent activity.
+- **Simulated funding** — review and confirm deposits and withdrawals using fictional provider labels.
+- **Currency conversion** — review server-owned, expiring quotes based on Frankfurter reference rates before confirming.
+- **Transfers** — send simulated funds to saved or new destinations; inspect destination accounts in read-only mode.
+- **Transaction history** — browse completed transactions, filter by type, currency, and UTC date, search by exact ID, and inspect recorded facts.
+- **Exact accounting** — balances come from immutable journal entries, with decimal input validation, atomic operations, and original-request retry protection.
+- **A considered interface** — light and dark themes, privacy controls, responsive navigation, and keyboard-accessible controls.
+
+> Reference rates are not streaming market prices. If a required rate is unavailable, the app reports an unavailable total or blocks the affected quote instead of inventing a value.
+
+## Quick start
+
+**Requirements:** Docker Engine and Docker Compose. Node does not need to be installed on your host; the container supplies Node 26.
 
 ```sh
+git clone https://github.com/ahmadhafizh16/cocowallet.git
+cd cocowallet
+
 docker compose build app
 docker compose run --rm app npm ci
 docker compose run --rm app npm run db:migrate
@@ -28,50 +53,58 @@ docker compose run --rm app npm run db:seed
 docker compose up -d app
 ```
 
-Open `http://localhost:3000/api/health` for the health endpoint. Use `APP_PORT=3100 docker compose up -d app` if port 3000 is already occupied.
+Open **[http://localhost:3000](http://localhost:3000)**. The health endpoint is at `/api/health`, and `/api/ready` checks the SQLite connection and migrated metadata table.
 
-`/api/ready` verifies SQLite and its migrated metadata table; it is not a full schema-version or seeded-account check. Nine migrations (0000–0008) create accounting/invariants, retained outcomes, reference caches, immutable quote/use tables and recorded portfolio observations. Migration and seed commands run explicitly, never during a GET or build. Seeding creates startup accounts/wallets, never funds, history, quotes or provider snapshots. On a fresh database, migrate and seed before opening `/`. Existing installations must back up SQLite and run `db:migrate` through 0008; no volume reset is needed.
+The seed creates a main account and USD, EUR, and GBP wallets with **zero balances**; it does not create funds or transaction history. To use another port, run `APP_PORT=3100 docker compose up -d app` and open `http://localhost:3100`.
 
-APIs: account/wallet GETs, `POST /api/deposits`, `POST /api/withdrawals`, `POST /api/conversions`, `POST /api/transfers`, `GET /api/currencies`, `GET /api/rates?base=USD&quote=EUR`, `POST /api/quotes`, `GET /api/quotes/{quoteId}`, `GET /api/transactions?accountId=…`, `GET /api/transactions/{transactionId}?accountId=…`, `GET /api/portfolio?accountId=…`, and `GET /api/openapi`. Money submissions require a UUID key; identical retries replay the original result indefinitely, while changed input is rejected. Amounts/rates are exact strings; responses are not cached. Reference/portfolio GETs can update technical caches/observations, never money/accounts/wallets. Eligible fallback is less than 24 hours old, with no invented reciprocal/cross rates. Quotes reserve no funds and create no recipient/wallet. Transaction history uses recorded facts only, without current rates, balances or retry keys. Swagger UI remains unimplemented.
+### Learn your way around
 
-The application service runs as the non-root `node` user. It uses separate named volumes for Linux dependencies, Next.js output, and SQLite data, so host dependencies cannot overwrite native modules in the container. The host port is bound to `127.0.0.1`; this no-auth simulation must not be exposed publicly.
+Open **[`artifact/index.html`](artifact/index.html)** in a browser after cloning the repository for the interactive, screenshot-led guide, searchable file tree, and test catalogue. It works directly from disk; GitHub itself displays the HTML source rather than running it.
 
-```sh
-docker compose run --rm app npm run typecheck
-docker compose run --rm app npm run build
-docker compose logs app
+Prefer reading on GitHub? Start with the [Markdown user guide](artifact/USER_GUIDE.md). It covers account switching, the balance-history chart, money workflows, transaction history, and recovery.
+
+## Tech stack
+
+| Layer           | Technology                                               |
+| --------------- | -------------------------------------------------------- |
+| Application     | Next.js 16 App Router, React 19, TypeScript 5.9          |
+| Runtime         | Node.js 26, npm 11, Docker Compose                       |
+| Data and ledger | SQLite, `better-sqlite3`, Drizzle ORM and SQL migrations |
+| Interface       | Tailwind CSS 4, shadcn/ui, Radix UI, Lucide              |
+| Reference rates | Frankfurter, with a bounded eligible cache fallback      |
+| Tests           | Jest and Playwright / Chromium                           |
+
+Versions and scripts are pinned in [`package.json`](package.json) and [`package-lock.json`](package-lock.json).
+
+## Project map
+
+```text
+src/app/         Next.js pages, layouts, and API routes
+src/features/    Wallet, accounting, rates, history, and other feature modules
+src/server/      SQLite, HTTP contracts, and server-side integration
+src/components/  Shared interface primitives and CocoWallet branding
+drizzle/         Reviewed SQLite migrations and schema metadata
+e2e/             Playwright browser and API scenarios
+artifact/        Interactive guide, user manual, requirements, and decisions
 ```
 
-## Local verification
+Explore the full annotated tree in the [interactive guide](artifact/index.html#files) or [`artifact/PROJECT_STRUCTURE.md`](artifact/PROJECT_STRUCTURE.md).
+
+## Verification
 
 ```sh
 docker compose run --rm app npm run artifacts:check
 docker compose run --rm app npm run lint
 docker compose run --rm app npm run format:check
+docker compose run --rm app npm run typecheck
 docker compose run --rm app npm test
 docker compose --profile test build browser-tests
 docker compose --profile test run --rm browser-tests
 ```
 
-The Playwright image runs Node 26 with its pinned Chromium and required Linux libraries. It addresses the app as `wallet.test` on the private Compose network; the bare `app` hostname can trigger Chromium's HTTPS upgrade for the `.app` namespace. No HTTPS validation is disabled to work around that.
+Read-only browser checks can use the normal local app. **Monetary and quote browser tests require the guarded disposable server** described in [`artifact/QUOTES.md`](artifact/QUOTES.md); they must never fund or seed quotes into the persistent wallet. The test catalogue is available in [`artifact/TEST_CASES.md`](artifact/TEST_CASES.md).
 
-`next.config.ts` allows only this additional development origin (`wallet.test`)
-so Next's private-network HMR handshake does not block client hydration. It does
-not allow arbitrary origins or change the localhost-only host-port binding.
-
-Jest covers exact accounting, atomic seeding, snapshot reads, funding concurrency/rollback/replay, client recovery and quote lifecycle/consumption. Read/visual Chromium checks can use the ordinary local server. **Monetary and quote browser tests must use the disposable funding-e2e server** in [`artifact/QUOTES.md`](artifact/QUOTES.md); they refuse the ordinary runtime target. Never fund or seed quotes in the persistent wallet as test setup. Retain the same key/input after a timeout/storage failure; do not start a replacement attempt while its outcome is unknown.
-
-Reference tests mock the network and clock. The optional live check is separate:
-`docker compose run --rm -e DATABASE_PATH=/tmp/opencode/rates-smoke.sqlite -e WALLET_RATES_SMOKE=1 app node --conditions=react-server --import tsx scripts/smoke-rates.ts`.
-It refuses the runtime database. The portfolio-specific live diagnostic is
-`scripts/smoke-portfolio.ts`: use `WALLET_PORTFOLIO_SMOKE=1`, a **new**
-`/tmp/opencode/portfolio-smoke-<digits>.sqlite` path and the same Node flags.
-The visible overview requests reference rates only for nonzero foreign balances.
-Valuation/recording happens outside monetary commit/replay; an FX failure cannot
-change confirmed money. Post-response observations are best effort after a crash,
-not a guarantee to reconstruct every historical valuation.
-
-For the complete local check (including a production build), stop the development compiler first:
+For the complete check, including a production build, stop the development service first so two compilers do not write to the same Next.js output volume:
 
 ```sh
 docker compose stop app
@@ -79,18 +112,18 @@ docker compose run --rm app npm run check
 docker compose up -d app
 ```
 
-Generate a migration after an intentional schema change with `docker compose run --rm app npm run db:generate -- --name=descriptive_name`, review/commit the generated SQL and metadata, then apply it with `npm run db:migrate` in the container. Never use schema-push or a volume reset as a substitute for a reviewed migration.
+## Data and safety
 
-The wallet retains its shadcn/Radix controls, flags, gradient, branding, typography and motion. `createPreviewOverview()` is test-only. Review alone never moves funds; funding/conversion/transfers require explicit confirmation. Ordinary drafts/quotes survive soft Overview/History navigation, not reloads. Only unresolved intent uses verified per-tab storage shared across money operations under the compatible `cocowallet.pending-funding.v1` key. Unknown outcomes retain the exact original key/request/quote, never a replacement. Closing the tab or deleting storage can lose that context; it is not cross-device recovery. Recent activity shows five matching completed records; `/history` provides UTC filters, numbered pages and exact scoped details. A single discreet prototype footer states that no real funds move.
+- SQLite data lives in the Docker `wallet-data` named volume. Use `docker compose down` for normal shutdown, **without `--volumes`**; deleting that volume destroys simulated balances and history.
+- Migrations and seeding are explicit. Back up an existing database before applying new migrations; never use a volume reset as a substitute for a reviewed migration.
+- Review does not submit an operation. A confirmed result requires a server response. If the outcome is uncertain, recover the **original request** rather than starting a replacement; unresolved context uses per-tab session storage and can be lost if the tab or its storage is cleared.
+- The app binds its host port to `127.0.0.1` and has no authentication. Do not expose it to a public network.
 
-Stop the development service before building against the same Next output volume to avoid two compilers writing there at once. Existing planning files and the design skill are preserved. Node 26 is enforced by npm; TypeScript 5.9 is pinned for the initial verified Next.js toolchain rather than adopting a new TypeScript major by default.
+## API and further reading
 
-Normal shutdown will use `docker compose down`, **without `--volumes`**. Removing `wallet-data` explicitly destroys simulated balances/history. No real payment, authentication, or crypto integration is included.
+The local API includes account and wallet reads, deposits, withdrawals, conversions, transfers, reference rates, quotes, portfolio valuation, and transaction history. The OpenAPI document is available at `/api/openapi`; Swagger UI is not currently implemented. Money submissions require UUID retry keys, and identical retries replay their original definitive result.
 
-## Design tooling
-
-See [`artifact/TOOLING.md`](artifact/TOOLING.md) to restore the checksum-verified Impeccable engine excluded from Git.
-
-The user confirmed local demo/evaluation use, code-first, and the frosted reference adaptation. The built shell's [review record](artifact/DESIGN_REVIEW.md) documents its corrected finding and verdict scope. [DESIGN.md](DESIGN.md) and `.impeccable/design.json` capture its actual tokens and component examples. Live-picker configuration has not been enabled automatically.
-
-Commit shared Impeccable artifacts when present: `PRODUCT.md`, `DESIGN.md`, `.impeccable/config.json`, `.impeccable/surfaces/`, `.impeccable/design.json`, `.impeccable/live/config.json`, and `.impeccable/critique/ignore.md`. Do not blanket-ignore `.impeccable/`; runtime directories ignore themselves, and `.impeccable/config.local.json` remains local.
+- [Documentation and project decisions](artifact/README.md)
+- [Money and journal contracts](artifact/MONEY.md) · [Journal implementation](artifact/JOURNAL.md)
+- [Funding](artifact/FUNDING.md) · [Conversions](artifact/CONVERSIONS.md) · [Transfers](artifact/TRANSFERS.md) · [History](artifact/HISTORY.md)
+- [Design system](DESIGN.md) · [Design tooling](artifact/TOOLING.md)

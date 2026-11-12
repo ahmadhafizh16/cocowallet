@@ -2,6 +2,7 @@
 
 These documents distinguish decisions, proposals, and implemented work. The journal, persistent reads, durable reviewed funding/conversion/transfers, exact reference metadata and scoped history are connected. D-035 moves History into a shared-shell page; D-036 connects Frankfurter-backed USD totals and actual recorded observations, including read-only destinations. Original-key recovery remains unchanged. Wallet/default management and Swagger remain separate work. Consult the kanban rather than assuming a draft PRD describes completed features.
 
+- [Project guide](index.html): searchable file tree, test catalogue, and illustrated operating manual. It also opens directly from disk.
 - [Main PRD](PRD.md): product scope and links to the smaller feature PRDs.
 - [Decision register](DECISIONS.md): stable `D-###` decisions and `O-###` open questions.
 - [Kanban](KANBAN.md): the current status of planning and implementation tasks.
