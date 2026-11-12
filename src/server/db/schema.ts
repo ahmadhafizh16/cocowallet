@@ -191,6 +191,30 @@ export const fxCatalogCache = sqliteTable(
   ],
 );
 
+/** Observed portfolio values are not balances or monetary outcomes. */
+export const portfolioSnapshots = sqliteTable(
+  "portfolio_snapshots",
+  {
+    accountId: text("account_id")
+      .notNull()
+      .references(() => accounts.id, { onDelete: "restrict" }),
+    balanceRevision: text("balance_revision").notNull(),
+    recordedAt: text("recorded_at").notNull(),
+    valuedAt: text("valued_at").notNull(),
+    totalUsdMinor: signedInteger("total_usd_minor").notNull(),
+    balances: text("balances").notNull(),
+    rates: text("rates").notNull(),
+  },
+  (table) => [
+    primaryKey({ columns: [table.accountId, table.balanceRevision] }),
+    index("portfolio_snapshot_time").on(table.accountId, table.recordedAt),
+    check(
+      "portfolio_total_nonnegative",
+      sql`typeof(${table.totalUsdMinor}) = 'integer' AND ${table.totalUsdMinor} >= 0`,
+    ),
+  ],
+);
+
 export const fxRateCache = sqliteTable(
   "fx_rate_cache",
   {

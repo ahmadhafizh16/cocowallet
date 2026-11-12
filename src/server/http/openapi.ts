@@ -4,6 +4,7 @@ import { quotePaths, quoteSchemas } from "./quotes-openapi";
 import { conversionPaths, conversionSchemas } from "./conversions-openapi";
 import { historyPaths, historySchemas } from "./history-openapi";
 import { transferPaths, transferSchemas } from "./transfers-openapi";
+import { portfolioPaths, portfolioSchemas } from "./portfolio-openapi";
 import {
   currencyContract,
   dateTimeSchema,
@@ -29,10 +30,11 @@ export const readApiDocument = {
     title: "CocoWallet simulated wallet API",
     version: "0.1.0",
     description:
-      "Local-only simulated wallet with exact account/history reads, durable simulated funding/conversion/transfers, fresh-first reference metadata and immutable one-minute server quotes. Full history UI and Swagger remain separate work. No authentication: do not expose the Docker port publicly.",
+      "Local-only wallet prototype with exact account/history reads, durable funding/conversion/transfers, fresh-first Frankfurter reference metadata, USD portfolio observations and immutable one-minute quotes. No real funds move. Swagger remains separate work. No authentication: do not expose the Docker port publicly.",
   },
   servers: [{ url: "/" }],
   paths: {
+    ...portfolioPaths,
     ...transferPaths,
     ...historyPaths,
     ...conversionPaths,
@@ -169,6 +171,7 @@ export const readApiDocument = {
   },
   components: {
     schemas: {
+      ...portfolioSchemas,
       ...transferSchemas,
       ...historySchemas,
       ...conversionSchemas,

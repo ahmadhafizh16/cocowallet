@@ -8,6 +8,7 @@ import { submitFunding } from "@/features/funding/service";
 import { getRuntimeDatabase } from "../db/runtime";
 import { jsonWriteIssue, readBoundedJson } from "./request-input";
 import { monetaryResponse as respond } from "./responses";
+import { observeCompletedSubmission } from "../portfolio-observation";
 
 export async function handleFunding(request: Request, kind: FundingKind) {
   const key = normalizeRequestKey(request.headers.get("Idempotency-Key"));
@@ -48,7 +49,10 @@ export async function handleFunding(request: Request, kind: FundingKind) {
       "Supply a UUID Idempotency-Key and exactly walletId, plain-decimal amount and supported provider strings.",
     );
   try {
-    return respond(submitFunding(getRuntimeDatabase(), kind, key, input));
+    const database = getRuntimeDatabase();
+    const result = submitFunding(database, kind, key, input);
+    observeCompletedSubmission(database, result);
+    return respond(result);
   } catch {
     return respond({
       status: 503,

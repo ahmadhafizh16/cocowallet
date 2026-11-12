@@ -7,6 +7,7 @@ import { normalizeRequestKey } from "@/features/funding/contracts";
 import { getRuntimeDatabase } from "../db/runtime";
 import { localJsonRequest, readValidatedJson } from "./request-input";
 import { monetaryResponse as respond } from "./responses";
+import { observeCompletedSubmission } from "../portfolio-observation";
 
 export async function handleTransfer(request: Request) {
   const key = normalizeRequestKey(request.headers.get("Idempotency-Key"));
@@ -30,7 +31,10 @@ export async function handleTransfer(request: Request) {
     return invalid();
   }
   try {
-    return respond(await submitTransfer(getRuntimeDatabase(), key, input));
+    const database = getRuntimeDatabase();
+    const result = await submitTransfer(database, key, input);
+    observeCompletedSubmission(database, result);
+    return respond(result);
   } catch {
     return respond({
       status: 503,

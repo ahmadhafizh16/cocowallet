@@ -46,6 +46,7 @@ describe("read-only OpenAPI contract", () => {
     const spec = await response.json();
     expect(spec.openapi).toBe("3.1.0");
     expect(Object.keys(spec.paths)).toEqual([
+      "/api/portfolio",
       "/api/transfers",
       "/api/transactions",
       "/api/transactions/{transactionId}",

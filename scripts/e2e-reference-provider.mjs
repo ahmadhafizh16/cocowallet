@@ -26,6 +26,18 @@ globalThis.fetch = async (input, init) => {
     ]);
   if (
     url.pathname === "/v2/rates.csv" &&
+    url.searchParams.get("quotes") === "USD" &&
+    ["GBP", "EUR", "JPY"].includes(url.searchParams.get("base"))
+  ) {
+    const date = new Date().toISOString().slice(0, 10);
+    const base = url.searchParams.get("base");
+    const rate = base === "GBP" ? "1.25" : base === "EUR" ? "1.1" : "0.0067";
+    return new Response(`date,base,quote,rate\n${date},${base},USD,${rate}\n`, {
+      headers: { "Content-Type": "text/csv" },
+    });
+  }
+  if (
+    url.pathname === "/v2/rates.csv" &&
     url.searchParams.get("base") === "USD" &&
     ["GBP", "EUR", "JPY"].includes(url.searchParams.get("quotes"))
   ) {

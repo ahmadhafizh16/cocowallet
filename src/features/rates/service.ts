@@ -15,7 +15,11 @@ import {
   validateStoredCatalog,
 } from "./validation";
 
-type Dependencies = { client?: FrankfurterClient; now?: () => number };
+type Dependencies = {
+  client?: FrankfurterClient;
+  now?: () => number;
+  catalog?: CurrencyCatalog | null;
+};
 function dependencies(database: WalletDatabase, input: Dependencies) {
   if (database.sqlite.inTransaction)
     throw new RateDataError("FX_STORAGE_UNAVAILABLE", 503);
@@ -123,7 +127,12 @@ export async function getReferenceRate(
   }
   let catalog: CurrencyCatalog;
   try {
-    catalog = await getCurrencyCatalog(database, { client, now });
+    if (input.catalog === null)
+      throw new RateDataError("CURRENCY_CATALOG_UNAVAILABLE", 503);
+    catalog =
+      input.catalog ?? (await getCurrencyCatalog(database, { client, now }));
+    if (!cacheEligible(catalog.fetchedAt, now()))
+      throw new RateDataError("CURRENCY_CATALOG_UNAVAILABLE", 503);
   } catch (error) {
     if (
       !(error instanceof RateDataError) ||
