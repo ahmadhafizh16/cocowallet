@@ -1,5 +1,13 @@
 # Wallet interface foundation
 
+**Latest follow-up:** [D-038](DECISIONS.md#d-038) resets ordinary amounts/reviews to
+zero on explicit reopen, preserves amounts when editing within an open modal, and
+restricts both Convert UI choices to USD/GBP/EUR. Shared task-step motion and a
+bounded dialog resize preserve focus; privacy/reduced motion remain immediate.
+Recovery requests/keys/quotes are never reset. See
+[MODAL_CONTINUITY.md](MODAL_CONTINUITY.md); historical draft-retention wording below
+does not override this newer request.
+
 **Current refinement:** [D-037](DECISIONS.md#d-037) and
 [WORKFLOW_REFINEMENT.md](WORKFLOW_REFINEMENT.md) supersede the historical entry/
 success presentation below: grouped exact decimal bottom-border amounts,

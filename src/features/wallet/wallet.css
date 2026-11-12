@@ -3,6 +3,61 @@
   font-variant-numeric: tabular-nums;
 }
 
+/* One protected surface connects task steps; no old monetary DOM is retained. */
+.wallet-operation-dialog {
+  align-content: start;
+}
+.wallet-operation-stage {
+  min-width: 0;
+}
+.wallet-operation-stage .wallet-dialog-review,
+.wallet-operation-stage .wallet-dialog-form[data-entry] {
+  animation: none;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .wallet-operation-stage[data-step="review"] {
+    animation: wallet-review-in var(--motion-state) var(--ease-settle);
+  }
+  .wallet-operation-stage[data-step="form"][data-direction="back"] {
+    animation: wallet-edit-in var(--motion-state) var(--ease-settle);
+  }
+  .wallet-operation-stage:is(
+    [data-step="pending"],
+    [data-step="problem"],
+    [data-step="recovery"]
+  ) {
+    animation: wallet-step-in var(--motion-state) var(--ease-settle);
+  }
+  .wallet-operation-stage[data-step="success"] {
+    animation: wallet-complete-in var(--motion-overlay) var(--ease-settle);
+  }
+  .wallet-operation-stage[data-private="true"] {
+    animation: none;
+  }
+}
+@keyframes wallet-step-in {
+  from {
+    opacity: 0.75;
+    translate: 0 6px;
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+@keyframes wallet-complete-in {
+  from {
+    opacity: 0.75;
+    translate: 0 10px;
+    scale: 0.985;
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+    scale: 1;
+  }
+}
+
 @keyframes wallet-loading-spin {
   to {
     transform: rotate(360deg);

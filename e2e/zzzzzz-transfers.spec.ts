@@ -511,19 +511,27 @@ test("privacy blocks hidden transfer review and removes monetary receipt details
     .click();
   await open(page);
   const dialog = page.getByRole("dialog");
-  await expect(dialog).toContainText("Show amounts before confirming");
+  await expect(page.getByLabel("You send", { exact: true })).toHaveAttribute(
+    "readonly",
+    "",
+  );
   await expect(dialog).not.toContainText("1.00 USD");
   await expect(
     page.getByRole("button", {
       name: "Confirm transfer",
       exact: true,
     }),
-  ).toBeDisabled();
+  ).toHaveCount(0);
   await page.keyboard.press("Escape");
   await page
     .getByRole("button", { name: "Hide monetary amounts", exact: true })
     .click();
   await open(page);
+  await expect(page.getByLabel("You send", { exact: true })).toHaveValue("0");
+  await page.getByLabel("You send", { exact: true }).fill("1.00");
+  await page
+    .getByRole("button", { name: "Review transfer", exact: true })
+    .click();
   await expect(dialog).toContainText("1.00 USD");
   await confirm(page);
   await page.getByRole("button", { name: "Close dialog", exact: true }).click();

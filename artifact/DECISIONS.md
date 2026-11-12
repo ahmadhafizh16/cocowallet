@@ -248,6 +248,17 @@ remain unchanged. Confirmed-dismissal cleanup supersedes D-035's X-retains-succe
 presentation choice, never unknown-outcome recovery. See
 [WORKFLOW_REFINEMENT.md](WORKFLOW_REFINEMENT.md).
 
+### D-038
+
+**Money-modal continuity follow-up:** Reset ordinary amount/review state to zero
+on every explicit money-modal opening, retaining original pending/unknown/error/
+blocked-storage recovery. Editing within the same open modal keeps the amount.
+Limit both Convert UI currency choices to USD/GBP/EUR without narrowing backend
+capabilities or hiding other balances. The user delegated the smooth step-motion
+choice and approved refreshing affected design guidance/examples. See
+[MODAL_CONTINUITY.md](MODAL_CONTINUITY.md). This supersedes ordinary amount draft
+retention across reopen/navigation in prior UI decisions, not recovery guarantees.
+
 ## Questions and resolutions
 
 ### O-001

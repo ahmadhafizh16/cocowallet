@@ -2,7 +2,15 @@
 
 <!-- impeccable:product-schema 1 -->
 
-The latest workflow feedback is pinned in
+The latest continuity follow-up is pinned in
+[MODAL_CONTINUITY.md](artifact/MODAL_CONTINUITY.md) (D-038): ordinary amounts reset
+to zero on reopening a money modal; Edit within the same modal keeps its amount.
+Smooth input/review/done continuity uses the existing motion world; original pending/
+unknown/error/blocked-storage recovery remains protected. Both Convert UI choices
+are limited to USD/GBP/EUR, without hiding other balances or narrowing backend
+capabilities. This supersedes ordinary amount retention across reopening below.
+
+The previous workflow feedback is pinned in
 [WORKFLOW_REFINEMENT.md](artifact/WORKFLOW_REFINEMENT.md) (D-037): amount-first
 review, grouped numeric bottom-border entry, Done-only success and safe reset on
 every confirmed-result dismissal, human-readable UTC dates/copy, green/loading

@@ -1,5 +1,38 @@
 # Wallet shell design review
 
+## T11-10 — money-modal continuity finish review
+
+**Disposition: `ship` at the bounded D-038 follow-up scope.** A fresh independent
+read-only child returned all five review-contract sections and no material fixes.
+The reviewer verified all **48 originals** exist, decode and have expected viewport
+dimensions, inspected all eight six-view matrices and six originals covering every
+**320/820/1440 light/dark** combination. Intentionally paused midpoint captures are
+supplements, not settled-layout claims. No comp, new identity or raster was needed.
+
+The review accepted zero-on-reopen ordinary amounts, exact Edit retention, protected
+pending/unknown/error/blocked-storage recovery, three-currency Convert UI, shared
+directional stages, bounded resizing and truthful success/focus/privacy/reduced
+motion. Type, material and ground match the incumbent frosted Operate world. The
+single primary detector warning remains the approved bottom focus boundary on a
+square input, not a rounded-card accent; 29 font/radius advisories do not establish
+new defects. No repeated scan or blanket suppression was added.
+
+The parent subsequently received the corrected full **117/117 Chromium** pass.
+The full Docker check passes **1,530 Jest tests / 71 suites**, formatting, lint,
+types, production build and **60 artifact documents / 39 tasks**. These are
+parent-run results, not browser execution by the reviewer. Corrected telemetry
+records actual **240ms WAAPI** resizing at all six viewport/theme combinations;
+the `.24s` optimization regression is covered by the unit test. This is not an
+exhaustive backend/security/performance, screen-reader or WCAG certification.
+
+The approved documenter refreshed affected DESIGN.md/sidecar guidance and inert
+examples after this verdict. The parent verified byte-identical normative
+frontmatter, unchanged color metadata/ramps, shadows, motion names/values and
+breakpoints, valid v2 JSON and all 12 preview entries retained. The reviewer did
+not independently audit sidecar examples; this is parent documentation validation.
+See
+[MODAL_CONTINUITY.md](MODAL_CONTINUITY.md) for preservation/restoration evidence.
+
 ## T11-09 — money workflow finish review
 
 **Disposition: `ship` at the bounded D-037 workflow-refinement scope.** A fresh,

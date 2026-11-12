@@ -111,7 +111,7 @@ test("review moves no funds; explicit confirmation records exact balances and pe
   ).toContainText("−1.00 USD+0.80 GBP");
 });
 
-test("an eligible missing currency wallet appears only after successful reviewed conversion", async ({
+test("the backend still creates eligible extra currencies while Convert exposes only USD, GBP and EUR", async ({
   page,
   request,
 }) => {
@@ -119,29 +119,54 @@ test("an eligible missing currency wallet appears only after successful reviewed
   expect(
     before.wallets.find((w: { currency: string }) => w.currency === "JPY"),
   ).toBeUndefined();
-  await review(page, "JPY");
+  const quoted = await request.post("/api/quotes", {
+    data: {
+      operation: "conversion",
+      sourceWalletId: before.source.id,
+      amount: "1.00",
+      targetCurrency: "JPY",
+    },
+  });
+  expect(quoted.status()).toBe(200);
+  const { quote } = await quoted.json();
   expect(
     (await main(request)).wallets.find(
       (w: { currency: string }) => w.currency === "JPY",
     ),
   ).toBeUndefined();
-  await page
-    .getByRole("button", { name: "Confirm conversion", exact: true })
-    .click();
-  await expect(
-    page.getByRole("heading", { name: "Conversion complete" }),
-  ).toBeVisible();
+  expect(
+    (
+      await request.post("/api/conversions", {
+        headers: { "Idempotency-Key": crypto.randomUUID() },
+        data: {
+          quoteId: quote.quoteId,
+          sourceWalletId: before.source.id,
+          amount: "1.00",
+          targetCurrency: "JPY",
+        },
+      })
+    ).status(),
+  ).toBe(200);
   expect(
     (await main(request)).wallets.find(
       (w: { currency: string }) => w.currency === "JPY",
     ),
   ).toMatchObject({ balanceMinor: "150", exponent: 0 });
-  await page.getByRole("button", { name: "Done", exact: true }).click();
   await page.reload();
   await expect(
     page.locator(".wallet-currency-row").filter({ hasText: "JPY" }),
   ).toContainText("150");
   await expect(page.locator('[data-currency="JPY"]')).toHaveClass(/lucide/);
+  await page
+    .locator(".wallet-quick-actions")
+    .getByRole("button", { name: "Convert", exact: true })
+    .click();
+  for (const name of ["Source currency", "Receive currency"]) {
+    await page.getByRole("combobox", { name, exact: true }).click();
+    await expect(page.getByRole("option")).toHaveText(["USD", "GBP", "EUR"]);
+    await page.keyboard.press("Escape");
+    await expect(page.locator('[data-slot="select-content"]')).toHaveCount(0);
+  }
 });
 
 test("expiry never auto-submits: fresh terms need an explicit request and a separate confirmation", async ({

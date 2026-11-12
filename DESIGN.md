@@ -254,14 +254,16 @@ pending/unknown/result states and immutable original-request recovery. Shared
 Buttons, typography and fact-list patterns are reused; no CSS, flags, gradient,
 branding or motion changes were introduced. Transfer final actions
 remained disabled at that milestone; the later transfer integration connects them.
-Ordinary drafts stay in shell memory; only unresolved monetary
-intent may use the approved per-tab storage exception in D-030.
+Ordinary selections stay in shell memory; the current fresh-opening amount reset
+is specified below. Only unresolved monetary intent may use the approved per-tab
+storage exception in D-030.
 
 The [conversion flow](artifact/CONVERSIONS.md) reuses those same dialog/fact-list
 patterns for server quote loading, fixed terms, expiry/reconfirmation and explicit
 simulated conversion. Shared submission recovery protects funding/conversion in
 one slot. Quote and receipt amounts/rates/timestamps are removed when private;
-the quote's original expiry is never extended by reopening the dialog. New fiat
+ordinary reopening invalidates stale quotes, while protected recovery retains its
+original terms and never extends the quote's original expiry. New fiat
 wallets without an approved USD/EUR/GBP flag use a neutral Lucide currency marker,
 not another country's flag. No palette, CSS, typography, layout or motion token
 changes accompany this connection.
@@ -284,6 +286,16 @@ intent or blocked recovery cleanup. Readable UTC dates, centered recent empty
 states, six-record balance-table pages and saved/new recipient selection refine
 task clarity without changing the frosted identity or financial capabilities.
 
+The [modal continuity follow-up](artifact/MODAL_CONTINUITY.md) (D-038) resets each
+ordinary amount to literal `0` on a fresh explicit opening of Deposit, Withdraw,
+Convert or Send money, clearing stale review/errors/quotes and remounting entry-local
+caret/hint state while retaining permitted provider, recipient and currency selections.
+Edit details within the same open modal keeps the exact amount. Protected original
+request/key/quote recovery is never reset into a zero draft. Both Convert selectors
+now use USD/GBP/EUR only; other balances and backend capabilities remain intact.
+Directional task stages, a bounded dialog-height resize and a verified-success settle
+reuse the existing motion world, with immediate privacy/reduced-motion behavior.
+
 **Key Characteristics:**
 
 - Icy-blue glass and a diffuse navy backdrop.
@@ -292,7 +304,7 @@ task clarity without changing the frosted identity or financial capabilities.
 - Named desktop icons with real tooltips, visible mobile labels, and clear focus.
 - Equivalent light/dark roles and honest unavailable states.
 
-This affected-section refresh preserves the approved identity and records current [global styles](src/app/globals.css), [wallet styles](src/features/wallet/wallet.css), [shared controls](src/components/ui/), [dashboard](src/features/wallet/dashboard.tsx), [amount editor](src/features/wallet/money-amount-input.tsx), [shared review](src/features/wallet/money-review.tsx), [recorded balance history](src/features/wallet/balance-history.tsx), [recent rows](src/features/history/recent-transactions.tsx), and [submission presentation](src/features/submissions/submission-panel.tsx). The approved [CocoWallet vector](src/components/brand/cocowallet-logo.tsx) and [branding/motion extension](artifact/MOTION.md) build on that world. Page strategy belongs in the newest section of the [canonical surface brief](.impeccable/surfaces/src-app-page-tsx.md) and [workflow refinement](artifact/WORKFLOW_REFINEMENT.md), superseding conflicting older workflow copy; product capabilities belong in [PRODUCT.md](PRODUCT.md). The direction was explicitly user-pinned; no new visual-world or quality-bar roll was required or performed.
+This affected-section refresh preserves the approved identity and records current [global styles](src/app/globals.css), [wallet styles](src/features/wallet/wallet.css), [shared controls](src/components/ui/), [dashboard](src/features/wallet/dashboard.tsx), [amount editor](src/features/wallet/money-amount-input.tsx), [shared review](src/features/wallet/money-review.tsx), [operation workspace](src/features/wallet/operation-workspace.tsx), [step-resize hook](src/features/wallet/use-money-step-motion.ts), [recorded balance history](src/features/wallet/balance-history.tsx), [recent rows](src/features/history/recent-transactions.tsx), and [submission presentation](src/features/submissions/submission-panel.tsx). The approved [CocoWallet vector](src/components/brand/cocowallet-logo.tsx) and [branding/motion extension](artifact/MOTION.md) build on that world. Page strategy belongs in the newest section of the [canonical surface brief](.impeccable/surfaces/src-app-page-tsx.md), [modal continuity follow-up](artifact/MODAL_CONTINUITY.md) and [workflow refinement](artifact/WORKFLOW_REFINEMENT.md), superseding conflicting older workflow copy; product capabilities belong in [PRODUCT.md](PRODUCT.md). The direction was explicitly user-pinned; no new visual-world or quality-bar roll was required or performed.
 
 The [sidecar](.impeccable/design.json) extends the frontmatter with shadows, motion, breakpoints, narrative, and standalone visual examples. Its eight-step OKLCH ramps are **non-normative previews**, not an application palette: they derive hue/chroma from the underlying source RGB, ignore alpha, and reduce chroma toward white and black. Examples depict appearance, not functioning Radix widgets or connected financial services. Existing [review captures](.impeccable/review/) are non-shipping evidence, not product assets; this documentation pass generated no raster.
 
@@ -355,7 +367,7 @@ Use flexible grids, `min-width: 0`, wrapping labels, and content-sized panels. T
 
 Observed overview composition is two content columns in a (1.4:1) ratio: total/actions and recent transactions at left, currency wallets at right. Within the total card, amount/copy and the compact sparkline share a grid with a flexible amount column, a (100–160px) chart column, and (16px) gap; actions sit below. At maximum width (640px), the chart column is (100px) and the gap (8px). At maximum width (1023px), overview content stacks as total, currencies, recent transactions. At maximum width (760px), the rail becomes a labelled fixed bottom bar. These are current CSS boundaries, not a requirement that every future surface use this topology. The original sketch remains material authority, not a three-column layout prescription.
 
-Full transaction History uses `/history` and a single-column completed-activity panel within the same [persistent route shell](<src/app/(wallet)/layout.tsx>). Account selection, privacy and mounted money drafts/recovery survive navigation between Overview and History; reload still clears ordinary drafts. Do not describe History as an overview anchor or promise durable browsing state.
+Full transaction History uses `/history` and a single-column completed-activity panel within the same [persistent route shell](<src/app/(wallet)/layout.tsx>). Account selection, privacy, money selections and protected recovery remain mounted between Overview and History. This does not retain an ordinary amount/review through a fresh explicit modal opening: that boundary resets the amount to `0` and clears stale review/errors/quotes. Reload still clears ordinary drafts. Do not describe History as an overview anchor or promise durable browsing state.
 
 ### Responsive behavior
 
@@ -394,9 +406,12 @@ The approved motion thesis is protected focus and continuity: a money dialog set
 - **Controls:** Button, Input, and Select trigger transition color, background, border, shadow, and individual `translate` over (180ms), with feedback easing. Enabled shared Buttons press down (1px) over (120ms); disabled/aria-disabled Buttons do not. Rail color/background/border/shadow uses (180ms), with (120ms) translate feedback.
 - **Dialogs:** a fresh scrim fades in over (240ms), out over (120ms). Fresh content arrives over (240ms): opacity (0 → 1), vertical translate (12px → 0), scale (0.985 → 1). Exit is (120ms), fading from the currently rendered opacity, moving (6px) farther down and multiplying the current scale by (0.99). Individual translate/scale leave the centered `transform` unchanged. Panel/scrim blur stays constant at the values above.
 - **Menus / tooltips:** fresh DropdownMenu and Select arrivals use (180ms), opacity (0 → 1), scale (0.98 → 1), and vertical offset (-4px → 0), reversed to (+4px → 0) above the trigger. Use the actual Radix transform origin. Menu exit is (120ms), fading from captured opacity to (0), keeping captured translation and multiplying captured scale by (0.985); tooltips fade from their current opacity over (120ms). Closing overlay/menu surfaces do not intercept pointer events during their exit.
-- **Local review / edit:** review enters over (180ms) from opacity (0.6), horizontal translate (+8px); returning edit uses (-8px). The form's `data-entry="back"` gates the return transition; initial form entry does not add a duplicate step animation. Focus and preserved drafts remain authoritative.
+- **Local review / edit:** the shared `wallet-operation-stage` owns directional entry, reusing the existing review/edit keyframes over (180ms): opacity (0.6 → 1), horizontal translate (+8px → 0) for review and (-8px → 0) for Edit details. Its step/direction attributes replace nested form/review animation so only one content stage moves; fresh form entry adds no duplicate step animation. Edit preserves the exact amount within the same open modal.
+- **Pending / problem / recovery:** the same stage settles over (180ms) from opacity (0.75 → 1), vertical translate (6px → 0). This is immediate truthful feedback, not a progress simulation or request delay.
+- **Verified success:** only a definitive server receipt selects the success stage, settling over (240ms) from opacity (0.75 → 1), vertical translate (10px → 0) and scale (0.985 → 1). Focus and the actual result are not delayed for the effect.
+- **Dialog-height continuity:** one bounded WAAPI height animation connects measured layouts using the incumbent overlay duration (240ms) and settle easing. The hook converts either `240ms` or optimized `.24s` CSS serialization to milliseconds. An interrupted resize retargets from the currently rendered height after canceling the prior animation; close, privacy changes, viewport resize, unmount and a live reduced-motion change cancel resizing. No old monetary DOM snapshot, value tween, per-frame JavaScript loop, new dependency or animated blur is involved. Existing dialog opening/closing and menu motion remain unchanged.
 
-These spatial/opacity effects and color transitions run only when motion is permitted. Reduced motion removes animations/transitions and smooth scrolling immediately without dropping state, focus, labels, or errors. Existing loading skeletons retain their (1.8s) breathing cycle, opacity (0.45) halfway through, and stop under reduced motion. Request-loading Buttons add a local LoaderCircle spin (900ms, linear, infinite while loading); reduced motion stops the icon without removing busy state or readable loading copy. Existing timing/easing tokens are unchanged; neither loop is decoration. Do not tween money, rates, or outcomes, fade privacy masking, animate blur/full-page filters, add page-load choreography, or retain `will-change`. Section scrolling remains smooth only when permitted. Static sidecar examples demonstrate control feedback, not fake portal/open-close behavior or an automatic page entrance.
+These spatial/opacity effects and color transitions run only when motion is permitted. Reduced motion removes animations/transitions and smooth scrolling immediately without dropping state, focus, labels, or errors. Privacy suppresses local stage choreography and cancels height resizing immediately; money is removed or masked without a fade. Stage content is visible by default, not dependent on JavaScript or an animation finishing. Existing loading skeletons retain their (1.8s) breathing cycle, opacity (0.45) halfway through, and stop under reduced motion. Request-loading Buttons add a local LoaderCircle spin (900ms, linear, infinite while loading); reduced motion stops the icon without removing busy state or readable loading copy. Existing timing/easing tokens are unchanged; neither loop is decoration. Do not tween money, rates, or outcomes, fade privacy masking, animate blur/full-page filters, add page-load choreography, or retain `will-change`. Section scrolling remains smooth only when permitted. Static sidecar examples demonstrate control feedback, not fake portal/open-close behavior or an automatic page entrance.
 
 **Interrupted presence:** before a Radix open-state change, the small shared motion controller batches current opacity/translate/scale reads and stores them as element-local CSS variables. Closing during arrival continues from that frame, not an assumed fully open value; reopening a still-mounted exiting layer likewise begins from its current frame. CSS owns timing and unmount remains Radix Presence's responsibility. Controlled and default-open APIs are preserved; there is no per-frame JavaScript loop. Reduced motion skips the snapshot work. Explicit task-dismiss buttons use the same capture boundary.
 
@@ -467,9 +482,15 @@ Input and Radix Select use opaque control fill, visible control border, control-
 
 `Field`, `FieldLabel`, `FieldDescription`, and `FieldError` keep labels, guidance, and alert copy together. `MoneyAmountInput` reuses shared Input as decimal **text** with `inputMode="decimal"`, not floating-point number input. Its component tokens define the (100px) height, responsive amount type, transparent fill, square corners and symbol inset. A (2px) control-border bottom edge becomes (3px) navy on visible focus, without a box/ring/shadow; invalid input changes that edge to danger and retains explanatory copy. The symbol is decorative and separate from the input value. Source currency remains a labelled Select beside the amount label.
 
-Thousands grouping is an exact string presentation with caret preservation; raw draft/API amounts remain ungrouped decimal strings. Invalid characters/paste are rejected with a readable hint, never parsed through floating point, silently rounded or precision-truncated. Privacy blanks/read-only masks the editor without destroying its draft; never replace the field with a password input or a bare decorative number.
+Thousands grouping is an exact string presentation with caret preservation; raw draft/API amounts remain ungrouped decimal strings. Invalid characters/paste are rejected with a readable hint, never parsed through floating point, silently rounded or precision-truncated. Privacy blanks/read-only masks the editor without destroying its current draft; a fresh ordinary modal opening still resets it to literal `0` and remounts caret/hint state. Never replace the field with a password input or a bare decorative number.
 
 Select menus are portaled, collision-aware solid surfaces with (4px) menu inset, (44px) minimum option height, checkmarked selection, scrolling controls, keyboard/typeahead support, and focus restoration. History uses the same Select foundation as forms, not a native select. Local history trigger width is (176px), becoming full width on compact phones.
+
+Convert exposes only **USD, GBP and EUR** in both source and receiving selectors.
+Source choices also require an existing wallet; the identical receiving currency
+stays disabled. Changing source clears an identical target. The broader currency
+catalog no longer populates these UI choices: other balances remain visible and
+backend-eligible conversions remain available through their existing contracts.
 
 Send money uses that same Radix Select for saved destination addresses and
 **Create new address**, revealing a labelled text Input only for new entry. New
@@ -477,8 +498,9 @@ addresses default to USD and are saved only with a successful transfer, not by
 selection or review. Both send/receive currency choices in this UI are limited to
 USD/GBP/EUR (source choices also require an existing wallet). Existing recipient
 defaults remain stored facts; an unsupported saved default gets a USD receiving
-selection without rewriting it. Other currency balances remain visible, and this
-picker scope does not restrict backend or conversion capabilities.
+selection without rewriting it. Same-currency transfers remain allowed, unlike
+Convert. Other currency balances remain visible, and this picker scope does not
+restrict backend or conversion capabilities.
 
 ### Navigation, tooltips, and utility menus
 
@@ -486,7 +508,7 @@ Desktop rail controls are named (48px) circles: resting icons are quiet on trans
 
 Mobile keeps three visible labels: Overview, History, **Actions**. Actions opens a named menu of all four money operations; selecting one opens its dialog and returns focus to the stable Actions trigger when closed. Do not link it to a removed inline workspace or relabel all operations as Transfer. Task labels on quick actions remain visible at every size.
 
-Theme and account utilities use themed DropdownMenu radio groups; history uses Select. System/Light/Dark follows the system when requested and persists only the theme preference. If storage fails, an in-memory preference still applies for the visit and a status note explains it. Account inspection is not authentication; destination accounts disable money actions. The account ID wraps and can be selected manually. Copy feedback stays inside the open account menu as a status; failure gives a manual-copy fallback. Copy status, account selection, filters, privacy, and drafts are in-memory UI state, not durable financial state. The persistent shell preserves account/privacy/money drafts across Overview/History navigation; this is not a guarantee that full-history filters persist after leaving their page.
+Theme and account utilities use themed DropdownMenu radio groups; history uses Select. System/Light/Dark follows the system when requested and persists only the theme preference. If storage fails, an in-memory preference still applies for the visit and a status note explains it. Account inspection is not authentication; destination accounts disable money actions. The account ID wraps and can be selected manually. Copy feedback stays inside the open account menu as a status; failure gives a manual-copy fallback. Copy status, account selection, filters, privacy, and ordinary drafts are in-memory UI state, not durable financial state. The persistent shell keeps account/privacy, non-amount money selections and protected recovery mounted across Overview/History navigation; every fresh ordinary modal opening still resets amount/review/errors/quote. This is not a guarantee that full-history filters persist after leaving their page.
 
 ### Badges and notices
 
@@ -515,9 +537,26 @@ rates**; describe reference rates, never live or streaming prices.
 
 ### Money dialogs and review
 
-All four money forms use the shared Radix Dialog. Content uses solid surface, ambient depth, a labelled title/description, accessible close Button, and the bounded width in frontmatter. Desktop maximum height is `calc(100dvh - 48px)` with internal vertical overflow; the mobile exception is in Layout. Escape dismisses, focus is trapped while open, and closing restores the invoking control. Initial focus goes to recipient for Send money, otherwise amount, or to the preserved review heading when reopening a review.
+All four money forms use the shared Radix Dialog. Content uses solid surface, ambient depth, a labelled title/description, accessible close Button, and the bounded width in frontmatter. Desktop maximum height is `calc(100dvh - 48px)` with internal vertical overflow; the mobile exception is in Layout. Escape dismisses, focus is trapped while open, and closing restores the invoking control. Fresh ordinary entry focuses the recipient picker/new-address field for Send money, otherwise amount; protected submission states retain their heading-focus behavior.
 
-The always-mounted workspace preserves separate ordinary drafts/errors/reviews across close/reopen; safely completed results/reviews are the exception below. Reload clears ordinary drafts. Validation focuses the first invalid control, valid review focuses its heading, and editing returns to amount. Conversion source changes clear an identical receiving currency; conversion disables same-currency targets, while transfers permit them. Review facts wrap. Reviewing never moves funds. Confirmation requires visible amounts and verified shared recovery storage; the single prototype footer supplies the simulation boundary without repeated provider/demo jargon in every form. Transfer entry retains exact arbitrary address IDs, saved defaults and permitted target overrides through the picker described above. Same-currency review uses identical minor units without a rate/quote. Conversion and FX-transfer reviews request server-owned terms; missing or expired quotes disable confirmation and require explicit fresh terms plus renewed review. See [the connected transfer contract](artifact/TRANSFERS.md).
+Each explicit fresh opening of Deposit, Withdraw, Convert or Send money resets that
+operation's ordinary amount to literal `0` before paint, clears stale review/errors
+and invalidates old quotes. Entry-local caret/hint state remounts even when reopening
+a still-exiting dialog. Keep provider, recipient and currency selections where
+permitted; normalize unavailable exchange sources or an unsupported/identical Convert
+target to permitted choices. **Edit details within the same open modal keeps the
+exact amount**; it is not a fresh-opening reset. Account/privacy and protected
+recovery remain mounted. This supersedes ordinary amount/review retention across
+close/reopen, including reopening after soft navigation; navigation alone is not
+the reset boundary. Reload still clears ordinary drafts.
+
+Pending/unknown outcomes, definitive-error context and blocked recovery storage
+retain their exact original request, retry key and quote. Never reset these into an
+editable zero draft, or infer that closing recovery cancels money movement. Success
+may reset only after a definitive receipt and unblocked recovery cleanup. Financial
+services and accounting are unchanged.
+
+Validation focuses the first invalid control, valid review focuses its heading, and editing returns to amount. Conversion source changes clear an identical receiving currency; conversion disables same-currency targets, while transfers permit them. Review facts wrap. Reviewing never moves funds. Confirmation requires visible amounts and verified shared recovery storage; the single prototype footer supplies the simulation boundary without repeated provider/demo jargon in every form. Transfer entry retains exact arbitrary address IDs, saved defaults and permitted target overrides through the picker described above. Same-currency review uses identical minor units without a rate/quote. Conversion and FX-transfer reviews request server-owned terms; missing or expired quotes disable confirmation and require explicit fresh terms plus renewed review. See [the connected transfer contract](artifact/TRANSFERS.md).
 
 All four reviews share `MoneyReview`: a wrapping heading row with **Edit details**
 at the top; a source identity panel; a large centered exact amount/currency; then a
@@ -544,8 +583,8 @@ Done, X, outside click and Escape all clear a safely confirmed result plus its
 review/quotes so the next explicit operation opens its intended form. A confirmed
 result arriving after dismissal is likewise reset on the next explicit open.
 Neither path discards an unknown outcome or bypasses blocked recovery-storage
-cleanup; those safeguards outrank presentation reset. Ordinary draft preservation
-is not permission to reopen a stale completed review.
+cleanup; those safeguards outrank presentation reset. The next fresh ordinary
+opening starts at `0`, not a retained amount or stale completed review.
 
 Pending/recovery/error views retain the existing dialog/fact-list composition and
 original-key protections. Step headings take focus; closing restores the invoking
@@ -562,7 +601,7 @@ must not relabel, delay or roll back a confirmed monetary outcome.
 
 ### Loading and error states
 
-The real dashboard skeleton reserves the current two-column/stacked geometry, top utilities, rail/bottom labels, actions, recent transactions and tighter currency rows. The balance card reserves a compact (72px) sparkline shape beside its total, not the former separate (112px) chart or a connection banner. Section-heading placeholders remain (30px) high; no separate balance-history heading is mounted in the overview skeleton. Balance-card shapes use its local divider role. Shapes are decorative; the busy main region supplies one “Loading wallet overview” status. No minimum loading delay or fake progress is introduced. Standalone errors retain the frosted world, offer retry/navigation, and do not expose exceptions or claim a known financial outcome. This affected-section documentation refresh is not a new visual review, full-accessibility or connected-feature certification; see [the scoped review](artifact/DESIGN_REVIEW.md), [presentation evidence](artifact/PRESENTATION_REFINEMENT.md) and [workflow evidence](artifact/WORKFLOW_REFINEMENT.md).
+The real dashboard skeleton reserves the current two-column/stacked geometry, top utilities, rail/bottom labels, actions, recent transactions and tighter currency rows. The balance card reserves a compact (72px) sparkline shape beside its total, not the former separate (112px) chart or a connection banner. Section-heading placeholders remain (30px) high; no separate balance-history heading is mounted in the overview skeleton. Balance-card shapes use its local divider role. Shapes are decorative; the busy main region supplies one “Loading wallet overview” status. No minimum loading delay or fake progress is introduced. Standalone errors retain the frosted world, offer retry/navigation, and do not expose exceptions or claim a known financial outcome. This affected-section documentation refresh is not a new visual review, full-accessibility or connected-feature certification; see [the scoped review](artifact/DESIGN_REVIEW.md), [presentation evidence](artifact/PRESENTATION_REFINEMENT.md), [workflow evidence](artifact/WORKFLOW_REFINEMENT.md) and [modal continuity evidence](artifact/MODAL_CONTINUITY.md). The continuity midpoint captures are intentionally paused at (50%), not settled-layout references.
 
 ## Do's and Don'ts
 
@@ -573,10 +612,10 @@ The real dashboard skeleton reserves the current two-column/stacked geometry, to
 - **Do** use the native UI sans stack, tabular figures, explicit currencies, and wrapping long values.
 - **Do** give desktop icon navigation accessible names and real tooltips; retain visible mobile and quick-action labels.
 - **Do** reuse the shared shadcn/Radix controls, visible focus, associated errors, and one loading announcement per busy region.
-- **Do** preserve dialog drafts, focus return, viewport overflow, and fixed-navigation clearance.
+- **Do** reset ordinary money amounts to literal `0` on fresh modal opening, retain permitted selections and same-open Edit amounts, and protect original request/key/quote recovery; preserve focus return, viewport overflow, and fixed-navigation clearance.
 - **Do** honor reduced motion, reduced transparency, and forced-colors treatments.
 - **Do** reuse the approved CocoWallet vector: fixed icon colors, ink-following wordmark, and a preserved accessible name.
-- **Do** preserve focus and drafts through bounded overlay/step motion, with immediate state changes under reduced motion.
+- **Do** preserve focus and exact same-open amounts through bounded overlay/step motion, keeping truth immediate and canceling local choreography/resizing for privacy or reduced motion.
 - **Do** keep simulation, preview, inspect-only, and unavailable states plain and visible.
 - **Do** keep the user-requested opaque balance gradient and its semantic roles local, consistent in both themes, with forced-colors replacements.
 - **Do** retain visible currency codes/names beside decorative vector flags and remove history values, timestamps, plot, and table immediately when privacy is enabled.

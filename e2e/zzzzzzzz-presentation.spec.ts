@@ -110,7 +110,7 @@ test("Frankfurter-backed totals sum every wallet exactly and record observations
   expect(again.history).toEqual(changed.history);
 });
 
-test("History is a real menu page; soft navigation preserves money drafts, account context and privacy", async ({
+test("History is a real menu page; account/privacy persist and reopening resets ordinary money amounts", async ({
   page,
 }) => {
   await page.goto("/");
@@ -149,9 +149,7 @@ test("History is a real menu page; soft navigation preserves money drafts, accou
     .locator(".wallet-quick-actions")
     .getByRole("button", { name: "Deposit", exact: true })
     .click();
-  await expect(page.getByLabel("You add", { exact: true })).toHaveValue(
-    "12.3400",
-  );
+  await expect(page.getByLabel("You add", { exact: true })).toHaveValue("0");
 });
 
 test("success is a focused green-check summary without technical keys; incoming totals remain read-only", async ({

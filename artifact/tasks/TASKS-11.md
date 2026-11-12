@@ -205,6 +205,36 @@ two-record History, privacy/draft navigation and no financial POSTs or errors;
 existing user financial data remains unchanged. See
 [PRESENTATION_REFINEMENT.md](../PRESENTATION_REFINEMENT.md) for limits and evidence.
 
+### T11-10
+
+**Money-modal reset and step continuity**
+
+**Status:** Done.
+
+**Decisions:** [D-038](../DECISIONS.md#d-038).
+**Depends on:** [T11-09](#t11-09).
+
+**Implementation:** Follow [MODAL_CONTINUITY.md](../MODAL_CONTINUITY.md): reset
+ordinary amounts/reviews on reopen without touching unresolved recovery; smoothly
+connect input/review/pending/done, with immediate privacy/reduced-motion behavior;
+limit Convert's UI choices to USD/GBP/EUR while leaving backend capabilities intact.
+
+**Acceptance and tests:** All four operations reset after ordinary/review/success
+dismissal; editing stays exact. Pending/unknown/blocked original requests survive.
+Check selectors with extra wallets, valid conversions, bounded/interrupted motion,
+focus, reduced motion, mobile/desktop themes, isolated monetary regressions and
+preserved normal data. Finish review, approved affected design refresh, restored
+development and local commit; no push.
+
+**Verified:** Full Docker check/build passes **1,530 Jest / 71 suites** and all
+**117 production Chromium checks** pass on the corrected disposable server.
+Independent full bounded finish review: **ship**, no material fixes. Approved
+affected DESIGN.md/sidecar refresh preserves core tokens. Restored development
+passes 300 stable read-only frames, actual eight-record History, zero-on-reopen
+and privacy with no extra navigation, errors or monetary/quote POSTs. All 13
+non-cache tables remain unchanged; only reference caches refreshed. See
+[MODAL_CONTINUITY.md](../MODAL_CONTINUITY.md) for evidence and scope limits.
+
 ### T11-09
 
 **Money workflow usability and review refinement**

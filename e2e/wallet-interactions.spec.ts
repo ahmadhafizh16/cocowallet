@@ -137,9 +137,7 @@ test("reviews a deposit without submitting money or losing draft input", async (
   await page.getByLabel("You withdraw", { exact: true }).fill("3.00");
   await closeMoneyForm(page);
   await openMoneyForm(page, "Deposit");
-  await expect(page.getByLabel("You add", { exact: true })).toHaveValue(
-    "25.00",
-  );
+  await expect(page.getByLabel("You add", { exact: true })).toHaveValue("0");
   await expect(
     page.getByRole("combobox", { name: "Deposit from", exact: true }),
   ).toContainText("Community Bank");
@@ -157,6 +155,7 @@ test("missing, zero and precision errors are specific, focused and preserve text
     name: "Review deposit",
     exact: true,
   });
+  await amount.fill("");
   await review.click();
   await expect(page.getByRole("alert")).toHaveText("Enter an amount.");
   await expect(amount).toBeFocused();
@@ -291,7 +290,7 @@ test("privacy hides amounts in the overview and reopened drafts without credenti
   await closeMoneyForm(page);
   await privacy.click();
   await openMoneyForm(page, "Deposit");
-  await expect(amount).toHaveValue("25.00");
+  await expect(amount).toHaveValue("0");
 });
 
 test("history filters use shadcn Select and have a useful reset", async ({

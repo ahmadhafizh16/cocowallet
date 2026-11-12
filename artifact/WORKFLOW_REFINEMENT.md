@@ -2,6 +2,11 @@
 
 **Status:** Complete — T11-09. **Decision:** D-037.
 
+**Follow-up:** [D-038](DECISIONS.md#d-038) /
+[MODAL_CONTINUITY.md](MODAL_CONTINUITY.md) subsequently resets ordinary amounts to
+zero on reopen and limits Convert's UI choices as well. Its newer normal-wallet
+baseline supersedes the counts in this historical D-037 verification record.
+
 The user's review screenshot pins the review layout: wallet identity, large exact
 amount, recipient/provider identity, Edit details at the review heading, and
 Cancel/green Confirm actions below. Preserve the existing frosted world, accounting,

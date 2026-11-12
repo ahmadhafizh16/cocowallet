@@ -7,7 +7,20 @@ related_targets: ["src/features/wallet/dashboard.tsx","src/features/wallet/walle
 
 # Wallet overview surface
 
-## Current workflow refinement — D-037
+## Current continuity follow-up — D-038
+
+Reset ordinary masked amounts to zero on explicit money-modal reopen, clearing
+stale review/errors/quotes, but retain metadata and Edit-within-modal amounts.
+Unknown/pending/error/blocked-storage recovery must keep its exact original terms.
+Convert now limits both UI choices to USD/GBP/EUR (existing source wallets only),
+not backend capabilities or other visible balances. Smooth directional task steps,
+measured bounded resize and a gentle verified-success settle use incumbent timings;
+privacy/reduced motion stay immediate. No old monetary snapshot, fake progress,
+request delay, amount tween or new identity. User approved affected design refresh.
+See `artifact/MODAL_CONTINUITY.md`; this supersedes ordinary amount retention on
+reopen in historical guidance below, not exact-money/recovery protections.
+
+## Prior workflow refinement — D-037
 
 The user's next screenshot pins amount-first review: wallet identity, large exact
 amount, recipient/provider, top Edit details and bottom Cancel/green Confirm.

@@ -1,14 +1,17 @@
 # Handover
 
-**Status:** D-037 workflow refinement is complete: **30 of 38 tasks closed,
-6 To do / 2 In progress / 30 Done**. Done-only safe success dismissal, exact grouped
-bottom-border amounts, shared amount-first reviews, saved/new recipient selection,
-readable UTC dates/copy, green/loading controls and six-row balance paging refine
-the existing shared-shell wallet. Destination money remains disabled; accounting,
-privacy, stored defaults and original-key recovery are preserved. Final review,
-design refresh and normal-wallet restoration evidence are recorded in
-[WORKFLOW_REFINEMENT.md](WORKFLOW_REFINEMENT.md). Wallet/default management and
-Swagger remain separate work.
+**Status:** D-038 modal continuity passes **1,530 Jest / 117 Chromium** checks and
+an independent bounded **`ship`** review. Ordinary money amounts reset to zero on
+reopen, Edit keeps its exact amount, all four flows share smooth protected task
+steps and both Convert choices use USD/GBP/EUR. Original-request recovery,
+accounting, privacy, stored defaults, other balances and backend currency support
+are preserved. Approved affected design guidance/examples are refreshed without
+changing core tokens. Normal development is restored with current user activity
+intact; T11-10 is complete.
+Board: **31 of 39 tasks closed, 6 To do / 2 In progress / 31 Done**.
+See [MODAL_CONTINUITY.md](MODAL_CONTINUITY.md). Wallet/default management and
+Swagger remain separate work; D-037 patterns remain except where D-038 supersedes
+ordinary amount retention and Convert choices.
 
 ## Implemented modules and commands
 
@@ -58,9 +61,10 @@ Swagger remain separate work.
 | `src/components/ui/` | Registry-derived shadcn Button/Card/Dialog/DropdownMenu/Tooltip/Field/Label/Badge/Separator/Input/Select/Skeleton with frosted semantic tokens, keyboard/focus handling, and retained upstream MIT notice. |
 | `src/components/brand/`, `public/brand/`, `src/app/icon.svg` | Approved CocoWallet inline vector logo, theme-aware wordmark, unchanged downloadable variants, and matching favicon. |
 | `src/features/theme/`, `src/app/globals.css` | Approved frosted tokens, light/dark/system preference, pre-paint theme bootstrap, storage fallback, and reduced-motion styles. |
-| `src/app/(wallet)/`, root `src/app/layout.tsx`, `loading.tsx`, `error.tsx`, `not-found.tsx` | Persistent dynamic shared shell for `/` and `/history`, preserving account/privacy/money drafts/recovery across soft navigation; root styles/metadata, skip/loading/error/404. No build-time DB read/seed. |
+| `src/app/(wallet)/`, root `src/app/layout.tsx`, `loading.tsx`, `error.tsx`, `not-found.tsx` | Persistent dynamic shared shell for `/` and `/history`, preserving account/privacy/non-amount selections/recovery across soft navigation; reopening ordinary money entry resets its amount. Root styles/metadata, skip/loading/error/404. No build-time DB read/seed. |
 | `src/features/wallet/`, `src/features/submissions/submission-panel.tsx` | Compact total/sparkline/actions, tighter wallet rows, signed recent activity and Done-only successes. Every safe completed-result dismissal resets presentation; unknown/blocked recovery remains. One discreet prototype footer. |
 | `src/features/wallet/money-amount-input.tsx`, `amount-entry.ts`, `money-review.tsx`, `src/lib/date-presentation.ts` | Exact string grouping/caret, large bottom-border amount field, shared screenshot-led reviews and deterministic human UTC date/time presentation without changing canonical API/storage facts. |
+| `src/features/wallet/use-money-step-motion.ts`, `operation-workspace.tsx` | Explicit-open ordinary reset boundary, protected recovery gates, three-currency exchange UI and one bounded interruptible dialog-height resize with immediate privacy/reduced-motion cancellation; shared directional/pending/verified-success stages. |
 | `src/features/wallet/balance-history.tsx`, `currency-flag.tsx` | Validated actual account-scoped USD observations, compact min/max sparkline and expanded zero-baseline chart/exact-value disclosure; honest empty/private states and local currency vectors. |
 | `DESIGN.md`, `.impeccable/design.json` | Extracted light/dark visual tokens, canonical design guidance, and version-2 component-preview extensions; actual application styles remain in source CSS. |
 | `scripts/check-artifacts.mjs` | Checks Markdown links, decision/task references, board status alignment, and task dependency cycles. |
@@ -81,7 +85,28 @@ Stop the dev compiler before `docker compose run --rm app npm run check`, then u
 
 Application DB: `/app/data/wallet.sqlite` in Compose's `wallet-data` volume. Tests use isolated temporary SQLite files. Normal shutdown is `docker compose down` without deleting volumes. Before applying journal migrations, the stopped app's database was backed up with SQLite's backup API to `/app/data/wallet.sqlite.pre-journal-1794390597589.bak`. Backup creation is verified; a full restore drill is not claimed.
 
-Current workflow verification passes the full Docker check/build: **1,529 Jest
+Current D-038 verification passes the full Docker check/build: **1,530 Jest tests
+in 71 suites**, formatting/lint/types and **60 artifact documents / 39 tasks**;
+all **117 production Chromium checks** pass on the corrected isolated server.
+The independent read-only full finish review returns **ship**, no material fixes,
+at the bounded follow-up scope. Corrected captures record actual 240ms WAAPI
+resizing across 320/820/1440 light/dark; see [DESIGN_REVIEW.md](DESIGN_REVIEW.md).
+
+The current normal-wallet backup is
+`/app/data/wallet.sqlite.pre-modal-motion-1794474651486.bak`. All 15 tables were
+row-identical before restoring development; afterwards **13 non-cache tables remain
+identical**, with only catalog/rate cache refresh. Preserved activity is **3 accounts /
+5 wallets / 5 funding attempts / 1 conversion attempt / 2 transfer attempts /
+8 transactions / 11 journal entries / 9 observations**, plus **5 quotes / 3 uses**.
+Integrity `ok`, no FK violations. Healthy development retains
+`.next/dev.pre-modal-motion-1794477888265` and passes **300 stable frames**, actual
+eight-record History/five recent rows, exact available total, grouped entry,
+zero-on-reopen/soft navigation and privacy, with no extra document navigation,
+page/console error or monetary/quote POST. Both disposable previews are stopped.
+No normal seed/money test, migration, dependency change, restore drill or push ran.
+See [MODAL_CONTINUITY.md](MODAL_CONTINUITY.md).
+
+Historical D-037 workflow verification passes the full Docker check/build: **1,529 Jest
 tests in 70 suites**, formatting/lint/types and **59 artifact documents / 38 tasks**;
 all **109 production Chromium checks** pass on a newly recreated isolated server.
 The independent full finish review returned **ship**, no material fixes, at the
