@@ -170,3 +170,19 @@ success/two failure captures and inspection data are in
 `.impeccable/review/copy-tooltip/`; sampled readable originals were opened. The
 once-only changed-component detector is clean. No full production-build/124-test
 browser rerun or independent whole-surface review is claimed for this local polish.
+
+### Tooltip arrow join follow-up
+
+The copy Button and shared Tooltip are local shadcn-derived source using the
+existing `radix-ui` primitives, with the retained upstream MIT notice—not a separate
+hand-built popup library. Rendered inspection found no bubble border: Radix's arrow
+started flush against the shadowed body edge. Its SVG now overlaps the body by one
+CSS pixel in its native local axis; Radix still owns positioning, rotation and
+collision. No content, timing, radius, palette, dependency or copy behavior changes.
+
+Read-only Chromium checks pass 320/820/1024/1440 light/dark and actual top/right/
+bottom tooltip placements. Arrow fill matches the body and the measured overlap
+is 1px; all tested popups remain in bounds, with zero page errors/API writes.
+High-density close-ups were opened. Eleven focused copy/shared-control/motion
+tests pass. Evidence is in `.impeccable/review/tooltip-arrow/`; this is a narrow
+join correction, not another full 124-test browser or independent design review.

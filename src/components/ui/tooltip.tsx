@@ -47,7 +47,11 @@ export function TooltipContent({
         {...props}
       >
         {children}
-        <TooltipPrimitive.Arrow className="fill-foreground" />
+        {/* Radix rotates the arrow wrapper per side; overlap its base to avoid a shadow seam. */}
+        <TooltipPrimitive.Arrow
+          data-slot="tooltip-arrow"
+          className="-translate-y-px fill-foreground"
+        />
       </TooltipPrimitive.Content>
     </TooltipPrimitive.Portal>
   );

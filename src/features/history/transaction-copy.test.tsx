@@ -68,6 +68,11 @@ it("copies exact IDs and offers selected, readable text when clipboard access fa
       "Copied!",
     );
     expect(host.querySelector(".wallet-detail-copy-feedback")).toBeNull();
+    expect(
+      document
+        .querySelector('[data-slot="tooltip-arrow"]')
+        ?.classList.contains("-translate-y-px"),
+    ).toBe(true);
     writeText.mockRejectedValueOnce(new Error("blocked"));
     await act(async () => button.click());
     expect(host.querySelector('[role="status"]')?.textContent).toContain(
